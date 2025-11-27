@@ -31,20 +31,7 @@ function App() {
           
             key={app.id}
             href={app.url}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1rem',
-              padding: '1.5rem',
-              background: 'rgba(255,255,255,0.1)',
-              borderRadius: '12px',
-              textDecoration: 'none',
-              color: 'white',
-              transition: 'all 0.2s',
-              border: '1px solid rgba(255,255,255,0.1)'
-            }}
-            onMouseOver={e => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-            onMouseOut={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            className="app-card"
           >
             <span style={{ fontSize: '2.5rem' }}>{app.icon}</span>
             <div>

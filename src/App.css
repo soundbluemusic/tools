@@ -40,3 +40,19 @@
 .read-the-docs {
   color: #888;
 }
+.app-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  text-decoration: none;
+  color: white;
+  transition: all 0.2s;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.app-card:hover {
+  background: rgba(255,255,255,0.2);
+}
