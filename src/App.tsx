@@ -22,6 +22,7 @@ function App() {
             </a>
           ))}
         </div>
+        <footer className="copyright">© SoundBlueMusic</footer>
       </div>
     </>
   )

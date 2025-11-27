@@ -56,3 +56,10 @@
 .app-card:hover {
   background: rgba(255,255,255,0.2);
 }
+
+.copyright {
+  margin-top: 3rem;
+  padding: 1rem;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+}
