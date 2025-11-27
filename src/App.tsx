@@ -1,47 +1,34 @@
+import { useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
 import './App.css'
 
-const apps = [
-  { id: 1, name: '계약서 분석 도구', desc: 'Contract Risk Analysis', icon: '📄', url: '/contract' },
-  { id: 2, name: '메트로놈', desc: 'Metronome', icon: '🎵', url: '/metronome' },
-  { id: 3, name: 'QR 코드 생성기', desc: 'QR Code Generator', icon: '📱', url: '/qr' },
-]
-
 function App() {
+  const [count, setCount] = useState(0)
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-    }}>
-      <h1 style={{ color: 'white', marginBottom: '2rem', fontSize: '2rem' }}>
-        🎨 SoundBlue Apps
-      </h1>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '1rem',
-        width: '100%',
-        maxWidth: '800px'
-      }}>
-        {apps.map(app => (
-          
-            key={app.id}
-            href={app.url}
-            className="app-card"
-          >
-            <span style={{ fontSize: '2.5rem' }}>{app.icon}</span>
-            <div>
-              <div style={{ fontWeight: 'bold', fontSize: '1.1rem' }}>{app.name}</div>
-              <div style={{ opacity: 0.7, fontSize: '0.85rem' }}>{app.desc}</div>
-            </div>
-          </a>
-        ))}
+    <>
+      <div>
+        <a href="https://vitejs.dev" target="_blank">
+          <img src={viteLogo} className="logo" alt="Vite logo" />
+        </a>
+        <a href="https://react.dev" target="_blank">
+          <img src={reactLogo} className="logo react" alt="React logo" />
+        </a>
       </div>
-    </div>
+      <h1>Vite + React</h1>
+      <div className="card">
+        <button onClick={() => setCount((count) => count + 1)}>
+          count is {count}
+        </button>
+        <p>
+          Edit <code>src/App.tsx</code> and save to test HMR
+        </p>
+      </div>
+      <p className="read-the-docs">
+        Click on the Vite and React logos to learn more
+      </p>
+    </>
   )
 }
 
