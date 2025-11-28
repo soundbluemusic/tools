@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
@@ -8,44 +8,84 @@ export default defineConfig(({ mode }) => ({
       // Use automatic JSX runtime for smaller bundles
       jsxRuntime: 'automatic',
     }),
+    // Split vendor chunks for better caching
+    splitVendorChunkPlugin(),
   ],
   build: {
     // Target modern browsers for smaller bundles
     target: 'es2020',
-    // Enable minification
+    // Use esbuild for fast minification (built-in)
     minify: 'esbuild',
     // CSS code splitting
     cssCodeSplit: true,
-    // Generate source maps for production debugging
+    // No source maps in production
     sourcemap: false,
     // Chunk splitting configuration
     rollupOptions: {
       output: {
         // Manual chunk splitting for optimal caching
-        manualChunks: {
-          // Vendor chunk for React
-          vendor: ['react', 'react-dom'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // React core - separate chunk for long-term caching
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+              return 'react-vendor';
+            }
+          }
         },
-        // Optimize chunk file names
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]',
+        // Optimize chunk file names with content hash
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          const ext = assetInfo.name?.split('.').pop() || '';
+          if (/png|jpe?g|svg|gif|webp|ico/i.test(ext)) {
+            return 'assets/img/[name]-[hash][extname]';
+          }
+          if (/css/i.test(ext)) {
+            return 'assets/css/[name]-[hash][extname]';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
+      },
+      // Tree shaking optimization
+      treeshake: {
+        moduleSideEffects: 'no-external',
+        propertyReadSideEffects: false,
       },
     },
     // Report compressed size
     reportCompressedSize: true,
     // Chunk size warning limit
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 300,
+    // Asset inline limit (4kb)
+    assetsInlineLimit: 4096,
   },
   // Optimize dependencies
   optimizeDeps: {
     include: ['react', 'react-dom'],
+    // Use esbuild for dependency optimization
+    esbuildOptions: {
+      target: 'es2020',
+    },
   },
-  // Performance optimizations
+  // Development server
+  server: {
+    // Pre-bundle dependencies for faster startup
+    warmup: {
+      clientFiles: ['./src/main.tsx', './src/App.tsx'],
+    },
+  },
+  // Preview server config
+  preview: {
+    // Enable caching headers
+    headers: {
+      'Cache-Control': 'public, max-age=31536000',
+    },
+  },
+  // esbuild options
   esbuild: {
-    // Drop console.log in production
+    // Drop console in production
     drop: mode === 'production' ? ['console', 'debugger'] : [],
-    // Minify identifiers
+    legalComments: 'none',
     minifyIdentifiers: true,
     minifySyntax: true,
     minifyWhitespace: true,

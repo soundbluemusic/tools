@@ -1,135 +1,165 @@
 /* CSS Variables for theming and performance */
 :root {
-  --card-bg: rgba(255, 255, 255, 0.1);
-  --card-bg-hover: rgba(255, 255, 255, 0.2);
-  --card-border: rgba(255, 255, 255, 0.1);
-  --card-radius: 12px;
-  --card-gap: 1rem;
-  --card-padding: 1.5rem;
+  --bg-color: #c4c4c4;
+  --text-color: #1a1a1a;
+  --border-color: #999;
+  --item-hover-bg: rgba(0, 0, 0, 0.05);
+  --search-bg: #fff;
+  --search-border: #bbb;
   --transition-fast: 150ms;
-  --skeleton-bg: rgba(255, 255, 255, 0.05);
-  --skeleton-shine: rgba(255, 255, 255, 0.1);
+  --skeleton-bg: rgba(0, 0, 0, 0.08);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #2a2a2a;
+    --text-color: #e5e5e5;
+    --border-color: #555;
+    --item-hover-bg: rgba(255, 255, 255, 0.08);
+    --search-bg: #3a3a3a;
+    --search-border: #555;
+    --skeleton-bg: rgba(255, 255, 255, 0.1);
+  }
 }
 
 #root {
-  max-width: 1280px;
+  width: 100%;
+  max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 2rem 1rem;
 }
 
-/* Title styling */
+/* Header styling */
+.header {
+  margin-bottom: 1.5rem;
+}
+
+/* Title styling - simple and clean */
 .title {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Grid Layout - GPU accelerated */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: var(--card-gap);
-  padding: 1rem;
-  contain: layout style;
-}
-
-/* App Card - Optimized with contain and will-change */
-.app-card {
-  display: flex;
-  align-items: center;
-  gap: var(--card-gap);
-  padding: var(--card-padding);
-  background: var(--card-bg);
-  border-radius: var(--card-radius);
-  text-decoration: none;
-  color: white;
-  border: 1px solid var(--card-border);
-  /* Performance optimizations */
-  contain: content;
-  will-change: transform, background-color;
-  transform: translateZ(0);
-  transition: transform var(--transition-fast) ease-out,
-              background-color var(--transition-fast) ease-out;
-}
-
-.app-card:hover {
-  background: var(--card-bg-hover);
-  transform: translateY(-2px) translateZ(0);
-}
-
-.app-card:active {
-  transform: translateY(0) translateZ(0);
-}
-
-/* Icon styling */
-.icon {
-  font-size: 2.5rem;
-  flex-shrink: 0;
-  /* Prevent layout shift */
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* App info container */
-.app-info {
-  text-align: left;
-  min-width: 0;
-}
-
-.name {
+  font-size: 1.5rem;
   font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 0.25rem;
-  /* Text overflow handling */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin: 0 0 1rem 0;
+  color: var(--text-color);
+  letter-spacing: -0.02em;
 }
 
-.desc {
-  font-size: 0.9rem;
+/* Search container */
+.search-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid var(--search-border);
+  border-radius: 8px;
+  background: var(--search-bg);
+  color: var(--text-color);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: #666;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.search-input::placeholder {
+  color: #888;
+}
+
+/* Hide default search cancel button */
+.search-input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  font-size: 1.25rem;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+  border-radius: 4px;
+  transition: color var(--transition-fast);
+}
+
+.search-clear:hover {
+  color: var(--text-color);
+}
+
+/* App List - Clean list style like the reference image */
+.app-list {
+  background: var(--bg-color);
+  border-radius: 12px;
+  overflow: hidden;
+  contain: content;
+}
+
+.app-list.pending {
   opacity: 0.7;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Skeleton Loading Animation */
-.skeleton {
   pointer-events: none;
 }
 
-.skeleton-icon,
-.skeleton-text {
+/* App Item - Clean bordered list item */
+.app-item {
+  display: block;
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color var(--transition-fast);
+  contain: layout style;
+}
+
+.app-item:last-child {
+  border-bottom: none;
+}
+
+.app-item:hover {
+  background: var(--item-hover-bg);
+}
+
+.app-item:active {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.app-item-text {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* No results message */
+.no-results {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+  font-size: 0.95rem;
+}
+
+/* Skeleton Loading Animation */
+.skeleton-list {
+  pointer-events: none;
+}
+
+.skeleton .skeleton-text {
+  height: 1.2rem;
+  width: 60%;
   background: var(--skeleton-bg);
   border-radius: 4px;
   animation: skeleton-pulse 1.5s ease-in-out infinite;
-}
-
-.skeleton-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-.skeleton-text {
-  height: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.skeleton .name.skeleton-text {
-  width: 70%;
-}
-
-.skeleton .desc.skeleton-text {
-  width: 50%;
-  margin-bottom: 0;
 }
 
 @keyframes skeleton-pulse {
@@ -137,40 +167,38 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.4;
+    opacity: 0.5;
   }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .app-card {
+  .app-item,
+  .search-input,
+  .search-clear {
     transition: none;
-    will-change: auto;
   }
 
-  .skeleton-icon,
-  .skeleton-text {
+  .skeleton .skeleton-text {
     animation: none;
   }
 }
 
-/* Light mode adjustments */
-@media (prefers-color-scheme: light) {
-  :root {
-    --card-bg: rgba(0, 0, 0, 0.05);
-    --card-bg-hover: rgba(0, 0, 0, 0.1);
-    --card-border: rgba(0, 0, 0, 0.1);
-    --skeleton-bg: rgba(0, 0, 0, 0.05);
-  }
-
-  .app-card {
-    color: #213547;
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  #root {
+    padding: 1rem 0.75rem;
   }
 
   .title {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 1.25rem;
+  }
+
+  .search-container {
+    max-width: 100%;
+  }
+
+  .app-item {
+    padding: 0.875rem 1rem;
   }
 }
