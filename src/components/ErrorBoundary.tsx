@@ -1,4 +1,39 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
+import { useLanguage } from '../i18n/context';
+
+interface ErrorFallbackProps {
+  /** The error that was caught */
+  error: Error | null;
+  /** Handler to reset the error boundary */
+  onReset: () => void;
+}
+
+/**
+ * Default Error Fallback Component
+ * Uses i18n for internationalized error messages
+ */
+function DefaultErrorFallback({ error, onReset }: ErrorFallbackProps) {
+  const { t } = useLanguage();
+
+  return (
+    <div className="error-boundary" role="alert">
+      <div className="error-boundary-content">
+        <h2 className="error-boundary-title">{t.common.errorBoundary.title}</h2>
+        <p className="error-boundary-message">{t.common.errorBoundary.message}</p>
+        {import.meta.env.DEV && error && (
+          <pre className="error-boundary-details">{error.message}</pre>
+        )}
+        <button
+          className="error-boundary-button"
+          onClick={onReset}
+          type="button"
+        >
+          {t.common.errorBoundary.retry}
+        </button>
+      </div>
+    </div>
+  );
+}
 
 interface ErrorBoundaryProps {
   /** Children to render */
@@ -67,28 +102,12 @@ export class ErrorBoundary extends Component<
         return this.props.fallback;
       }
 
-      // Default error UI
+      // Default error UI with i18n support
       return (
-        <div className="error-boundary" role="alert">
-          <div className="error-boundary-content">
-            <h2 className="error-boundary-title">문제가 발생했습니다</h2>
-            <p className="error-boundary-message">
-              예상치 못한 오류가 발생했습니다.
-            </p>
-            {import.meta.env.DEV && this.state.error && (
-              <pre className="error-boundary-details">
-                {this.state.error.message}
-              </pre>
-            )}
-            <button
-              className="error-boundary-button"
-              onClick={this.handleReset}
-              type="button"
-            >
-              다시 시도
-            </button>
-          </div>
-        </div>
+        <DefaultErrorFallback
+          error={this.state.error}
+          onReset={this.handleReset}
+        />
       );
     }
 

@@ -33,6 +33,11 @@ export const commonKo: CommonTranslation = {
     success: '성공!',
     backButton: '← 돌아가기',
   },
+  errorBoundary: {
+    title: '문제가 발생했습니다',
+    message: '예상치 못한 오류가 발생했습니다.',
+    retry: '다시 시도',
+  },
 };
 
 export const commonEn: CommonTranslation = {
@@ -67,5 +72,10 @@ export const commonEn: CommonTranslation = {
     error: 'An error occurred',
     success: 'Success!',
     backButton: '← Back',
+  },
+  errorBoundary: {
+    title: 'Something went wrong',
+    message: 'An unexpected error occurred.',
+    retry: 'Try again',
   },
 };
