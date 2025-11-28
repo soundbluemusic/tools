@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
+import { LanguageToggle } from './components/LanguageToggle';
 import { LanguageProvider } from './i18n';
 import './App.css';
 
@@ -83,6 +84,7 @@ const App = memo(function App() {
               ))}
             </Routes>
             <Footer />
+            <LanguageToggle />
           </NavigationProvider>
         </LanguageProvider>
       </BrowserRouter>

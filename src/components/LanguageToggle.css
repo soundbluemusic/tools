@@ -1,0 +1,86 @@
+/* ==========================================================================
+   Language Toggle - Floating button fixed at bottom-right
+   ========================================================================== */
+.language-toggle {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #d1d5db;
+  border-radius: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+
+  transition: transform 0.2s ease-out,
+              box-shadow 0.2s ease-out,
+              background-color 0.2s ease-out;
+}
+
+.language-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  background: white;
+}
+
+.language-toggle:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.language-toggle-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.language-toggle-text {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .language-toggle {
+    background: rgba(42, 42, 42, 0.95);
+    border-color: #555;
+    color: #e5e5e5;
+  }
+
+  .language-toggle:hover {
+    background: rgba(50, 50, 50, 0.98);
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .language-toggle {
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8rem;
+  }
+
+  .language-toggle-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .language-toggle {
+    transition: none;
+  }
+}

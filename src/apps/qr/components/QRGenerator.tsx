@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
-import { useLanguage } from '../../../i18n';
+import { useTranslations } from '../../../i18n';
 import './QRGenerator.css';
 
 declare global {
@@ -27,7 +27,7 @@ const QRGenerator = memo(function QRGenerator() {
   const [copySuccess, setCopySuccess] = useState(false);
   const isLibraryLoaded = useRef(false);
 
-  const { language, toggleLanguage, t } = useLanguage();
+  const t = useTranslations();
   const qrT = t.qr;
   const commonT = t.common;
 
@@ -165,13 +165,13 @@ const QRGenerator = memo(function QRGenerator() {
       try {
         const newWindow = window.open(dataUrl, '_blank');
         if (!newWindow) {
-          alert('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+          alert(qrT.popupBlocked);
         }
       } catch {
-        alert('다운로드에 실패했습니다. 이미지를 우클릭하여 저장해주세요.');
+        alert(qrT.downloadFailed);
       }
     }
-  }, []);
+  }, [qrT]);
 
   const fallbackDownload = useCallback(
     (dataUrl: string) => {
@@ -179,13 +179,9 @@ const QRGenerator = memo(function QRGenerator() {
       link.href = dataUrl;
       link.download = `qr_${colorMode}.png`;
       link.click();
-      alert(
-        language === 'ko'
-          ? '이미지 복사를 지원하지 않아 다운로드되었습니다.'
-          : 'Image copy not supported, downloaded instead.'
-      );
+      alert(qrT.imageCopyNotSupported);
     },
-    [colorMode, language]
+    [colorMode, qrT]
   );
 
   const copyImage = useCallback(
@@ -231,23 +227,13 @@ const QRGenerator = memo(function QRGenerator() {
                 if (navigator.userAgent.match(/iPhone|iPad|iPod|Android/i)) {
                   const newWindow = window.open(blobUrl, '_blank');
                   if (newWindow) {
-                    alert(
-                      language === 'ko'
-                        ? '이미지가 새 탭에서 열렸습니다. 이미지를 길게 눌러 저장하거나 복사하세요.'
-                        : 'Image opened in new tab. Long press the image to save or copy.'
-                    );
+                    alert(qrT.imageOpenedInNewTab);
                   } else {
                     link.click();
-                    alert(language === 'ko' ? '이미지가 다운로드되었습니다.' : 'Image downloaded.');
+                    alert(qrT.imageDownloaded);
                   }
                 } else {
-                  if (
-                    confirm(
-                      language === 'ko'
-                        ? '이미지 복사가 지원되지 않습니다. 대신 다운로드하시겠습니까?'
-                        : 'Image copy not supported. Download instead?'
-                    )
-                  ) {
+                  if (confirm(qrT.imageCopyConfirm)) {
                     link.click();
                   }
                 }
@@ -274,7 +260,7 @@ const QRGenerator = memo(function QRGenerator() {
         fallbackDownload(dataUrl);
       }
     },
-    [colorMode, language, fallbackDownload]
+    [colorMode, qrT, fallbackDownload]
   );
 
   const currentQR = colorMode === 'black' ? qrBlack : qrWhite;
@@ -286,30 +272,7 @@ const QRGenerator = memo(function QRGenerator() {
   return (
     <div className="qr-generator">
       <div className="qr-header">
-        <div className="qr-header-title">
-          <h1>{qrT.title}</h1>
-          <button
-            onClick={toggleLanguage}
-            className="qr-lang-btn"
-            title={language === 'ko' ? 'Switch to English' : '한국어로 전환'}
-          >
-            <svg
-              className="qr-globe-icon"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-            >
-              <circle cx="12" cy="12" r="10" strokeWidth="2" />
-              <path
-                strokeWidth="2"
-                d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
-              />
-            </svg>
-            {language === 'ko' ? 'EN' : 'KO'}
-          </button>
-        </div>
+        <h1>{qrT.title}</h1>
         <p className="qr-subtitle">{qrT.subtitle}</p>
       </div>
 
