@@ -1,17 +1,33 @@
 import { memo } from 'react';
-import { PageLayout } from '../components/layout';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCallback } from 'react';
+import { QRGenerator } from '../apps/qr/components/QRGenerator';
 
 /**
  * QR Code Generator Tool Page
  */
 const QR = memo(function QR() {
+  const navigate = useNavigate();
+
+  const handleBackClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (document.startViewTransition) {
+        e.preventDefault();
+        document.startViewTransition(() => {
+          navigate('/');
+        });
+      }
+    },
+    [navigate]
+  );
+
   return (
-    <PageLayout
-      title="QR 코드 생성기"
-      description="QR Code Generator"
-    >
-      <p>QR 코드 생성기가 여기에 들어갑니다.</p>
-    </PageLayout>
+    <div className="qr-page">
+      <Link to="/" className="back-link" onClick={handleBackClick}>
+        ← 돌아가기
+      </Link>
+      <QRGenerator />
+    </div>
   );
 });
 
