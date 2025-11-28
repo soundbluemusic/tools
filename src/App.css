@@ -555,6 +555,14 @@
     animation-name: page-enter;
   }
 
+  /* Disable animations for fixed elements (footer, language toggle) */
+  ::view-transition-old(footer),
+  ::view-transition-new(footer),
+  ::view-transition-old(language-toggle),
+  ::view-transition-new(language-toggle) {
+    animation: none;
+  }
+
   @keyframes page-exit {
     from {
       opacity: 1;
@@ -573,6 +581,8 @@
   padding: 2rem 0;
   text-align: center;
   border-top: 1px solid var(--border-color);
+  /* Exclude from view transitions - prevents shaking during page navigation */
+  view-transition-name: footer;
 }
 
 .footer-menu {
