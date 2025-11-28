@@ -275,11 +275,6 @@ const QRGenerator = memo(function QRGenerator() {
 
   return (
     <div className="qr-generator">
-      <div className="qr-header">
-        <h1>{qrT.title}</h1>
-        <p className="qr-subtitle">{qrT.subtitle}</p>
-      </div>
-
       <div className="qr-card">
         <div className="qr-grid">
           {/* Input Section */}
