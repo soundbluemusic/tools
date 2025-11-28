@@ -1,23 +1,18 @@
-import { memo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { memo, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useViewTransition } from '../hooks/useViewTransition';
 
 /**
  * 404 Not Found Page
  * - View Transitions API for smooth navigation back to home
  */
 const NotFound = memo(function NotFound() {
-  const navigate = useNavigate();
+  const { createClickHandler } = useViewTransition();
 
-  const handleHomeClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (document.startViewTransition) {
-        e.preventDefault();
-        document.startViewTransition(() => {
-          navigate('/');
-        });
-      }
-    },
-    [navigate]
+  // Memoized home click handler using shared View Transition hook
+  const handleHomeClick = useMemo(
+    () => createClickHandler('/'),
+    [createClickHandler]
   );
 
   return (

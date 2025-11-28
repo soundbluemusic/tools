@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { cn } from '../../utils';
+import { SIZE_CLASSES } from '../../utils/sizeClass';
 
 interface LoaderProps {
   /** Size variant */
@@ -9,12 +10,6 @@ interface LoaderProps {
   /** Accessible label */
   label?: string;
 }
-
-const sizeClasses = {
-  sm: 'loader-spinner--sm',
-  md: 'loader-spinner--md',
-  lg: 'loader-spinner--lg',
-} as const;
 
 /**
  * Spinner Loader Component
@@ -26,7 +21,7 @@ export const Loader = memo<LoaderProps>(function Loader({
 }) {
   return (
     <div
-      className={cn('loader-spinner', sizeClasses[size], className)}
+      className={cn('loader-spinner', SIZE_CLASSES.loader[size], className)}
       role="status"
       aria-label={label}
     >
