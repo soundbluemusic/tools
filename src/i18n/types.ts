@@ -43,6 +43,12 @@ export interface CommonTranslation {
     success: string;
     backButton: string;
   };
+  // Error boundary
+  errorBoundary: {
+    title: string;
+    message: string;
+    retry: string;
+  };
 }
 
 /**
