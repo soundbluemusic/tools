@@ -540,39 +540,32 @@
 /* ==========================================================================
    View Transitions API Support
    ========================================================================== */
+
+/* Main content area - only this element participates in view transitions */
+.main-content {
+  view-transition-name: main-content;
+}
+
 @supports (view-transition-name: none) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
+  /* Only animate the main content area, not root */
+  ::view-transition-old(main-content),
+  ::view-transition-new(main-content) {
     animation-duration: 0.12s;
     animation-timing-function: ease-out;
   }
 
-  ::view-transition-old(root) {
+  ::view-transition-old(main-content) {
     animation-name: page-exit;
   }
 
-  ::view-transition-new(root) {
+  ::view-transition-new(main-content) {
     animation-name: page-enter;
   }
 
-  /* Disable animations for fixed elements (footer, language toggle) */
-  ::view-transition-group(footer),
-  ::view-transition-group(language-toggle) {
+  /* Disable root transition to prevent footer/header from animating */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation: none;
-  }
-
-  ::view-transition-old(footer),
-  ::view-transition-new(footer),
-  ::view-transition-old(language-toggle),
-  ::view-transition-new(language-toggle) {
-    animation: none;
-    mix-blend-mode: normal;
-  }
-
-  ::view-transition-image-pair(footer),
-  ::view-transition-image-pair(language-toggle) {
-    isolation: auto;
-    mix-blend-mode: normal;
   }
 
   @keyframes page-exit {
@@ -593,8 +586,6 @@
   padding: 2rem 0;
   text-align: center;
   border-top: 1px solid var(--border-color);
-  /* Exclude from view transitions - prevents shaking during page navigation */
-  view-transition-name: footer;
 }
 
 .footer-menu {

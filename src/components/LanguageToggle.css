@@ -31,9 +31,6 @@
   will-change: transform;
   contain: layout style;
 
-  /* Exclude from view transitions - prevents shaking during page navigation */
-  view-transition-name: language-toggle;
-
   transition: transform 0.2s ease-out,
               box-shadow 0.2s ease-out,
               background-color 0.2s ease-out;
