@@ -31,6 +31,7 @@ export const commonKo: CommonTranslation = {
     loading: '로딩 중...',
     error: '오류가 발생했습니다',
     success: '성공!',
+    backButton: '← 돌아가기',
   },
 };
 
@@ -65,5 +66,6 @@ export const commonEn: CommonTranslation = {
     loading: 'Loading...',
     error: 'An error occurred',
     success: 'Success!',
+    backButton: '← Back',
   },
 };

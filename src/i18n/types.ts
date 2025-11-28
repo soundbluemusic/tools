@@ -41,6 +41,7 @@ export interface CommonTranslation {
     loading: string;
     error: string;
     success: string;
+    backButton: string;
   };
 }
 

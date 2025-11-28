@@ -1,6 +1,7 @@
 import { memo, useCallback, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { cn } from '../../utils';
+import { useTranslations } from '../../i18n/context';
 
 interface PageLayoutProps {
   /** Page title */
@@ -11,8 +12,6 @@ interface PageLayoutProps {
   showBackLink?: boolean;
   /** Back link URL */
   backUrl?: string;
-  /** Back link text */
-  backText?: string;
   /** Children content */
   children: ReactNode;
   /** Additional class names */
@@ -31,11 +30,11 @@ export const PageLayout = memo<PageLayoutProps>(function PageLayout({
   description,
   showBackLink = true,
   backUrl = '/',
-  backText = '← 돌아가기',
   children,
   className,
   actions,
 }) {
+  const { common } = useTranslations();
   const navigate = useNavigate();
 
   // Handle back navigation with View Transitions API
@@ -55,7 +54,7 @@ export const PageLayout = memo<PageLayoutProps>(function PageLayout({
     <main className={cn('container', 'tool-page', className)} role="main">
       {showBackLink && (
         <Link to={backUrl} className="back-link" onClick={handleBackClick}>
-          {backText}
+          {common.common.backButton}
         </Link>
       )}
 
