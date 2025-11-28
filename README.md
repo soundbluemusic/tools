@@ -38,33 +38,30 @@ npm run validate
 
 ## 라이선스
 
-**© SoundBlueMusic. All Rights Reserved.**
+### 소스코드 (MIT License)
 
-이 소스코드는 MIT 라이선스로 공개됩니다. 저작권 고지를 포함하여 자유롭게 사용, 수정, 배포할 수 있습니다.
+이 프로젝트의 **소스코드**는 MIT 라이선스로 공개됩니다. 저작권 고지를 포함하여 자유롭게 사용, 수정, 배포할 수 있습니다.
 
-```
-MIT License
+자세한 내용은 [LICENSE](./LICENSE) 파일을 참조하세요.
 
-Copyright (c) 2024 SoundBlueMusic
+### 지적재산권 및 상표 (Intellectual Property & Trademarks)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+**다음 항목들은 MIT 라이선스의 적용을 받지 않으며, 무단 사용이 금지됩니다:**
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+| 항목 | 설명 |
+|:-----|:-----|
+| 브랜드명 | "SoundBlueMusic", "Sound Blue" 및 모든 변형 |
+| 로고 | 모든 로고, 아이콘 및 브랜드 이미지 |
+| 이미지 | 프로젝트에 포함된 모든 이미지 및 그래픽 |
+| 음악/오디오 | 프로젝트에 포함된 모든 음악, 음향 효과 및 오디오 파일 |
+| 브랜드 자산 | 기타 모든 브랜드 관련 자료 |
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+**주의사항:**
+- 위 항목들의 무단 사용, 복제, 수정, 배포는 금지됩니다
+- 이 프로젝트를 포크하거나 소스코드를 사용할 경우, 보호되는 모든 자료(로고, 이미지, 오디오, 브랜드명)를 제거하고 본인의 것으로 교체해야 합니다
+- 라이선스 관련 문의는 SoundBlueMusic으로 연락해 주세요
+
+**© 2025 SoundBlueMusic. All Rights Reserved for Intellectual Property & Trademarks.**
 
 ---
 
