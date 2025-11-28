@@ -60,6 +60,13 @@ export interface QRTranslation {
   enterUrl: string;
   transparentBg: string;
   footer: string;
+  // Alert messages
+  imageCopyNotSupported: string;
+  imageOpenedInNewTab: string;
+  imageDownloaded: string;
+  imageCopyConfirm: string;
+  popupBlocked: string;
+  downloadFailed: string;
 }
 
 /**

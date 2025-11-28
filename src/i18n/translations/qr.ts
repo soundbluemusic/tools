@@ -31,6 +31,13 @@ export const qrKo: QRTranslation = {
   enterUrl: 'URL을 입력하세요',
   transparentBg: '투명 배경, 2048x2048 PNG',
   footer: 'QR 코드를 즉시 생성 • 데이터 저장 안함 • 무료 사용',
+  // Alert messages
+  imageCopyNotSupported: '이미지 복사를 지원하지 않아 다운로드되었습니다.',
+  imageOpenedInNewTab: '이미지가 새 탭에서 열렸습니다. 이미지를 길게 눌러 저장하거나 복사하세요.',
+  imageDownloaded: '이미지가 다운로드되었습니다.',
+  imageCopyConfirm: '이미지 복사가 지원되지 않습니다. 대신 다운로드하시겠습니까?',
+  popupBlocked: '팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.',
+  downloadFailed: '다운로드에 실패했습니다. 이미지를 우클릭하여 저장해주세요.',
 };
 
 export const qrEn: QRTranslation = {
@@ -64,4 +71,11 @@ export const qrEn: QRTranslation = {
   enterUrl: 'Enter URL',
   transparentBg: 'Transparent background, 2048x2048 PNG',
   footer: 'Generate QR codes instantly • No data stored • Free to use',
+  // Alert messages
+  imageCopyNotSupported: 'Image copy not supported, downloaded instead.',
+  imageOpenedInNewTab: 'Image opened in new tab. Long press the image to save or copy.',
+  imageDownloaded: 'Image downloaded.',
+  imageCopyConfirm: 'Image copy not supported. Download instead?',
+  popupBlocked: 'Popup blocked. Please disable popup blocking and try again.',
+  downloadFailed: 'Download failed. Right-click the image to save.',
 };
