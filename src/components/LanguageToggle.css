@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Language Toggle - Floating button fixed at bottom-right
+   Language Toggle - Floating button fixed at top-right
    ========================================================================== */
 .language-toggle {
   position: fixed;
-  bottom: 1.5rem;
+  top: 1.5rem;
   right: 1.5rem;
   z-index: 1000;
 
@@ -74,7 +74,7 @@
 /* Mobile adjustments */
 @media (max-width: 480px) {
   .language-toggle {
-    bottom: 1rem;
+    top: 1rem;
     right: 1rem;
     padding: 0.5rem 0.875rem;
     font-size: 0.8rem;
