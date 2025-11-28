@@ -16,12 +16,20 @@
   border: 1px solid #d1d5db;
   border-radius: 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(8px);
+
+  /* Use @supports for backdrop-filter with fallback */
+  @supports (backdrop-filter: blur(8px)) {
+    backdrop-filter: blur(8px);
+  }
 
   font-size: 0.875rem;
   font-weight: 600;
   color: #374151;
   cursor: pointer;
+
+  /* Promote to GPU layer for smoother animations */
+  will-change: transform;
+  contain: layout style;
 
   transition: transform 0.2s ease-out,
               box-shadow 0.2s ease-out,

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
@@ -70,10 +70,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
   }, []);
 
-  // Toggle between languages
+  // Toggle between languages - use state updater to avoid language dependency
   const toggleLanguage = useCallback(() => {
-    setLanguage(language === 'ko' ? 'en' : 'ko');
-  }, [language, setLanguage]);
+    setLanguageState((prev) => {
+      const next = prev === 'ko' ? 'en' : 'ko';
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, next);
+      return next;
+    });
+  }, []);
 
   // Sync with localStorage on mount
   useEffect(() => {
@@ -86,8 +90,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Current translations based on language
   const t = allTranslations[language];
 
+  // Memoize context value to prevent unnecessary re-renders of consumers
+  const contextValue = useMemo<LanguageContextValue>(
+    () => ({ language, setLanguage, toggleLanguage, t }),
+    [language, setLanguage, toggleLanguage, t]
+  );
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage, t }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

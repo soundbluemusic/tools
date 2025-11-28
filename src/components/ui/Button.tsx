@@ -1,6 +1,20 @@
 import { memo, forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../utils';
 
+// Move class mappings to module level to avoid recreation on every render
+const VARIANT_CLASSES = {
+  primary: 'btn--primary',
+  secondary: 'btn--secondary',
+  ghost: 'btn--ghost',
+  outline: 'btn--outline',
+} as const;
+
+const SIZE_CLASSES = {
+  sm: 'btn--sm',
+  md: 'btn--md',
+  lg: 'btn--lg',
+} as const;
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button variant */
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
@@ -35,18 +49,8 @@ export const Button = memo(
     },
     ref
   ) {
-    const variantClass = {
-      primary: 'btn--primary',
-      secondary: 'btn--secondary',
-      ghost: 'btn--ghost',
-      outline: 'btn--outline',
-    }[variant];
-
-    const sizeClass = {
-      sm: 'btn--sm',
-      md: 'btn--md',
-      lg: 'btn--lg',
-    }[size];
+    const variantClass = VARIANT_CLASSES[variant];
+    const sizeClass = SIZE_CLASSES[size];
 
     return (
       <button
