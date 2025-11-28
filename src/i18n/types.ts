@@ -14,6 +14,23 @@ export interface CommonTranslation {
     opensource: string;
     toolsUsed: string;
   };
+  // Home page
+  home: {
+    searchPlaceholder: string;
+    searchAriaLabel: string;
+    clearSearchAriaLabel: string;
+    sortAriaLabel: string;
+    noResults: string;
+    // Sort options
+    sort: {
+      nameAsc: string;
+      nameDesc: string;
+      nameLong: string;
+      nameShort: string;
+      sizeLarge: string;
+      sizeSmall: string;
+    };
+  };
   // Common UI elements
   common: {
     copyImage: string;

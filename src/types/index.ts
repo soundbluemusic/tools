@@ -7,10 +7,16 @@
 // App Types
 // ============================================
 
-/** Configuration for a single app/tool */
+/** Configuration for a single app/tool (bilingual) */
 export interface AppConfig {
-  readonly name: string;
-  readonly desc: string;
+  readonly name: {
+    readonly ko: string;
+    readonly en: string;
+  };
+  readonly desc: {
+    readonly ko: string;
+    readonly en: string;
+  };
   readonly icon: string;
   readonly size: number; // Size in bytes
 }

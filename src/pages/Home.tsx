@@ -8,26 +8,36 @@ import {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { APPS } from '../constants/apps';
-import { SORT_OPTIONS } from '../constants/sortOptions';
+import { useLanguage } from '../i18n';
 import AppList from '../components/AppList';
 import type { App, SortOption } from '../types';
+import type { Language } from '../i18n/types';
 
 /**
  * Sort apps based on selected option
  * Uses stable sort for consistent ordering
  */
-function sortApps(apps: readonly App[], sortBy: SortOption): readonly App[] {
+function sortApps(
+  apps: readonly App[],
+  sortBy: SortOption,
+  language: Language
+): readonly App[] {
   const sorted = [...apps];
+  const locale = language === 'ko' ? 'ko' : 'en';
 
   switch (sortBy) {
     case 'name-asc':
-      return sorted.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
+      return sorted.sort((a, b) =>
+        a.name[language].localeCompare(b.name[language], locale)
+      );
     case 'name-desc':
-      return sorted.sort((a, b) => b.name.localeCompare(a.name, 'ko'));
+      return sorted.sort((a, b) =>
+        b.name[language].localeCompare(a.name[language], locale)
+      );
     case 'name-long':
-      return sorted.sort((a, b) => b.name.length - a.name.length);
+      return sorted.sort((a, b) => b.name[language].length - a.name[language].length);
     case 'name-short':
-      return sorted.sort((a, b) => a.name.length - b.name.length);
+      return sorted.sort((a, b) => a.name[language].length - b.name[language].length);
     case 'size-large':
       return sorted.sort((a, b) => b.size - a.size);
     case 'size-small':
@@ -43,6 +53,9 @@ function sortApps(apps: readonly App[], sortBy: SortOption): readonly App[] {
  * Optimized for instant interactions
  */
 const Home = memo(function Home() {
+  const { language, t } = useLanguage();
+  const homeT = t.common.home;
+
   // Search state with deferred value for smooth typing
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -51,23 +64,38 @@ const Home = memo(function Home() {
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');
   const [isPending, startTransition] = useTransition();
 
+  // Sort options with translations
+  const sortOptions = useMemo(
+    () => [
+      { value: 'name-asc' as const, label: homeT.sort.nameAsc },
+      { value: 'name-desc' as const, label: homeT.sort.nameDesc },
+      { value: 'name-long' as const, label: homeT.sort.nameLong },
+      { value: 'name-short' as const, label: homeT.sort.nameShort },
+      { value: 'size-large' as const, label: homeT.sort.sizeLarge },
+      { value: 'size-small' as const, label: homeT.sort.sizeSmall },
+    ],
+    [homeT.sort]
+  );
+
   // Filter and sort apps - only recompute when inputs change
   const filteredApps = useMemo(() => {
     let apps = APPS;
 
-    // Apply search filter
+    // Apply search filter (search in both languages for better UX)
     if (deferredSearchQuery.trim()) {
       const query = deferredSearchQuery.toLowerCase().trim();
       apps = APPS.filter(
         (app) =>
-          app.name.toLowerCase().includes(query) ||
-          app.desc.toLowerCase().includes(query)
+          app.name.ko.toLowerCase().includes(query) ||
+          app.name.en.toLowerCase().includes(query) ||
+          app.desc.ko.toLowerCase().includes(query) ||
+          app.desc.en.toLowerCase().includes(query)
       );
     }
 
-    // Apply sorting
-    return sortApps(apps, sortBy);
-  }, [deferredSearchQuery, sortBy]);
+    // Apply sorting with current language
+    return sortApps(apps, sortBy, language);
+  }, [deferredSearchQuery, sortBy, language]);
 
   // Optimized search handler - immediate state update
   const handleSearchChange = useCallback(
@@ -95,6 +123,9 @@ const Home = memo(function Home() {
   // Check if search is pending
   const isSearchPending = searchQuery !== deferredSearchQuery;
 
+  // Aria label for app list
+  const appListAriaLabel = language === 'ko' ? '사용 가능한 도구' : 'Available tools';
+
   return (
     <main className="container home-page" role="main">
       {/* Header */}
@@ -110,10 +141,10 @@ const Home = memo(function Home() {
             <input
               type="search"
               className="search-input"
-              placeholder="검색..."
+              placeholder={homeT.searchPlaceholder}
               value={searchQuery}
               onChange={handleSearchChange}
-              aria-label="도구 검색"
+              aria-label={homeT.searchAriaLabel}
               autoComplete="off"
               spellCheck="false"
             />
@@ -121,7 +152,7 @@ const Home = memo(function Home() {
               <button
                 className="search-clear"
                 onClick={handleClearSearch}
-                aria-label="검색어 지우기"
+                aria-label={homeT.clearSearchAriaLabel}
                 type="button"
               >
                 ×
@@ -134,9 +165,9 @@ const Home = memo(function Home() {
             className="sort-dropdown"
             value={sortBy}
             onChange={handleSortChange}
-            aria-label="정렬 방식"
+            aria-label={homeT.sortAriaLabel}
           >
-            {SORT_OPTIONS.map((option) => (
+            {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -146,12 +177,19 @@ const Home = memo(function Home() {
       </header>
 
       {/* App List - Direct render without Suspense */}
-      <AppList apps={filteredApps} isPending={isSearchPending || isPending} />
+      <AppList
+        apps={filteredApps}
+        isPending={isSearchPending || isPending}
+        language={language}
+        ariaLabel={appListAriaLabel}
+      />
 
       {/* No Results Message */}
       {filteredApps.length === 0 && searchQuery && (
         <p className="no-results">
-          "{searchQuery}"에 대한 검색 결과가 없습니다
+          {language === 'ko'
+            ? `"${searchQuery}"${homeT.noResults}`
+            : `${homeT.noResults} "${searchQuery}"`}
         </p>
       )}
     </main>
