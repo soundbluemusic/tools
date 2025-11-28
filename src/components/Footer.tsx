@@ -13,8 +13,8 @@ export const Footer = memo(function Footer() {
     <footer className="footer">
       {/* Footer Menu */}
       <nav className="footer-menu" aria-label="Footer navigation">
-        <Link to="/terms" className="footer-link">
-          {t.common.footer.terms}
+        <Link to="/about" className="footer-link">
+          {t.common.footer.about}
         </Link>
         <Link to="/opensource" className="footer-link">
           {t.common.footer.opensource}

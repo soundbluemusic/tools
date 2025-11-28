@@ -2,8 +2,7 @@ import type { CommonTranslation } from '../types';
 
 export const commonKo: CommonTranslation = {
   footer: {
-    about: '제작배경',
-    terms: '이용약관',
+    about: '소개',
     opensource: '오픈소스목록',
     toolsUsed: '사용된툴',
   },
@@ -43,7 +42,6 @@ export const commonKo: CommonTranslation = {
 export const commonEn: CommonTranslation = {
   footer: {
     about: 'About',
-    terms: 'Terms of Service',
     opensource: 'Open Source',
     toolsUsed: 'Tools Used',
   },

@@ -10,7 +10,6 @@ export interface CommonTranslation {
   // Footer
   footer: {
     about: string;
-    terms: string;
     opensource: string;
     toolsUsed: string;
   };
