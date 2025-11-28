@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
+import { LanguageProvider } from './i18n';
 import './App.css';
 
 // Direct imports for instant page loads - no lazy loading for small pages
@@ -74,14 +75,16 @@ const App = memo(function App() {
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <NavigationProvider>
-          <Routes>
-            {ROUTES.map((route) => (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-          <Footer />
-        </NavigationProvider>
+        <LanguageProvider>
+          <NavigationProvider>
+            <Routes>
+              {ROUTES.map((route) => (
+                <Route key={route.path} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+            <Footer />
+          </NavigationProvider>
+        </LanguageProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );
