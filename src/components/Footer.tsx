@@ -6,15 +6,14 @@ import { useTranslations } from '../i18n';
  * Footer component with menu links and copyright
  */
 export const Footer = memo(function Footer() {
-  const currentYear = new Date().getFullYear();
   const t = useTranslations();
 
   return (
     <footer className="footer">
       {/* Footer Menu */}
       <nav className="footer-menu" aria-label="Footer navigation">
-        <Link to="/terms" className="footer-link">
-          {t.common.footer.terms}
+        <Link to="/about" className="footer-link">
+          {t.common.footer.about}
         </Link>
         <Link to="/opensource" className="footer-link">
           {t.common.footer.opensource}
@@ -26,7 +25,7 @@ export const Footer = memo(function Footer() {
 
       {/* Copyright */}
       <p className="footer-copyright">
-        &copy; {currentYear} SoundBlueMusic. All rights reserved.
+        Licensed under the MIT License
       </p>
     </footer>
   );

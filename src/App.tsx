@@ -80,11 +80,13 @@ const App = memo(function App() {
       <BrowserRouter>
         <LanguageProvider>
           <NavigationProvider>
-            <Routes>
-              {ROUTES.map((route) => (
-                <Route key={route.path} path={route.path} element={route.element} />
-              ))}
-            </Routes>
+            <main className="main-content">
+              <Routes>
+                {ROUTES.map((route) => (
+                  <Route key={route.path} path={route.path} element={route.element} />
+                ))}
+              </Routes>
+            </main>
             <Footer />
             <LanguageToggle />
           </NavigationProvider>

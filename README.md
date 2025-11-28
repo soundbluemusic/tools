@@ -2,6 +2,12 @@
 
 > React + TypeScript + Vite 기반의 유틸리티 앱 모음 대시보드
 
+🤖 **Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code)** - AI-assisted development
+
+📄 **MIT License**
+
+---
+
 ## 개요
 
 SoundBlue Tools는 다양한 유틸리티 도구들을 한 곳에서 접근할 수 있는 웹 대시보드입니다.
@@ -365,4 +371,6 @@ export const APPS: AppList = Object.freeze([
 
 ## 라이선스
 
-Private
+MIT License
+
+이 프로젝트는 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (AI-assisted development)를 사용하여 제작되었습니다.
