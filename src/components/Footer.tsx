@@ -25,7 +25,7 @@ export const Footer = memo(function Footer() {
 
       {/* Copyright */}
       <p className="footer-copyright">
-        Licensed under the MIT License
+        © SoundBlueMusic. MIT License
       </p>
     </footer>
   );
