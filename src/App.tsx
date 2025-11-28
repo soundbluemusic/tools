@@ -1,57 +1,85 @@
-import { Suspense, lazy, memo, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { memo, useCallback, useEffect } from 'react';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { PageLoader } from './components/ui/Loader';
 import './App.css';
 
-// Lazy load all pages for code splitting
-const Home = lazy(() => import('./pages/Home'));
-const Contract = lazy(() => import('./pages/Contract'));
-const Metronome = lazy(() => import('./pages/Metronome'));
-const QR = lazy(() => import('./pages/QR'));
-
-// 404 Not Found page
-const NotFound = lazy(() => import('./pages/NotFound'));
+// Direct imports for instant page loads - no lazy loading for small pages
+import Home from './pages/Home';
+import Contract from './pages/Contract';
+import Metronome from './pages/Metronome';
+import QR from './pages/QR';
+import NotFound from './pages/NotFound';
 
 /**
- * Performance monitoring hook for development
+ * Route configuration for prefetching
  */
-function usePerformanceMonitoring(): void {
+const ROUTES = [
+  { path: '/', element: <Home /> },
+  { path: '/contract', element: <Contract /> },
+  { path: '/metronome', element: <Metronome /> },
+  { path: '/qr', element: <QR /> },
+  { path: '*', element: <NotFound /> },
+] as const;
+
+/**
+ * Navigation wrapper with View Transitions API support
+ */
+function NavigationProvider({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Enhanced navigation with View Transitions API
+  const handleNavigation = useCallback(
+    (to: string) => {
+      // Check if View Transitions API is supported
+      if (document.startViewTransition) {
+        document.startViewTransition(() => {
+          navigate(to);
+        });
+      } else {
+        navigate(to);
+      }
+    },
+    [navigate]
+  );
+
+  // Expose navigation handler globally for Link components
   useEffect(() => {
-    if (import.meta.env.DEV) {
-      const observer = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          console.log(`[Perf] ${entry.name}: ${entry.duration.toFixed(2)}ms`);
-        }
-      });
+    window.__navigate = handleNavigation;
+    return () => {
+      delete window.__navigate;
+    };
+  }, [handleNavigation]);
 
-      observer.observe({ entryTypes: ['measure', 'longtask'] });
-      performance.mark('app-rendered');
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
-      return () => observer.disconnect();
-    }
-  }, []);
+  return <>{children}</>;
 }
 
 /**
  * Main Application Component
- * Handles routing and global error boundaries
+ * Optimized for instant page transitions
  */
 const App = memo(function App() {
-  usePerformanceMonitoring();
-
   return (
     <ErrorBoundary>
       <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
+        <NavigationProvider>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/contract" element={<Contract />} />
-            <Route path="/metronome" element={<Metronome />} />
-            <Route path="/qr" element={<QR />} />
-            <Route path="*" element={<NotFound />} />
+            {ROUTES.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
           </Routes>
-        </Suspense>
+        </NavigationProvider>
       </BrowserRouter>
     </ErrorBoundary>
   );
@@ -60,3 +88,14 @@ const App = memo(function App() {
 App.displayName = 'App';
 
 export default App;
+
+// Type declaration for global navigation
+declare global {
+  interface Window {
+    __navigate?: (to: string) => void;
+    __DEBUG__?: {
+      version: string;
+      env: string;
+    };
+  }
+}

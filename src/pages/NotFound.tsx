@@ -1,10 +1,25 @@
-import { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { memo, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 /**
  * 404 Not Found Page
+ * - View Transitions API for smooth navigation back to home
  */
 const NotFound = memo(function NotFound() {
+  const navigate = useNavigate();
+
+  const handleHomeClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (document.startViewTransition) {
+        e.preventDefault();
+        document.startViewTransition(() => {
+          navigate('/');
+        });
+      }
+    },
+    [navigate]
+  );
+
   return (
     <main className="container tool-page" role="main">
       <div className="not-found">
@@ -13,8 +28,8 @@ const NotFound = memo(function NotFound() {
         <p className="not-found-message">
           요청하신 페이지가 존재하지 않거나 이동되었습니다.
         </p>
-        <Link to="/" className="not-found-link">
-          &larr; 홈으로 돌아가기
+        <Link to="/" className="not-found-link" onClick={handleHomeClick}>
+          ← 홈으로 돌아가기
         </Link>
       </div>
     </main>

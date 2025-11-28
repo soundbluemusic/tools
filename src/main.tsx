@@ -15,11 +15,17 @@ if (!rootElement) {
 // Create React root and render app
 const root = createRoot(rootElement);
 
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+// Render without StrictMode in production for better performance
+// StrictMode causes double renders in development
+if (import.meta.env.DEV) {
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+} else {
+  root.render(<App />);
+}
 
 // Development-only debug info
 if (import.meta.env.DEV) {

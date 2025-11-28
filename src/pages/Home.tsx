@@ -1,22 +1,19 @@
 import {
-  Suspense,
-  lazy,
   memo,
   useState,
   useMemo,
   useCallback,
   useDeferredValue,
+  useTransition,
 } from 'react';
 import { APPS } from '../constants/apps';
 import { SORT_OPTIONS } from '../constants/sortOptions';
-import { SkeletonList } from '../components/ui/Skeleton';
+import AppList from '../components/AppList';
 import type { App, SortOption } from '../types';
-
-// Lazy load AppList for code splitting
-const AppList = lazy(() => import('../components/AppList'));
 
 /**
  * Sort apps based on selected option
+ * Uses stable sort for consistent ordering
  */
 function sortApps(apps: readonly App[], sortBy: SortOption): readonly App[] {
   const sorted = [...apps];
@@ -42,17 +39,18 @@ function sortApps(apps: readonly App[], sortBy: SortOption): readonly App[] {
 /**
  * Home Page Component
  * Displays a searchable and sortable list of tools
+ * Optimized for instant interactions
  */
 const Home = memo(function Home() {
-  // Search state with deferred value for performance
+  // Search state with deferred value for smooth typing
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearchQuery = useDeferredValue(searchQuery);
-  const isPending = searchQuery !== deferredSearchQuery;
 
-  // Sort state
+  // Sort state with transition for non-blocking updates
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');
+  const [isPending, startTransition] = useTransition();
 
-  // Filter and sort apps
+  // Filter and sort apps - only recompute when inputs change
   const filteredApps = useMemo(() => {
     let apps = APPS;
 
@@ -70,7 +68,7 @@ const Home = memo(function Home() {
     return sortApps(apps, sortBy);
   }, [deferredSearchQuery, sortBy]);
 
-  // Event handlers
+  // Optimized search handler - immediate state update
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setSearchQuery(e.target.value);
@@ -78,19 +76,26 @@ const Home = memo(function Home() {
     []
   );
 
+  // Clear search
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
   }, []);
 
+  // Sort change with transition for smooth UI
   const handleSortChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setSortBy(e.target.value as SortOption);
+      startTransition(() => {
+        setSortBy(e.target.value as SortOption);
+      });
     },
     []
   );
 
+  // Check if search is pending
+  const isSearchPending = searchQuery !== deferredSearchQuery;
+
   return (
-    <main className="container" role="main">
+    <main className="container home-page" role="main">
       {/* Header */}
       <header className="header">
         <h1 className="title">tools</h1>
@@ -102,10 +107,10 @@ const Home = memo(function Home() {
             <input
               type="search"
               className="search-input"
-              placeholder="Search tools..."
+              placeholder="검색..."
               value={searchQuery}
               onChange={handleSearchChange}
-              aria-label="Search tools"
+              aria-label="도구 검색"
               autoComplete="off"
               spellCheck="false"
             />
@@ -113,7 +118,7 @@ const Home = memo(function Home() {
               <button
                 className="search-clear"
                 onClick={handleClearSearch}
-                aria-label="Clear search"
+                aria-label="검색어 지우기"
                 type="button"
               >
                 ×
@@ -126,7 +131,7 @@ const Home = memo(function Home() {
             className="sort-dropdown"
             value={sortBy}
             onChange={handleSortChange}
-            aria-label="Sort apps"
+            aria-label="정렬 방식"
           >
             {SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -137,10 +142,8 @@ const Home = memo(function Home() {
         </div>
       </header>
 
-      {/* App List */}
-      <Suspense fallback={<SkeletonList count={5} />}>
-        <AppList apps={filteredApps} isPending={isPending} />
-      </Suspense>
+      {/* App List - Direct render without Suspense */}
+      <AppList apps={filteredApps} isPending={isSearchPending || isPending} />
 
       {/* No Results Message */}
       {filteredApps.length === 0 && searchQuery && (
