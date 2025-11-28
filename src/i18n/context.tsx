@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useMemo, t
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
+import { metronomeKo, metronomeEn } from './translations/metronome';
 
 /**
  * All translations organized by language
@@ -10,10 +11,12 @@ const allTranslations: AllTranslations = {
   ko: {
     common: commonKo,
     qr: qrKo,
+    metronome: metronomeKo,
   },
   en: {
     common: commonEn,
     qr: qrEn,
+    metronome: metronomeEn,
   },
 };
 

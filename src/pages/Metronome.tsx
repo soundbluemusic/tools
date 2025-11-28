@@ -1,16 +1,19 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
+import { useTranslations } from '../i18n/context';
 
 /**
  * Metronome Tool Page
  */
 const Metronome = memo(function Metronome() {
+  const { metronome } = useTranslations();
+
   return (
     <PageLayout
-      title="메트로놈"
-      description="Metronome"
+      title={metronome.title}
+      description={metronome.description}
     >
-      <p>메트로놈 도구가 여기에 들어갑니다.</p>
+      <p>{metronome.placeholder}</p>
     </PageLayout>
   );
 });

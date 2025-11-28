@@ -88,11 +88,21 @@ export interface QRTranslation {
 }
 
 /**
+ * Metronome specific translations
+ */
+export interface MetronomeTranslation {
+  title: string;
+  description: string;
+  placeholder: string;
+}
+
+/**
  * All translations combined
  */
 export interface Translations {
   common: CommonTranslation;
   qr: QRTranslation;
+  metronome: MetronomeTranslation;
 }
 
 /**
