@@ -1,4 +1,4 @@
-import { Suspense, lazy, memo, useState, useMemo, useCallback, useTransition, useRef } from 'react';
+import { Suspense, lazy, memo, useState, useMemo, useCallback, useDeferredValue } from 'react';
 import { APPS } from '../constants/apps';
 import type { App } from '../types';
 
@@ -50,13 +50,13 @@ const ListSkeleton = memo(function ListSkeleton() {
 const Home = memo(function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');
-  const [isPending, startTransition] = useTransition();
-  const isComposing = useRef(false);
+  const deferredSearchQuery = useDeferredValue(searchQuery);
+  const isPending = searchQuery !== deferredSearchQuery;
 
   const filteredApps = useMemo(() => {
     let apps = APPS;
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase().trim();
+    if (deferredSearchQuery.trim()) {
+      const query = deferredSearchQuery.toLowerCase().trim();
       apps = APPS.filter(
         (app) =>
           app.name.toLowerCase().includes(query) ||
@@ -64,25 +64,10 @@ const Home = memo(function Home() {
       );
     }
     return sortApps(apps, sortBy);
-  }, [searchQuery, sortBy]);
+  }, [deferredSearchQuery, sortBy]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!isComposing.current) {
-      startTransition(() => {
-        setSearchQuery(e.target.value);
-      });
-    }
-  }, []);
-
-  const handleCompositionStart = useCallback(() => {
-    isComposing.current = true;
-  }, []);
-
-  const handleCompositionEnd = useCallback((e: React.CompositionEvent<HTMLInputElement>) => {
-    isComposing.current = false;
-    startTransition(() => {
-      setSearchQuery(e.currentTarget.value);
-    });
+    setSearchQuery(e.target.value);
   }, []);
 
   const handleClearSearch = useCallback(() => {
@@ -90,9 +75,7 @@ const Home = memo(function Home() {
   }, []);
 
   const handleSortChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    startTransition(() => {
-      setSortBy(e.target.value as SortOption);
-    });
+    setSortBy(e.target.value as SortOption);
   }, []);
 
   return (
@@ -107,8 +90,6 @@ const Home = memo(function Home() {
               placeholder="Search tools..."
               value={searchQuery}
               onChange={handleSearchChange}
-              onCompositionStart={handleCompositionStart}
-              onCompositionEnd={handleCompositionEnd}
               aria-label="Search tools"
               autoComplete="off"
               spellCheck="false"
