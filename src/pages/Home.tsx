@@ -1,4 +1,4 @@
-import { Suspense, lazy, memo, useState, useMemo, useCallback, useTransition } from 'react';
+import { Suspense, lazy, memo, useState, useMemo, useCallback, useTransition, useRef } from 'react';
 import { APPS } from '../constants/apps';
 import type { App } from '../types';
 
@@ -51,6 +51,7 @@ const Home = memo(function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');
   const [isPending, startTransition] = useTransition();
+  const isComposing = useRef(false);
 
   const filteredApps = useMemo(() => {
     let apps = APPS;
@@ -66,8 +67,21 @@ const Home = memo(function Home() {
   }, [searchQuery, sortBy]);
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isComposing.current) {
+      startTransition(() => {
+        setSearchQuery(e.target.value);
+      });
+    }
+  }, []);
+
+  const handleCompositionStart = useCallback(() => {
+    isComposing.current = true;
+  }, []);
+
+  const handleCompositionEnd = useCallback((e: React.CompositionEvent<HTMLInputElement>) => {
+    isComposing.current = false;
     startTransition(() => {
-      setSearchQuery(e.target.value);
+      setSearchQuery(e.currentTarget.value);
     });
   }, []);
 
@@ -93,6 +107,8 @@ const Home = memo(function Home() {
               placeholder="Search tools..."
               value={searchQuery}
               onChange={handleSearchChange}
+              onCompositionStart={handleCompositionStart}
+              onCompositionEnd={handleCompositionEnd}
               aria-label="Search tools"
               autoComplete="off"
               spellCheck="false"
