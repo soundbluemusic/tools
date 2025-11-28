@@ -9,3 +9,4 @@ export {
   removeStorageItem,
   clearStorage,
 } from './storage';
+export { getSizeClass, SIZE_CLASSES, type Size } from './sizeClass';

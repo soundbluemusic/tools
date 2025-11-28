@@ -1,7 +1,8 @@
-import { memo, useCallback, type ReactNode } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { memo, useMemo, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import { cn } from '../../utils';
 import { useTranslations } from '../../i18n/context';
+import { useViewTransition } from '../../hooks/useViewTransition';
 
 interface PageLayoutProps {
   /** Page title */
@@ -35,19 +36,12 @@ export const PageLayout = memo<PageLayoutProps>(function PageLayout({
   actions,
 }) {
   const { common } = useTranslations();
-  const navigate = useNavigate();
+  const { createClickHandler } = useViewTransition();
 
-  // Handle back navigation with View Transitions API
-  const handleBackClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (document.startViewTransition) {
-        e.preventDefault();
-        document.startViewTransition(() => {
-          navigate(backUrl);
-        });
-      }
-    },
-    [navigate, backUrl]
+  // Memoized back click handler using shared View Transition hook
+  const handleBackClick = useMemo(
+    () => createClickHandler(backUrl),
+    [createClickHandler, backUrl]
   );
 
   return (

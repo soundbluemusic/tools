@@ -1,5 +1,6 @@
 import { memo, forwardRef, type SelectHTMLAttributes } from 'react';
 import { cn } from '../../utils';
+import { SIZE_CLASSES } from '../../utils/sizeClass';
 
 export interface SelectOption<T extends string = string> {
   value: T;
@@ -37,11 +38,7 @@ function SelectInner<T extends string = string>(
   }: SelectProps<T>,
   ref: React.Ref<HTMLSelectElement>
 ) {
-  const sizeClass = {
-    sm: 'select--sm',
-    md: 'select--md',
-    lg: 'select--lg',
-  }[size];
+  const sizeClass = SIZE_CLASSES.select[size];
 
   return (
     <select

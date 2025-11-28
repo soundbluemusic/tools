@@ -5,6 +5,7 @@ import {
   type ReactNode,
 } from 'react';
 import { cn } from '../../utils';
+import { SIZE_CLASSES } from '../../utils/sizeClass';
 
 export interface InputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
@@ -40,11 +41,7 @@ export const Input = memo(
     },
     ref
   ) {
-    const sizeClass = {
-      sm: 'input--sm',
-      md: 'input--md',
-      lg: 'input--lg',
-    }[size];
+    const sizeClass = SIZE_CLASSES.input[size];
 
     return (
       <div

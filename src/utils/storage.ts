@@ -18,6 +18,22 @@ function getStorage(type: StorageType): Storage | null {
 }
 
 /**
+ * Generic wrapper for safe storage operations
+ * Consolidates duplicate try-catch error handling
+ *
+ * @param operation - Storage operation to execute
+ * @param fallback - Fallback value if operation fails
+ * @returns Operation result or fallback
+ */
+function safeStorageOperation<T>(operation: () => T, fallback: T): T {
+  try {
+    return operation();
+  } catch {
+    return fallback;
+  }
+}
+
+/**
  * Get a value from storage with type safety
  */
 export function getStorageItem<T>(
@@ -28,13 +44,11 @@ export function getStorageItem<T>(
   const storage = getStorage(type);
   if (!storage) return defaultValue;
 
-  try {
+  return safeStorageOperation(() => {
     const item = storage.getItem(key);
     if (item === null) return defaultValue;
     return JSON.parse(item) as T;
-  } catch {
-    return defaultValue;
-  }
+  }, defaultValue);
 }
 
 /**
@@ -48,12 +62,10 @@ export function setStorageItem<T>(
   const storage = getStorage(type);
   if (!storage) return false;
 
-  try {
+  return safeStorageOperation(() => {
     storage.setItem(key, JSON.stringify(value));
     return true;
-  } catch {
-    return false;
-  }
+  }, false);
 }
 
 /**
@@ -66,12 +78,10 @@ export function removeStorageItem(
   const storage = getStorage(type);
   if (!storage) return false;
 
-  try {
+  return safeStorageOperation(() => {
     storage.removeItem(key);
     return true;
-  } catch {
-    return false;
-  }
+  }, false);
 }
 
 /**
@@ -81,10 +91,8 @@ export function clearStorage(type: StorageType = 'local'): boolean {
   const storage = getStorage(type);
   if (!storage) return false;
 
-  try {
+  return safeStorageOperation(() => {
     storage.clear();
     return true;
-  } catch {
-    return false;
-  }
+  }, false);
 }

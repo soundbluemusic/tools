@@ -1,5 +1,6 @@
-import { memo, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { memo, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useViewTransition } from '../hooks/useViewTransition';
 import type { App } from '../types';
 import type { Language } from '../i18n/types';
 
@@ -15,25 +16,16 @@ interface AppItemProps {
  */
 const AppItem = memo<AppItemProps>(
   function AppItem({ app, language }) {
-    const navigate = useNavigate();
+    const { createClickHandler } = useViewTransition();
 
     // Get localized name and description
     const name = app.name[language];
     const desc = app.desc[language];
 
-    // Handle click with View Transitions API
-    const handleClick = useCallback(
-      (e: React.MouseEvent<HTMLAnchorElement>) => {
-        // Use View Transitions API if available
-        if (document.startViewTransition) {
-          e.preventDefault();
-          document.startViewTransition(() => {
-            navigate(app.url);
-          });
-        }
-        // Otherwise, let the Link handle navigation normally
-      },
-      [navigate, app.url]
+    // Memoized click handler using shared View Transition hook
+    const handleClick = useMemo(
+      () => createClickHandler(app.url),
+      [createClickHandler, app.url]
     );
 
     return (

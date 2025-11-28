@@ -1,5 +1,6 @@
 import { memo, forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cn } from '../../utils';
+import { SIZE_CLASSES } from '../../utils/sizeClass';
 
 // Move class mappings to module level to avoid recreation on every render
 const VARIANT_CLASSES = {
@@ -7,12 +8,6 @@ const VARIANT_CLASSES = {
   secondary: 'btn--secondary',
   ghost: 'btn--ghost',
   outline: 'btn--outline',
-} as const;
-
-const SIZE_CLASSES = {
-  sm: 'btn--sm',
-  md: 'btn--md',
-  lg: 'btn--lg',
 } as const;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -50,7 +45,7 @@ export const Button = memo(
     ref
   ) {
     const variantClass = VARIANT_CLASSES[variant];
-    const sizeClass = SIZE_CLASSES[size];
+    const sizeClass = SIZE_CLASSES.btn[size];
 
     return (
       <button
