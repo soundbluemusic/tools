@@ -218,6 +218,70 @@
   }
 }
 
+/* Page Loader */
+.page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.loader-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--skeleton-bg);
+  border-top-color: var(--text-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Tool Page Styles */
+.tool-page {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+
+.back-link:hover {
+  opacity: 1;
+}
+
+.tool-page h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+}
+
+.tool-desc {
+  color: #666;
+  margin: 0 0 2rem 0;
+  font-size: 0.95rem;
+}
+
+.tool-content {
+  background: var(--bg-color);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
 /* Mobile optimizations */
 @media (max-width: 480px) {
   #root {
