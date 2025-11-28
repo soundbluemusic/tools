@@ -14,9 +14,10 @@ import './App.css';
 
 // Direct imports for instant page loads - no lazy loading for small pages
 import Home from './pages/Home';
-import Contract from './pages/Contract';
 import Metronome from './pages/Metronome';
 import QR from './pages/QR';
+import OpenSource from './pages/OpenSource';
+import ToolsUsed from './pages/ToolsUsed';
 import NotFound from './pages/NotFound';
 
 /**
@@ -24,9 +25,10 @@ import NotFound from './pages/NotFound';
  */
 const ROUTES = [
   { path: '/', element: <Home /> },
-  { path: '/contract', element: <Contract /> },
   { path: '/metronome', element: <Metronome /> },
   { path: '/qr', element: <QR /> },
+  { path: '/opensource', element: <OpenSource /> },
+  { path: '/tools-used', element: <ToolsUsed /> },
   { path: '*', element: <NotFound /> },
 ] as const;
 

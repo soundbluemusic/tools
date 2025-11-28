@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo, useCallback } from 'react';
+import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
 import { useTranslations } from '../../../i18n';
 import './QRGenerator.css';
 
@@ -31,12 +31,16 @@ const QRGenerator = memo(function QRGenerator() {
   const qrT = t.qr;
   const commonT = t.common;
 
-  const errorLevels = [
-    { level: 'L' as const, recovery: '7%', use: qrT.onlineOnly, desc: qrT.noDamageRisk },
-    { level: 'M' as const, recovery: '15%', use: qrT.smallPrint, desc: qrT.coatedSurface },
-    { level: 'Q' as const, recovery: '25%', use: qrT.generalPrint, desc: qrT.paperLabel },
-    { level: 'H' as const, recovery: '30%', use: qrT.outdoorLarge, desc: qrT.highDamageRisk },
-  ];
+  // Memoize errorLevels to prevent recreation on every render
+  const errorLevels = useMemo(
+    () => [
+      { level: 'L' as const, recovery: '7%', use: qrT.onlineOnly, desc: qrT.noDamageRisk },
+      { level: 'M' as const, recovery: '15%', use: qrT.smallPrint, desc: qrT.coatedSurface },
+      { level: 'Q' as const, recovery: '25%', use: qrT.generalPrint, desc: qrT.paperLabel },
+      { level: 'H' as const, recovery: '30%', use: qrT.outdoorLarge, desc: qrT.highDamageRisk },
+    ],
+    [qrT]
+  );
 
   const makeTransparent = useCallback((canvas: HTMLCanvasElement, isWhite: boolean): string => {
     const ctx = canvas.getContext('2d');
@@ -271,11 +275,6 @@ const QRGenerator = memo(function QRGenerator() {
 
   return (
     <div className="qr-generator">
-      <div className="qr-header">
-        <h1>{qrT.title}</h1>
-        <p className="qr-subtitle">{qrT.subtitle}</p>
-      </div>
-
       <div className="qr-card">
         <div className="qr-grid">
           {/* Input Section */}

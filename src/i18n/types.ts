@@ -14,6 +14,23 @@ export interface CommonTranslation {
     opensource: string;
     toolsUsed: string;
   };
+  // Home page
+  home: {
+    searchPlaceholder: string;
+    searchAriaLabel: string;
+    clearSearchAriaLabel: string;
+    sortAriaLabel: string;
+    noResults: string;
+    // Sort options
+    sort: {
+      nameAsc: string;
+      nameDesc: string;
+      nameLong: string;
+      nameShort: string;
+      sizeLarge: string;
+      sizeSmall: string;
+    };
+  };
   // Common UI elements
   common: {
     copyImage: string;
@@ -24,6 +41,7 @@ export interface CommonTranslation {
     loading: string;
     error: string;
     success: string;
+    backButton: string;
   };
 }
 
@@ -70,11 +88,21 @@ export interface QRTranslation {
 }
 
 /**
+ * Metronome specific translations
+ */
+export interface MetronomeTranslation {
+  title: string;
+  description: string;
+  placeholder: string;
+}
+
+/**
  * All translations combined
  */
 export interface Translations {
   common: CommonTranslation;
   qr: QRTranslation;
+  metronome: MetronomeTranslation;
 }
 
 /**

@@ -1,33 +1,18 @@
 import { memo } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useCallback } from 'react';
+import { PageLayout } from '../components/layout';
 import { QRGenerator } from '../apps/qr/components/QRGenerator';
+import { useTranslations } from '../i18n';
 
 /**
  * QR Code Generator Tool Page
  */
 const QR = memo(function QR() {
-  const navigate = useNavigate();
-
-  const handleBackClick = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (document.startViewTransition) {
-        e.preventDefault();
-        document.startViewTransition(() => {
-          navigate('/');
-        });
-      }
-    },
-    [navigate]
-  );
+  const { qr } = useTranslations();
 
   return (
-    <div className="qr-page">
-      <Link to="/" className="back-link" onClick={handleBackClick}>
-        ← 돌아가기
-      </Link>
+    <PageLayout title={qr.title} description={qr.subtitle}>
       <QRGenerator />
-    </div>
+    </PageLayout>
   );
 });
 

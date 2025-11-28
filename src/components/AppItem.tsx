@@ -1,9 +1,11 @@
 import { memo, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { App } from '../types';
+import type { Language } from '../i18n/types';
 
 interface AppItemProps {
   readonly app: App;
+  readonly language: Language;
 }
 
 /**
@@ -12,8 +14,12 @@ interface AppItemProps {
  * - View Transitions API support for smooth navigation
  */
 const AppItem = memo<AppItemProps>(
-  function AppItem({ app }) {
+  function AppItem({ app, language }) {
     const navigate = useNavigate();
+
+    // Get localized name and description
+    const name = app.name[language];
+    const desc = app.desc[language];
 
     // Handle click with View Transitions API
     const handleClick = useCallback(
@@ -34,16 +40,17 @@ const AppItem = memo<AppItemProps>(
       <Link
         to={app.url}
         className="app-item"
-        aria-label={`${app.name} - ${app.desc}`}
+        aria-label={`${name} - ${desc}`}
         role="listitem"
         onClick={handleClick}
       >
-        <span className="app-item-text">{app.name}</span>
+        <span className="app-item-text">{name}</span>
       </Link>
     );
   },
-  // Only re-render if app.id changes
-  (prevProps, nextProps) => prevProps.app.id === nextProps.app.id
+  // Re-render if app.id or language changes
+  (prevProps, nextProps) =>
+    prevProps.app.id === nextProps.app.id && prevProps.language === nextProps.language
 );
 
 AppItem.displayName = 'AppItem';
