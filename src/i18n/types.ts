@@ -48,6 +48,18 @@ export interface CommonTranslation {
     message: string;
     retry: string;
   };
+  // PWA
+  pwa: {
+    installTitle: string;
+    installMessage: string;
+    installButton: string;
+    dismissButton: string;
+    updateTitle: string;
+    updateMessage: string;
+    updateButton: string;
+    offlineTitle: string;
+    offlineMessage: string;
+  };
 }
 
 /**

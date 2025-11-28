@@ -37,6 +37,17 @@ export const commonKo: CommonTranslation = {
     message: '예상치 못한 오류가 발생했습니다.',
     retry: '다시 시도',
   },
+  pwa: {
+    installTitle: '앱 설치',
+    installMessage: 'Tools를 앱으로 설치하면 더 빠르고 편리하게 사용할 수 있습니다.',
+    installButton: '설치하기',
+    dismissButton: '나중에',
+    updateTitle: '업데이트 가능',
+    updateMessage: '새로운 버전이 있습니다. 지금 업데이트하시겠습니까?',
+    updateButton: '업데이트',
+    offlineTitle: '오프라인',
+    offlineMessage: '인터넷 연결이 없습니다. 일부 기능이 제한될 수 있습니다.',
+  },
 };
 
 export const commonEn: CommonTranslation = {
@@ -75,5 +86,19 @@ export const commonEn: CommonTranslation = {
     title: 'Something went wrong',
     message: 'An unexpected error occurred.',
     retry: 'Try again',
+  },
+  pwa: {
+    installTitle: 'Install App',
+    installMessage:
+      'Install Tools as an app for a faster and more convenient experience.',
+    installButton: 'Install',
+    dismissButton: 'Later',
+    updateTitle: 'Update Available',
+    updateMessage:
+      'A new version is available. Would you like to update now?',
+    updateButton: 'Update',
+    offlineTitle: 'Offline',
+    offlineMessage:
+      'No internet connection. Some features may be limited.',
   },
 };
