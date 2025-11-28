@@ -7,6 +7,7 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { Footer } from './components/Footer';
 import './App.css';
 
 // Direct imports for instant page loads - no lazy loading for small pages
@@ -79,6 +80,7 @@ const App = memo(function App() {
               <Route key={route.path} path={route.path} element={route.element} />
             ))}
           </Routes>
+          <Footer />
         </NavigationProvider>
       </BrowserRouter>
     </ErrorBoundary>
