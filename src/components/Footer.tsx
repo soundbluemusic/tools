@@ -6,7 +6,6 @@ import { useTranslations } from '../i18n';
  * Footer component with menu links and copyright
  */
 export const Footer = memo(function Footer() {
-  const currentYear = new Date().getFullYear();
   const t = useTranslations();
 
   return (
@@ -26,7 +25,7 @@ export const Footer = memo(function Footer() {
 
       {/* Copyright */}
       <p className="footer-copyright">
-        &copy; {currentYear} SoundBlueMusic. All rights reserved.
+        Licensed under the Apache License 2.0
       </p>
     </footer>
   );
