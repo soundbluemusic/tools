@@ -68,4 +68,10 @@ SOFTWARE.
 
 ---
 
+## Inspiration
+
+Looking for ideas? Visit the [Claude Artifacts Gallery](https://claude.ai/artifacts) and check out the **Inspiration** tab to discover creative artifacts built by others with Claude.
+
+---
+
 Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
