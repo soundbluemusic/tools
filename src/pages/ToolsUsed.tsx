@@ -4,11 +4,11 @@ import { useLanguage } from '../i18n/context';
 
 const toolsUsed = [
   {
-    name: 'Claude',
-    url: 'https://claude.ai',
+    name: 'Claude Code',
+    url: 'https://docs.anthropic.com/en/docs/claude-code',
     desc: {
-      ko: 'AI 어시스턴트 - 코드 작성 및 개발',
-      en: 'AI Assistant - Code writing and development',
+      ko: 'AI 기반 개발 도구 - 모든 코드 작성 및 개발',
+      en: 'AI-assisted development - All code writing and development',
     },
   },
 ];
@@ -19,8 +19,8 @@ const pageContent = {
     en: 'Tools Used',
   },
   description: {
-    ko: '이 프로젝트 개발에 사용된 도구들입니다.',
-    en: 'Tools used in developing this project.',
+    ko: '이 프로젝트는 Claude Code (AI-assisted development)를 이용해 제작되었습니다.',
+    en: 'This project was built with Claude Code (AI-assisted development).',
   },
 };
 
