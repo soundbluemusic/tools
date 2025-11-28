@@ -1,14 +1,23 @@
-import type { AppList } from '../types';
+import type { App, AppConfig, AppList } from '../types';
 
-/**
- * Static app data - Object.freeze prevents mutations
- * Defined outside component to prevent recreation on re-renders
- */
-export const APPS: AppList = Object.freeze([
-  Object.freeze({ id: 1, name: '계약서 분석 도구', desc: 'Contract Risk Analysis', icon: '📄', url: '/contract' }),
-  Object.freeze({ id: 2, name: '메트로놈', desc: 'Metronome', icon: '🎵', url: '/metronome' }),
-  Object.freeze({ id: 3, name: 'QR 코드 생성기', desc: 'QR Code Generator', icon: '📱', url: '/qr' }),
-]);
+// Auto-load apps from src/apps/[name]/config.ts
+// - id: auto-generated from index
+// - url: auto-generated from folder name (e.g., /contract, /qr)
+const appModules = import.meta.glob<{ default: AppConfig }>(
+  '../apps/*/config.ts',
+  { eager: true }
+);
 
-// Precompute length for iteration optimization
+const loadedApps: App[] = Object.entries(appModules).map(([path, module], index) => {
+  // Extract folder name from path: '../apps/contract/config.ts' -> 'contract'
+  const folderName = path.split('/').slice(-2, -1)[0];
+
+  return {
+    id: index + 1,
+    ...module.default,
+    url: `/${folderName}`,
+  };
+});
+
+export const APPS: AppList = Object.freeze(loadedApps);
 export const APPS_COUNT = APPS.length;

@@ -3,11 +3,14 @@
  * Using readonly for immutability optimization
  */
 
-export interface App {
-  readonly id: number;
+export interface AppConfig {
   readonly name: string;
   readonly desc: string;
   readonly icon: string;
+}
+
+export interface App extends AppConfig {
+  readonly id: number;
   readonly url: string;
 }
 
