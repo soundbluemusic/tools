@@ -6,6 +6,7 @@ import {
   useDeferredValue,
   useTransition,
 } from 'react';
+import { Link } from 'react-router-dom';
 import { APPS } from '../constants/apps';
 import { SORT_OPTIONS } from '../constants/sortOptions';
 import AppList from '../components/AppList';
@@ -98,7 +99,9 @@ const Home = memo(function Home() {
     <main className="container home-page" role="main">
       {/* Header */}
       <header className="header">
-        <h1 className="title">tools</h1>
+        <Link to="/" className="title-link">
+          <h1 className="title">tools</h1>
+        </Link>
 
         {/* Search and Sort Controls */}
         <div className="controls">
