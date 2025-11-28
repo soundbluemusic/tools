@@ -7,8 +7,8 @@ const toolsUsed = [
     name: 'Claude',
     url: 'https://claude.ai',
     desc: {
-      ko: 'AI 어시스턴트 - 코드 작성 및 개발 지원',
-      en: 'AI Assistant - Code writing and development support',
+      ko: 'AI 어시스턴트 - 코드 작성 및 개발',
+      en: 'AI Assistant - Code writing and development',
     },
   },
 ];
