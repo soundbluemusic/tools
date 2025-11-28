@@ -1,3 +1,11 @@
+/* ==========================================================================
+   Performance-Optimized CSS
+   - GPU acceleration with transform3d
+   - Optimized animations using transform/opacity only
+   - CSS containment for layout isolation
+   - will-change hints for animated elements
+   ========================================================================== */
+
 /* CSS Variables for theming and performance */
 :root {
   --bg-color: #c4c4c4;
@@ -6,8 +14,12 @@
   --item-hover-bg: rgba(0, 0, 0, 0.05);
   --search-bg: #fff;
   --search-border: #bbb;
-  --transition-fast: 150ms;
+  --transition-fast: 100ms;
+  --transition-normal: 180ms;
   --skeleton-bg: rgba(0, 0, 0, 0.08);
+
+  /* GPU layer creation */
+  --gpu-transform: translateZ(0);
 }
 
 /* Dark mode support */
@@ -23,16 +35,20 @@
   }
 }
 
+/* Base styles with GPU acceleration */
 #root {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem 1rem;
+  /* Promote to own layer for smoother scrolling */
+  transform: var(--gpu-transform);
 }
 
 /* Header styling */
 .header {
   margin-bottom: 1.5rem;
+  contain: layout style;
 }
 
 /* Title styling - simple and clean */
@@ -50,6 +66,7 @@
   gap: 0.75rem;
   align-items: center;
   flex-wrap: wrap;
+  contain: layout style;
 }
 
 /* Search container */
@@ -70,8 +87,11 @@
   background: var(--search-bg);
   color: var(--text-color);
   outline: none;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   box-sizing: border-box;
+  /* GPU acceleration for focus animation */
+  transform: var(--gpu-transform);
+  transition: border-color var(--transition-fast) ease-out,
+              box-shadow var(--transition-fast) ease-out;
 }
 
 .search-input:focus {
@@ -101,11 +121,13 @@
   cursor: pointer;
   line-height: 1;
   border-radius: 4px;
-  transition: color var(--transition-fast);
+  /* Only animate opacity for performance */
+  opacity: 0.7;
+  transition: opacity var(--transition-fast) ease-out;
 }
 
 .search-clear:hover {
-  color: var(--text-color);
+  opacity: 1;
 }
 
 /* Sort dropdown */
@@ -119,8 +141,10 @@
   color: var(--text-color);
   cursor: pointer;
   outline: none;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   min-width: 150px;
+  transform: var(--gpu-transform);
+  transition: border-color var(--transition-fast) ease-out,
+              box-shadow var(--transition-fast) ease-out;
 }
 
 .sort-dropdown:focus {
@@ -132,39 +156,64 @@
   border-color: #888;
 }
 
-/* App List - Clean list style like the reference image */
+/* ==========================================================================
+   App List - Optimized for smooth scrolling and transitions
+   ========================================================================== */
 .app-list {
   background: var(--bg-color);
   border-radius: 12px;
   overflow: hidden;
+  /* CSS containment for layout isolation - major performance boost */
   contain: content;
+  /* GPU layer for smooth scrolling */
+  transform: var(--gpu-transform);
+  /* Smooth opacity transition when filtering */
+  transition: opacity var(--transition-fast) ease-out;
 }
 
 .app-list.pending {
-  opacity: 0.7;
-  pointer-events: none;
+  opacity: 0.6;
 }
 
-/* App Item - Clean bordered list item */
+/* ==========================================================================
+   App Item - GPU accelerated hover effects
+   ========================================================================== */
 .app-item {
   display: block;
   padding: 1rem 1.25rem;
   text-decoration: none;
   color: var(--text-color);
   border-bottom: 1px solid var(--border-color);
-  transition: background-color var(--transition-fast);
-  contain: layout style;
+  /* CSS containment - isolates repaints */
+  contain: layout style paint;
+  /* GPU layer for smooth hover */
+  transform: var(--gpu-transform);
+  /* Background color transition using pseudo-element for better performance */
+  position: relative;
+  z-index: 0;
+}
+
+/* Use pseudo-element for background to avoid triggering layout */
+.app-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--item-hover-bg);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity var(--transition-fast) ease-out;
 }
 
 .app-item:last-child {
   border-bottom: none;
 }
 
-.app-item:hover {
-  background: var(--item-hover-bg);
+.app-item:hover::before {
+  opacity: 1;
 }
 
-.app-item:active {
+.app-item:active::before {
+  opacity: 1;
   background: rgba(0, 0, 0, 0.1);
 }
 
@@ -172,6 +221,8 @@
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
+  /* Prevent text from triggering reflow */
+  contain: layout style;
 }
 
 /* No results message */
@@ -182,16 +233,40 @@
   font-size: 0.95rem;
 }
 
-/* Skeleton Loading Animation */
+/* ==========================================================================
+   Skeleton Loading - Optimized animation
+   ========================================================================== */
 .skeleton-list {
   pointer-events: none;
+  contain: content;
+  background: var(--bg-color);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.skeleton .skeleton-text {
-  height: 1.2rem;
-  width: 60%;
+.skeleton-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  contain: layout style;
+}
+
+.skeleton-item:last-child {
+  border-bottom: none;
+}
+
+.skeleton {
   background: var(--skeleton-bg);
   border-radius: 4px;
+}
+
+.skeleton--text {
+  height: 1rem;
+}
+
+.skeleton--pulse {
+  /* Use transform-based animation for GPU acceleration */
   animation: skeleton-pulse 1.5s ease-in-out infinite;
 }
 
@@ -200,30 +275,19 @@
     opacity: 1;
   }
   50% {
-    opacity: 0.5;
+    opacity: 0.4;
   }
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .app-item,
-  .search-input,
-  .search-clear,
-  .sort-dropdown {
-    transition: none;
-  }
-
-  .skeleton .skeleton-text {
-    animation: none;
-  }
-}
-
-/* Page Loader */
+/* ==========================================================================
+   Page Loader - GPU accelerated spinner
+   ========================================================================== */
 .page-loader {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 200px;
+  contain: layout style;
 }
 
 .loader-spinner {
@@ -232,38 +296,90 @@
   border: 3px solid var(--skeleton-bg);
   border-top-color: var(--text-color);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  /* GPU accelerated rotation */
+  animation: spin 0.7s linear infinite;
+}
+
+.loader-spinner--sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2px;
+}
+
+.loader-spinner--md {
+  width: 32px;
+  height: 32px;
+  border-width: 3px;
+}
+
+.loader-spinner--lg {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Tool Page Styles */
+/* ==========================================================================
+   Tool Page Styles - View Transitions compatible
+   ========================================================================== */
 .tool-page {
-  animation: fadeIn 0.2s ease-out;
+  /* GPU layer for page transitions */
+  transform: var(--gpu-transform);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* View Transition animations */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply enter animation when page loads */
+.tool-page {
+  animation: page-enter 0.15s ease-out;
 }
 
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   color: var(--text-color);
   text-decoration: none;
   padding: 0.5rem 0;
   margin-bottom: 1rem;
   opacity: 0.7;
-  transition: opacity var(--transition-fast);
+  transform: var(--gpu-transform);
+  transition: opacity var(--transition-fast) ease-out;
 }
 
 .back-link:hover {
   opacity: 1;
 }
 
-.tool-page h1 {
+.tool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  contain: layout style;
+}
+
+.tool-header-content {
+  flex: 1;
+}
+
+.tool-title {
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
@@ -272,7 +388,7 @@
 
 .tool-desc {
   color: #666;
-  margin: 0 0 2rem 0;
+  margin: 0;
   font-size: 0.95rem;
 }
 
@@ -280,9 +396,57 @@
   background: var(--bg-color);
   border-radius: 12px;
   padding: 2rem;
+  contain: layout style;
+  transform: var(--gpu-transform);
 }
 
-/* Mobile optimizations */
+/* ==========================================================================
+   Home Page Enter Animation
+   ========================================================================== */
+.home-page {
+  transform: var(--gpu-transform);
+}
+
+.home-page.entering {
+  animation: page-enter 0.15s ease-out;
+}
+
+/* ==========================================================================
+   Screen Reader Only - Accessible hiding
+   ========================================================================== */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ==========================================================================
+   Reduced Motion - Accessibility
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .tool-page,
+  .home-page {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Mobile Optimizations
+   ========================================================================== */
 @media (max-width: 480px) {
   #root {
     padding: 1rem 0.75rem;
@@ -307,5 +471,85 @@
 
   .app-item {
     padding: 0.875rem 1rem;
+  }
+
+  .tool-header {
+    flex-direction: column;
+  }
+
+  .tool-content {
+    padding: 1.5rem;
+  }
+}
+
+/* ==========================================================================
+   404 Not Found Page
+   ========================================================================== */
+.not-found {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.not-found-code {
+  font-size: 6rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+  line-height: 1;
+  opacity: 0.3;
+}
+
+.not-found-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 1rem 0 0.5rem;
+}
+
+.not-found-message {
+  color: #666;
+  margin: 0 0 2rem;
+  font-size: 0.95rem;
+}
+
+.not-found-link {
+  display: inline-block;
+  color: var(--text-color);
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  transition: background-color var(--transition-fast) ease-out;
+}
+
+.not-found-link:hover {
+  background: var(--item-hover-bg);
+}
+
+/* ==========================================================================
+   View Transitions API Support
+   ========================================================================== */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.12s;
+    animation-timing-function: ease-out;
+  }
+
+  ::view-transition-old(root) {
+    animation-name: page-exit;
+  }
+
+  ::view-transition-new(root) {
+    animation-name: page-enter;
+  }
+
+  @keyframes page-exit {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 }

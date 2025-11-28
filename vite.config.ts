@@ -1,5 +1,5 @@
-import { defineConfig, splitVendorChunkPlugin } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -8,8 +8,6 @@ export default defineConfig(({ mode }) => ({
       // Use automatic JSX runtime for smaller bundles
       jsxRuntime: 'automatic',
     }),
-    // Split vendor chunks for better caching
-    splitVendorChunkPlugin(),
   ],
   build: {
     // Target modern browsers for smaller bundles
@@ -26,9 +24,14 @@ export default defineConfig(({ mode }) => ({
         // Manual chunk splitting for optimal caching
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // React core - separate chunk for long-term caching
-            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
-              return 'react-vendor';
+            // React + Router - single vendor chunk for caching
+            if (
+              id.includes('react') ||
+              id.includes('react-dom') ||
+              id.includes('react-router') ||
+              id.includes('scheduler')
+            ) {
+              return 'vendor';
             }
           }
         },
@@ -61,7 +64,7 @@ export default defineConfig(({ mode }) => ({
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ['react', 'react-dom'],
+    include: ['react', 'react-dom', 'react-router-dom'],
     // Use esbuild for dependency optimization
     esbuildOptions: {
       target: 'es2020',
@@ -90,4 +93,4 @@ export default defineConfig(({ mode }) => ({
     minifySyntax: true,
     minifyWhitespace: true,
   },
-}))
+}));
