@@ -7,6 +7,7 @@ export interface AppConfig {
   readonly name: string;
   readonly desc: string;
   readonly icon: string;
+  readonly size: number; // Size in bytes
 }
 
 export interface App extends AppConfig {

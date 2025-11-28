@@ -44,10 +44,19 @@
   letter-spacing: -0.02em;
 }
 
+/* Controls container - search and sort */
+.controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 /* Search container */
 .search-container {
   position: relative;
-  width: 100%;
+  flex: 1;
+  min-width: 200px;
   max-width: 400px;
 }
 
@@ -97,6 +106,30 @@
 
 .search-clear:hover {
   color: var(--text-color);
+}
+
+/* Sort dropdown */
+.sort-dropdown {
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border: 1px solid var(--search-border);
+  border-radius: 8px;
+  background: var(--search-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  min-width: 150px;
+}
+
+.sort-dropdown:focus {
+  border-color: #666;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.sort-dropdown:hover {
+  border-color: #888;
 }
 
 /* App List - Clean list style like the reference image */
@@ -175,7 +208,8 @@
 @media (prefers-reduced-motion: reduce) {
   .app-item,
   .search-input,
-  .search-clear {
+  .search-clear,
+  .sort-dropdown {
     transition: none;
   }
 
@@ -194,8 +228,17 @@
     font-size: 1.25rem;
   }
 
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .search-container {
     max-width: 100%;
+  }
+
+  .sort-dropdown {
+    width: 100%;
   }
 
   .app-item {
