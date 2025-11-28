@@ -556,11 +556,23 @@
   }
 
   /* Disable animations for fixed elements (footer, language toggle) */
+  ::view-transition-group(footer),
+  ::view-transition-group(language-toggle) {
+    animation: none;
+  }
+
   ::view-transition-old(footer),
   ::view-transition-new(footer),
   ::view-transition-old(language-toggle),
   ::view-transition-new(language-toggle) {
     animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-image-pair(footer),
+  ::view-transition-image-pair(language-toggle) {
+    isolation: auto;
+    mix-blend-mode: normal;
   }
 
   @keyframes page-exit {
