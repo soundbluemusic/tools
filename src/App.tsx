@@ -1,5 +1,7 @@
 import { Suspense, lazy, memo, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { PageLoader } from './components/ui/Loader';
 import './App.css';
 
 // Lazy load all pages for code splitting
@@ -8,17 +10,13 @@ const Contract = lazy(() => import('./pages/Contract'));
 const Metronome = lazy(() => import('./pages/Metronome'));
 const QR = lazy(() => import('./pages/QR'));
 
-// Loading fallback
-const PageLoader = memo(function PageLoader() {
-  return (
-    <div className="page-loader" aria-busy="true">
-      <div className="loader-spinner" />
-    </div>
-  );
-});
+// 404 Not Found page
+const NotFound = lazy(() => import('./pages/NotFound'));
 
-const App = memo(function App() {
-  // Performance monitoring in development
+/**
+ * Performance monitoring hook for development
+ */
+function usePerformanceMonitoring(): void {
   useEffect(() => {
     if (import.meta.env.DEV) {
       const observer = new PerformanceObserver((list) => {
@@ -26,23 +24,36 @@ const App = memo(function App() {
           console.log(`[Perf] ${entry.name}: ${entry.duration.toFixed(2)}ms`);
         }
       });
+
       observer.observe({ entryTypes: ['measure', 'longtask'] });
       performance.mark('app-rendered');
+
       return () => observer.disconnect();
     }
   }, []);
+}
+
+/**
+ * Main Application Component
+ * Handles routing and global error boundaries
+ */
+const App = memo(function App() {
+  usePerformanceMonitoring();
 
   return (
-    <BrowserRouter>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contract" element={<Contract />} />
-          <Route path="/metronome" element={<Metronome />} />
-          <Route path="/qr" element={<QR />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/contract" element={<Contract />} />
+            <Route path="/metronome" element={<Metronome />} />
+            <Route path="/qr" element={<QR />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 });
 

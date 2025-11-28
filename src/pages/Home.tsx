@@ -1,20 +1,26 @@
-import { Suspense, lazy, memo, useState, useMemo, useCallback, useDeferredValue } from 'react';
+import {
+  Suspense,
+  lazy,
+  memo,
+  useState,
+  useMemo,
+  useCallback,
+  useDeferredValue,
+} from 'react';
 import { APPS } from '../constants/apps';
-import type { App } from '../types';
+import { SORT_OPTIONS } from '../constants/sortOptions';
+import { SkeletonList } from '../components/ui/Skeleton';
+import type { App, SortOption } from '../types';
 
-type SortOption = 'name-asc' | 'name-desc' | 'name-long' | 'name-short' | 'size-large' | 'size-small';
+// Lazy load AppList for code splitting
+const AppList = lazy(() => import('../components/AppList'));
 
-const SORT_OPTIONS: { value: SortOption; label: string }[] = [
-  { value: 'name-asc', label: '이름순 (A-Z)' },
-  { value: 'name-desc', label: '이름역순 (Z-A)' },
-  { value: 'name-long', label: '이름 긴 순' },
-  { value: 'name-short', label: '이름 짧은 순' },
-  { value: 'size-large', label: '용량 큰 순' },
-  { value: 'size-small', label: '용량 작은 순' },
-];
-
-const sortApps = (apps: readonly App[], sortBy: SortOption): readonly App[] => {
+/**
+ * Sort apps based on selected option
+ */
+function sortApps(apps: readonly App[], sortBy: SortOption): readonly App[] {
   const sorted = [...apps];
+
   switch (sortBy) {
     case 'name-asc':
       return sorted.sort((a, b) => a.name.localeCompare(b.name, 'ko'));
@@ -31,30 +37,26 @@ const sortApps = (apps: readonly App[], sortBy: SortOption): readonly App[] => {
     default:
       return apps;
   }
-};
+}
 
-const AppList = lazy(() => import('../components/AppList'));
-
-const ListSkeleton = memo(function ListSkeleton() {
-  return (
-    <div className="app-list skeleton-list" aria-busy="true" aria-label="Loading applications">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="app-item skeleton" aria-hidden="true">
-          <div className="skeleton-text" />
-        </div>
-      ))}
-    </div>
-  );
-});
-
+/**
+ * Home Page Component
+ * Displays a searchable and sortable list of tools
+ */
 const Home = memo(function Home() {
+  // Search state with deferred value for performance
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<SortOption>('name-asc');
   const deferredSearchQuery = useDeferredValue(searchQuery);
   const isPending = searchQuery !== deferredSearchQuery;
 
+  // Sort state
+  const [sortBy, setSortBy] = useState<SortOption>('name-asc');
+
+  // Filter and sort apps
   const filteredApps = useMemo(() => {
     let apps = APPS;
+
+    // Apply search filter
     if (deferredSearchQuery.trim()) {
       const query = deferredSearchQuery.toLowerCase().trim();
       apps = APPS.filter(
@@ -63,26 +65,39 @@ const Home = memo(function Home() {
           app.desc.toLowerCase().includes(query)
       );
     }
+
+    // Apply sorting
     return sortApps(apps, sortBy);
   }, [deferredSearchQuery, sortBy]);
 
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  }, []);
+  // Event handlers
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+    },
+    []
+  );
 
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
   }, []);
 
-  const handleSortChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortBy(e.target.value as SortOption);
-  }, []);
+  const handleSortChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setSortBy(e.target.value as SortOption);
+    },
+    []
+  );
 
   return (
     <main className="container" role="main">
+      {/* Header */}
       <header className="header">
         <h1 className="title">tools</h1>
+
+        {/* Search and Sort Controls */}
         <div className="controls">
+          {/* Search Input */}
           <div className="search-container">
             <input
               type="search"
@@ -105,6 +120,8 @@ const Home = memo(function Home() {
               </button>
             )}
           </div>
+
+          {/* Sort Dropdown */}
           <select
             className="sort-dropdown"
             value={sortBy}
@@ -120,15 +137,21 @@ const Home = memo(function Home() {
         </div>
       </header>
 
-      <Suspense fallback={<ListSkeleton />}>
+      {/* App List */}
+      <Suspense fallback={<SkeletonList count={5} />}>
         <AppList apps={filteredApps} isPending={isPending} />
       </Suspense>
 
+      {/* No Results Message */}
       {filteredApps.length === 0 && searchQuery && (
-        <p className="no-results">No tools found for "{searchQuery}"</p>
+        <p className="no-results">
+          "{searchQuery}"에 대한 검색 결과가 없습니다
+        </p>
       )}
     </main>
   );
 });
+
+Home.displayName = 'Home';
 
 export default Home;
