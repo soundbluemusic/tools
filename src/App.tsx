@@ -1,30 +1,62 @@
-import './App.css'
+import { Suspense, lazy, memo, useEffect } from 'react';
+import { APPS } from './constants/apps';
+import './App.css';
 
-const apps = [
-  { id: 1, name: '계약서 분석 도구', desc: 'Contract Risk Analysis', icon: '📄', url: '/contract' },
-  { id: 2, name: '메트로놈', desc: 'Metronome', icon: '🎵', url: '/metronome' },
-  { id: 3, name: 'QR 코드 생성기', desc: 'QR Code Generator', icon: '📱', url: '/qr' },
-]
+// Lazy load the grid for code splitting
+const AppGrid = lazy(() => import('./components/AppGrid'));
 
-function App() {
+// Loading fallback - minimal for fast initial paint
+const GridSkeleton = memo(function GridSkeleton() {
   return (
-    <>
-      <div className="container">
-        <h1>🎨 SoundBlue Apps</h1>
-        <div className="grid">
-          {apps.map(app => (
-            <a key={app.id} href={app.url} className="app-card">
-              <span className="icon">{app.icon}</span>
-              <div>
-                <div className="name">{app.name}</div>
-                <div className="desc">{app.desc}</div>
-              </div>
-            </a>
-          ))}
+    <div className="grid skeleton-grid" aria-busy="true" aria-label="Loading applications">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="app-card skeleton" aria-hidden="true">
+          <span className="icon skeleton-icon" />
+          <div className="app-info">
+            <div className="name skeleton-text" />
+            <div className="desc skeleton-text" />
+          </div>
         </div>
-      </div>
-    </>
-  )
-}
+      ))}
+    </div>
+  );
+});
 
-export default App
+/**
+ * App Component - Optimized root component
+ * - Code splitting with React.lazy
+ * - Suspense for loading states
+ * - Memoized for render optimization
+ */
+const App = memo(function App() {
+  // Performance monitoring in development
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      // Log performance metrics
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          console.log(`[Perf] ${entry.name}: ${entry.duration.toFixed(2)}ms`);
+        }
+      });
+      observer.observe({ entryTypes: ['measure', 'longtask'] });
+
+      // Mark initial render
+      performance.mark('app-rendered');
+
+      return () => observer.disconnect();
+    }
+  }, []);
+
+  return (
+    <main className="container" role="main">
+      <h1 className="title">SoundBlue Apps</h1>
+      <Suspense fallback={<GridSkeleton />}>
+        <AppGrid apps={APPS} />
+      </Suspense>
+    </main>
+  );
+});
+
+App.displayName = 'App';
+
+export default App;

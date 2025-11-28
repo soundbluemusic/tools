@@ -1,13 +1,63 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Performance: DNS Prefetch & Preconnect -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+
+    <!-- Critical resource preload -->
+    <link rel="preload" href="/src/main.tsx" as="script" crossorigin />
+
+    <!-- SEO & Meta Tags -->
+    <title>SoundBlue Apps - Tools & Utilities</title>
+    <meta name="description" content="SoundBlue Apps collection - Contract analyzer, Metronome, QR Code Generator and more productivity tools." />
+    <meta name="keywords" content="soundblue, tools, contract analysis, metronome, qr code" />
+    <meta name="author" content="SoundBlue" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="SoundBlue Apps" />
+    <meta property="og:description" content="Powerful tools and utilities by SoundBlue" />
+    <meta property="og:type" content="website" />
+
+    <!-- Theme & PWA -->
+    <meta name="theme-color" content="#242424" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+
+    <!-- Performance hints -->
+    <meta http-equiv="x-dns-prefetch-control" content="on" />
+
+    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
   </head>
   <body>
+    <!-- Critical CSS inline for faster FCP -->
+    <style>
+      /* Critical above-the-fold styles */
+      body { margin: 0; min-height: 100vh; display: flex; place-items: center; }
+      #root { width: 100%; }
+    </style>
+
     <div id="root"></div>
+
+    <!-- Module preload for faster startup -->
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Performance monitoring -->
+    <script>
+      // Report Web Vitals
+      if ('PerformanceObserver' in window) {
+        new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            if (entry.entryType === 'largest-contentful-paint') {
+              console.log('[LCP]', entry.startTime.toFixed(0), 'ms');
+            }
+          });
+        }).observe({ type: 'largest-contentful-paint', buffered: true });
+      }
+    </script>
   </body>
 </html>
