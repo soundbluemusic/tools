@@ -187,6 +187,10 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         const totalBeats = elapsed / secondsPerBeat;
         const currentBeatIndex = Math.floor(totalBeats) % beatsPerMeasureRef.current;
 
+        // Calculate measure count from elapsed time (synced with beat visualization)
+        const currentMeasure = Math.floor(totalBeats / beatsPerMeasureRef.current) + 1;
+        setMeasureCount(currentMeasure);
+
         setBeat(currentBeatIndex);
 
         // Pendulum swing (one cycle per 2 beats)
@@ -285,10 +289,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         const now = audioContextRef.current.currentTime;
 
         while (nextNoteTimeRef.current < now + 0.1) {
-          if (schedulerBeatRef.current === 0) {
-            setMeasureCount((prev) => prev + 1);
-          }
-
+          // Only schedule sound - measure count is calculated in animation loop
           playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
 
           nextNoteTimeRef.current += secondsPerBeat;
