@@ -9,6 +9,7 @@ import {
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
 import { LanguageToggle } from './components/LanguageToggle';
+import { PWAPrompt } from './components/PWAPrompt';
 import { LanguageProvider } from './i18n';
 import './App.css';
 
@@ -89,6 +90,7 @@ const App = memo(function App() {
             </main>
             <Footer />
             <LanguageToggle />
+            <PWAPrompt />
           </NavigationProvider>
         </LanguageProvider>
       </BrowserRouter>
