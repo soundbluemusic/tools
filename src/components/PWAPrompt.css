@@ -110,7 +110,7 @@
 }
 
 .pwa-banner__button:hover {
-  background: #1d4ed8;
+  background: var(--color-accent-hover, #4f46e5);
   transform: translateY(-1px);
 }
 
@@ -133,7 +133,7 @@
 }
 
 .pwa-banner--update .pwa-banner__button:hover {
-  background: #a16207;
+  background: #d97706;
 }
 
 /* Mobile adjustments */

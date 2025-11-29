@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Language Toggle - Floating button fixed at top-right
+   Language Toggle - Floating button fixed at top-right (Minimal)
    ========================================================================== */
 .language-toggle {
   position: fixed;
@@ -10,41 +10,25 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1rem;
+  padding: 0.5rem 0.875rem;
 
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #d1d5db;
-  border-radius: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-  /* Use @supports for backdrop-filter with fallback */
-  @supports (backdrop-filter: blur(8px)) {
-    backdrop-filter: blur(8px);
-  }
+  background: var(--color-bg-secondary, #ffffff);
+  border: 1px solid var(--color-border-primary, #e7e5e4);
+  border-radius: 8px;
 
   font-size: 0.875rem;
-  font-weight: 600;
-  color: #374151;
+  font-weight: 500;
+  color: var(--color-text-primary, #1c1917);
   cursor: pointer;
 
-  /* Promote to GPU layer for smoother animations */
-  will-change: transform;
   contain: layout style;
-
-  transition: transform 0.2s ease-out,
-              box-shadow 0.2s ease-out,
-              background-color 0.2s ease-out;
+  transition: border-color 0.15s ease-out,
+              background-color 0.15s ease-out;
 }
 
 .language-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  background: white;
-}
-
-.language-toggle:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-border-hover, #d6d3d1);
+  background: var(--color-bg-tertiary, #f5f4f1);
 }
 
 .language-toggle-icon {
@@ -61,13 +45,14 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .language-toggle {
-    background: rgba(42, 42, 42, 0.95);
-    border-color: #555;
-    color: #e5e5e5;
+    background: var(--color-bg-secondary, #212120);
+    border-color: var(--color-border-primary, #333231);
+    color: var(--color-text-primary, #ececec);
   }
 
   .language-toggle:hover {
-    background: rgba(50, 50, 50, 0.98);
+    background: var(--color-bg-tertiary, #292827);
+    border-color: var(--color-border-hover, #404040);
   }
 }
 

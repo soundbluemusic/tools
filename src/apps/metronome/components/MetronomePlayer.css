@@ -301,20 +301,18 @@
   padding: var(--spacing-4) var(--spacing-6);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-medium);
-  border-radius: var(--radius-xl);
-  transition:
-    background-color var(--transition-fast) var(--ease-default),
-    opacity var(--transition-fast) var(--ease-default);
+  border-radius: var(--radius-lg);
+  transition: background-color var(--transition-fast) var(--ease-default);
 }
 
 .metronome-btn--primary {
   flex: 1;
-  background: var(--color-text-primary);
+  background: var(--color-accent-primary, var(--color-text-primary));
   color: var(--color-text-inverse);
 }
 
 .metronome-btn--primary:hover {
-  opacity: 0.9;
+  background: var(--color-accent-hover, var(--color-text-primary));
 }
 
 .metronome-btn--secondary {

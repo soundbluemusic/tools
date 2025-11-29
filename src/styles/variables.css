@@ -1,39 +1,59 @@
 /**
  * Design System Variables
+ * Warm, minimal palette inspired by Claude.ai & OpenAI
  * Central place for all design tokens
  */
 
 :root {
   /* ============================================
-   * Colors - Light Mode
+   * Colors - Light Mode (Warm Minimal)
    * ============================================ */
-  --color-bg-primary: #e8e8e8;
-  --color-bg-secondary: #c4c4c4;
-  --color-bg-tertiary: #fff;
+  --color-bg-primary: #faf9f7;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f5f4f1;
+  --color-bg-elevated: #ffffff;
+  --color-bg-overlay: rgba(28, 25, 23, 0.4);
 
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #666;
-  --color-text-tertiary: #888;
-  --color-text-inverse: #fff;
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-tertiary: #a8a29e;
+  --color-text-inverse: #fafaf9;
+  --color-text-brand: #1c1917;
 
-  --color-border-primary: #999;
-  --color-border-secondary: #bbb;
-  --color-border-focus: #666;
+  --color-border-primary: #e7e5e4;
+  --color-border-secondary: #f5f5f4;
+  --color-border-focus: #1c1917;
+  --color-border-hover: #d6d3d1;
 
-  --color-interactive-hover: rgba(0, 0, 0, 0.05);
-  --color-interactive-active: rgba(0, 0, 0, 0.1);
-  --color-interactive-focus: rgba(0, 0, 0, 0.1);
+  --color-interactive-hover: rgba(28, 25, 23, 0.04);
+  --color-interactive-active: rgba(28, 25, 23, 0.08);
+  --color-interactive-focus: rgba(28, 25, 23, 0.12);
+  --color-interactive-muted: #f5f5f4;
 
-  --color-skeleton: rgba(0, 0, 0, 0.08);
+  --color-skeleton: rgba(28, 25, 23, 0.05);
+  --color-skeleton-shimmer: rgba(255, 255, 255, 0.6);
 
+  /* Semantic Colors - Soft & Muted */
   --color-error: #dc2626;
   --color-error-bg: #fef2f2;
-  --color-success: #16a34a;
-  --color-success-bg: #f0fdf4;
-  --color-warning: #ca8a04;
-  --color-warning-bg: #fefce8;
-  --color-info: #2563eb;
-  --color-info-bg: #eff6ff;
+  --color-error-border: #fecaca;
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-success-border: #a7f3d0;
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-info: #57534e;
+  --color-info-bg: #f5f5f4;
+  --color-info-border: #e7e5e4;
+
+  /* Brand/Accent - Warm & Subtle */
+  --color-accent-primary: #1c1917;
+  --color-accent-secondary: #44403c;
+  --color-accent-tertiary: #78716c;
+  --color-accent-hover: #292524;
+  --color-gradient-start: #1c1917;
+  --color-gradient-end: #44403c;
 
   /* ============================================
    * Typography
@@ -88,12 +108,20 @@
   --radius-full: 9999px;
 
   /* ============================================
-   * Shadows
+   * Shadows - Subtle & Warm
    * ============================================ */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-focus: 0 0 0 3px var(--color-interactive-focus);
+  --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.03);
+  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
+  --shadow-md: 0 2px 4px rgba(28, 25, 23, 0.04), 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-lg: 0 4px 12px rgba(28, 25, 23, 0.06);
+  --shadow-xl: 0 8px 24px rgba(28, 25, 23, 0.08);
+  --shadow-2xl: 0 16px 48px rgba(28, 25, 23, 0.12);
+  --shadow-focus: 0 0 0 2px var(--color-interactive-focus);
+  --shadow-focus-ring: 0 0 0 2px var(--color-bg-secondary), 0 0 0 4px rgba(28, 25, 23, 0.15);
+  --shadow-card: 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-card-hover: 0 4px 12px rgba(28, 25, 23, 0.06);
+  --shadow-glow: 0 0 0 transparent;
+  --shadow-inner: inset 0 1px 2px rgba(28, 25, 23, 0.03);
 
   /* ============================================
    * Transitions
@@ -140,40 +168,68 @@
 }
 
 /* ============================================
- * Dark Mode Variables
+ * Dark Mode Variables - Warm & Comfortable
+ * Inspired by Claude.ai dark mode
  * ============================================ */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg-primary: #1a1a1a;
-    --color-bg-secondary: #2a2a2a;
-    --color-bg-tertiary: #3a3a3a;
+    --color-bg-primary: #1a1918;
+    --color-bg-secondary: #212120;
+    --color-bg-tertiary: #292827;
+    --color-bg-elevated: #2f2e2d;
+    --color-bg-overlay: rgba(0, 0, 0, 0.5);
 
-    --color-text-primary: #e5e5e5;
-    --color-text-secondary: #a3a3a3;
-    --color-text-tertiary: #888;
-    --color-text-inverse: #1a1a1a;
+    --color-text-primary: #ececec;
+    --color-text-secondary: #a8a8a8;
+    --color-text-tertiary: #737373;
+    --color-text-inverse: #1a1918;
+    --color-text-brand: #ececec;
 
-    --color-border-primary: #555;
-    --color-border-secondary: #444;
-    --color-border-focus: #888;
+    --color-border-primary: #333231;
+    --color-border-secondary: #292827;
+    --color-border-focus: #ececec;
+    --color-border-hover: #404040;
 
-    --color-interactive-hover: rgba(255, 255, 255, 0.08);
-    --color-interactive-active: rgba(255, 255, 255, 0.12);
-    --color-interactive-focus: rgba(255, 255, 255, 0.15);
+    --color-interactive-hover: rgba(236, 236, 236, 0.06);
+    --color-interactive-active: rgba(236, 236, 236, 0.1);
+    --color-interactive-focus: rgba(236, 236, 236, 0.15);
+    --color-interactive-muted: #292827;
 
-    --color-skeleton: rgba(255, 255, 255, 0.1);
+    --color-skeleton: rgba(255, 255, 255, 0.05);
+    --color-skeleton-shimmer: rgba(255, 255, 255, 0.06);
 
+    /* Semantic Colors - Dark Mode */
     --color-error: #f87171;
-    --color-error-bg: #450a0a;
+    --color-error-bg: rgba(248, 113, 113, 0.1);
+    --color-error-border: rgba(248, 113, 113, 0.2);
     --color-success: #4ade80;
-    --color-success-bg: #052e16;
-    --color-warning: #facc15;
-    --color-warning-bg: #422006;
-    --color-info: #60a5fa;
-    --color-info-bg: #172554;
+    --color-success-bg: rgba(74, 222, 128, 0.1);
+    --color-success-border: rgba(74, 222, 128, 0.2);
+    --color-warning: #fbbf24;
+    --color-warning-bg: rgba(251, 191, 36, 0.1);
+    --color-warning-border: rgba(251, 191, 36, 0.2);
+    --color-info: #a8a8a8;
+    --color-info-bg: rgba(168, 168, 168, 0.1);
+    --color-info-border: rgba(168, 168, 168, 0.2);
 
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+    /* Brand/Accent - Dark Mode */
+    --color-accent-primary: #ececec;
+    --color-accent-secondary: #a8a8a8;
+    --color-accent-tertiary: #737373;
+    --color-accent-hover: #ffffff;
+    --color-gradient-start: #ececec;
+    --color-gradient-end: #a8a8a8;
+
+    /* Shadows - Dark Mode (very subtle) */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.3);
+    --shadow-2xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --shadow-glow: 0 0 0 transparent;
+    --shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.15);
   }
 }
