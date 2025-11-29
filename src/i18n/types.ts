@@ -110,7 +110,31 @@ export interface QRTranslation {
 export interface MetronomeTranslation {
   title: string;
   description: string;
-  placeholder: string;
+  // Controls
+  bpm: string;
+  volume: string;
+  timeSignature: string;
+  timer: string;
+  // Info
+  measure: string;
+  elapsed: string;
+  countdown: string;
+  // Slider labels
+  slow: string;
+  fast: string;
+  quiet: string;
+  loud: string;
+  // Time units
+  minutes: string;
+  seconds: string;
+  // Actions
+  start: string;
+  stop: string;
+  reset: string;
+  // Status
+  perfectSync: string;
+  syncDescription: string;
+  precision: string;
 }
 
 /**
