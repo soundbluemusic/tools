@@ -131,7 +131,7 @@ const Home = memo(function Home() {
       {/* Header */}
       <header className="header">
         <Link to="/" className="title-link">
-          <h1 className="title">tools</h1>
+          <h1 className="title">tools <span className="beta-badge">beta</span></h1>
         </Link>
 
         {/* Search and Sort Controls */}
