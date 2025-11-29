@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
+import { MetronomePlayer } from '../apps/metronome/components/MetronomePlayer';
 import { useTranslations } from '../i18n/context';
 
 /**
@@ -9,11 +10,8 @@ const Metronome = memo(function Metronome() {
   const { metronome } = useTranslations();
 
   return (
-    <PageLayout
-      title={metronome.title}
-      description={metronome.description}
-    >
-      <p>{metronome.placeholder}</p>
+    <PageLayout title={metronome.title} description={metronome.description}>
+      <MetronomePlayer />
     </PageLayout>
   );
 });
