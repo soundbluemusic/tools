@@ -63,11 +63,21 @@ export interface CommonTranslation {
 }
 
 /**
+ * SEO specific translations for each page
+ */
+export interface SEOTranslation {
+  title: string;
+  description: string;
+  keywords: string;
+}
+
+/**
  * QR Generator specific translations
  */
 export interface QRTranslation {
   title: string;
   subtitle: string;
+  seo: SEOTranslation;
   urlInput: string;
   urlLabel: string;
   urlPlaceholder: string;
@@ -110,6 +120,7 @@ export interface QRTranslation {
 export interface MetronomeTranslation {
   title: string;
   description: string;
+  seo: SEOTranslation;
   // Controls
   bpm: string;
   volume: string;

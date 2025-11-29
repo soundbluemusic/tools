@@ -20,7 +20,8 @@
     "test:ui": "vitest --ui",
     "typecheck": "tsc --noEmit",
     "validate": "npm run typecheck && npm run lint && npm run test:run",
-    "generate-icons": "node scripts/generate-icons.mjs"
+    "generate-icons": "node scripts/generate-icons.mjs",
+    "generate-og-image": "node scripts/generate-og-image.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

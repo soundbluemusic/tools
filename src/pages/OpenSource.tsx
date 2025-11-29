@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n';
+import { useSEO } from '../hooks';
 import './OpenSource.css';
 
 /**
@@ -110,6 +111,17 @@ const OpenSource = memo(function OpenSource() {
     language === 'ko'
       ? '이 프로젝트에 사용된 오픈소스 라이브러리 목록입니다'
       : 'List of open source libraries used in this project';
+
+  // SEO for OpenSource page (noindex as it's supplementary content)
+  useSEO({
+    title: language === 'ko' ? '오픈소스 라이브러리' : 'Open Source Libraries',
+    description:
+      language === 'ko'
+        ? 'Productivity Tools에 사용된 오픈소스 라이브러리 목록'
+        : 'List of open source libraries used in Productivity Tools',
+    canonicalPath: '/opensource',
+    noindex: true,
+  });
 
   return (
     <PageLayout title={title} description={description}>

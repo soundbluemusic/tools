@@ -14,3 +14,4 @@ export { useSearch } from './useSearch';
 export { useSort } from './useSort';
 export { useViewTransition } from './useViewTransition';
 export { usePWA } from './usePWA';
+export { useSEO } from './useSEO';
