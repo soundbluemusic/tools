@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Language Toggle - Floating button fixed at top-right (Premium)
+   Language Toggle - Floating button fixed at top-right (Minimal)
    ========================================================================== */
 .language-toggle {
   position: fixed;
@@ -10,44 +10,25 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1rem;
+  padding: 0.5rem 0.875rem;
 
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.98));
-  border: 1px solid var(--color-border-secondary, rgba(0, 0, 0, 0.06));
-  border-radius: 2rem;
-  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
-
-  /* Use @supports for backdrop-filter with fallback */
-  @supports (backdrop-filter: blur(12px)) {
-    backdrop-filter: blur(12px);
-    background: rgba(255, 255, 255, 0.85);
-  }
+  background: var(--color-bg-secondary, #ffffff);
+  border: 1px solid var(--color-border-primary, #e7e5e4);
+  border-radius: 8px;
 
   font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--color-text-primary, #0f172a);
+  font-weight: 500;
+  color: var(--color-text-primary, #1c1917);
   cursor: pointer;
 
-  /* Promote to GPU layer for smoother animations */
-  will-change: transform;
   contain: layout style;
-
-  transition: transform 0.2s ease-out,
-              box-shadow 0.2s ease-out,
-              background-color 0.2s ease-out,
-              border-color 0.2s ease-out;
+  transition: border-color 0.15s ease-out,
+              background-color 0.15s ease-out;
 }
 
 .language-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.12));
-  border-color: var(--color-accent-primary, #6366f1);
-  background: var(--color-bg-secondary, white);
-}
-
-.language-toggle:active {
-  transform: translateY(0);
-  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
+  border-color: var(--color-border-hover, #d6d3d1);
+  background: var(--color-bg-tertiary, #f5f4f1);
 }
 
 .language-toggle-icon {
@@ -64,21 +45,14 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .language-toggle {
-    background: var(--color-bg-elevated, rgba(31, 31, 40, 0.95));
-    border-color: var(--color-border-primary, rgba(255, 255, 255, 0.08));
-    color: var(--color-text-primary, #f4f4f5);
-  }
-
-  @supports (backdrop-filter: blur(12px)) {
-    .language-toggle {
-      backdrop-filter: blur(12px);
-      background: rgba(31, 31, 40, 0.85);
-    }
+    background: var(--color-bg-secondary, #212120);
+    border-color: var(--color-border-primary, #333231);
+    color: var(--color-text-primary, #ececec);
   }
 
   .language-toggle:hover {
-    background: var(--color-bg-elevated, rgba(40, 40, 50, 0.98));
-    border-color: var(--color-accent-primary, #818cf8);
+    background: var(--color-bg-tertiary, #292827);
+    border-color: var(--color-border-hover, #404040);
   }
 }
 
