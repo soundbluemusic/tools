@@ -368,12 +368,19 @@ const MetronomePlayer = memo(function MetronomePlayer() {
           nextNoteTimeRef.current = currentTime;
         } else {
           // Resume from pause - adjust start time to maintain elapsed time
-          startAudioTimeRef.current = currentTime - elapsedTimeRef.current / 1000;
-          nextNoteTimeRef.current = currentTime;
-          // Calculate which beat we should be on
+          const elapsedSeconds = elapsedTimeRef.current / 1000;
+          startAudioTimeRef.current = currentTime - elapsedSeconds;
+
+          // Calculate which beat we're on and when the next beat should occur
           const secondsPerBeat = 60 / bpmRef.current;
-          const totalBeats = elapsedTimeRef.current / 1000 / secondsPerBeat;
-          schedulerBeatRef.current = Math.floor(totalBeats) % beatsPerMeasureRef.current;
+          const totalBeats = elapsedSeconds / secondsPerBeat;
+          const currentBeatNumber = Math.floor(totalBeats);
+
+          schedulerBeatRef.current = (currentBeatNumber + 1) % beatsPerMeasureRef.current;
+
+          // Next beat should occur at the next whole beat number
+          const nextBeatTime = startAudioTimeRef.current + (currentBeatNumber + 1) * secondsPerBeat;
+          nextNoteTimeRef.current = nextBeatTime;
         }
       }
 
