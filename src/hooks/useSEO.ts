@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
 interface SEOConfig {
-  title: string;
+  title?: string;
   description: string;
   keywords?: string;
   canonicalPath?: string;
   ogImage?: string;
   ogType?: 'website' | 'article' | 'product';
   noindex?: boolean;
+  isHomePage?: boolean;
 }
 
 const BASE_URL = 'https://tools.soundbluemusic.com';
@@ -66,9 +67,10 @@ export function useSEO(config: SEOConfig): void {
       ogImage = DEFAULT_OG_IMAGE,
       ogType = 'website',
       noindex = false,
+      isHomePage = false,
     } = config;
 
-    const fullTitle = `${title} | ${SITE_NAME}`;
+    const fullTitle = isHomePage ? SITE_NAME : `${title} | ${SITE_NAME}`;
     const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
     // Update document title
