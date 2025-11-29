@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { useTranslations } from '../../../i18n';
 import './MetronomePlayer.css';
 
@@ -126,32 +126,8 @@ const MetronomePlayer = memo(function MetronomePlayer() {
   const animationRef = useRef<number | null>(null);
   const startAudioTimeRef = useRef(0);
 
-  // Get accent pattern based on time signature
-  const getAccentPattern = useCallback(() => {
-    const n = beatsPerMeasure;
-
-    if (n >= 1 && n <= 4) return (beatIndex: number) => beatIndex === 0;
-    if (n === 5) return (beatIndex: number) => beatIndex === 0 || beatIndex === 2;
-    if (n === 6) return (beatIndex: number) => beatIndex === 0 || beatIndex === 3;
-    if (n === 7)
-      return (beatIndex: number) => beatIndex === 0 || beatIndex === 2 || beatIndex === 4;
-    if (n === 8) return (beatIndex: number) => beatIndex === 0 || beatIndex === 4;
-    if (n === 9)
-      return (beatIndex: number) => beatIndex === 0 || beatIndex === 3 || beatIndex === 6;
-    if (n === 10)
-      return (beatIndex: number) =>
-        beatIndex === 0 || beatIndex === 3 || beatIndex === 6 || beatIndex === 8;
-    if (n === 11)
-      return (beatIndex: number) =>
-        beatIndex === 0 || beatIndex === 3 || beatIndex === 6 || beatIndex === 9;
-    if (n === 12)
-      return (beatIndex: number) =>
-        beatIndex === 0 || beatIndex === 3 || beatIndex === 6 || beatIndex === 9;
-
-    return (beatIndex: number) => beatIndex === 0;
-  }, [beatsPerMeasure]);
-
-  const isAccentBeat = useMemo(() => getAccentPattern(), [getAccentPattern]);
+  // Get accent pattern - only first beat of each measure is accented
+  const isAccentBeat = useCallback((beatIndex: number) => beatIndex === 0, []);
 
   // Update refs when state changes
   useEffect(() => {
@@ -243,17 +219,11 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     elapsedTimeRef.current = elapsedTime;
   }, [elapsedTime]);
 
-  // Use ref for isAccentBeat to avoid stale closures
-  const isAccentBeatRef = useRef(isAccentBeat);
-  useEffect(() => {
-    isAccentBeatRef.current = isAccentBeat;
-  }, [isAccentBeat]);
-
   const playClick = useCallback((time: number, beatNumber: number) => {
     const ctx = audioContextRef.current;
     if (!ctx) return;
 
-    const isFirst = isAccentBeatRef.current(beatNumber);
+    const isFirst = isAccentBeat(beatNumber);
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -277,7 +247,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
 
     osc.start(time);
     osc.stop(time + 0.08);
-  }, []);
+  }, [isAccentBeat]);
 
   // Scheduler effect - timing is already initialized in handleStart
   useEffect(() => {
