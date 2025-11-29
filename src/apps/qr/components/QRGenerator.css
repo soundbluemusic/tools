@@ -320,10 +320,77 @@
   }
 
   .qr-preview {
-    min-height: 250px;
+    min-height: 200px;
+    padding: var(--spacing-4);
+  }
+
+  .qr-preview-card {
+    padding: var(--spacing-4);
   }
 
   .qr-actions {
     flex-direction: column;
   }
+
+  .qr-action-btn {
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-3);
+    white-space: nowrap;
+  }
+
+  /* Hide table on mobile, show cards instead */
+  .qr-table-wrapper {
+    display: none;
+  }
+
+  .qr-table-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+}
+
+/* Mobile-only card layout for error levels */
+.qr-table-mobile {
+  display: none;
+}
+
+.qr-table-mobile-card {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-3);
+}
+
+.qr-table-mobile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-2);
+}
+
+.qr-table-mobile-level {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-lg);
+  color: var(--color-info);
+}
+
+.qr-table-mobile-recovery {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+}
+
+.qr-table-mobile-use {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.qr-table-mobile-desc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
 }

@@ -295,6 +295,7 @@ const QRGenerator = memo(function QRGenerator() {
 
             <div className="qr-error-section">
               <h3>{qrT.errorCorrectionLevel}</h3>
+              {/* Desktop: Table view */}
               <div className="qr-table-wrapper">
                 <table className="qr-table">
                   <thead>
@@ -316,6 +317,20 @@ const QRGenerator = memo(function QRGenerator() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile: Card view */}
+              <div className="qr-table-mobile">
+                {errorLevels.map((item, idx) => (
+                  <div key={idx} className="qr-table-mobile-card">
+                    <div className="qr-table-mobile-card-header">
+                      <span className="qr-table-mobile-level">{item.level}</span>
+                      <span className="qr-table-mobile-recovery">{item.recovery}</span>
+                    </div>
+                    <div className="qr-table-mobile-use">{item.use}</div>
+                    <div className="qr-table-mobile-desc">{item.desc}</div>
+                  </div>
+                ))}
               </div>
 
               <div className="qr-level-buttons">
