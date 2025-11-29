@@ -224,6 +224,12 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     };
   }, []);
 
+  // Use ref for elapsedTime to avoid dependency issues
+  const elapsedTimeRef = useRef(0);
+  useEffect(() => {
+    elapsedTimeRef.current = elapsedTime;
+  }, [elapsedTime]);
+
   // Use ref for isAccentBeat to avoid stale closures
   const isAccentBeatRef = useRef(isAccentBeat);
   useEffect(() => {
@@ -260,49 +266,48 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     osc.stop(time + 0.08);
   }, []);
 
-  // Scheduler effect - uses refs to avoid dependency issues
+  // Scheduler effect - only depends on isPlaying
   useEffect(() => {
-    if (!isPlaying || !audioContextRef.current) {
+    if (isPlaying && audioContextRef.current) {
+      const ctx = audioContextRef.current;
+      const currentTime = ctx.currentTime;
+
+      if (elapsedTimeRef.current === 0) {
+        startAudioTimeRef.current = currentTime;
+      } else {
+        startAudioTimeRef.current = currentTime - elapsedTimeRef.current / 1000;
+      }
+
+      schedulerBeatRef.current = 0;
+      setBeat(0);
+      nextNoteTimeRef.current = currentTime;
+
+      const scheduleNotes = () => {
+        if (!audioContextRef.current) return;
+
+        const secondsPerBeat = 60.0 / bpmRef.current;
+        const now = audioContextRef.current.currentTime;
+
+        while (nextNoteTimeRef.current < now + 0.1) {
+          if (schedulerBeatRef.current === 0) {
+            setMeasureCount((prev) => prev + 1);
+          }
+
+          playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
+
+          nextNoteTimeRef.current += secondsPerBeat;
+          schedulerBeatRef.current =
+            (schedulerBeatRef.current + 1) % beatsPerMeasureRef.current;
+        }
+      };
+
+      schedulerRef.current = setInterval(scheduleNotes, 25);
+    } else {
       if (schedulerRef.current) {
         clearInterval(schedulerRef.current);
         schedulerRef.current = null;
       }
-      return;
     }
-
-    const ctx = audioContextRef.current;
-    const currentTime = ctx.currentTime;
-
-    if (elapsedTime === 0) {
-      startAudioTimeRef.current = currentTime;
-    } else {
-      startAudioTimeRef.current = currentTime - elapsedTime / 1000;
-    }
-
-    schedulerBeatRef.current = 0;
-    setBeat(0);
-    nextNoteTimeRef.current = currentTime;
-
-    const scheduleNotes = () => {
-      if (!audioContextRef.current) return;
-
-      const secondsPerBeat = 60.0 / bpmRef.current;
-      const now = audioContextRef.current.currentTime;
-
-      while (nextNoteTimeRef.current < now + 0.1) {
-        if (schedulerBeatRef.current === 0) {
-          setMeasureCount((prev) => prev + 1);
-        }
-
-        playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
-
-        nextNoteTimeRef.current += secondsPerBeat;
-        schedulerBeatRef.current =
-          (schedulerBeatRef.current + 1) % beatsPerMeasureRef.current;
-      }
-    };
-
-    schedulerRef.current = setInterval(scheduleNotes, 25);
 
     return () => {
       if (schedulerRef.current) {
@@ -310,7 +315,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         schedulerRef.current = null;
       }
     };
-  }, [isPlaying, playClick, elapsedTime]);
+  }, [isPlaying, playClick]);
 
   const handleStart = useCallback(async () => {
     // Ensure AudioContext exists
