@@ -1,7 +1,7 @@
 import type { QRTranslation } from '../types';
 
 export const qrKo: QRTranslation = {
-  title: 'QR 코드 생성기 for myself',
+  title: 'QR 코드 생성기',
   subtitle: '투명 배경의 고해상도 QR 코드를 생성합니다',
   urlInput: 'URL 입력',
   urlLabel: '연결할 URL',
@@ -41,7 +41,7 @@ export const qrKo: QRTranslation = {
 };
 
 export const qrEn: QRTranslation = {
-  title: 'QR Code Generator for myself',
+  title: 'QR Code Generator',
   subtitle: 'Generate high-resolution QR codes with transparent backgrounds',
   urlInput: 'URL Input',
   urlLabel: 'URL to connect',

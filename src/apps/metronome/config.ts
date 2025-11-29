@@ -6,8 +6,8 @@ const config: AppConfig = {
     en: 'Metronome',
   },
   desc: {
-    ko: '정확한 박자를 위한 메트로놈 도구',
-    en: 'Metronome tool for accurate tempo',
+    ko: '음악가를 위한 정밀 메트로놈',
+    en: 'Precision metronome for musicians',
   },
   icon: '🎵',
   size: 51200, // 50KB

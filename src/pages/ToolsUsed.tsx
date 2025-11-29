@@ -7,20 +7,20 @@ const toolsUsed = [
     name: 'Claude Code',
     url: 'https://docs.anthropic.com/en/docs/claude-code',
     desc: {
-      ko: 'AI 기반 개발 도구 - 모든 코드 작성 및 개발',
-      en: 'AI-assisted development - All code writing and development',
+      ko: 'AI 기반 개발 도구',
+      en: 'AI-powered development tool',
     },
   },
 ];
 
 const pageContent = {
   title: {
-    ko: '사용된 툴',
+    ko: '사용된 도구',
     en: 'Tools Used',
   },
   description: {
-    ko: '이 프로젝트는 Claude Code (AI-assisted development)를 이용해 제작되었습니다.',
-    en: 'This project was built with Claude Code (AI-assisted development).',
+    ko: '이 프로젝트는 Claude Code를 활용하여 개발되었습니다.',
+    en: 'This project was built with Claude Code.',
   },
 };
 
