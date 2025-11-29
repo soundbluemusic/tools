@@ -125,6 +125,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
   const beatsPerMeasureRef = useRef(4);
   const animationRef = useRef<number | null>(null);
   const startAudioTimeRef = useRef(0);
+  const countdownTimeRef = useRef(0);
 
   // Get accent pattern - only first beat of each measure is accented
   const isAccentBeat = useCallback((beatIndex: number) => beatIndex === 0, []);
@@ -141,6 +142,10 @@ const MetronomePlayer = memo(function MetronomePlayer() {
   useEffect(() => {
     beatsPerMeasureRef.current = beatsPerMeasure;
   }, [beatsPerMeasure]);
+
+  useEffect(() => {
+    countdownTimeRef.current = countdownTime;
+  }, [countdownTime]);
 
   // Animation loop for visual updates - synced with audio scheduler
   useEffect(() => {
@@ -177,10 +182,12 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         const elapsedMs = elapsed * 1000;
         setElapsedTime(elapsedMs);
 
-        if (countdownTime > 0) {
-          const remaining = countdownTime - elapsedMs;
+        // Use ref to get latest countdownTime value
+        const currentCountdownTime = countdownTimeRef.current;
+        if (currentCountdownTime > 0) {
+          const remaining = currentCountdownTime - elapsedMs;
           if (remaining <= 0) {
-            setCountdownElapsed(countdownTime);
+            setCountdownElapsed(currentCountdownTime);
             setIsPlaying(false);
             return;
           }
@@ -199,7 +206,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isPlaying, countdownTime]);
+  }, [isPlaying]);
 
   // Initialize AudioContext
   useEffect(() => {
@@ -318,6 +325,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
           const totalMs = (totalMinutes * 60 + totalSeconds) * 1000;
 
           if (totalMs > 0) {
+            countdownTimeRef.current = totalMs; // Set ref synchronously
             setCountdownTime(totalMs);
             setCountdownElapsed(0);
           }
@@ -376,6 +384,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     schedulerBeatRef.current = 0;
     setBeat(0);
     startAudioTimeRef.current = 0;
+    countdownTimeRef.current = 0;
 
     if (schedulerRef.current) {
       clearInterval(schedulerRef.current);
