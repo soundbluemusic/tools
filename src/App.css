@@ -6,32 +6,43 @@
    - will-change hints for animated elements
    ========================================================================== */
 
-/* CSS Variables for theming and performance */
+/* ============================================
+   CSS Variables Mapping - Links to design system
+   These map legacy variable names to the new premium design tokens
+   ============================================ */
 :root {
-  --bg-color: #c4c4c4;
-  --text-color: #1a1a1a;
-  --border-color: #999;
-  --item-hover-bg: rgba(0, 0, 0, 0.05);
-  --search-bg: #fff;
-  --search-border: #bbb;
+  /* Background colors - Premium light theme */
+  --bg-color: var(--color-bg-tertiary);
+  --text-color: var(--color-text-primary);
+  --border-color: var(--color-border-primary);
+  --item-hover-bg: var(--color-interactive-hover);
+  --search-bg: var(--color-bg-secondary);
+  --search-border: var(--color-border-primary);
   --transition-fast: 100ms;
   --transition-normal: 180ms;
-  --skeleton-bg: rgba(0, 0, 0, 0.08);
+  --skeleton-bg: var(--color-skeleton);
+
+  /* Premium additions */
+  --accent-color: var(--color-accent-primary);
+  --accent-hover: var(--color-accent-hover);
+  --accent-glow: var(--shadow-glow);
+  --card-shadow: var(--shadow-card);
+  --card-shadow-hover: var(--shadow-card-hover);
 
   /* GPU layer creation */
   --gpu-transform: translateZ(0);
 }
 
-/* Dark mode support */
+/* Dark mode - Inherits from design system automatically */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-color: #2a2a2a;
-    --text-color: #e5e5e5;
-    --border-color: #555;
-    --item-hover-bg: rgba(255, 255, 255, 0.08);
-    --search-bg: #3a3a3a;
-    --search-border: #555;
-    --skeleton-bg: rgba(255, 255, 255, 0.1);
+    --bg-color: var(--color-bg-tertiary);
+    --text-color: var(--color-text-primary);
+    --border-color: var(--color-border-primary);
+    --item-hover-bg: var(--color-interactive-hover);
+    --search-bg: var(--color-bg-elevated);
+    --search-border: var(--color-border-primary);
+    --skeleton-bg: var(--color-skeleton);
   }
 }
 
@@ -106,12 +117,12 @@
 }
 
 .search-input:focus {
-  border-color: #666;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-focus-ring, 0 0 0 3px var(--item-hover-bg));
 }
 
 .search-input::placeholder {
-  color: #888;
+  color: var(--color-text-tertiary, #888);
 }
 
 /* Hide default search cancel button */
@@ -159,27 +170,35 @@
 }
 
 .sort-dropdown:focus {
-  border-color: #666;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-focus-ring, 0 0 0 3px var(--item-hover-bg));
 }
 
 .sort-dropdown:hover {
-  border-color: #888;
+  border-color: var(--color-border-hover, #888);
 }
 
 /* ==========================================================================
-   App List - Optimized for smooth scrolling and transitions
+   App List - Premium card with subtle shadows
    ========================================================================== */
 .app-list {
-  background: var(--bg-color);
-  border-radius: 12px;
+  background: var(--color-bg-secondary, var(--bg-color));
+  border-radius: 16px;
+  border: 1px solid var(--color-border-secondary, transparent);
   overflow: hidden;
   /* CSS containment for layout isolation - major performance boost */
   contain: content;
   /* GPU layer for smooth scrolling */
   transform: var(--gpu-transform);
+  /* Premium shadow */
+  box-shadow: var(--card-shadow, var(--shadow-sm));
   /* Smooth opacity transition when filtering */
-  transition: opacity var(--transition-fast) ease-out;
+  transition: opacity var(--transition-fast) ease-out,
+              box-shadow var(--transition-normal) ease-out;
+}
+
+.app-list:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .app-list.pending {
@@ -225,7 +244,7 @@
 
 .app-item:active::before {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--color-interactive-active, rgba(0, 0, 0, 0.1));
 }
 
 .app-item-text {
@@ -239,7 +258,7 @@
 /* No results message */
 .no-results {
   text-align: center;
-  color: #666;
+  color: var(--color-text-secondary, #666);
   padding: 2rem;
   font-size: 0.95rem;
 }
@@ -398,15 +417,17 @@
 }
 
 .tool-desc {
-  color: #666;
+  color: var(--color-text-secondary, #666);
   margin: 0;
   font-size: 0.95rem;
 }
 
 .tool-content {
-  background: var(--bg-color);
-  border-radius: 12px;
+  background: var(--color-bg-secondary, var(--bg-color));
+  border-radius: 16px;
+  border: 1px solid var(--color-border-secondary, transparent);
   padding: 2rem;
+  box-shadow: var(--card-shadow, var(--shadow-sm));
   contain: layout style;
   transform: var(--gpu-transform);
 }
@@ -518,23 +539,32 @@
 }
 
 .not-found-message {
-  color: #666;
+  color: var(--color-text-secondary, #666);
   margin: 0 0 2rem;
   font-size: 0.95rem;
 }
 
 .not-found-link {
   display: inline-block;
-  color: var(--text-color);
+  color: var(--color-text-inverse, #fff);
+  background: var(--accent-color);
   text-decoration: none;
   padding: 0.75rem 1.5rem;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  transition: background-color var(--transition-fast) ease-out;
+  border: none;
+  border-radius: 10px;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast) ease-out;
 }
 
 .not-found-link:hover {
-  background: var(--item-hover-bg);
+  background: var(--accent-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.not-found-link:active {
+  transform: translateY(0);
 }
 
 /* ==========================================================================
@@ -648,15 +678,10 @@
   top: 1rem;
   left: 1rem;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-secondary);
   padding: 0.5rem 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(8px);
-}
-
-@media (prefers-color-scheme: dark) {
-  .qr-page .back-link {
-    background: rgba(42, 42, 42, 0.9);
-  }
+  border-radius: 10px;
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(12px);
 }

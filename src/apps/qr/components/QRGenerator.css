@@ -217,11 +217,11 @@
 }
 
 .qr-preview.light-bg {
-  background-color: #f3f4f6;
+  background-color: var(--color-bg-tertiary, #f4f6f8);
 }
 
 .qr-preview.dark-bg {
-  background-color: #111827;
+  background-color: var(--color-bg-primary, #0a0a0f);
 }
 
 .qr-image {
@@ -235,11 +235,11 @@
 }
 
 .qr-placeholder.light {
-  color: #9ca3af;
+  color: var(--color-text-tertiary, #94a3b8);
 }
 
 .qr-placeholder.dark {
-  color: #6b7280;
+  color: var(--color-text-tertiary, #71717a);
 }
 
 .qr-placeholder-icon {

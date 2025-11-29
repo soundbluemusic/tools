@@ -1,39 +1,59 @@
 /**
  * Design System Variables
+ * Premium color palette inspired by Linear, Figma, Vercel
  * Central place for all design tokens
  */
 
 :root {
   /* ============================================
-   * Colors - Light Mode
+   * Colors - Light Mode (Premium Clean)
    * ============================================ */
-  --color-bg-primary: #e8e8e8;
-  --color-bg-secondary: #c4c4c4;
-  --color-bg-tertiary: #fff;
+  --color-bg-primary: #fafbfc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f4f6f8;
+  --color-bg-elevated: #ffffff;
+  --color-bg-overlay: rgba(15, 23, 42, 0.4);
 
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #666;
-  --color-text-tertiary: #888;
-  --color-text-inverse: #fff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94a3b8;
+  --color-text-inverse: #ffffff;
+  --color-text-brand: #6366f1;
 
-  --color-border-primary: #999;
-  --color-border-secondary: #bbb;
-  --color-border-focus: #666;
+  --color-border-primary: #e2e8f0;
+  --color-border-secondary: #f1f5f9;
+  --color-border-focus: #6366f1;
+  --color-border-hover: #cbd5e1;
 
-  --color-interactive-hover: rgba(0, 0, 0, 0.05);
-  --color-interactive-active: rgba(0, 0, 0, 0.1);
-  --color-interactive-focus: rgba(0, 0, 0, 0.1);
+  --color-interactive-hover: rgba(99, 102, 241, 0.06);
+  --color-interactive-active: rgba(99, 102, 241, 0.12);
+  --color-interactive-focus: rgba(99, 102, 241, 0.15);
+  --color-interactive-muted: #f1f5f9;
 
-  --color-skeleton: rgba(0, 0, 0, 0.08);
+  --color-skeleton: rgba(15, 23, 42, 0.06);
+  --color-skeleton-shimmer: rgba(255, 255, 255, 0.5);
 
-  --color-error: #dc2626;
+  /* Semantic Colors - Refined */
+  --color-error: #ef4444;
   --color-error-bg: #fef2f2;
-  --color-success: #16a34a;
-  --color-success-bg: #f0fdf4;
-  --color-warning: #ca8a04;
-  --color-warning-bg: #fefce8;
-  --color-info: #2563eb;
-  --color-info-bg: #eff6ff;
+  --color-error-border: #fecaca;
+  --color-success: #10b981;
+  --color-success-bg: #ecfdf5;
+  --color-success-border: #a7f3d0;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-info: #6366f1;
+  --color-info-bg: #eef2ff;
+  --color-info-border: #c7d2fe;
+
+  /* Brand/Accent Colors - Premium Gradient */
+  --color-accent-primary: #6366f1;
+  --color-accent-secondary: #8b5cf6;
+  --color-accent-tertiary: #a855f7;
+  --color-accent-hover: #4f46e5;
+  --color-gradient-start: #6366f1;
+  --color-gradient-end: #8b5cf6;
 
   /* ============================================
    * Typography
@@ -88,12 +108,20 @@
   --radius-full: 9999px;
 
   /* ============================================
-   * Shadows
+   * Shadows - Premium Layered
    * ============================================ */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(15, 23, 42, 0.2);
   --shadow-focus: 0 0 0 3px var(--color-interactive-focus);
+  --shadow-focus-ring: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-accent-primary);
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --shadow-card-hover: 0 10px 40px -10px rgba(99, 102, 241, 0.15), 0 4px 6px -2px rgba(15, 23, 42, 0.05);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-inner: inset 0 2px 4px 0 rgba(15, 23, 42, 0.04);
 
   /* ============================================
    * Transitions
@@ -140,40 +168,68 @@
 }
 
 /* ============================================
- * Dark Mode Variables
+ * Dark Mode Variables - Premium Dark Theme
+ * Inspired by Linear, Vercel, GitHub Dark
  * ============================================ */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg-primary: #1a1a1a;
-    --color-bg-secondary: #2a2a2a;
-    --color-bg-tertiary: #3a3a3a;
+    --color-bg-primary: #0a0a0f;
+    --color-bg-secondary: #111118;
+    --color-bg-tertiary: #18181f;
+    --color-bg-elevated: #1f1f28;
+    --color-bg-overlay: rgba(0, 0, 0, 0.6);
 
-    --color-text-primary: #e5e5e5;
-    --color-text-secondary: #a3a3a3;
-    --color-text-tertiary: #888;
-    --color-text-inverse: #1a1a1a;
+    --color-text-primary: #f4f4f5;
+    --color-text-secondary: #a1a1aa;
+    --color-text-tertiary: #71717a;
+    --color-text-inverse: #0a0a0f;
+    --color-text-brand: #818cf8;
 
-    --color-border-primary: #555;
-    --color-border-secondary: #444;
-    --color-border-focus: #888;
+    --color-border-primary: #27272a;
+    --color-border-secondary: #1f1f23;
+    --color-border-focus: #818cf8;
+    --color-border-hover: #3f3f46;
 
-    --color-interactive-hover: rgba(255, 255, 255, 0.08);
-    --color-interactive-active: rgba(255, 255, 255, 0.12);
-    --color-interactive-focus: rgba(255, 255, 255, 0.15);
+    --color-interactive-hover: rgba(129, 140, 248, 0.08);
+    --color-interactive-active: rgba(129, 140, 248, 0.15);
+    --color-interactive-focus: rgba(129, 140, 248, 0.2);
+    --color-interactive-muted: #1f1f28;
 
-    --color-skeleton: rgba(255, 255, 255, 0.1);
+    --color-skeleton: rgba(255, 255, 255, 0.06);
+    --color-skeleton-shimmer: rgba(255, 255, 255, 0.08);
 
+    /* Semantic Colors - Dark Mode */
     --color-error: #f87171;
-    --color-error-bg: #450a0a;
-    --color-success: #4ade80;
-    --color-success-bg: #052e16;
-    --color-warning: #facc15;
-    --color-warning-bg: #422006;
-    --color-info: #60a5fa;
-    --color-info-bg: #172554;
+    --color-error-bg: rgba(248, 113, 113, 0.1);
+    --color-error-border: rgba(248, 113, 113, 0.3);
+    --color-success: #34d399;
+    --color-success-bg: rgba(52, 211, 153, 0.1);
+    --color-success-border: rgba(52, 211, 153, 0.3);
+    --color-warning: #fbbf24;
+    --color-warning-bg: rgba(251, 191, 36, 0.1);
+    --color-warning-border: rgba(251, 191, 36, 0.3);
+    --color-info: #818cf8;
+    --color-info-bg: rgba(129, 140, 248, 0.1);
+    --color-info-border: rgba(129, 140, 248, 0.3);
 
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+    /* Brand/Accent - Dark Mode */
+    --color-accent-primary: #818cf8;
+    --color-accent-secondary: #a78bfa;
+    --color-accent-tertiary: #c084fc;
+    --color-accent-hover: #6366f1;
+    --color-gradient-start: #818cf8;
+    --color-gradient-end: #a78bfa;
+
+    /* Shadows - Dark Mode */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -2px rgba(0, 0, 0, 0.25);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-card-hover: 0 10px 40px -10px rgba(129, 140, 248, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 30px rgba(129, 140, 248, 0.2);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   }
 }

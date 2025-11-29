@@ -142,9 +142,16 @@
 
 .app-list {
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-secondary);
   overflow: hidden;
+  box-shadow: var(--shadow-card);
   contain: content;
+  transition: box-shadow var(--transition-normal) var(--ease-default);
+}
+
+.app-list:hover {
+  box-shadow: var(--shadow-md);
 }
 
 .app-list.pending {
@@ -194,17 +201,23 @@
   align-items: center;
   padding: var(--spacing-6);
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-xl);
   text-decoration: none;
   color: var(--color-text-primary);
+  box-shadow: var(--shadow-card);
   transition:
     background-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default),
+    border-color var(--transition-fast) var(--ease-default),
     transform var(--transition-fast) var(--ease-default);
 }
 
 .app-card:hover {
-  background: var(--color-interactive-hover);
-  transform: translateY(-2px);
+  background: var(--color-bg-secondary);
+  border-color: var(--color-accent-primary);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-3px);
 }
 
 .app-card .icon {
@@ -361,8 +374,10 @@
 
 .tool-content {
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-xl);
   padding: var(--spacing-8);
+  box-shadow: var(--shadow-card);
 }
 
 /* ============================================
@@ -407,15 +422,25 @@
 
 .error-boundary-button {
   padding: var(--spacing-3) var(--spacing-6);
-  background: var(--color-text-primary);
+  background: var(--color-accent-primary);
   color: var(--color-text-inverse);
   border-radius: var(--radius-md);
   font-weight: var(--font-weight-medium);
-  transition: opacity var(--transition-fast) var(--ease-default);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default);
 }
 
 .error-boundary-button:hover {
-  opacity: 0.9;
+  background: var(--color-accent-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.error-boundary-button:active {
+  transform: translateY(0);
 }
 
 /* ============================================
@@ -431,6 +456,8 @@
   border-radius: var(--radius-md);
   transition:
     background-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default),
     opacity var(--transition-fast) var(--ease-default);
 }
 
@@ -439,11 +466,20 @@
 .btn--lg { height: var(--btn-height-lg); padding: 0 var(--spacing-6); font-size: var(--font-size-lg); }
 
 .btn--primary {
-  background: var(--color-text-primary);
+  background: var(--color-accent-primary);
   color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
 }
 
-.btn--primary:hover { opacity: 0.9; }
+.btn--primary:hover {
+  background: var(--color-accent-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.btn--primary:active {
+  transform: translateY(0);
+}
 
 .btn--secondary {
   background: var(--color-bg-secondary);
@@ -568,15 +604,25 @@
 .not-found-link {
   display: inline-block;
   padding: var(--spacing-3) var(--spacing-6);
-  background: var(--color-text-primary);
+  background: var(--color-accent-primary);
   color: var(--color-text-inverse);
   border-radius: var(--radius-md);
   font-weight: var(--font-weight-medium);
-  transition: opacity var(--transition-fast) var(--ease-default);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default);
 }
 
 .not-found-link:hover {
-  opacity: 0.9;
+  background: var(--color-accent-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.not-found-link:active {
+  transform: translateY(0);
 }
 
 /* ============================================

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Language Toggle - Floating button fixed at top-right
+   Language Toggle - Floating button fixed at top-right (Premium)
    ========================================================================== */
 .language-toggle {
   position: fixed;
@@ -12,19 +12,20 @@
   gap: 0.5rem;
   padding: 0.625rem 1rem;
 
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid #d1d5db;
+  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.98));
+  border: 1px solid var(--color-border-secondary, rgba(0, 0, 0, 0.06));
   border-radius: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
 
   /* Use @supports for backdrop-filter with fallback */
-  @supports (backdrop-filter: blur(8px)) {
-    backdrop-filter: blur(8px);
+  @supports (backdrop-filter: blur(12px)) {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.85);
   }
 
   font-size: 0.875rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-text-primary, #0f172a);
   cursor: pointer;
 
   /* Promote to GPU layer for smoother animations */
@@ -33,18 +34,20 @@
 
   transition: transform 0.2s ease-out,
               box-shadow 0.2s ease-out,
-              background-color 0.2s ease-out;
+              background-color 0.2s ease-out,
+              border-color 0.2s ease-out;
 }
 
 .language-toggle:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-  background: white;
+  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0, 0, 0, 0.12));
+  border-color: var(--color-accent-primary, #6366f1);
+  background: var(--color-bg-secondary, white);
 }
 
 .language-toggle:active {
   transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
 }
 
 .language-toggle-icon {
@@ -61,13 +64,21 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .language-toggle {
-    background: rgba(42, 42, 42, 0.95);
-    border-color: #555;
-    color: #e5e5e5;
+    background: var(--color-bg-elevated, rgba(31, 31, 40, 0.95));
+    border-color: var(--color-border-primary, rgba(255, 255, 255, 0.08));
+    color: var(--color-text-primary, #f4f4f5);
+  }
+
+  @supports (backdrop-filter: blur(12px)) {
+    .language-toggle {
+      backdrop-filter: blur(12px);
+      background: rgba(31, 31, 40, 0.85);
+    }
   }
 
   .language-toggle:hover {
-    background: rgba(50, 50, 50, 0.98);
+    background: var(--color-bg-elevated, rgba(40, 40, 50, 0.98));
+    border-color: var(--color-accent-primary, #818cf8);
   }
 }
 
