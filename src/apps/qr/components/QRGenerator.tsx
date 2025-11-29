@@ -105,7 +105,7 @@ const QRGenerator = memo(function QRGenerator() {
   }, []);
 
   const createQR = useCallback(
-    (text: string) => {
+    (text: string, level: ErrorLevel) => {
       if (!window.QRious || !text.trim()) return;
 
       const canvas1 = document.createElement('canvas');
@@ -113,7 +113,7 @@ const QRGenerator = memo(function QRGenerator() {
         element: canvas1,
         value: text,
         size: 512,
-        level: errorLevel,
+        level: level,
         background: 'white',
         foreground: 'black',
       });
@@ -126,7 +126,7 @@ const QRGenerator = memo(function QRGenerator() {
         element: canvas2,
         value: text,
         size: 512,
-        level: errorLevel,
+        level: level,
         background: 'black',
         foreground: 'white',
       });
@@ -134,7 +134,7 @@ const QRGenerator = memo(function QRGenerator() {
       const whiteQR = makeTransparent(canvas2, true);
       setQrWhite(whiteQR);
     },
-    [errorLevel, makeTransparent]
+    [makeTransparent]
   );
 
   useEffect(() => {
@@ -148,7 +148,7 @@ const QRGenerator = memo(function QRGenerator() {
       return;
     }
 
-    createQR(debouncedUrl);
+    createQR(debouncedUrl, errorLevel);
   }, [debouncedUrl, errorLevel, createQR]);
 
   const downloadQR = useCallback((dataUrl: string, filename: string) => {
