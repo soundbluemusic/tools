@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
 import { useTranslations } from '../../../i18n';
+import { useDebounce } from '../../../hooks/useDebounce';
 import './QRGenerator.css';
 
 declare global {
@@ -26,6 +27,9 @@ const QRGenerator = memo(function QRGenerator() {
   const [qrWhite, setQrWhite] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const isLibraryLoaded = useRef(false);
+
+  // Debounce URL for QR generation (input stays responsive)
+  const debouncedUrl = useDebounce(url, 300);
 
   const t = useTranslations();
   const qrT = t.qr;
@@ -138,14 +142,14 @@ const QRGenerator = memo(function QRGenerator() {
   }, [loadQRLibrary]);
 
   useEffect(() => {
-    if (!url.trim()) {
+    if (!debouncedUrl.trim()) {
       setQrBlack(null);
       setQrWhite(null);
       return;
     }
 
-    createQR(url);
-  }, [url, errorLevel, createQR]);
+    createQR(debouncedUrl);
+  }, [debouncedUrl, errorLevel, createQR]);
 
   const downloadQR = useCallback((dataUrl: string, filename: string) => {
     try {
