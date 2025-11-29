@@ -224,80 +224,85 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     };
   }, []);
 
-  const playClick = useCallback(
-    (time: number, beatNumber: number) => {
-      const ctx = audioContextRef.current;
-      if (!ctx || ctx.state === 'suspended') return;
-
-      const isFirst = isAccentBeat(beatNumber);
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      const volumeMultiplier = volumeRef.current / 100;
-
-      if (isFirst) {
-        osc.frequency.value = 2000;
-        gain.gain.setValueAtTime(0.8 * volumeMultiplier, time);
-      } else {
-        osc.frequency.value = 800;
-        gain.gain.setValueAtTime(0.4 * volumeMultiplier, time);
-      }
-
-      gain.gain.exponentialRampToValueAtTime(
-        Math.max(0.001, 0.01 * volumeMultiplier),
-        time + 0.08
-      );
-
-      osc.start(time);
-      osc.stop(time + 0.08);
-    },
-    [isAccentBeat]
-  );
-
-  const scheduleNote = useCallback(() => {
-    if (!audioContextRef.current || audioContextRef.current.state === 'suspended') return;
-
-    const secondsPerBeat = 60.0 / bpmRef.current;
-    const currentTime = audioContextRef.current.currentTime;
-
-    while (nextNoteTimeRef.current < currentTime + 0.1) {
-      if (schedulerBeatRef.current === 0) {
-        setMeasureCount((prev) => prev + 1);
-      }
-
-      playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
-
-      nextNoteTimeRef.current += secondsPerBeat;
-      schedulerBeatRef.current =
-        (schedulerBeatRef.current + 1) % beatsPerMeasureRef.current;
-    }
-  }, [playClick]);
-
-  // Scheduler effect
+  // Use ref for isAccentBeat to avoid stale closures
+  const isAccentBeatRef = useRef(isAccentBeat);
   useEffect(() => {
-    if (isPlaying && audioContextRef.current && audioContextRef.current.state !== 'suspended') {
-      const currentTime = audioContextRef.current.currentTime;
+    isAccentBeatRef.current = isAccentBeat;
+  }, [isAccentBeat]);
 
-      if (elapsedTime === 0) {
-        startAudioTimeRef.current = currentTime;
-      } else {
-        startAudioTimeRef.current = currentTime - elapsedTime / 1000;
-      }
+  const playClick = useCallback((time: number, beatNumber: number) => {
+    const ctx = audioContextRef.current;
+    if (!ctx) return;
 
-      schedulerBeatRef.current = 0;
-      setBeat(0);
-      nextNoteTimeRef.current = currentTime;
+    const isFirst = isAccentBeatRef.current(beatNumber);
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-      schedulerRef.current = setInterval(scheduleNote, 25);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    const volumeMultiplier = volumeRef.current / 100;
+
+    if (isFirst) {
+      osc.frequency.value = 2000;
+      gain.gain.setValueAtTime(0.8 * volumeMultiplier, time);
     } else {
+      osc.frequency.value = 800;
+      gain.gain.setValueAtTime(0.4 * volumeMultiplier, time);
+    }
+
+    gain.gain.exponentialRampToValueAtTime(
+      Math.max(0.001, 0.01 * volumeMultiplier),
+      time + 0.08
+    );
+
+    osc.start(time);
+    osc.stop(time + 0.08);
+  }, []);
+
+  // Scheduler effect - uses refs to avoid dependency issues
+  useEffect(() => {
+    if (!isPlaying || !audioContextRef.current) {
       if (schedulerRef.current) {
         clearInterval(schedulerRef.current);
         schedulerRef.current = null;
       }
+      return;
     }
+
+    const ctx = audioContextRef.current;
+    const currentTime = ctx.currentTime;
+
+    if (elapsedTime === 0) {
+      startAudioTimeRef.current = currentTime;
+    } else {
+      startAudioTimeRef.current = currentTime - elapsedTime / 1000;
+    }
+
+    schedulerBeatRef.current = 0;
+    setBeat(0);
+    nextNoteTimeRef.current = currentTime;
+
+    const scheduleNotes = () => {
+      if (!audioContextRef.current) return;
+
+      const secondsPerBeat = 60.0 / bpmRef.current;
+      const now = audioContextRef.current.currentTime;
+
+      while (nextNoteTimeRef.current < now + 0.1) {
+        if (schedulerBeatRef.current === 0) {
+          setMeasureCount((prev) => prev + 1);
+        }
+
+        playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
+
+        nextNoteTimeRef.current += secondsPerBeat;
+        schedulerBeatRef.current =
+          (schedulerBeatRef.current + 1) % beatsPerMeasureRef.current;
+      }
+    };
+
+    schedulerRef.current = setInterval(scheduleNotes, 25);
 
     return () => {
       if (schedulerRef.current) {
@@ -305,14 +310,26 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         schedulerRef.current = null;
       }
     };
-  }, [isPlaying, scheduleNote, elapsedTime]);
+  }, [isPlaying, playClick, elapsedTime]);
 
   const handleStart = useCallback(async () => {
+    // Ensure AudioContext exists
+    if (!audioContextRef.current) {
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (AudioContextClass) {
+        audioContextRef.current = new AudioContextClass();
+      }
+    }
+
+    // Resume AudioContext if suspended (required for mobile browsers)
     if (audioContextRef.current?.state === 'suspended') {
       try {
         await audioContextRef.current.resume();
       } catch (err) {
         console.error('AudioContext resume failed:', err);
+        return;
       }
     }
 
