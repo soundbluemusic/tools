@@ -1,8 +1,8 @@
-# CLAUDE.md - AI Assistant Guide for SoundBlue Tools
+# CLAUDE.md - AI Assistant Guide for Productivity Tools
 
 ## Project Overview
 
-**SoundBlue Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface.
+**Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface.
 
 **Current Tools:**
 - Contract Analysis (`/contract`) - Legal document analysis
