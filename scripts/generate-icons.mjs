@@ -1,117 +1,81 @@
 import sharp from 'sharp';
-import { readFileSync, mkdirSync, existsSync } from 'fs';
-import { join, dirname } from 'path';
+import { mkdir } from 'fs/promises';
+import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
-const publicDir = join(rootDir, 'public');
-const iconsDir = join(publicDir, 'icons');
+const sourceIcon = join(rootDir, 'public/branding asset/icon.png');
+const outputDir = join(rootDir, 'public/icons');
 
-// Ensure icons directory exists
-if (!existsSync(iconsDir)) {
-  mkdirSync(iconsDir, { recursive: true });
-}
+// Icon sizes for different purposes
+const standardSizes = [16, 32, 72, 96, 128, 144, 152, 180, 192, 384, 512];
+const maskableSizes = [192, 512];
 
-// Icon sizes to generate
-const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
-
-// Read the SVG
-const svgBuffer = readFileSync(join(iconsDir, 'icon.svg'));
-
-// Generate standard icons
 async function generateIcons() {
-  console.log('Generating PWA icons...');
+  // Ensure output directory exists
+  await mkdir(outputDir, { recursive: true });
 
-  for (const size of sizes) {
-    const filename = `icon-${size}.png`;
-    await sharp(svgBuffer)
-      .resize(size, size)
+  console.log('Generating icons from branding asset...');
+
+  // Generate standard icons
+  for (const size of standardSizes) {
+    const filename = size === 180 
+      ? 'apple-touch-icon.png'
+      : size <= 32 
+        ? `favicon-${size}x${size}.png`
+        : `icon-${size}.png`;
+    
+    await sharp(sourceIcon)
+      .resize(size, size, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
       .png()
-      .toFile(join(iconsDir, filename));
-    console.log(`  Created ${filename}`);
+      .toFile(join(outputDir, filename));
+    
+    console.log(`✓ Generated ${filename}`);
   }
 
   // Generate maskable icons (with padding for safe zone)
-  const maskableSizes = [192, 512];
   for (const size of maskableSizes) {
-    const filename = `icon-maskable-${size}.png`;
-    // Maskable icons need ~10% padding, so we render at 80% and add background
-    const innerSize = Math.round(size * 0.8);
-
+    const iconSize = Math.floor(size * 0.8); // 80% of total size for safe zone
+    const padding = Math.floor((size - iconSize) / 2);
+    
+    // Create icon with transparent background, then composite on solid background
+    const resizedIcon = await sharp(sourceIcon)
+      .resize(iconSize, iconSize, {
+        fit: 'contain',
+        background: { r: 0, g: 0, b: 0, alpha: 0 }
+      })
+      .toBuffer();
+    
     await sharp({
       create: {
         width: size,
         height: size,
         channels: 4,
-        background: { r: 26, g: 26, b: 46, alpha: 1 }, // #1a1a2e
-      },
+        background: { r: 26, g: 26, b: 46, alpha: 1 } // #1a1a2e
+      }
     })
-      .composite([
-        {
-          input: await sharp(svgBuffer).resize(innerSize, innerSize).toBuffer(),
-          gravity: 'center',
-        },
-      ])
+      .composite([{
+        input: resizedIcon,
+        left: padding,
+        top: padding
+      }])
       .png()
-      .toFile(join(iconsDir, filename));
-    console.log(`  Created ${filename}`);
+      .toFile(join(outputDir, `icon-maskable-${size}.png`));
+    
+    console.log(`✓ Generated icon-maskable-${size}.png`);
   }
 
-  // Generate Apple touch icon
-  await sharp(svgBuffer)
-    .resize(180, 180)
-    .png()
-    .toFile(join(iconsDir, 'apple-touch-icon.png'));
-  console.log('  Created apple-touch-icon.png');
+  // Generate SVG (just copy as reference, actual SVG conversion is complex)
+  // For now, create a simple SVG wrapper
+  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <image href="icon-512.png" width="512" height="512"/>
+</svg>`;
 
-  // Generate favicon
-  await sharp(svgBuffer).resize(32, 32).png().toFile(join(iconsDir, 'favicon-32x32.png'));
-  console.log('  Created favicon-32x32.png');
-
-  await sharp(svgBuffer).resize(16, 16).png().toFile(join(iconsDir, 'favicon-16x16.png'));
-  console.log('  Created favicon-16x16.png');
-
-  // Generate screenshots placeholder (simple colored rectangles)
-  // Wide screenshot
-  await sharp({
-    create: {
-      width: 1280,
-      height: 720,
-      channels: 4,
-      background: { r: 26, g: 26, b: 46, alpha: 1 },
-    },
-  })
-    .composite([
-      {
-        input: await sharp(svgBuffer).resize(200, 200).toBuffer(),
-        gravity: 'center',
-      },
-    ])
-    .png()
-    .toFile(join(iconsDir, 'screenshot-wide.png'));
-  console.log('  Created screenshot-wide.png');
-
-  // Narrow screenshot
-  await sharp({
-    create: {
-      width: 720,
-      height: 1280,
-      channels: 4,
-      background: { r: 26, g: 26, b: 46, alpha: 1 },
-    },
-  })
-    .composite([
-      {
-        input: await sharp(svgBuffer).resize(200, 200).toBuffer(),
-        gravity: 'center',
-      },
-    ])
-    .png()
-    .toFile(join(iconsDir, 'screenshot-narrow.png'));
-  console.log('  Created screenshot-narrow.png');
-
-  console.log('Done! All icons generated.');
+  console.log('\n✅ All icons generated successfully!');
 }
 
 generateIcons().catch(console.error);
