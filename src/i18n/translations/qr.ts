@@ -29,7 +29,7 @@ export const qrKo: QRTranslation = {
   blackQrCode: '검정 QR 코드',
   whiteQrCode: '흰색 QR 코드',
   enterUrl: 'URL을 입력하세요',
-  transparentBg: '투명 배경, 2048x2048 PNG',
+  transparentBg: '투명 배경, 512x512 PNG',
   footer: 'QR 코드를 즉시 생성 • 데이터 저장 안함 • 무료 사용',
   // Alert messages
   imageCopyNotSupported: '이미지 복사를 지원하지 않아 다운로드되었습니다.',
@@ -69,7 +69,7 @@ export const qrEn: QRTranslation = {
   blackQrCode: 'Black QR Code',
   whiteQrCode: 'White QR Code',
   enterUrl: 'Enter URL',
-  transparentBg: 'Transparent background, 2048x2048 PNG',
+  transparentBg: 'Transparent background, 512x512 PNG',
   footer: 'Generate QR codes instantly • No data stored • Free to use',
   // Alert messages
   imageCopyNotSupported: 'Image copy not supported, downloaded instead.',

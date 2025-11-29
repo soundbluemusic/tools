@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
 import { useTranslations } from '../../../i18n';
+import { useDebounce } from '../../../hooks/useDebounce';
 import './QRGenerator.css';
 
 declare global {
@@ -26,6 +27,9 @@ const QRGenerator = memo(function QRGenerator() {
   const [qrWhite, setQrWhite] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
   const isLibraryLoaded = useRef(false);
+
+  // Debounce URL for QR generation (input stays responsive)
+  const debouncedUrl = useDebounce(url, 300);
 
   const t = useTranslations();
   const qrT = t.qr;
@@ -101,15 +105,15 @@ const QRGenerator = memo(function QRGenerator() {
   }, []);
 
   const createQR = useCallback(
-    (text: string) => {
+    (text: string, level: ErrorLevel) => {
       if (!window.QRious || !text.trim()) return;
 
       const canvas1 = document.createElement('canvas');
       new window.QRious({
         element: canvas1,
         value: text,
-        size: 2048,
-        level: errorLevel,
+        size: 512,
+        level: level,
         background: 'white',
         foreground: 'black',
       });
@@ -121,8 +125,8 @@ const QRGenerator = memo(function QRGenerator() {
       new window.QRious({
         element: canvas2,
         value: text,
-        size: 2048,
-        level: errorLevel,
+        size: 512,
+        level: level,
         background: 'black',
         foreground: 'white',
       });
@@ -130,7 +134,7 @@ const QRGenerator = memo(function QRGenerator() {
       const whiteQR = makeTransparent(canvas2, true);
       setQrWhite(whiteQR);
     },
-    [errorLevel, makeTransparent]
+    [makeTransparent]
   );
 
   useEffect(() => {
@@ -138,14 +142,14 @@ const QRGenerator = memo(function QRGenerator() {
   }, [loadQRLibrary]);
 
   useEffect(() => {
-    if (!url.trim()) {
+    if (!debouncedUrl.trim()) {
       setQrBlack(null);
       setQrWhite(null);
       return;
     }
 
-    createQR(url);
-  }, [url, errorLevel, createQR]);
+    createQR(debouncedUrl, errorLevel);
+  }, [debouncedUrl, errorLevel, createQR]);
 
   const downloadQR = useCallback((dataUrl: string, filename: string) => {
     try {
@@ -295,6 +299,7 @@ const QRGenerator = memo(function QRGenerator() {
 
             <div className="qr-error-section">
               <h3>{qrT.errorCorrectionLevel}</h3>
+              {/* Desktop: Table view */}
               <div className="qr-table-wrapper">
                 <table className="qr-table">
                   <thead>
@@ -316,6 +321,20 @@ const QRGenerator = memo(function QRGenerator() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+
+              {/* Mobile: Card view */}
+              <div className="qr-table-mobile">
+                {errorLevels.map((item, idx) => (
+                  <div key={idx} className="qr-table-mobile-card">
+                    <div className="qr-table-mobile-card-header">
+                      <span className="qr-table-mobile-level">{item.level}</span>
+                      <span className="qr-table-mobile-recovery">{item.recovery}</span>
+                    </div>
+                    <div className="qr-table-mobile-use">{item.use}</div>
+                    <div className="qr-table-mobile-desc">{item.desc}</div>
+                  </div>
+                ))}
               </div>
 
               <div className="qr-level-buttons">

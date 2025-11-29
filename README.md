@@ -1,4 +1,4 @@
-# SoundBlue Tools
+# Productivity Tools
 
 React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
 
