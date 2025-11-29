@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
+import { useSEO } from '../hooks';
 
 const toolsUsed = [
   {
@@ -29,6 +30,14 @@ const pageContent = {
  */
 const ToolsUsed = memo(function ToolsUsed() {
   const { language } = useLanguage();
+
+  // SEO for ToolsUsed page (noindex as it's supplementary content)
+  useSEO({
+    title: pageContent.title[language],
+    description: pageContent.description[language],
+    canonicalPath: '/tools-used',
+    noindex: true,
+  });
 
   return (
     <PageLayout
