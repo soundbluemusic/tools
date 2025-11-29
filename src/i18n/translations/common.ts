@@ -3,8 +3,8 @@ import type { CommonTranslation } from '../types';
 export const commonKo: CommonTranslation = {
   footer: {
     about: '소개',
-    opensource: '오픈소스목록',
-    toolsUsed: '사용된툴',
+    opensource: '오픈소스',
+    toolsUsed: '사용된 도구',
   },
   home: {
     searchPlaceholder: '검색...',
@@ -39,11 +39,11 @@ export const commonKo: CommonTranslation = {
   },
   pwa: {
     installTitle: '앱 설치',
-    installMessage: 'Tools를 앱으로 설치하면 더 빠르고 편리하게 사용할 수 있습니다.',
-    installButton: '설치하기',
+    installMessage: 'SoundBlue Tools를 앱으로 설치하면 더 빠르고 편리하게 사용할 수 있습니다.',
+    installButton: '설치',
     dismissButton: '나중에',
     updateTitle: '업데이트 가능',
-    updateMessage: '새로운 버전이 있습니다. 지금 업데이트하시겠습니까?',
+    updateMessage: '새 버전이 있습니다. 지금 업데이트하시겠습니까?',
     updateButton: '업데이트',
     offlineTitle: '오프라인',
     offlineMessage: '인터넷 연결이 없습니다. 일부 기능이 제한될 수 있습니다.',
@@ -90,15 +90,13 @@ export const commonEn: CommonTranslation = {
   pwa: {
     installTitle: 'Install App',
     installMessage:
-      'Install Tools as an app for a faster and more convenient experience.',
+      'Install SoundBlue Tools as an app for a faster and more convenient experience.',
     installButton: 'Install',
     dismissButton: 'Later',
     updateTitle: 'Update Available',
-    updateMessage:
-      'A new version is available. Would you like to update now?',
+    updateMessage: 'A new version is available. Would you like to update now?',
     updateButton: 'Update',
     offlineTitle: 'Offline',
-    offlineMessage:
-      'No internet connection. Some features may be limited.',
+    offlineMessage: 'No internet connection. Some features may be limited.',
   },
 };

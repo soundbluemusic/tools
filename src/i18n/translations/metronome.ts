@@ -2,7 +2,7 @@ import type { MetronomeTranslation } from '../types';
 
 export const metronomeKo: MetronomeTranslation = {
   title: '메트로놈',
-  description: '정확한 박자를 위한 메트로놈 도구',
+  description: '음악가를 위한 정밀 메트로놈',
   // Controls
   bpm: '속도',
   volume: '볼륨',
@@ -32,11 +32,11 @@ export const metronomeKo: MetronomeTranslation = {
 
 export const metronomeEn: MetronomeTranslation = {
   title: 'Metronome',
-  description: 'Metronome tool for accurate tempo',
+  description: 'Precision metronome for musicians',
   // Controls
-  bpm: 'BPM',
-  volume: 'Vol',
-  timeSignature: 'Time',
+  bpm: 'Tempo',
+  volume: 'Volume',
+  timeSignature: 'Time Sig.',
   timer: 'Timer',
   // Info
   measure: 'Measure',
@@ -48,8 +48,8 @@ export const metronomeEn: MetronomeTranslation = {
   quiet: 'Quiet',
   loud: 'Loud',
   // Time units
-  minutes: 'm',
-  seconds: 's',
+  minutes: 'min',
+  seconds: 'sec',
   // Actions
   start: 'Start',
   stop: 'Pause',
