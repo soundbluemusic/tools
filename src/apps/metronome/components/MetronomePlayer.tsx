@@ -166,11 +166,20 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     beatsPerMeasureRef.current = beatsPerMeasure;
   }, [beatsPerMeasure]);
 
-  // Animation loop for visual updates
+  // Animation loop for visual updates - synced with audio scheduler
   useEffect(() => {
     if (isPlaying && audioContextRef.current) {
       const animate = () => {
-        if (!audioContextRef.current || startAudioTimeRef.current === 0) return;
+        if (!audioContextRef.current) {
+          animationRef.current = requestAnimationFrame(animate);
+          return;
+        }
+
+        // Wait for startAudioTimeRef to be set by handleStart
+        if (startAudioTimeRef.current === 0) {
+          animationRef.current = requestAnimationFrame(animate);
+          return;
+        }
 
         const currentTime = audioContextRef.current.currentTime;
         const secondsPerBeat = 60 / bpmRef.current;
@@ -266,22 +275,9 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     osc.stop(time + 0.08);
   }, []);
 
-  // Scheduler effect - only depends on isPlaying
+  // Scheduler effect - timing is already initialized in handleStart
   useEffect(() => {
     if (isPlaying && audioContextRef.current) {
-      const ctx = audioContextRef.current;
-      const currentTime = ctx.currentTime;
-
-      if (elapsedTimeRef.current === 0) {
-        startAudioTimeRef.current = currentTime;
-      } else {
-        startAudioTimeRef.current = currentTime - elapsedTimeRef.current / 1000;
-      }
-
-      schedulerBeatRef.current = 0;
-      setBeat(0);
-      nextNoteTimeRef.current = currentTime;
-
       const scheduleNotes = () => {
         if (!audioContextRef.current) return;
 
@@ -341,26 +337,49 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     const timerEnded = countdownTime > 0 && countdownElapsed >= countdownTime;
 
     if (!isPlaying) {
-      if (elapsedTime === 0 && countdownTime === 0) {
-        const totalMinutes = parseInt(timerMinutes) || 0;
-        const totalSeconds = parseInt(timerSeconds) || 0;
-        const totalMs = (totalMinutes * 60 + totalSeconds) * 1000;
+      // Initialize timing BEFORE setIsPlaying so both effects use the same start time
+      if (audioContextRef.current) {
+        const currentTime = audioContextRef.current.currentTime;
 
-        if (totalMs > 0) {
-          setCountdownTime(totalMs);
+        if (elapsedTime === 0 && countdownTime === 0) {
+          const totalMinutes = parseInt(timerMinutes) || 0;
+          const totalSeconds = parseInt(timerSeconds) || 0;
+          const totalMs = (totalMinutes * 60 + totalSeconds) * 1000;
+
+          if (totalMs > 0) {
+            setCountdownTime(totalMs);
+            setCountdownElapsed(0);
+          }
+          // Fresh start
+          startAudioTimeRef.current = currentTime;
+          nextNoteTimeRef.current = currentTime;
+          schedulerBeatRef.current = 0;
+          setMeasureCount(0);
+          setBeat(0);
+        } else if (timerEnded) {
+          // Timer ended, restart fresh
           setCountdownElapsed(0);
+          setElapsedTime(0);
+          setMeasureCount(0);
+          schedulerBeatRef.current = 0;
+          setBeat(0);
+          startAudioTimeRef.current = currentTime;
+          nextNoteTimeRef.current = currentTime;
+        } else {
+          // Resume from pause - adjust start time to maintain elapsed time
+          startAudioTimeRef.current = currentTime - elapsedTimeRef.current / 1000;
+          nextNoteTimeRef.current = currentTime;
+          // Calculate which beat we should be on
+          const secondsPerBeat = 60 / bpmRef.current;
+          const totalBeats = elapsedTimeRef.current / 1000 / secondsPerBeat;
+          schedulerBeatRef.current = Math.floor(totalBeats) % beatsPerMeasureRef.current;
         }
-      } else if (timerEnded) {
-        setCountdownElapsed(0);
-        setElapsedTime(0);
-        setMeasureCount(0);
-        schedulerBeatRef.current = 0;
-        setBeat(0);
-        startAudioTimeRef.current = 0;
       }
-    }
 
-    setIsPlaying(!isPlaying);
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
   }, [
     isPlaying,
     countdownTime,
