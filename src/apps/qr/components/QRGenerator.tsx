@@ -112,7 +112,7 @@ const QRGenerator = memo(function QRGenerator() {
       new window.QRious({
         element: canvas1,
         value: text,
-        size: 2048,
+        size: 512,
         level: errorLevel,
         background: 'white',
         foreground: 'black',
@@ -125,7 +125,7 @@ const QRGenerator = memo(function QRGenerator() {
       new window.QRious({
         element: canvas2,
         value: text,
-        size: 2048,
+        size: 512,
         level: errorLevel,
         background: 'black',
         foreground: 'white',
