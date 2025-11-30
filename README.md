@@ -1,3 +1,5 @@
+<img src="public/icons/icon-72.png" alt="생활도구" width="32" height="32" align="left" style="margin-right: 8px;">
+
 # Productivity Tools
 
 React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
