@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { DrumMachine } from '../apps/drum/components/DrumMachine';
+import { ShareButton } from '../components/ShareButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 
@@ -19,7 +20,11 @@ const Drum = memo(function Drum() {
   });
 
   return (
-    <PageLayout title={drum.title} description={drum.description}>
+    <PageLayout
+      title={drum.title}
+      description={drum.description}
+      actions={<ShareButton title={drum.title} description={drum.description} />}
+    >
       <DrumMachine />
     </PageLayout>
   );

@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslations } from '../i18n';
+import { ShareButton } from './ShareButton';
 
 /**
  * Footer component with menu links and copyright
@@ -10,6 +11,11 @@ export const Footer = memo(function Footer() {
 
   return (
     <footer className="footer">
+      {/* Share Button */}
+      <div className="footer-share">
+        <ShareButton />
+      </div>
+
       {/* Footer Menu */}
       <nav className="footer-menu" aria-label="Footer navigation">
         <Link to="/privacy" className="footer-link">

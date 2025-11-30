@@ -354,6 +354,8 @@
 }
 
 .tool-header {
+  position: relative;
+  z-index: var(--z-sticky);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -731,5 +733,226 @@
   .btn--md {
     padding: 0 var(--spacing-3);
     font-size: var(--font-size-sm);
+  }
+}
+
+/* ============================================
+ * Share Button
+ * ============================================ */
+
+.share-button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    border-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default);
+}
+
+.share-button:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.share-button:active {
+  transform: translateY(0);
+}
+
+.share-button:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.share-button--compact {
+  padding: var(--spacing-2);
+  border-radius: var(--radius-md);
+}
+
+.share-button-icon {
+  font-size: var(--font-size-base);
+  line-height: 1;
+  transition: transform var(--transition-fast) var(--ease-default);
+}
+
+.share-button:hover .share-button-icon {
+  transform: translate(1px, -1px);
+}
+
+.share-button-text {
+  line-height: 1;
+}
+
+/* Backdrop overlay */
+.share-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal-backdrop);
+  background: transparent;
+}
+
+.share-dropdown {
+  position: absolute;
+  top: calc(100% + var(--spacing-2));
+  right: 0;
+  z-index: var(--z-popover);
+  min-width: 200px;
+  padding: var(--spacing-2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  animation: shareDropdownIn 0.15s var(--ease-out);
+}
+
+@keyframes shareDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.share-dropdown-header {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.share-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default);
+}
+
+.share-dropdown-item:hover {
+  background: var(--color-interactive-hover);
+}
+
+.share-dropdown-item:active {
+  transform: scale(0.98);
+}
+
+.share-dropdown-item:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: -2px;
+}
+
+.share-dropdown-item--success {
+  color: var(--color-success);
+}
+
+.share-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: var(--font-size-base);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-tertiary);
+}
+
+.share-item-label {
+  flex: 1;
+  font-weight: var(--font-weight-medium);
+}
+
+.share-dropdown-divider {
+  height: 1px;
+  margin: var(--spacing-2) 0;
+  background: var(--color-border-primary);
+}
+
+/* Mobile adjustments - Bottom sheet style */
+@media (max-width: 480px) {
+  .share-backdrop {
+    background: var(--color-bg-overlay);
+    animation: fadeIn 0.2s var(--ease-out);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .share-dropdown {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-width: 100%;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: var(--spacing-4) var(--spacing-4) var(--spacing-6);
+    box-shadow: var(--shadow-2xl);
+    animation: shareDropdownSlideUp 0.25s var(--ease-out);
+  }
+
+  .share-dropdown::before {
+    content: '';
+    display: block;
+    width: 36px;
+    height: 4px;
+    margin: 0 auto var(--spacing-4);
+    background: var(--color-border-primary);
+    border-radius: var(--radius-full);
+  }
+
+  @keyframes shareDropdownSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .share-dropdown-item {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+  }
+
+  .share-item-icon {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-lg);
   }
 }

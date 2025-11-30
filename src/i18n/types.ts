@@ -45,6 +45,18 @@ export interface CommonTranslation {
     success: string;
     backButton: string;
   };
+  // Share functionality
+  share: {
+    button: string;
+    copyLink: string;
+    copied: string;
+    more: string;
+    twitter: string;
+    facebook: string;
+    linkedin: string;
+    whatsapp: string;
+    telegram: string;
+  };
   // Error boundary
   errorBoundary: {
     title: string;
