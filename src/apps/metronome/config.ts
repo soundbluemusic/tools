@@ -11,6 +11,7 @@ const config: AppConfig = {
   },
   icon: '🎵',
   size: 51200, // 50KB
+  order: 1, // Display order
 };
 
 export default config;

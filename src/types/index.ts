@@ -19,6 +19,7 @@ export interface AppConfig {
   };
   readonly icon: string;
   readonly size: number; // Size in bytes
+  readonly order?: number; // Display order (lower = first)
 }
 
 /** Full app object with computed properties */

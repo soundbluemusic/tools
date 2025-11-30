@@ -26,7 +26,3 @@ export const TIMEOUTS = {
   /** Delay before revoking blob URL */
   BLOB_REVOKE: 100,
 } as const;
-
-/** QRious library CDN URL */
-export const QRIOUS_CDN_URL =
-  'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js';

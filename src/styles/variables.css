@@ -194,9 +194,10 @@
 /* ============================================
  * Dark Mode Variables - Warm & Comfortable
  * Inspired by Claude.ai dark mode
+ * Supports both system preference and manual toggle via data-theme
  * ============================================ */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-bg-primary: #1a1918;
     --color-bg-secondary: #212120;
     --color-bg-tertiary: #292827;
@@ -256,4 +257,66 @@
     --shadow-glow: 0 0 0 transparent;
     --shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.15);
   }
+}
+
+/* Manual dark mode override via data-theme attribute */
+:root[data-theme="dark"] {
+  --color-bg-primary: #1a1918;
+  --color-bg-secondary: #212120;
+  --color-bg-tertiary: #292827;
+  --color-bg-elevated: #2f2e2d;
+  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+  --color-text-primary: #ececec;
+  --color-text-secondary: #a8a8a8;
+  --color-text-tertiary: #737373;
+  --color-text-inverse: #1a1918;
+  --color-text-brand: #ececec;
+
+  --color-border-primary: #333231;
+  --color-border-secondary: #292827;
+  --color-border-focus: #ececec;
+  --color-border-hover: #404040;
+
+  --color-interactive-hover: rgba(236, 236, 236, 0.06);
+  --color-interactive-active: rgba(236, 236, 236, 0.1);
+  --color-interactive-focus: rgba(236, 236, 236, 0.15);
+  --color-interactive-muted: #292827;
+
+  --color-skeleton: rgba(255, 255, 255, 0.05);
+  --color-skeleton-shimmer: rgba(255, 255, 255, 0.06);
+
+  /* Semantic Colors - Dark Mode */
+  --color-error: #f87171;
+  --color-error-bg: rgba(248, 113, 113, 0.1);
+  --color-error-border: rgba(248, 113, 113, 0.2);
+  --color-success: #4ade80;
+  --color-success-bg: rgba(74, 222, 128, 0.1);
+  --color-success-border: rgba(74, 222, 128, 0.2);
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgba(251, 191, 36, 0.1);
+  --color-warning-border: rgba(251, 191, 36, 0.2);
+  --color-info: #a8a8a8;
+  --color-info-bg: rgba(168, 168, 168, 0.1);
+  --color-info-border: rgba(168, 168, 168, 0.2);
+
+  /* Brand/Accent - Dark Mode */
+  --color-accent-primary: #ececec;
+  --color-accent-secondary: #a8a8a8;
+  --color-accent-tertiary: #737373;
+  --color-accent-hover: #ffffff;
+  --color-gradient-start: #ececec;
+  --color-gradient-end: #a8a8a8;
+
+  /* Shadows - Dark Mode (very subtle) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --shadow-2xl: 0 16px 48px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 0 transparent;
+  --shadow-inner: inset 0 1px 2px rgba(0, 0, 0, 0.15);
 }

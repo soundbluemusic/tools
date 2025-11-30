@@ -1,69 +1,59 @@
-import { memo, useCallback, useEffect } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useNavigate,
-  useLocation,
-} from 'react-router-dom';
+import { memo, useEffect, lazy, Suspense } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
 import { LanguageToggle } from './components/LanguageToggle';
+import { ThemeToggle } from './components/ThemeToggle';
 import { PWAPrompt } from './components/PWAPrompt';
+import { SkipLink } from './components/SkipLink';
+import { Loader } from './components/ui';
 import { LanguageProvider } from './i18n';
+import { ThemeProvider } from './hooks';
 import './App.css';
 
-// Direct imports for instant page loads - no lazy loading for small pages
+// Critical pages - direct imports for instant loading
 import Home from './pages/Home';
-import Metronome from './pages/Metronome';
-import QR from './pages/QR';
-import Sitemap from './pages/Sitemap';
-import OpenSource from './pages/OpenSource';
-import ToolsUsed from './pages/ToolsUsed';
 import NotFound from './pages/NotFound';
 
+// Tool pages - lazy loaded for code splitting
+const Metronome = lazy(() => import('./pages/Metronome'));
+const QR = lazy(() => import('./pages/QR'));
+
+// Info pages - lazy loaded (rarely visited)
+const Sitemap = lazy(() => import('./pages/Sitemap'));
+const OpenSource = lazy(() => import('./pages/OpenSource'));
+const ToolsUsed = lazy(() => import('./pages/ToolsUsed'));
+
 /**
- * Route configuration for prefetching
+ * Loading fallback for lazy-loaded pages
+ */
+function PageLoader() {
+  return (
+    <div className="page-loader">
+      <Loader size="lg" />
+    </div>
+  );
+}
+
+/**
+ * Route configuration with lazy loading support
  */
 const ROUTES = [
-  { path: '/', element: <Home /> },
-  { path: '/metronome', element: <Metronome /> },
-  { path: '/qr', element: <QR /> },
-  { path: '/sitemap', element: <Sitemap /> },
-  { path: '/opensource', element: <OpenSource /> },
-  { path: '/tools-used', element: <ToolsUsed /> },
-  { path: '*', element: <NotFound /> },
+  { path: '/', element: <Home />, lazy: false },
+  { path: '/metronome', element: <Metronome />, lazy: true },
+  { path: '/qr', element: <QR />, lazy: true },
+  { path: '/sitemap', element: <Sitemap />, lazy: true },
+  { path: '/opensource', element: <OpenSource />, lazy: true },
+  { path: '/tools-used', element: <ToolsUsed />, lazy: true },
+  { path: '*', element: <NotFound />, lazy: false },
 ] as const;
 
 /**
- * Navigation wrapper with View Transitions API support
+ * Navigation wrapper handling scroll restoration on route changes
+ * View Transitions are handled by useViewTransition hook in components
  */
 function NavigationProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
   const location = useLocation();
-
-  // Enhanced navigation with View Transitions API
-  const handleNavigation = useCallback(
-    (to: string) => {
-      // Check if View Transitions API is supported
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          navigate(to);
-        });
-      } else {
-        navigate(to);
-      }
-    },
-    [navigate]
-  );
-
-  // Expose navigation handler globally for Link components
-  useEffect(() => {
-    window.__navigate = handleNavigation;
-    return () => {
-      delete window.__navigate;
-    };
-  }, [handleNavigation]);
 
   // Scroll to top on route change
   useEffect(() => {
@@ -79,24 +69,30 @@ function NavigationProvider({ children }: { children: React.ReactNode }) {
  */
 const App = memo(function App() {
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
+    <BrowserRouter>
+      <ThemeProvider>
         <LanguageProvider>
-          <NavigationProvider>
-            <main className="main-content">
-              <Routes>
-                {ROUTES.map((route) => (
-                  <Route key={route.path} path={route.path} element={route.element} />
-                ))}
-              </Routes>
-            </main>
-            <Footer />
-            <LanguageToggle />
-            <PWAPrompt />
-          </NavigationProvider>
+          <ErrorBoundary>
+            <NavigationProvider>
+              <SkipLink />
+              <main id="main-content" className="main-content" role="main">
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    {ROUTES.map((route) => (
+                      <Route key={route.path} path={route.path} element={route.element} />
+                    ))}
+                  </Routes>
+                </Suspense>
+              </main>
+              <Footer />
+              <ThemeToggle />
+              <LanguageToggle />
+              <PWAPrompt />
+            </NavigationProvider>
+          </ErrorBoundary>
         </LanguageProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+      </ThemeProvider>
+    </BrowserRouter>
   );
 });
 
@@ -104,10 +100,9 @@ App.displayName = 'App';
 
 export default App;
 
-// Type declaration for global navigation
+// Type declaration for debug utilities
 declare global {
   interface Window {
-    __navigate?: (to: string) => void;
     __DEBUG__?: {
       version: string;
       env: string;

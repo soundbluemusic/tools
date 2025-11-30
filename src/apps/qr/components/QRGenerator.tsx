@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
+import { useState, useEffect, memo, useCallback, useMemo } from 'react';
+import QRious from 'qrious';
 import { useTranslations } from '../../../i18n';
 import { useDebounce } from '../../../hooks/useDebounce';
 import {
@@ -6,22 +7,8 @@ import {
   URL_DEBOUNCE_MS,
   COLOR_THRESHOLD,
   TIMEOUTS,
-  QRIOUS_CDN_URL,
 } from '../constants';
 import './QRGenerator.css';
-
-declare global {
-  interface Window {
-    QRious: new (options: {
-      element: HTMLCanvasElement;
-      value: string;
-      size: number;
-      level: string;
-      background: string;
-      foreground: string;
-    }) => void;
-  }
-}
 
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type ColorMode = 'black' | 'white';
@@ -33,7 +20,6 @@ const QRGenerator = memo(function QRGenerator() {
   const [qrBlack, setQrBlack] = useState<string | null>(null);
   const [qrWhite, setQrWhite] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
-  const isLibraryLoaded = useRef(false);
 
   // Debounce URL for QR generation (input stays responsive)
   const debouncedUrl = useDebounce(url, URL_DEBOUNCE_MS);
@@ -90,33 +76,12 @@ const QRGenerator = memo(function QRGenerator() {
     return canvas.toDataURL('image/png');
   }, []);
 
-  const loadQRLibrary = useCallback(() => {
-    return new Promise<void>((resolve) => {
-      if (window.QRious) {
-        isLibraryLoaded.current = true;
-        resolve();
-        return;
-      }
-      if (isLibraryLoaded.current) {
-        resolve();
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = QRIOUS_CDN_URL;
-      script.onload = () => {
-        isLibraryLoaded.current = true;
-        resolve();
-      };
-      document.head.appendChild(script);
-    });
-  }, []);
-
   const createQR = useCallback(
     (text: string, level: ErrorLevel) => {
-      if (!window.QRious || !text.trim()) return;
+      if (!text.trim()) return;
 
       const canvas1 = document.createElement('canvas');
-      new window.QRious({
+      new QRious({
         element: canvas1,
         value: text,
         size: QR_SIZE,
@@ -129,7 +94,7 @@ const QRGenerator = memo(function QRGenerator() {
       setQrBlack(blackQR);
 
       const canvas2 = document.createElement('canvas');
-      new window.QRious({
+      new QRious({
         element: canvas2,
         value: text,
         size: QR_SIZE,
@@ -143,10 +108,6 @@ const QRGenerator = memo(function QRGenerator() {
     },
     [makeTransparent]
   );
-
-  useEffect(() => {
-    loadQRLibrary();
-  }, [loadQRLibrary]);
 
   useEffect(() => {
     if (!debouncedUrl.trim()) {

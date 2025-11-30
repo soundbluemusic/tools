@@ -15,3 +15,12 @@ export { useSort } from './useSort';
 export { useViewTransition } from './useViewTransition';
 export { usePWA } from './usePWA';
 export { useSEO } from './useSEO';
+export { useTheme, ThemeProvider } from './useTheme';
+export type { Theme, ResolvedTheme } from './useTheme';
+export {
+  useFocusTrap,
+  useArrowNavigation,
+  useAnnounce,
+  usePrefersReducedMotion,
+  useId,
+} from './useA11y';

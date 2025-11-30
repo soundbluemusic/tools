@@ -3,6 +3,7 @@ import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
 import { metronomeKo, metronomeEn } from './translations/metronome';
+import { getStorageItem, setStorageItem, createEnumValidator } from '../utils/storage';
 
 /**
  * All translations organized by language
@@ -41,13 +42,27 @@ const LanguageContext = createContext<LanguageContextValue | undefined>(undefine
 const LANGUAGE_STORAGE_KEY = 'preferred-language';
 
 /**
- * Get initial language from localStorage or default to Korean
+ * Supported languages for validation
+ */
+const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
+
+/**
+ * Type-safe validator for language values
+ */
+const isLanguage = createEnumValidator(SUPPORTED_LANGUAGES);
+
+/**
+ * Get initial language from localStorage or detect from browser
  */
 const getInitialLanguage = (): Language => {
   if (typeof window === 'undefined') return 'ko';
 
-  const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (stored === 'ko' || stored === 'en') {
+  // Try to get from storage with validation
+  const stored = getStorageItem<Language>(LANGUAGE_STORAGE_KEY, null as unknown as Language, {
+    validator: isLanguage,
+  });
+
+  if (stored) {
     return stored;
   }
 
@@ -67,25 +82,27 @@ const getInitialLanguage = (): Language => {
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
-  // Save language preference to localStorage
+  // Save language preference to localStorage with type safety
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+    setStorageItem(LANGUAGE_STORAGE_KEY, lang);
   }, []);
 
   // Toggle between languages - use state updater to avoid language dependency
   const toggleLanguage = useCallback(() => {
     setLanguageState((prev) => {
       const next = prev === 'ko' ? 'en' : 'ko';
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, next);
+      setStorageItem(LANGUAGE_STORAGE_KEY, next);
       return next;
     });
   }, []);
 
-  // Sync with localStorage on mount
+  // Sync with localStorage on mount (with validation)
   useEffect(() => {
-    const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (stored === 'ko' || stored === 'en') {
+    const stored = getStorageItem<Language>(LANGUAGE_STORAGE_KEY, null as unknown as Language, {
+      validator: isLanguage,
+    });
+    if (stored) {
       setLanguageState(stored);
     }
   }, []);

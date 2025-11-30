@@ -1,0 +1,119 @@
+/* ==========================================================================
+   Theme Toggle - Floating button fixed at top-right, next to Language Toggle
+   ========================================================================== */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 6.5rem; /* Position left of language toggle */
+  z-index: 1000;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+
+  background: var(--color-bg-secondary, #ffffff);
+  border: 1px solid var(--color-border-primary, #e7e5e4);
+  border-radius: 8px;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary, #1c1917);
+  cursor: pointer;
+
+  contain: layout style;
+  transition: border-color 0.15s ease-out,
+              background-color 0.15s ease-out;
+}
+
+.theme-toggle:hover {
+  border-color: var(--color-border-hover, #d6d3d1);
+  background: var(--color-bg-tertiary, #f5f4f1);
+}
+
+.theme-toggle-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+}
+
+.theme-toggle-text {
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Tablet adjustments */
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: 1.25rem;
+    right: 6rem;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .theme-toggle {
+    top: 0.75rem;
+    right: 5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .theme-toggle-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* Small mobile - icon only */
+@media (max-width: 360px) {
+  .theme-toggle {
+    right: 4rem;
+    padding: 0.5rem;
+  }
+
+  .theme-toggle-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+}
+
+/* Safe area support for notched devices */
+@supports (top: env(safe-area-inset-top)) {
+  .theme-toggle {
+    top: calc(1.5rem + env(safe-area-inset-top));
+    right: calc(6.5rem + env(safe-area-inset-right));
+  }
+
+  @media (max-width: 768px) {
+    .theme-toggle {
+      top: calc(1.25rem + env(safe-area-inset-top));
+      right: calc(6rem + env(safe-area-inset-right));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .theme-toggle {
+      top: calc(0.75rem + env(safe-area-inset-top));
+      right: calc(5rem + env(safe-area-inset-right));
+    }
+  }
+
+  @media (max-width: 360px) {
+    .theme-toggle {
+      right: calc(4rem + env(safe-area-inset-right));
+    }
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle {
+    transition: none;
+  }
+}
