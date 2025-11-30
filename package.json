@@ -21,7 +21,8 @@
     "typecheck": "tsc --noEmit",
     "validate": "npm run typecheck && npm run lint && npm run test:run",
     "generate-icons": "node scripts/generate-icons.mjs",
-    "generate-og-image": "node scripts/generate-og-image.mjs"
+    "generate-og-image": "node scripts/generate-og-image.mjs",
+    "convert-webp": "node scripts/convert-to-webp.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

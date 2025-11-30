@@ -11,6 +11,7 @@ const config: AppConfig = {
   },
   icon: '📱',
   size: 153600, // 150KB
+  order: 2, // Display order
 };
 
 export default config;
