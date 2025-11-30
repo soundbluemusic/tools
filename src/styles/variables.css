@@ -155,6 +155,12 @@
 
   /* ============================================
    * Responsive Breakpoints
+   * Used in media queries throughout the app:
+   * - xs (320px): Small mobile phones
+   * - sm (480px): Mobile phones (portrait)
+   * - md (768px): Tablets (portrait)
+   * - lg (1024px): Tablets (landscape) / Small desktops
+   * - xl (1280px): Desktops / Large screens
    * ============================================ */
   --breakpoint-xs: 320px;
   --breakpoint-sm: 480px;
@@ -163,7 +169,10 @@
   --breakpoint-xl: 1280px;
 
   /* ============================================
-   * Touch Target Sizes (WCAG 2.5.5)
+   * Touch Target Sizes (WCAG 2.5.5 Compliance)
+   * - min (44px): Minimum accessible touch target
+   * - comfortable (48px): Recommended for primary actions
+   * See: https://www.w3.org/WAI/WCAG21/Understanding/target-size.html
    * ============================================ */
   --touch-target-min: 44px;
   --touch-target-comfortable: 48px;

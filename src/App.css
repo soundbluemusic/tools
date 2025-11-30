@@ -469,8 +469,12 @@
 }
 
 /* ==========================================================================
-   Tablet Optimizations (768px - 1024px)
+   Responsive Optimizations
+   Note: These rules override components.css for this app's specific needs.
+   Uses rem values for GPU-optimized performance rendering.
    ========================================================================== */
+
+/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
   #root {
     max-width: 800px;

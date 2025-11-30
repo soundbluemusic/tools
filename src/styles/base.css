@@ -203,14 +203,24 @@ table {
 
 /* ============================================
  * Touch Device Optimizations
+ * Detects touch-primary devices (phones/tablets)
+ * using the pointer media query
  * ============================================ */
 @media (hover: none) and (pointer: coarse) {
-  /* Increase touch targets on touch devices */
-  a, button {
+  /*
+   * Increase touch targets for interactive elements
+   * Note: Only applies to block-level buttons and nav links
+   * Inline text links are excluded to preserve text flow
+   */
+  button:not(.inline-btn),
+  a.app-item,
+  a.back-link,
+  a.not-found-link,
+  a.footer-link {
     min-height: var(--touch-target-comfortable, 48px);
   }
 
-  /* Disable hover effects that can feel "sticky" on touch */
+  /* Remove tap highlight that can feel "sticky" on touch */
   * {
     -webkit-tap-highlight-color: transparent;
   }
