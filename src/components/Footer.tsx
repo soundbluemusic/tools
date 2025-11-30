@@ -15,6 +15,9 @@ export const Footer = memo(function Footer() {
         <Link to="/about" className="footer-link">
           {t.common.footer.about}
         </Link>
+        <Link to="/sitemap" className="footer-link">
+          {t.common.footer.sitemap}
+        </Link>
         <Link to="/opensource" className="footer-link">
           {t.common.footer.opensource}
         </Link>
