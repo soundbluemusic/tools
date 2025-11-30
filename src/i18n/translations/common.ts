@@ -12,7 +12,7 @@ export const commonKo: CommonTranslation = {
     searchAriaLabel: '도구 검색',
     clearSearchAriaLabel: '검색어 지우기',
     sortAriaLabel: '정렬 방식',
-    noResults: '에 대한 검색 결과가 없습니다',
+    noResults: '"{query}"에 대한 검색 결과가 없습니다',
     sort: {
       nameAsc: '이름순 (A-Z)',
       nameDesc: '이름역순 (Z-A)',
@@ -49,6 +49,18 @@ export const commonKo: CommonTranslation = {
     offlineTitle: '오프라인',
     offlineMessage: '인터넷 연결이 없습니다. 일부 기능이 제한될 수 있습니다.',
   },
+  notFound: {
+    title: '페이지를 찾을 수 없습니다',
+    message: '요청하신 페이지가 존재하지 않거나 이동되었습니다.',
+    backToHome: '← 홈으로 돌아가기',
+  },
+  languageToggle: {
+    switchToEnglish: 'Switch to English',
+    switchToKorean: '한국어로 전환',
+  },
+  a11y: {
+    availableTools: '사용 가능한 도구',
+  },
 };
 
 export const commonEn: CommonTranslation = {
@@ -63,7 +75,7 @@ export const commonEn: CommonTranslation = {
     searchAriaLabel: 'Search tools',
     clearSearchAriaLabel: 'Clear search',
     sortAriaLabel: 'Sort by',
-    noResults: 'No results found for',
+    noResults: 'No results found for "{query}"',
     sort: {
       nameAsc: 'Name (A-Z)',
       nameDesc: 'Name (Z-A)',
@@ -100,5 +112,17 @@ export const commonEn: CommonTranslation = {
     updateButton: 'Update',
     offlineTitle: 'Offline',
     offlineMessage: 'No internet connection. Some features may be limited.',
+  },
+  notFound: {
+    title: 'Page Not Found',
+    message: 'The page you requested does not exist or has been moved.',
+    backToHome: '← Back to Home',
+  },
+  languageToggle: {
+    switchToEnglish: 'Switch to English',
+    switchToKorean: '한국어로 전환',
+  },
+  a11y: {
+    availableTools: 'Available tools',
   },
 };

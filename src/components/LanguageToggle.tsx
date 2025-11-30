@@ -7,14 +7,18 @@ import './LanguageToggle.css';
  * Displayed on all pages at the bottom-right corner
  */
 export const LanguageToggle = memo(function LanguageToggle() {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, t } = useLanguage();
+  const toggleLabel =
+    language === 'ko'
+      ? t.common.languageToggle.switchToEnglish
+      : t.common.languageToggle.switchToKorean;
 
   return (
     <button
       onClick={toggleLanguage}
       className="language-toggle"
-      title={language === 'ko' ? 'Switch to English' : '한국어로 전환'}
-      aria-label={language === 'ko' ? 'Switch to English' : '한국어로 전환'}
+      title={toggleLabel}
+      aria-label={toggleLabel}
     >
       <svg
         className="language-toggle-icon"

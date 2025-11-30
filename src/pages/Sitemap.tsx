@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { PageLayout } from '../components/layout';
-import { useLanguage } from '../i18n/context';
+import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
 import { APPS } from '../constants/apps';
 import { BASE_URL, getTodayDate } from '../constants/site';

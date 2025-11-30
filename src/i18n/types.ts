@@ -61,6 +61,21 @@ export interface CommonTranslation {
     offlineTitle: string;
     offlineMessage: string;
   };
+  // 404 Not Found
+  notFound: {
+    title: string;
+    message: string;
+    backToHome: string;
+  };
+  // Language Toggle
+  languageToggle: {
+    switchToEnglish: string;
+    switchToKorean: string;
+  };
+  // Accessibility
+  a11y: {
+    availableTools: string;
+  };
 }
 
 /**
