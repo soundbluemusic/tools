@@ -49,9 +49,9 @@
 /* Base styles with GPU acceleration */
 #root {
   width: 100%;
-  max-width: 800px;
+  max-width: 1024px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 2rem 1.5rem;
   /* Promote to own layer for smoother scrolling */
   transform: var(--gpu-transform);
 }
@@ -70,7 +70,7 @@
 
 /* Title styling - simple and clean */
 .title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
   font-weight: 600;
   margin: 0 0 1rem 0;
   color: var(--text-color);
@@ -403,7 +403,7 @@
 }
 
 .tool-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.25rem, 5vw, 1.5rem);
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   color: var(--text-color);
@@ -469,15 +469,40 @@
 }
 
 /* ==========================================================================
-   Mobile Optimizations
+   Tablet Optimizations (768px - 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  #root {
+    max-width: 800px;
+    padding: 1.5rem 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #root {
+    padding: 1.25rem 1rem;
+  }
+
+  .tool-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .tool-content {
+    padding: 1.5rem;
+  }
+
+  .footer-menu {
+    gap: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   Mobile Optimizations (< 480px)
    ========================================================================== */
 @media (max-width: 480px) {
   #root {
     padding: 1rem 0.75rem;
-  }
-
-  .title {
-    font-size: 1.25rem;
   }
 
   .controls {
@@ -499,10 +524,33 @@
 
   .tool-header {
     flex-direction: column;
+    gap: 0.5rem;
   }
 
   .tool-content {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   Small Mobile (< 360px)
+   ========================================================================== */
+@media (max-width: 360px) {
+  #root {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .app-item {
+    padding: 0.75rem;
+  }
+
+  .tool-content {
+    padding: 1rem;
+  }
+
+  .footer-menu {
+    flex-direction: column;
+    gap: 0.75rem;
   }
 }
 
@@ -668,4 +716,12 @@
   padding: 0.5rem 1rem;
   border-radius: 8px;
   backdrop-filter: blur(8px);
+}
+
+/* Safe area support for QR page back link */
+@supports (top: env(safe-area-inset-top)) {
+  .qr-page .back-link {
+    top: calc(1rem + env(safe-area-inset-top));
+    left: calc(1rem + env(safe-area-inset-left));
+  }
 }

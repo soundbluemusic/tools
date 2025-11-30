@@ -154,6 +154,21 @@
   --container-xl: 1280px;
 
   /* ============================================
+   * Responsive Breakpoints
+   * ============================================ */
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* ============================================
+   * Touch Target Sizes (WCAG 2.5.5)
+   * ============================================ */
+  --touch-target-min: 44px;
+  --touch-target-comfortable: 48px;
+
+  /* ============================================
    * Component Specific
    * ============================================ */
   /* Input */

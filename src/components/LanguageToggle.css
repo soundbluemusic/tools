@@ -56,18 +56,66 @@
   }
 }
 
+/* Tablet adjustments */
+@media (max-width: 768px) {
+  .language-toggle {
+    top: 1.25rem;
+    right: 1.25rem;
+  }
+}
+
 /* Mobile adjustments */
 @media (max-width: 480px) {
   .language-toggle {
-    top: 1rem;
-    right: 1rem;
-    padding: 0.5rem 0.875rem;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+    min-height: 44px;
+    min-width: 44px;
   }
 
   .language-toggle-icon {
     width: 1rem;
     height: 1rem;
+  }
+}
+
+/* Small mobile - icon only */
+@media (max-width: 360px) {
+  .language-toggle {
+    padding: 0.5rem;
+  }
+
+  .language-toggle-text {
+    /* Hide text on very small screens, show only icon */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+}
+
+/* Safe area support for notched devices */
+@supports (top: env(safe-area-inset-top)) {
+  .language-toggle {
+    top: calc(1.5rem + env(safe-area-inset-top));
+    right: calc(1.5rem + env(safe-area-inset-right));
+  }
+
+  @media (max-width: 768px) {
+    .language-toggle {
+      top: calc(1.25rem + env(safe-area-inset-top));
+      right: calc(1.25rem + env(safe-area-inset-right));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .language-toggle {
+      top: calc(0.75rem + env(safe-area-inset-top));
+      right: calc(0.75rem + env(safe-area-inset-right));
+    }
   }
 }
 

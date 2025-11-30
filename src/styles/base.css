@@ -63,6 +63,9 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  /* Touch-friendly minimum size */
+  min-height: var(--touch-target-min, 44px);
+  touch-action: manipulation;
 }
 
 button:disabled {
@@ -76,6 +79,20 @@ textarea,
 select {
   font-family: inherit;
   font-size: inherit;
+  /* Prevent iOS zoom on focus (requires 16px minimum) */
+  font-size: max(16px, 1rem);
+  touch-action: manipulation;
+}
+
+/* Touch-friendly input/select sizing */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+select {
+  min-height: var(--touch-target-min, 44px);
 }
 
 /* Lists */
@@ -154,5 +171,47 @@ table {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+ * Safe Area Support (for notched devices)
+ * ============================================ */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ============================================
+ * Responsive Typography
+ * ============================================ */
+@media (max-width: 480px) {
+  :root {
+    /* Slightly smaller base on mobile for better readability */
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    /* Slightly larger base on large screens */
+    font-size: 17px;
+  }
+}
+
+/* ============================================
+ * Touch Device Optimizations
+ * ============================================ */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch targets on touch devices */
+  a, button {
+    min-height: var(--touch-target-comfortable, 48px);
+  }
+
+  /* Disable hover effects that can feel "sticky" on touch */
+  * {
+    -webkit-tap-highlight-color: transparent;
   }
 }

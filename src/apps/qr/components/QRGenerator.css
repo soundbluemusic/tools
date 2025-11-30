@@ -18,12 +18,14 @@
 .qr-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--spacing-8);
+  gap: var(--spacing-6);
 }
 
-@media (min-width: 1024px) {
+/* Tablet: 2 columns */
+@media (min-width: 768px) {
   .qr-grid {
     grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-8);
   }
 }
 
@@ -309,14 +311,50 @@
   margin: 0;
 }
 
-/* Responsive adjustments */
+/* Tablet adjustments */
+@media (max-width: 768px) {
+  .qr-input-section h2,
+  .qr-display-section h2 {
+    font-size: var(--font-size-lg);
+  }
+
+  .qr-error-section h3,
+  .qr-color-section h3 {
+    font-size: var(--font-size-base);
+  }
+}
+
+/* Mobile adjustments */
 @media (max-width: 640px) {
   .qr-card {
     padding: var(--spacing-4);
   }
 
+  .qr-input-section,
+  .qr-display-section {
+    gap: var(--spacing-4);
+  }
+
+  .qr-input-section h2,
+  .qr-display-section h2 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-3);
+  }
+
   .qr-level-buttons {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .qr-level-btn {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    min-height: 44px;
+  }
+
+  .qr-color-btn {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
+    min-height: 44px;
   }
 
   .qr-preview {
@@ -336,6 +374,7 @@
     font-size: var(--font-size-sm);
     padding: var(--spacing-3);
     white-space: nowrap;
+    min-height: 48px;
   }
 
   /* Hide table on mobile, show cards instead */
@@ -347,6 +386,38 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-3);
+  }
+
+  .qr-input {
+    padding: var(--spacing-3);
+    min-height: 48px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 360px) {
+  .qr-card {
+    padding: var(--spacing-3);
+  }
+
+  .qr-preview-card {
+    padding: var(--spacing-3);
+  }
+
+  .qr-preview {
+    min-height: 180px;
+    padding: var(--spacing-3);
+  }
+
+  .qr-level-buttons,
+  .qr-color-buttons {
+    gap: var(--spacing-1);
+  }
+
+  .qr-level-btn,
+  .qr-color-btn {
+    padding: var(--spacing-2);
+    font-size: var(--font-size-xs);
   }
 }
 
