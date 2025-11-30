@@ -57,6 +57,15 @@ export interface CommonTranslation {
     whatsapp: string;
     telegram: string;
   };
+  // Embed functionality
+  embed: {
+    button: string;
+    title: string;
+    width: string;
+    height: string;
+    copyCode: string;
+    copied: string;
+  };
   // Error boundary
   errorBoundary: {
     title: string;
