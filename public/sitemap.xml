@@ -36,17 +36,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/metronome"/>
   </url>
 
-  <!-- Sitemap -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/sitemap</loc>
-    <lastmod>2025-11-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/sitemap"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/sitemap"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/sitemap"/>
-  </url>
-
   <!-- Open Source -->
   <url>
     <loc>https://tools.soundbluemusic.com/opensource</loc>
