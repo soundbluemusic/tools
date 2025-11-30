@@ -151,12 +151,44 @@ export interface MetronomeTranslation {
 }
 
 /**
+ * Drum Machine specific translations
+ */
+export interface DrumTranslation {
+  title: string;
+  description: string;
+  seo: SEOTranslation;
+  // Transport
+  play: string;
+  pause: string;
+  stop: string;
+  clear: string;
+  tempo: string;
+  // Instruments
+  kick: string;
+  snare: string;
+  hihat: string;
+  openhat: string;
+  clap: string;
+  // UI
+  step: string;
+  presets: string;
+  presetTechno: string;
+  presetHouse: string;
+  presetTrap: string;
+  presetBreakbeat: string;
+  presetMinimal: string;
+  // Status
+  loadedPreset: string;
+}
+
+/**
  * All translations combined
  */
 export interface Translations {
   common: CommonTranslation;
   qr: QRTranslation;
   metronome: MetronomeTranslation;
+  drum: DrumTranslation;
 }
 
 /**
