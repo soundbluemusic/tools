@@ -4,7 +4,6 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
 import { LanguageToggle } from './components/LanguageToggle';
 import { ThemeToggle } from './components/ThemeToggle';
-import { PWAPrompt } from './components/PWAPrompt';
 import { SkipLink } from './components/SkipLink';
 import { Loader } from './components/ui';
 import { LanguageProvider } from './i18n';
@@ -87,7 +86,6 @@ const App = memo(function App() {
               <Footer />
               <ThemeToggle />
               <LanguageToggle />
-              <PWAPrompt />
             </NavigationProvider>
           </ErrorBoundary>
         </LanguageProvider>
