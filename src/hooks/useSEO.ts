@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { BASE_URL, DEFAULT_OG_IMAGE, SITE_NAME } from '../constants/site';
 
 interface SEOConfig {
   title?: string;
@@ -10,10 +11,6 @@ interface SEOConfig {
   noindex?: boolean;
   isHomePage?: boolean;
 }
-
-const BASE_URL = 'https://tools.soundbluemusic.com';
-const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
-const SITE_NAME = 'Productivity Tools';
 
 /**
  * Update or create a meta tag
