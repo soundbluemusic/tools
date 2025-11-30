@@ -1,10 +1,10 @@
 /* ==========================================================================
-   Theme Toggle - Floating button fixed at top-left (Minimal)
+   Theme Toggle - Floating button fixed at top-right, next to Language Toggle
    ========================================================================== */
 .theme-toggle {
   position: fixed;
   top: 1.5rem;
-  left: 1.5rem;
+  right: 6.5rem; /* Position left of language toggle */
   z-index: 1000;
 
   display: inline-flex;
@@ -46,7 +46,7 @@
 @media (max-width: 768px) {
   .theme-toggle {
     top: 1.25rem;
-    left: 1.25rem;
+    right: 6rem;
   }
 }
 
@@ -54,7 +54,7 @@
 @media (max-width: 480px) {
   .theme-toggle {
     top: 0.75rem;
-    left: 0.75rem;
+    right: 5rem;
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
     min-height: 44px;
@@ -70,6 +70,7 @@
 /* Small mobile - icon only */
 @media (max-width: 360px) {
   .theme-toggle {
+    right: 4rem;
     padding: 0.5rem;
   }
 
@@ -86,20 +87,26 @@
 @supports (top: env(safe-area-inset-top)) {
   .theme-toggle {
     top: calc(1.5rem + env(safe-area-inset-top));
-    left: calc(1.5rem + env(safe-area-inset-left));
+    right: calc(6.5rem + env(safe-area-inset-right));
   }
 
   @media (max-width: 768px) {
     .theme-toggle {
       top: calc(1.25rem + env(safe-area-inset-top));
-      left: calc(1.25rem + env(safe-area-inset-left));
+      right: calc(6rem + env(safe-area-inset-right));
     }
   }
 
   @media (max-width: 480px) {
     .theme-toggle {
       top: calc(0.75rem + env(safe-area-inset-top));
-      left: calc(0.75rem + env(safe-area-inset-left));
+      right: calc(5rem + env(safe-area-inset-right));
+    }
+  }
+
+  @media (max-width: 360px) {
+    .theme-toggle {
+      right: calc(4rem + env(safe-area-inset-right));
     }
   }
 }
