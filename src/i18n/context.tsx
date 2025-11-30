@@ -3,6 +3,7 @@ import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
 import { metronomeKo, metronomeEn } from './translations/metronome';
+import { drumKo, drumEn } from './translations/drum';
 import { getStorageItem, setStorageItem, createEnumValidator } from '../utils/storage';
 
 /**
@@ -13,11 +14,13 @@ const allTranslations: AllTranslations = {
     common: commonKo,
     qr: qrKo,
     metronome: metronomeKo,
+    drum: drumKo,
   },
   en: {
     common: commonEn,
     qr: qrEn,
     metronome: metronomeEn,
+    drum: drumEn,
   },
 };
 
