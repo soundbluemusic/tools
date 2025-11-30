@@ -17,6 +17,7 @@ import './App.css';
 import Home from './pages/Home';
 import Metronome from './pages/Metronome';
 import QR from './pages/QR';
+import Sitemap from './pages/Sitemap';
 import OpenSource from './pages/OpenSource';
 import ToolsUsed from './pages/ToolsUsed';
 import NotFound from './pages/NotFound';
@@ -28,6 +29,7 @@ const ROUTES = [
   { path: '/', element: <Home /> },
   { path: '/metronome', element: <Metronome /> },
   { path: '/qr', element: <QR /> },
+  { path: '/sitemap', element: <Sitemap /> },
   { path: '/opensource', element: <OpenSource /> },
   { path: '/tools-used', element: <ToolsUsed /> },
   { path: '*', element: <NotFound /> },
