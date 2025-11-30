@@ -1,5 +1,13 @@
 import { useState, useEffect, useRef, memo, useCallback } from 'react';
 import { useTranslations } from '../../../i18n';
+import {
+  DEFAULTS,
+  BPM_RANGE,
+  VOLUME_RANGE,
+  FREQUENCIES,
+  TIMING,
+  PENDULUM,
+} from '../constants';
 import './MetronomePlayer.css';
 
 /**
@@ -99,15 +107,15 @@ NoteIcon.displayName = 'NoteIcon';
  * Features accurate BPM timing, timer, and beat visualization
  */
 const MetronomePlayer = memo(function MetronomePlayer() {
-  const [bpm, setBpm] = useState(120);
+  const [bpm, setBpm] = useState<number>(DEFAULTS.BPM);
   const [isPlaying, setIsPlaying] = useState(false);
   const [beat, setBeat] = useState(0);
-  const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
-  const [beatUnit, setBeatUnit] = useState(4);
+  const [beatsPerMeasure, setBeatsPerMeasure] = useState<number>(DEFAULTS.BEATS_PER_MEASURE);
+  const [beatUnit, setBeatUnit] = useState<number>(DEFAULTS.BEAT_UNIT);
   const [timerMinutes, setTimerMinutes] = useState('');
   const [timerSeconds, setTimerSeconds] = useState('');
   const [measureCount, setMeasureCount] = useState(0);
-  const [volume, setVolume] = useState(80);
+  const [volume, setVolume] = useState<number>(DEFAULTS.VOLUME);
   const [pendulumAngle, setPendulumAngle] = useState(0);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [countdownTime, setCountdownTime] = useState(0);
@@ -120,9 +128,9 @@ const MetronomePlayer = memo(function MetronomePlayer() {
   const nextNoteTimeRef = useRef(0);
   const schedulerBeatRef = useRef(0);
   const schedulerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const bpmRef = useRef(120);
-  const volumeRef = useRef(80);
-  const beatsPerMeasureRef = useRef(4);
+  const bpmRef = useRef<number>(DEFAULTS.BPM);
+  const volumeRef = useRef<number>(DEFAULTS.VOLUME);
+  const beatsPerMeasureRef = useRef<number>(DEFAULTS.BEATS_PER_MEASURE);
   const animationRef = useRef<number | null>(null);
   const startAudioTimeRef = useRef(0);
 
@@ -171,7 +179,10 @@ const MetronomePlayer = memo(function MetronomePlayer() {
 
         // Pendulum swing (one cycle per 2 beats)
         const swingCycle = totalBeats % 2;
-        const angle = swingCycle < 1 ? -30 + swingCycle * 60 : 30 - (swingCycle - 1) * 60;
+        const angle =
+          swingCycle < 1
+            ? -PENDULUM.MAX_ANGLE + swingCycle * PENDULUM.SWING_RANGE
+            : PENDULUM.MAX_ANGLE - (swingCycle - 1) * PENDULUM.SWING_RANGE;
         setPendulumAngle(angle);
 
         const elapsedMs = elapsed * 1000;
@@ -233,20 +244,20 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     const volumeMultiplier = volumeRef.current / 100;
 
     if (isFirst) {
-      osc.frequency.value = 2000;
+      osc.frequency.value = FREQUENCIES.ACCENT;
       gain.gain.setValueAtTime(0.8 * volumeMultiplier, time);
     } else {
-      osc.frequency.value = 800;
+      osc.frequency.value = FREQUENCIES.REGULAR;
       gain.gain.setValueAtTime(0.4 * volumeMultiplier, time);
     }
 
     gain.gain.exponentialRampToValueAtTime(
       Math.max(0.001, 0.01 * volumeMultiplier),
-      time + 0.08
+      time + TIMING.CLICK_DURATION_SECONDS
     );
 
     osc.start(time);
-    osc.stop(time + 0.08);
+    osc.stop(time + TIMING.CLICK_DURATION_SECONDS);
   }, [isAccentBeat]);
 
   // Scheduler effect - timing is already initialized in handleStart
@@ -258,7 +269,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         const secondsPerBeat = 60.0 / bpmRef.current;
         const now = audioContextRef.current.currentTime;
 
-        while (nextNoteTimeRef.current < now + 0.1) {
+        while (nextNoteTimeRef.current < now + TIMING.LOOK_AHEAD_SECONDS) {
           // Only schedule sound - measure count is calculated in animation loop
           playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
 
@@ -268,7 +279,7 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         }
       };
 
-      schedulerRef.current = setInterval(scheduleNotes, 25);
+      schedulerRef.current = setInterval(scheduleNotes, TIMING.SCHEDULER_INTERVAL_MS);
     } else {
       if (schedulerRef.current) {
         clearInterval(schedulerRef.current);
@@ -520,8 +531,8 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         <div className="metronome-slider-group">
           <input
             type="range"
-            min="40"
-            max="240"
+            min={BPM_RANGE.MIN}
+            max={BPM_RANGE.MAX}
             value={bpm}
             onChange={(e) => setBpm(parseInt(e.target.value))}
             className="metronome-slider"
@@ -535,8 +546,8 @@ const MetronomePlayer = memo(function MetronomePlayer() {
         <div className="metronome-slider-group">
           <input
             type="range"
-            min="0"
-            max="100"
+            min={VOLUME_RANGE.MIN}
+            max={VOLUME_RANGE.MAX}
             value={volume}
             onChange={(e) => setVolume(parseInt(e.target.value))}
             className="metronome-slider"
