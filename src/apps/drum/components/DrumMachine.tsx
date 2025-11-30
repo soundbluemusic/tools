@@ -6,6 +6,7 @@ import {
   INSTRUMENTS,
   TEMPO_RANGE,
   VOLUME_RANGE,
+  VELOCITY,
   AUDIO,
   PRESETS,
   DEFAULT_VOLUMES,
@@ -132,6 +133,13 @@ export const DrumMachine = memo(function DrumMachine() {
   const isPlayingRef = useRef<boolean>(false);
   const isDraggingRef = useRef(false);
   const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
+  // Velocity drag refs
+  const velocityDragRef = useRef<{
+    inst: Instrument;
+    step: number;
+    startY: number;
+    startVelocity: number;
+  } | null>(null);
 
   // Keep refs in sync with state
   useEffect(() => {
@@ -160,14 +168,18 @@ export const DrumMachine = memo(function DrumMachine() {
 
   /**
    * Play a single instrument sound at a specific time
+   * @param inst - Instrument to play
+   * @param time - Audio context time to schedule the sound
+   * @param velocity - Note velocity (0-100), affects volume
    */
   const playSound = useCallback(
-    (inst: Instrument, time?: number) => {
+    (inst: Instrument, time?: number, velocity: number = VELOCITY.DEFAULT) => {
       const ctx = audioContextRef.current;
-      if (!ctx) return;
+      if (!ctx || velocity <= 0) return;
 
       const startTime = time ?? ctx.currentTime;
-      const volumeMultiplier = volumesRef.current[inst] / 100;
+      // Combine instrument volume and note velocity
+      const volumeMultiplier = (volumesRef.current[inst] / 100) * (velocity / 100);
 
       switch (inst) {
         case 'kick': {
@@ -278,8 +290,9 @@ export const DrumMachine = memo(function DrumMachine() {
     (stepIndex: number, time: number) => {
       const currentPattern = patternRef.current;
       INSTRUMENTS.forEach((inst) => {
-        if (currentPattern[inst][stepIndex]) {
-          playSound(inst, time);
+        const velocity = currentPattern[inst][stepIndex];
+        if (velocity > 0) {
+          playSound(inst, time, velocity);
         }
       });
     },
@@ -369,12 +382,12 @@ export const DrumMachine = memo(function DrumMachine() {
   }, []);
 
   /**
-   * Set a step to a specific value (for drag painting)
+   * Set a step velocity value
    */
-  const setStep = useCallback((inst: Instrument, step: number, value: boolean) => {
+  const setStepVelocity = useCallback((inst: Instrument, step: number, velocity: number) => {
     setPattern((prev) => ({
       ...prev,
-      [inst]: prev[inst].map((val, i) => (i === step ? (value ? 1 : 0) : val)),
+      [inst]: prev[inst].map((val, i) => (i === step ? velocity : val)),
     }));
   }, []);
 
@@ -382,26 +395,61 @@ export const DrumMachine = memo(function DrumMachine() {
    * Handle drag start on a step
    */
   const handleStepMouseDown = useCallback(
-    (inst: Instrument, step: number) => {
-      isDraggingRef.current = true;
-      // Determine paint mode based on current step state (toggle it)
+    (inst: Instrument, step: number, clientY: number) => {
       const currentValue = pattern[inst][step];
-      paintModeRef.current = !currentValue;
-      setStep(inst, step, !currentValue);
+
+      if (currentValue > 0) {
+        // Active note: start velocity drag mode
+        velocityDragRef.current = {
+          inst,
+          step,
+          startY: clientY,
+          startVelocity: currentValue,
+        };
+        isDraggingRef.current = false;
+        paintModeRef.current = null;
+      } else {
+        // Inactive note: start paint mode with full velocity
+        isDraggingRef.current = true;
+        paintModeRef.current = true;
+        velocityDragRef.current = null;
+        setStepVelocity(inst, step, VELOCITY.DEFAULT);
+      }
     },
-    [pattern, setStep]
+    [pattern, setStepVelocity]
   );
 
   /**
-   * Handle mouse enter while dragging
+   * Handle mouse enter while dragging (paint mode only)
    */
   const handleStepMouseEnter = useCallback(
     (inst: Instrument, step: number) => {
-      if (isDraggingRef.current && paintModeRef.current !== null) {
-        setStep(inst, step, paintModeRef.current);
+      if (isDraggingRef.current && paintModeRef.current) {
+        setStepVelocity(inst, step, VELOCITY.DEFAULT);
       }
     },
-    [setStep]
+    [setStepVelocity]
+  );
+
+  /**
+   * Handle mouse move for velocity adjustment
+   */
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent | MouseEvent) => {
+      if (!velocityDragRef.current) return;
+
+      const { inst, step, startY, startVelocity } = velocityDragRef.current;
+      // Drag down = decrease velocity, drag up = increase velocity
+      const deltaY = e.clientY - startY;
+      // 100px drag = full velocity change
+      const velocityChange = Math.round(-deltaY * 1);
+      const newVelocity = Math.max(
+        VELOCITY.OFF,
+        Math.min(VELOCITY.MAX, startVelocity + velocityChange)
+      );
+      setStepVelocity(inst, step, newVelocity);
+    },
+    [setStepVelocity]
   );
 
   /**
@@ -410,47 +458,73 @@ export const DrumMachine = memo(function DrumMachine() {
   const handleDragEnd = useCallback(() => {
     isDraggingRef.current = false;
     paintModeRef.current = null;
+    velocityDragRef.current = null;
   }, []);
 
   /**
-   * Handle touch move for mobile drag painting
+   * Handle touch move for mobile (paint mode and velocity adjustment)
    */
   const handleTouchMove = useCallback(
     (e: React.TouchEvent) => {
-      if (!isDraggingRef.current || paintModeRef.current === null) return;
-
       const touch = e.touches[0];
+
+      // Velocity drag mode
+      if (velocityDragRef.current) {
+        const { inst, step, startY, startVelocity } = velocityDragRef.current;
+        const deltaY = touch.clientY - startY;
+        const velocityChange = Math.round(-deltaY * 1);
+        const newVelocity = Math.max(
+          VELOCITY.OFF,
+          Math.min(VELOCITY.MAX, startVelocity + velocityChange)
+        );
+        setStepVelocity(inst, step, newVelocity);
+        return;
+      }
+
+      // Paint mode
+      if (!isDraggingRef.current || !paintModeRef.current) return;
+
       const element = document.elementFromPoint(touch.clientX, touch.clientY);
 
       if (element && element.classList.contains('drum-step')) {
         const inst = element.getAttribute('data-instrument') as Instrument;
-        const step = parseInt(element.getAttribute('data-step') || '', 10);
+        const stepAttr = element.getAttribute('data-step');
+        const step = stepAttr ? parseInt(stepAttr, 10) : NaN;
 
         if (inst && !isNaN(step)) {
-          setStep(inst, step, paintModeRef.current);
+          setStepVelocity(inst, step, VELOCITY.DEFAULT);
         }
       }
     },
-    [setStep]
+    [setStepVelocity]
   );
 
   /**
-   * Add global mouse up listener for drag end
+   * Add global mouse listeners for drag handling
    */
   useEffect(() => {
     const handleGlobalMouseUp = () => {
       isDraggingRef.current = false;
       paintModeRef.current = null;
+      velocityDragRef.current = null;
+    };
+
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (velocityDragRef.current) {
+        handleMouseMove(e);
+      }
     };
 
     window.addEventListener('mouseup', handleGlobalMouseUp);
     window.addEventListener('touchend', handleGlobalMouseUp);
+    window.addEventListener('mousemove', handleGlobalMouseMove);
 
     return () => {
       window.removeEventListener('mouseup', handleGlobalMouseUp);
       window.removeEventListener('touchend', handleGlobalMouseUp);
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
     };
-  }, []);
+  }, [handleMouseMove]);
 
   /**
    * Show status message
@@ -625,29 +699,37 @@ export const DrumMachine = memo(function DrumMachine() {
               </div>
             </div>
             <div className="drum-track-steps">
-              {Array.from({ length: STEPS }).map((_, step) => (
-                <button
-                  key={step}
-                  className={cn(
-                    'drum-step',
-                    pattern[inst][step] && 'drum-step--active',
-                    isPlaying && currentStep === step && 'drum-step--playing'
-                  )}
-                  data-instrument={inst}
-                  data-step={step}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    handleStepMouseDown(inst, step);
-                  }}
-                  onMouseEnter={() => handleStepMouseEnter(inst, step)}
-                  onTouchStart={(e) => {
-                    e.preventDefault();
-                    handleStepMouseDown(inst, step);
-                  }}
-                  aria-label={`${getInstrumentLabel(inst)} ${drum.step} ${step + 1}`}
-                  aria-pressed={Boolean(pattern[inst][step])}
-                />
-              ))}
+              {Array.from({ length: STEPS }).map((_, step) => {
+                const velocity = pattern[inst][step];
+                const isActive = velocity > 0;
+                // Opacity: min 0.3 at velocity 10, max 1 at velocity 100
+                const opacity = isActive ? 0.3 + (velocity / VELOCITY.MAX) * 0.7 : 1;
+                return (
+                  <button
+                    key={step}
+                    className={cn(
+                      'drum-step',
+                      isActive && 'drum-step--active',
+                      isPlaying && currentStep === step && 'drum-step--playing'
+                    )}
+                    style={isActive ? { opacity } : undefined}
+                    data-instrument={inst}
+                    data-step={step}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      handleStepMouseDown(inst, step, e.clientY);
+                    }}
+                    onMouseEnter={() => handleStepMouseEnter(inst, step)}
+                    onTouchStart={(e) => {
+                      e.preventDefault();
+                      const touch = e.touches[0];
+                      handleStepMouseDown(inst, step, touch.clientY);
+                    }}
+                    aria-label={`${getInstrumentLabel(inst)} ${drum.step} ${step + 1}${isActive ? ` (${velocity}%)` : ''}`}
+                    aria-pressed={isActive}
+                  />
+                );
+              })}
             </div>
           </div>
         ))}
