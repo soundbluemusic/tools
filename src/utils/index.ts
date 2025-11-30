@@ -8,5 +8,12 @@ export {
   setStorageItem,
   removeStorageItem,
   clearStorage,
+  // Validators
+  createEnumValidator,
+  createObjectValidator,
+  isString,
+  isNumber,
+  isBoolean,
+  type Validator,
 } from './storage';
 export { getSizeClass, SIZE_CLASSES, type Size } from './sizeClass';

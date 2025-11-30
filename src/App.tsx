@@ -79,9 +79,9 @@ function NavigationProvider({ children }: { children: React.ReactNode }) {
  */
 const App = memo(function App() {
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <LanguageProvider>
+    <BrowserRouter>
+      <LanguageProvider>
+        <ErrorBoundary>
           <NavigationProvider>
             <main className="main-content">
               <Routes>
@@ -94,9 +94,9 @@ const App = memo(function App() {
             <LanguageToggle />
             <PWAPrompt />
           </NavigationProvider>
-        </LanguageProvider>
-      </BrowserRouter>
-    </ErrorBoundary>
+        </ErrorBoundary>
+      </LanguageProvider>
+    </BrowserRouter>
   );
 });
 

@@ -465,3 +465,29 @@
   font-size: var(--font-size-xs);
   color: var(--color-text-tertiary);
 }
+
+/* Error state for library load failure */
+.qr-placeholder.qr-error {
+  color: var(--color-error, #ef4444);
+}
+
+.qr-placeholder.qr-error .qr-placeholder-icon {
+  color: var(--color-error, #ef4444);
+}
+
+.qr-retry-btn {
+  margin-top: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast) var(--ease-default);
+  border: 1px solid var(--color-error, #ef4444);
+  background-color: transparent;
+  color: var(--color-error, #ef4444);
+}
+
+.qr-retry-btn:hover {
+  background-color: var(--color-error, #ef4444);
+  color: white;
+}
