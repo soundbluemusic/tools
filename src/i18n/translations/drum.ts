@@ -2,9 +2,9 @@ import type { DrumTranslation } from '../types';
 
 export const drumKo: DrumTranslation = {
   title: '드럼머신',
-  description: 'AI 기반 리듬 시퀀서',
+  description: '드럼 패턴 연습용 시퀀서',
   seo: {
-    title: '무료 온라인 드럼머신 | AI 리듬 시퀀서',
+    title: '무료 온라인 드럼머신 | 드럼 패턴 연습 시퀀서',
     description:
       '무료 온라인 드럼머신. 16스텝 시퀀서, 테크노/하우스/트랩 프리셋, 60-180 BPM 조절. 드럼 패턴 연습과 비트 메이킹에 완벽한 도구. 회원가입 불필요!',
     keywords:
@@ -36,9 +36,9 @@ export const drumKo: DrumTranslation = {
 
 export const drumEn: DrumTranslation = {
   title: 'Drum Machine',
-  description: 'AI-powered rhythm sequencer',
+  description: 'Drum pattern practice sequencer',
   seo: {
-    title: 'Free Online Drum Machine | AI Rhythm Sequencer',
+    title: 'Free Online Drum Machine | Drum Pattern Sequencer',
     description:
       'Free online drum machine. 16-step sequencer, techno/house/trap presets, 60-180 BPM control. Perfect tool for drum pattern practice and beat making. No signup required!',
     keywords:

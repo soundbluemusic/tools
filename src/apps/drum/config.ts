@@ -6,8 +6,8 @@ const config: AppConfig = {
     en: 'Drum Machine',
   },
   desc: {
-    ko: 'AI 기반 리듬 시퀀서',
-    en: 'AI-powered rhythm sequencer',
+    ko: '드럼 패턴 연습용 시퀀서',
+    en: 'Drum pattern practice sequencer',
   },
   icon: '🥁',
   size: 61440, // ~60KB
