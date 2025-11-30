@@ -30,10 +30,24 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
   const shareTitle = title || (typeof document !== 'undefined' ? document.title : '');
   const shareText = description || shareTitle;
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    if (isOpen) {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+          setIsOpen(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isOpen]);
 
   // Close dropdown on scroll (standard UX pattern)
   useEffect(() => {
@@ -63,9 +77,6 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
     setCopied(false);
   }, []);
 
-  const handleClose = useCallback(() => {
-    setIsOpen(false);
-  }, []);
 
   const handleCopyLink = useCallback(async () => {
     try {
@@ -150,7 +161,7 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
   const hasNativeShare = typeof navigator !== 'undefined' && 'share' in navigator;
 
   return (
-    <div className={cn('share-button-container', className)}>
+    <div ref={containerRef} className={cn('share-button-container', className)}>
       <button
         ref={buttonRef}
         type="button"
@@ -167,11 +178,7 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
       </button>
 
       {isOpen && (
-        <>
-          {/* Backdrop to capture clicks outside */}
-          <div className="share-backdrop" onClick={handleClose} aria-hidden="true" />
-
-          <div className="share-dropdown" role="menu" aria-label={t.common.share.button}>
+        <div className="share-dropdown" role="menu" aria-label={t.common.share.button}>
             {/* Copy Link */}
             <button
               type="button"
@@ -222,8 +229,7 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
                 <span className="share-item-label">{link.label}</span>
               </button>
             ))}
-          </div>
-        </>
+        </div>
       )}
     </div>
   );
