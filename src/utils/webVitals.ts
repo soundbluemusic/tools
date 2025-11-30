@@ -276,7 +276,12 @@ function observeINP(callback: ReportCallback) {
       }
     });
 
-    observer.observe({ type: 'event', buffered: true, durationThreshold: 16 });
+    // durationThreshold is part of the Event Timing API but not in all TS definitions
+    observer.observe({
+      type: 'event',
+      buffered: true,
+      durationThreshold: 16,
+    } as PerformanceObserverInit);
   } catch {
     // INP not supported
   }

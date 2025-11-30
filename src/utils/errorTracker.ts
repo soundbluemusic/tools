@@ -194,7 +194,12 @@ function setupAutoBreadcrumbs(): void {
   // Track fetch requests
   const originalFetch = window.fetch;
   window.fetch = async function (input, init) {
-    const url = typeof input === 'string' ? input : input.url;
+    const url =
+      typeof input === 'string'
+        ? input
+        : input instanceof Request
+          ? input.url
+          : input.href;
     addBreadcrumb('fetch', `Fetch ${init?.method || 'GET'} ${url}`);
     return originalFetch.apply(this, [input, init]);
   };
