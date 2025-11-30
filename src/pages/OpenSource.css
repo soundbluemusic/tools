@@ -2,6 +2,33 @@
    Open Source Libraries Page
    ========================================================================== */
 
+.opensource-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-secondary);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-6);
+  border-left: 3px solid var(--color-info);
+}
+
+.opensource-category {
+  margin-bottom: var(--spacing-8);
+}
+
+.opensource-category:last-child {
+  margin-bottom: 0;
+}
+
+.opensource-category-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 1px solid var(--color-border-secondary);
+}
+
 .opensource-list {
   list-style: none;
   padding: 0;

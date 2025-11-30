@@ -12,6 +12,14 @@ const toolsUsed = [
       en: 'AI-powered development tool',
     },
   },
+  {
+    name: 'Claude Artifacts',
+    url: 'https://support.anthropic.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them',
+    desc: {
+      ko: 'AI 기반 콘텐츠 생성 도구',
+      en: 'AI-powered content creation tool',
+    },
+  },
 ];
 
 const pageContent = {
@@ -20,8 +28,8 @@ const pageContent = {
     en: 'Tools Used',
   },
   description: {
-    ko: '이 프로젝트는 Claude Code를 활용하여 개발되었습니다.',
-    en: 'This project was built with Claude Code.',
+    ko: '이 프로젝트는 Claude Code와 Claude Artifacts를 활용하여 개발되었습니다.',
+    en: 'This project was built with Claude Code and Claude Artifacts.',
   },
 };
 

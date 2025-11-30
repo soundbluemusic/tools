@@ -24,6 +24,10 @@ const Sitemap = lazy(() => import('./pages/Sitemap'));
 const OpenSource = lazy(() => import('./pages/OpenSource'));
 const ToolsUsed = lazy(() => import('./pages/ToolsUsed'));
 
+// Legal pages - lazy loaded
+const Privacy = lazy(() => import('./pages/Privacy'));
+const Terms = lazy(() => import('./pages/Terms'));
+
 /**
  * Loading fallback for lazy-loaded pages
  */
@@ -46,6 +50,8 @@ const ROUTES = [
   { path: '/sitemap', element: <Sitemap />, lazy: true },
   { path: '/opensource', element: <OpenSource />, lazy: true },
   { path: '/tools-used', element: <ToolsUsed />, lazy: true },
+  { path: '/privacy', element: <Privacy />, lazy: true },
+  { path: '/terms', element: <Terms />, lazy: true },
   { path: '*', element: <NotFound />, lazy: false },
 ] as const;
 

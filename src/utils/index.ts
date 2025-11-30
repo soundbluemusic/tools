@@ -17,18 +17,3 @@ export {
   type Validator,
 } from './storage';
 export { getSizeClass, SIZE_CLASSES, type Size } from './sizeClass';
-export {
-  initWebVitals,
-  consoleReporter,
-  createAnalyticsReporter,
-  type WebVitalsMetric,
-} from './webVitals';
-export {
-  initErrorTracker,
-  captureError,
-  captureReactError,
-  addBreadcrumb,
-  createRemoteReporter,
-  type ErrorInfo,
-  type Breadcrumb,
-} from './errorTracker';
