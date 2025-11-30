@@ -139,6 +139,7 @@ export const DrumMachine = memo(function DrumMachine() {
     step: number;
     startY: number;
     startVelocity: number;
+    hasMoved: boolean; // Track if user actually dragged
   } | null>(null);
 
   // Keep refs in sync with state
@@ -399,12 +400,13 @@ export const DrumMachine = memo(function DrumMachine() {
       const currentValue = pattern[inst][step];
 
       if (currentValue > 0) {
-        // Active note: start velocity drag mode
+        // Active note: start velocity drag mode (or remove on click without drag)
         velocityDragRef.current = {
           inst,
           step,
           startY: clientY,
           startVelocity: currentValue,
+          hasMoved: false,
         };
         isDraggingRef.current = false;
         paintModeRef.current = null;
@@ -441,25 +443,35 @@ export const DrumMachine = memo(function DrumMachine() {
       const { inst, step, startY, startVelocity } = velocityDragRef.current;
       // Drag down = decrease velocity, drag up = increase velocity
       const deltaY = e.clientY - startY;
-      // 100px drag = full velocity change
-      const velocityChange = Math.round(-deltaY * 1);
-      const newVelocity = Math.max(
-        VELOCITY.OFF,
-        Math.min(VELOCITY.MAX, startVelocity + velocityChange)
-      );
-      setStepVelocity(inst, step, newVelocity);
+
+      // Only process if moved more than 3px (threshold to distinguish click from drag)
+      if (Math.abs(deltaY) > 3) {
+        velocityDragRef.current.hasMoved = true;
+        // 100px drag = full velocity change
+        const velocityChange = Math.round(-deltaY * 1);
+        const newVelocity = Math.max(
+          VELOCITY.OFF,
+          Math.min(VELOCITY.MAX, startVelocity + velocityChange)
+        );
+        setStepVelocity(inst, step, newVelocity);
+      }
     },
     [setStepVelocity]
   );
 
   /**
-   * Handle drag end
+   * Handle drag end - remove note if clicked without dragging
    */
   const handleDragEnd = useCallback(() => {
+    // If velocity drag mode was active and user didn't move, remove the note
+    if (velocityDragRef.current && !velocityDragRef.current.hasMoved) {
+      const { inst, step } = velocityDragRef.current;
+      setStepVelocity(inst, step, VELOCITY.OFF);
+    }
     isDraggingRef.current = false;
     paintModeRef.current = null;
     velocityDragRef.current = null;
-  }, []);
+  }, [setStepVelocity]);
 
   /**
    * Handle touch move for mobile (paint mode and velocity adjustment)
@@ -472,12 +484,17 @@ export const DrumMachine = memo(function DrumMachine() {
       if (velocityDragRef.current) {
         const { inst, step, startY, startVelocity } = velocityDragRef.current;
         const deltaY = touch.clientY - startY;
-        const velocityChange = Math.round(-deltaY * 1);
-        const newVelocity = Math.max(
-          VELOCITY.OFF,
-          Math.min(VELOCITY.MAX, startVelocity + velocityChange)
-        );
-        setStepVelocity(inst, step, newVelocity);
+
+        // Only process if moved more than 3px
+        if (Math.abs(deltaY) > 3) {
+          velocityDragRef.current.hasMoved = true;
+          const velocityChange = Math.round(-deltaY * 1);
+          const newVelocity = Math.max(
+            VELOCITY.OFF,
+            Math.min(VELOCITY.MAX, startVelocity + velocityChange)
+          );
+          setStepVelocity(inst, step, newVelocity);
+        }
         return;
       }
 
@@ -504,6 +521,11 @@ export const DrumMachine = memo(function DrumMachine() {
    */
   useEffect(() => {
     const handleGlobalMouseUp = () => {
+      // If velocity drag mode was active and user didn't move, remove the note
+      if (velocityDragRef.current && !velocityDragRef.current.hasMoved) {
+        const { inst, step } = velocityDragRef.current;
+        setStepVelocity(inst, step, VELOCITY.OFF);
+      }
       isDraggingRef.current = false;
       paintModeRef.current = null;
       velocityDragRef.current = null;
@@ -524,7 +546,7 @@ export const DrumMachine = memo(function DrumMachine() {
       window.removeEventListener('touchend', handleGlobalMouseUp);
       window.removeEventListener('mousemove', handleGlobalMouseMove);
     };
-  }, [handleMouseMove]);
+  }, [handleMouseMove, setStepVelocity]);
 
   /**
    * Show status message
