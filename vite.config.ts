@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
+// Cloudflare Pages 최적화 설정
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
@@ -161,32 +162,41 @@ export default defineConfig(({ mode }) => ({
     }),
   ],
   build: {
-    // Target modern browsers for smaller bundles
-    target: 'es2020',
+    // Target modern browsers for smaller bundles (Cloudflare Edge 호환)
+    target: 'esnext',
     // Use esbuild for fast minification (built-in)
     minify: 'esbuild',
     // CSS code splitting
     cssCodeSplit: true,
+    // CSS minification target
+    cssMinify: 'esbuild',
     // No source maps in production
     sourcemap: false,
     // Chunk splitting configuration
     rollupOptions: {
       output: {
-        // Manual chunk splitting for optimal caching
+        // Manual chunk splitting for optimal Cloudflare CDN caching
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // React + Router - single vendor chunk for caching
+            // React core - 가장 안정적인 의존성
             if (
               id.includes('react') ||
               id.includes('react-dom') ||
-              id.includes('react-router') ||
               id.includes('scheduler')
             ) {
-              return 'vendor';
+              return 'react-vendor';
+            }
+            // React Router - 별도 청크로 분리 (업데이트 빈도 다름)
+            if (id.includes('react-router')) {
+              return 'router-vendor';
+            }
+            // QRious 등 기타 라이브러리
+            if (id.includes('qrious')) {
+              return 'qr-vendor';
             }
           }
         },
-        // Optimize chunk file names with content hash
+        // Optimize chunk file names with content hash (Cloudflare immutable caching)
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
@@ -197,21 +207,34 @@ export default defineConfig(({ mode }) => ({
           if (/css/i.test(ext)) {
             return 'assets/css/[name]-[hash][extname]';
           }
+          if (/woff2?|ttf|eot/i.test(ext)) {
+            return 'assets/fonts/[name]-[hash][extname]';
+          }
           return 'assets/[name]-[hash][extname]';
         },
+        // ES 모듈 형식 (최신 브라우저 최적화)
+        format: 'es',
+        // 청크 간 공유 코드 최적화
+        compact: true,
       },
       // Tree shaking optimization
       treeshake: {
         moduleSideEffects: 'no-external',
         propertyReadSideEffects: false,
+        // 사용되지 않는 export 제거
+        preset: 'recommended',
       },
     },
-    // Report compressed size
+    // Report compressed size (Brotli/gzip)
     reportCompressedSize: true,
-    // Chunk size warning limit
-    chunkSizeWarningLimit: 300,
-    // Asset inline limit (4kb)
+    // Chunk size warning limit (Cloudflare Pages 권장)
+    chunkSizeWarningLimit: 250,
+    // Asset inline limit - 작은 파일은 인라인 (네트워크 요청 감소)
     assetsInlineLimit: 4096,
+    // 모듈 프리로드 폴리필 비활성화 (최신 브라우저만 지원)
+    modulePreload: {
+      polyfill: false,
+    },
   },
   // Optimize dependencies
   optimizeDeps: {

@@ -59,7 +59,6 @@ npm run validate
 **주의사항:**
 - 위 항목들의 무단 사용, 복제, 수정, 배포는 금지됩니다
 - 이 프로젝트를 포크하거나 소스코드를 사용할 경우, 보호되는 모든 자료(로고, 이미지, 오디오, 브랜드명)를 제거하고 본인의 것으로 교체해야 합니다
-- 라이선스 관련 문의는 SoundBlueMusic으로 연락해 주세요
 
 **© 2025 SoundBlueMusic. All Rights Reserved for Intellectual Property & Trademarks.**
 
