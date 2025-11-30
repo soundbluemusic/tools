@@ -38,6 +38,11 @@ npm run validate
 | 테스트 | Vitest + React Testing Library |
 | 배포 | Cloudflare Pages |
 
+## UI 최적화
+
+- UI는 **14인치 MacBook** 기준으로 1차 최적화되어 있습니다
+- 다른 화면 크기에서도 사용 가능하지만, 14인치 MacBook에서 가장 최적의 경험을 제공합니다
+
 ## 라이선스
 
 ### 소스코드 (MIT License)
