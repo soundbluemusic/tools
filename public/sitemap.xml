@@ -1,50 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Homepage -->
   <url>
     <loc>https://tools.soundbluemusic.com/</loc>
     <lastmod>2025-11-30</lastmod>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/"/>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
   </url>
 
   <!-- QR Code Generator -->
   <url>
     <loc>https://tools.soundbluemusic.com/qr</loc>
     <lastmod>2025-11-30</lastmod>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/qr"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/qr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/qr"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <!-- Metronome -->
   <url>
     <loc>https://tools.soundbluemusic.com/metronome</loc>
     <lastmod>2025-11-30</lastmod>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/metronome"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/metronome"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/metronome"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Drum Machine -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/drum</loc>
+    <lastmod>2025-11-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Sitemap Page -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/sitemap</loc>
+    <lastmod>2025-11-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
   <!-- Open Source -->
   <url>
     <loc>https://tools.soundbluemusic.com/opensource</loc>
     <lastmod>2025-11-30</lastmod>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/opensource"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/opensource"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/opensource"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
   <!-- Tools Used -->
   <url>
     <loc>https://tools.soundbluemusic.com/tools-used</loc>
     <lastmod>2025-11-30</lastmod>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/tools-used"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/tools-used"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/tools-used"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Privacy Policy -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/privacy</loc>
+    <lastmod>2025-11-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Terms of Service -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/terms</loc>
+    <lastmod>2025-11-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 
 </urlset>
