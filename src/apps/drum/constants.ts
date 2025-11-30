@@ -13,6 +13,22 @@ export const TEMPO_RANGE = {
   DEFAULT: 120,
 } as const;
 
+export const VOLUME_RANGE = {
+  MIN: 0,
+  MAX: 100,
+  DEFAULT: 80,
+} as const;
+
+export type InstrumentVolumes = Record<Instrument, number>;
+
+export const DEFAULT_VOLUMES: InstrumentVolumes = {
+  kick: 80,
+  snare: 80,
+  hihat: 80,
+  openhat: 80,
+  clap: 80,
+};
+
 /**
  * Audio synthesis configuration
  */

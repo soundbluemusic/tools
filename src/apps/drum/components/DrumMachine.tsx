@@ -5,11 +5,14 @@ import {
   STEPS,
   INSTRUMENTS,
   TEMPO_RANGE,
+  VOLUME_RANGE,
   AUDIO,
   PRESETS,
+  DEFAULT_VOLUMES,
   createEmptyPattern,
   type Instrument,
   type Pattern,
+  type InstrumentVolumes,
 } from '../constants';
 import './DrumMachine.css';
 
@@ -110,6 +113,7 @@ export const DrumMachine = memo(function DrumMachine() {
   // State
   const [pattern, setPattern] = useState<Pattern>(createEmptyPattern);
   const [tempo, setTempo] = useState<number>(TEMPO_RANGE.DEFAULT);
+  const [volumes, setVolumes] = useState<InstrumentVolumes>({ ...DEFAULT_VOLUMES });
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [statusMessage, setStatusMessage] = useState<{
@@ -144,6 +148,7 @@ export const DrumMachine = memo(function DrumMachine() {
       if (!ctx) return;
 
       const now = ctx.currentTime;
+      const volumeMultiplier = volumes[inst] / 100;
 
       switch (inst) {
         case 'kick': {
@@ -156,7 +161,7 @@ export const DrumMachine = memo(function DrumMachine() {
             AUDIO.KICK.FREQUENCY_END,
             now + AUDIO.KICK.DURATION
           );
-          gain.gain.setValueAtTime(AUDIO.KICK.GAIN, now);
+          gain.gain.setValueAtTime(AUDIO.KICK.GAIN * volumeMultiplier, now);
           gain.gain.exponentialRampToValueAtTime(
             0.01,
             now + AUDIO.KICK.DURATION
@@ -180,7 +185,7 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           source.connect(gain);
           gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(AUDIO.SNARE.GAIN, now);
+          gain.gain.setValueAtTime(AUDIO.SNARE.GAIN * volumeMultiplier, now);
           gain.gain.exponentialRampToValueAtTime(
             0.01,
             now + AUDIO.SNARE.DURATION
@@ -212,7 +217,7 @@ export const DrumMachine = memo(function DrumMachine() {
           filter.connect(gain);
           gain.connect(ctx.destination);
           gain.gain.setValueAtTime(
-            isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN,
+            (isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN) * volumeMultiplier,
             now
           );
           gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
@@ -234,7 +239,7 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           source.connect(gain);
           gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(AUDIO.CLAP.GAIN, now);
+          gain.gain.setValueAtTime(AUDIO.CLAP.GAIN * volumeMultiplier, now);
           gain.gain.exponentialRampToValueAtTime(
             0.01,
             now + AUDIO.CLAP.DURATION
@@ -244,7 +249,7 @@ export const DrumMachine = memo(function DrumMachine() {
         }
       }
     },
-    [getAudioContext]
+    [getAudioContext, volumes]
   );
 
   /**
@@ -442,6 +447,16 @@ export const DrumMachine = memo(function DrumMachine() {
   );
 
   /**
+   * Handle instrument volume change
+   */
+  const handleVolumeChange = useCallback(
+    (inst: Instrument, value: number) => {
+      setVolumes((prev) => ({ ...prev, [inst]: value }));
+    },
+    []
+  );
+
+  /**
    * Cleanup on unmount
    */
   useEffect(() => {
@@ -545,7 +560,21 @@ export const DrumMachine = memo(function DrumMachine() {
       >
         {INSTRUMENTS.map((inst) => (
           <div key={inst} className="drum-track">
-            <div className="drum-track-label">{getInstrumentLabel(inst)}</div>
+            <div className="drum-track-info">
+              <div className="drum-track-label">{getInstrumentLabel(inst)}</div>
+              <div className="drum-track-volume">
+                <input
+                  type="range"
+                  className="drum-volume-slider"
+                  min={VOLUME_RANGE.MIN}
+                  max={VOLUME_RANGE.MAX}
+                  value={volumes[inst]}
+                  onChange={(e) => handleVolumeChange(inst, parseInt(e.target.value, 10))}
+                  aria-label={`${getInstrumentLabel(inst)} ${drum.volume}`}
+                />
+                <span className="drum-volume-value">{volumes[inst]}</span>
+              </div>
+            </div>
             <div className="drum-track-steps">
               {Array.from({ length: STEPS }).map((_, step) => (
                 <button

@@ -24,6 +24,7 @@ export const drumKo: DrumTranslation = {
   clap: '클랩',
   // UI
   step: '스텝',
+  volume: '볼륨',
   presets: '프리셋',
   presetTechno: '테크노',
   presetHouse: '하우스',
@@ -58,6 +59,7 @@ export const drumEn: DrumTranslation = {
   clap: 'Clap',
   // UI
   step: 'Step',
+  volume: 'Volume',
   presets: 'Presets',
   presetTechno: 'Techno',
   presetHouse: 'House',

@@ -126,7 +126,7 @@
 
 .drum-track {
   display: grid;
-  grid-template-columns: 80px 1fr;
+  grid-template-columns: 140px 1fr;
   gap: var(--spacing-3);
   align-items: center;
   margin-bottom: var(--spacing-2);
@@ -136,12 +136,64 @@
   margin-bottom: 0;
 }
 
+.drum-track-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
 .drum-track-label {
   font-size: var(--font-size-xs);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide);
   color: var(--color-text-secondary);
   white-space: nowrap;
+}
+
+.drum-track-volume {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.drum-volume-slider {
+  width: 80px;
+  height: 3px;
+  background: var(--color-border-primary);
+  border-radius: var(--radius-full);
+  appearance: none;
+  cursor: pointer;
+}
+
+.drum-volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--color-text-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: transform var(--transition-fast) var(--ease-default);
+}
+
+.drum-volume-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.drum-volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  background: var(--color-text-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.drum-volume-value {
+  font-family: var(--font-family-mono);
+  font-size: 0.625rem;
+  color: var(--color-text-tertiary);
+  min-width: 24px;
+  text-align: right;
 }
 
 .drum-track-steps {
@@ -290,8 +342,12 @@
   }
 
   .drum-track {
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 100px 1fr;
     gap: var(--spacing-2);
+  }
+
+  .drum-volume-slider {
+    width: 60px;
   }
 
   .drum-step {
@@ -333,11 +389,19 @@
   }
 
   .drum-track {
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 70px 1fr;
   }
 
   .drum-track-label {
     font-size: 0.625rem;
+  }
+
+  .drum-volume-slider {
+    width: 40px;
+  }
+
+  .drum-volume-value {
+    display: none;
   }
 
   .drum-track-steps {

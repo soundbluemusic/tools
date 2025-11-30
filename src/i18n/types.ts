@@ -171,6 +171,7 @@ export interface DrumTranslation {
   clap: string;
   // UI
   step: string;
+  volume: string;
   presets: string;
   presetTechno: string;
   presetHouse: string;
