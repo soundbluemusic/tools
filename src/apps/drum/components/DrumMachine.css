@@ -197,17 +197,24 @@
 }
 
 .drum-track-steps {
-  display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  gap: 4px;
+  display: flex;
+  gap: 6px;
+}
+
+/* Beat group separation (every 4 steps) */
+.drum-track-steps > :nth-child(5),
+.drum-track-steps > :nth-child(9),
+.drum-track-steps > :nth-child(13) {
+  margin-left: 8px;
 }
 
 .drum-step {
-  aspect-ratio: 1;
-  min-width: 24px;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--color-border-primary);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition:
     background-color var(--transition-fast) var(--ease-default),
@@ -218,7 +225,7 @@
 
 .drum-step:hover {
   border-color: var(--color-accent-primary);
-  transform: translateY(-1px);
+  transform: scale(1.05);
 }
 
 .drum-step--active {
@@ -227,22 +234,13 @@
 }
 
 .drum-step--playing {
-  box-shadow: 0 0 0 3px rgba(28, 25, 23, 0.2);
-  transform: scale(1.1);
+  box-shadow: 0 0 0 2px var(--color-bg-tertiary), 0 0 0 4px var(--color-accent-primary);
+  transform: scale(1.08);
 }
 
 .drum-step--active.drum-step--playing {
   background: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
-}
-
-/* Beat group separation (every 4 steps) */
-.drum-step:nth-child(4n + 1) {
-  margin-left: 4px;
-}
-
-.drum-step:nth-child(1) {
-  margin-left: 0;
 }
 
 /* Presets */
@@ -350,12 +348,19 @@
     width: 60px;
   }
 
-  .drum-step {
-    min-width: 20px;
+  .drum-track-steps {
+    gap: 4px;
   }
 
-  .drum-step:nth-child(4n + 1) {
-    margin-left: 2px;
+  .drum-track-steps > :nth-child(5),
+  .drum-track-steps > :nth-child(9),
+  .drum-track-steps > :nth-child(13) {
+    margin-left: 6px;
+  }
+
+  .drum-step {
+    width: 22px;
+    height: 22px;
   }
 }
 
@@ -405,15 +410,19 @@
   }
 
   .drum-track-steps {
-    gap: 2px;
+    gap: 3px;
+  }
+
+  .drum-track-steps > :nth-child(5),
+  .drum-track-steps > :nth-child(9),
+  .drum-track-steps > :nth-child(13) {
+    margin-left: 4px;
   }
 
   .drum-step {
-    min-width: 16px;
-  }
-
-  .drum-step:nth-child(4n + 1) {
-    margin-left: 1px;
+    width: 18px;
+    height: 18px;
+    border-radius: var(--radius-sm);
   }
 
   .drum-presets {
@@ -434,8 +443,19 @@
     grid-template-columns: 40px 1fr;
   }
 
+  .drum-track-steps {
+    gap: 2px;
+  }
+
+  .drum-track-steps > :nth-child(5),
+  .drum-track-steps > :nth-child(9),
+  .drum-track-steps > :nth-child(13) {
+    margin-left: 3px;
+  }
+
   .drum-step {
-    min-width: 14px;
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -449,6 +469,10 @@
     transition: none;
   }
 
+  .drum-volume-slider::-webkit-slider-thumb {
+    transition: none;
+  }
+
   .drum-status {
     animation: none;
   }
@@ -457,7 +481,7 @@
 /* Dark mode adjustments for step playing indicator */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .drum-step--playing {
-    box-shadow: 0 0 0 3px rgba(236, 236, 236, 0.2);
+    box-shadow: 0 0 0 2px var(--color-bg-tertiary), 0 0 0 4px var(--color-accent-primary);
   }
 }
 
