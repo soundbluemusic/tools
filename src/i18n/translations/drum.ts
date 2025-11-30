@@ -31,6 +31,9 @@ export const drumKo: DrumTranslation = {
   presetTrap: '트랩',
   presetBreakbeat: '브레이크비트',
   presetMinimal: '미니멀',
+  // Export
+  exportMidi: 'MIDI 내보내기',
+  exportSuccess: 'MIDI 파일을 다운로드했습니다',
   // Status
   loadedPreset: '{preset} 프리셋을 불러왔습니다',
 };
@@ -66,6 +69,9 @@ export const drumEn: DrumTranslation = {
   presetTrap: 'Trap',
   presetBreakbeat: 'Breakbeat',
   presetMinimal: 'Minimal',
+  // Export
+  exportMidi: 'Export MIDI',
+  exportSuccess: 'MIDI file downloaded',
   // Status
   loadedPreset: 'Loaded {preset} preset',
 };

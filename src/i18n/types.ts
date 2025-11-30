@@ -200,6 +200,9 @@ export interface DrumTranslation {
   presetTrap: string;
   presetBreakbeat: string;
   presetMinimal: string;
+  // Export
+  exportMidi: string;
+  exportSuccess: string;
   // Status
   loadedPreset: string;
 }

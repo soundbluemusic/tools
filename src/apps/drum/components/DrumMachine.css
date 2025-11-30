@@ -59,6 +59,16 @@
   border-color: var(--color-accent-hover);
 }
 
+.drum-btn--export {
+  background: var(--color-bg-tertiary);
+}
+
+.drum-btn--export:hover {
+  background: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+
 /* Tempo Control */
 .drum-tempo {
   display: flex;
