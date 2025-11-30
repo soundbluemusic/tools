@@ -1,6 +1,13 @@
 import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
 import { useTranslations } from '../../../i18n';
 import { useDebounce } from '../../../hooks/useDebounce';
+import {
+  QR_SIZE,
+  URL_DEBOUNCE_MS,
+  COLOR_THRESHOLD,
+  TIMEOUTS,
+  QRIOUS_CDN_URL,
+} from '../constants';
 import './QRGenerator.css';
 
 declare global {
@@ -29,7 +36,7 @@ const QRGenerator = memo(function QRGenerator() {
   const isLibraryLoaded = useRef(false);
 
   // Debounce URL for QR generation (input stays responsive)
-  const debouncedUrl = useDebounce(url, 300);
+  const debouncedUrl = useDebounce(url, URL_DEBOUNCE_MS);
 
   const t = useTranslations();
   const qrT = t.qr;
@@ -59,7 +66,7 @@ const QRGenerator = memo(function QRGenerator() {
       const b = data[i + 2];
 
       if (isWhite) {
-        if (r <= 5 && g <= 5 && b <= 5) {
+        if (r <= COLOR_THRESHOLD.BLACK && g <= COLOR_THRESHOLD.BLACK && b <= COLOR_THRESHOLD.BLACK) {
           data[i + 3] = 0;
         } else {
           data[i] = 255;
@@ -68,7 +75,7 @@ const QRGenerator = memo(function QRGenerator() {
           data[i + 3] = 255;
         }
       } else {
-        if (r >= 250 && g >= 250 && b >= 250) {
+        if (r >= COLOR_THRESHOLD.WHITE && g >= COLOR_THRESHOLD.WHITE && b >= COLOR_THRESHOLD.WHITE) {
           data[i + 3] = 0;
         } else {
           data[i] = 0;
@@ -95,7 +102,7 @@ const QRGenerator = memo(function QRGenerator() {
         return;
       }
       const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js';
+      script.src = QRIOUS_CDN_URL;
       script.onload = () => {
         isLibraryLoaded.current = true;
         resolve();
@@ -112,7 +119,7 @@ const QRGenerator = memo(function QRGenerator() {
       new window.QRious({
         element: canvas1,
         value: text,
-        size: 512,
+        size: QR_SIZE,
         level: level,
         background: 'white',
         foreground: 'black',
@@ -125,7 +132,7 @@ const QRGenerator = memo(function QRGenerator() {
       new window.QRious({
         element: canvas2,
         value: text,
-        size: 512,
+        size: QR_SIZE,
         level: level,
         background: 'black',
         foreground: 'white',
@@ -167,7 +174,7 @@ const QRGenerator = memo(function QRGenerator() {
 
       setTimeout(() => {
         document.body.removeChild(link);
-      }, 100);
+      }, TIMEOUTS.DOWNLOAD_CLEANUP);
     } catch (error) {
       console.error('Download error:', error);
       try {
@@ -220,7 +227,7 @@ const QRGenerator = memo(function QRGenerator() {
                     setCopySuccess(true);
                     setTimeout(() => {
                       setCopySuccess(false);
-                    }, 2000);
+                    }, TIMEOUTS.COPY_SUCCESS);
                     return;
                   } catch (clipErr) {
                     console.log('Clipboard API 실패, 대체 방법 시도:', clipErr);
@@ -246,7 +253,7 @@ const QRGenerator = memo(function QRGenerator() {
                   }
                 }
 
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 100);
+                setTimeout(() => URL.revokeObjectURL(blobUrl), TIMEOUTS.BLOB_REVOKE);
               },
               'image/png',
               1.0
