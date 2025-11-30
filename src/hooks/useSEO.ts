@@ -58,18 +58,18 @@ function updateCanonicalLink(url: string): void {
  * Updates document title and meta tags dynamically for each page
  */
 export function useSEO(config: SEOConfig): void {
-  useEffect(() => {
-    const {
-      title,
-      description,
-      keywords,
-      canonicalPath = '',
-      ogImage = DEFAULT_OG_IMAGE,
-      ogType = 'website',
-      noindex = false,
-      isHomePage = false,
-    } = config;
+  const {
+    title,
+    description,
+    keywords,
+    canonicalPath = '',
+    ogImage = DEFAULT_OG_IMAGE,
+    ogType = 'website',
+    noindex = false,
+    isHomePage = false,
+  } = config;
 
+  useEffect(() => {
     const fullTitle = isHomePage ? SITE_NAME : `${title} | ${SITE_NAME}`;
     const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
@@ -108,7 +108,7 @@ export function useSEO(config: SEOConfig): void {
     updateMetaTag('name', 'twitter:description', description);
     updateMetaTag('name', 'twitter:url', canonicalUrl);
     updateMetaTag('name', 'twitter:image', ogImage);
-  }, [config]);
+  }, [title, description, keywords, canonicalPath, ogImage, ogType, noindex, isHomePage]);
 }
 
 export default useSEO;
