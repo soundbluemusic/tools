@@ -239,8 +239,8 @@ export function exportMidi(options: MidiExportOptions): void {
   const { filename = 'drum-pattern' } = options;
   const midiData = generateMidiData(options);
 
-  // Create blob and download
-  const blob = new Blob([midiData], { type: 'audio/midi' });
+  // Create blob and download (use slice to get a proper ArrayBuffer)
+  const blob = new Blob([midiData.buffer.slice(0)], { type: 'audio/midi' });
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement('a');
