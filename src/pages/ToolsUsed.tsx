@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
-import { useLanguage } from '../i18n/context';
+import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
 
 const toolsUsed = [

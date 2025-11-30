@@ -1,12 +1,11 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { PageLayout } from '../components/layout';
-import { useLanguage } from '../i18n/context';
+import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
 import { APPS } from '../constants/apps';
+import { BASE_URL, getTodayDate } from '../constants/site';
 import './Sitemap.css';
-
-const BASE_URL = 'https://tools.soundbluemusic.com';
 
 interface SitemapSection {
   title: { ko: string; en: string };
@@ -73,7 +72,7 @@ const pageContent = {
  * Build sitemap sections dynamically from APPS constant
  */
 function buildSitemapSections(): SitemapSection[] {
-  const today = '2025-11-30';
+  const today = getTodayDate();
 
   // Main section
   const mainSection: SitemapSection = {

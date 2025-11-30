@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { MetronomePlayer } from '../apps/metronome/components/MetronomePlayer';
-import { useTranslations } from '../i18n/context';
+import { useTranslations } from '../i18n';
 import { useSEO } from '../hooks';
 
 /**

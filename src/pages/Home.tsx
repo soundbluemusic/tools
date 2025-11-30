@@ -148,7 +148,7 @@ const Home = memo(function Home() {
   const isSearchPending = searchQuery !== deferredSearchQuery;
 
   // Aria label for app list
-  const appListAriaLabel = language === 'ko' ? '사용 가능한 도구' : 'Available tools';
+  const appListAriaLabel = t.common.a11y.availableTools;
 
   return (
     <main className="container home-page" role="main">
@@ -211,9 +211,7 @@ const Home = memo(function Home() {
       {/* No Results Message */}
       {filteredApps.length === 0 && searchQuery && (
         <p className="no-results">
-          {language === 'ko'
-            ? `"${searchQuery}"${homeT.noResults}`
-            : `${homeT.noResults} "${searchQuery}"`}
+          {homeT.noResults.replace('{query}', searchQuery)}
         </p>
       )}
     </main>

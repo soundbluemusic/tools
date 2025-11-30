@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useViewTransition } from '../hooks/useViewTransition';
+import { useLanguage } from '../i18n';
 
 /**
  * 404 Not Found Page
@@ -8,6 +9,7 @@ import { useViewTransition } from '../hooks/useViewTransition';
  */
 const NotFound = memo(function NotFound() {
   const { createClickHandler } = useViewTransition();
+  const { t } = useLanguage();
 
   // Memoized home click handler using shared View Transition hook
   const handleHomeClick = useMemo(
@@ -19,12 +21,10 @@ const NotFound = memo(function NotFound() {
     <main className="container tool-page" role="main">
       <div className="not-found">
         <h1 className="not-found-code">404</h1>
-        <h2 className="not-found-title">페이지를 찾을 수 없습니다</h2>
-        <p className="not-found-message">
-          요청하신 페이지가 존재하지 않거나 이동되었습니다.
-        </p>
+        <h2 className="not-found-title">{t.common.notFound.title}</h2>
+        <p className="not-found-message">{t.common.notFound.message}</p>
         <Link to="/" className="not-found-link" onClick={handleHomeClick}>
-          ← 홈으로 돌아가기
+          {t.common.notFound.backToHome}
         </Link>
       </div>
     </main>

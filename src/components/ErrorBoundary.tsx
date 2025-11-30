@@ -1,5 +1,5 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
-import { useLanguage } from '../i18n/context';
+import { useLanguage } from '../i18n';
 
 interface ErrorFallbackProps {
   /** The error that was caught */

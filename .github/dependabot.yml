@@ -14,15 +14,26 @@ updates:
     labels:
       - "dependencies"
     groups:
+      # React 관련 패키지는 반드시 함께 업데이트 (peer dependency 충돌 방지)
+      react:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
       # 개발 의존성은 하나의 PR로 묶음
       dev-dependencies:
         dependency-type: "development"
+        exclude-patterns:
+          - "@types/react*"
         update-types:
           - "minor"
           - "patch"
       # 프로덕션 의존성 minor/patch도 묶음
       production-dependencies:
         dependency-type: "production"
+        exclude-patterns:
+          - "react*"
         update-types:
           - "minor"
           - "patch"
