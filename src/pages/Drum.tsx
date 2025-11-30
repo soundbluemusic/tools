@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { DrumMachine } from '../apps/drum/components/DrumMachine';
 import { ShareButton } from '../components/ShareButton';
+import { EmbedButton } from '../components/EmbedButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 
@@ -23,7 +24,12 @@ const Drum = memo(function Drum() {
     <PageLayout
       title={drum.title}
       description={drum.description}
-      actions={<ShareButton title={drum.title} description={drum.description} />}
+      actions={
+        <>
+          <EmbedButton title={drum.title} defaultWidth={500} defaultHeight={600} />
+          <ShareButton title={drum.title} description={drum.description} />
+        </>
+      }
     >
       <DrumMachine />
     </PageLayout>

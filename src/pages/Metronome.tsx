@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { MetronomePlayer } from '../apps/metronome/components/MetronomePlayer';
 import { ShareButton } from '../components/ShareButton';
+import { EmbedButton } from '../components/EmbedButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 
@@ -24,7 +25,10 @@ const Metronome = memo(function Metronome() {
       title={metronome.title}
       description={metronome.description}
       actions={
-        <ShareButton title={metronome.title} description={metronome.description} />
+        <>
+          <EmbedButton title={metronome.title} defaultWidth={400} defaultHeight={500} />
+          <ShareButton title={metronome.title} description={metronome.description} />
+        </>
       }
     >
       <MetronomePlayer />

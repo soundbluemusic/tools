@@ -46,6 +46,14 @@ export const commonKo: CommonTranslation = {
     whatsapp: 'WhatsApp',
     telegram: 'Telegram',
   },
+  embed: {
+    button: '임베드',
+    title: '임베드 코드',
+    width: '너비',
+    height: '높이',
+    copyCode: '코드 복사',
+    copied: '복사 완료!',
+  },
   errorBoundary: {
     title: '문제가 발생했습니다',
     message: '예상치 못한 오류가 발생했습니다.',
@@ -109,6 +117,14 @@ export const commonEn: CommonTranslation = {
     linkedin: 'LinkedIn',
     whatsapp: 'WhatsApp',
     telegram: 'Telegram',
+  },
+  embed: {
+    button: 'Embed',
+    title: 'Embed Code',
+    width: 'Width',
+    height: 'Height',
+    copyCode: 'Copy Code',
+    copied: 'Copied!',
   },
   errorBoundary: {
     title: 'Something went wrong',
