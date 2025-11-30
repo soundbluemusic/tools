@@ -5,7 +5,8 @@
 .drum-machine {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
+  padding: var(--spacing-2) 0;
 }
 
 /* Transport Controls */
@@ -25,8 +26,10 @@
 .drum-btn {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: var(--spacing-2);
-  padding: var(--spacing-3) var(--spacing-4);
+  padding: var(--spacing-3) var(--spacing-5);
+  min-height: 44px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-primary);
@@ -118,7 +121,7 @@
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-4);
+  padding: var(--spacing-5) var(--spacing-6);
   overflow-x: auto;
   touch-action: none;
   user-select: none;
@@ -127,13 +130,17 @@
 .drum-track {
   display: grid;
   grid-template-columns: 140px 1fr;
-  gap: var(--spacing-3);
+  gap: var(--spacing-4);
   align-items: center;
-  margin-bottom: var(--spacing-2);
+  padding: var(--spacing-2) 0;
+}
+
+.drum-track:first-child {
+  padding-top: 0;
 }
 
 .drum-track:last-child {
-  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
 .drum-track-info {
@@ -198,19 +205,19 @@
 
 .drum-track-steps {
   display: flex;
-  gap: 6px;
+  gap: 8px;
 }
 
 /* Beat group separation (every 4 steps) */
 .drum-track-steps > :nth-child(5),
 .drum-track-steps > :nth-child(9),
 .drum-track-steps > :nth-child(13) {
-  margin-left: 8px;
+  margin-left: 12px;
 }
 
 .drum-step {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   flex-shrink: 0;
   background: var(--color-bg-secondary);
   border: 1.5px solid var(--color-border-primary);
@@ -265,7 +272,8 @@
 }
 
 .drum-preset-btn {
-  padding: var(--spacing-2) var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-4);
+  min-height: 36px;
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   text-transform: uppercase;
@@ -325,10 +333,14 @@
 
 /* Tablet responsive */
 @media (max-width: 768px) {
+  .drum-machine {
+    gap: var(--spacing-6);
+  }
+
   .drum-transport {
     flex-direction: column;
     align-items: stretch;
-    gap: var(--spacing-3);
+    gap: var(--spacing-4);
   }
 
   .drum-transport-controls {
@@ -339,13 +351,84 @@
     justify-content: center;
   }
 
+  .drum-sequencer {
+    padding: var(--spacing-4) var(--spacing-5);
+  }
+
   .drum-track {
-    grid-template-columns: 100px 1fr;
-    gap: var(--spacing-2);
+    grid-template-columns: 110px 1fr;
+    gap: var(--spacing-3);
   }
 
   .drum-volume-slider {
     width: 60px;
+  }
+
+  .drum-track-steps {
+    gap: 5px;
+  }
+
+  .drum-track-steps > :nth-child(5),
+  .drum-track-steps > :nth-child(9),
+  .drum-track-steps > :nth-child(13) {
+    margin-left: 8px;
+  }
+
+  .drum-step {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .drum-machine {
+    gap: var(--spacing-5);
+    padding: var(--spacing-1) 0;
+  }
+
+  .drum-transport-controls {
+    flex-wrap: wrap;
+    gap: var(--spacing-2);
+  }
+
+  .drum-btn {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-xs);
+    min-height: 44px;
+    flex: 1;
+    min-width: 70px;
+  }
+
+  .drum-tempo {
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+    padding: var(--spacing-2) 0;
+  }
+
+  .drum-slider {
+    width: 120px;
+  }
+
+  .drum-sequencer {
+    padding: var(--spacing-4);
+  }
+
+  .drum-track {
+    grid-template-columns: 80px 1fr;
+    padding: var(--spacing-1) 0;
+  }
+
+  .drum-track-label {
+    font-size: 0.625rem;
+  }
+
+  .drum-volume-slider {
+    width: 50px;
+  }
+
+  .drum-volume-value {
+    display: none;
   }
 
   .drum-track-steps {
@@ -359,54 +442,34 @@
   }
 
   .drum-step {
-    width: 22px;
-    height: 22px;
-  }
-}
-
-/* Mobile responsive */
-@media (max-width: 480px) {
-  .drum-machine {
-    gap: var(--spacing-4);
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-sm);
   }
 
-  .drum-transport-controls {
-    flex-wrap: wrap;
-  }
-
-  .drum-btn {
-    padding: var(--spacing-2) var(--spacing-3);
-    font-size: var(--font-size-xs);
-    min-height: var(--touch-target-min);
-  }
-
-  .drum-tempo {
-    flex-wrap: wrap;
+  .drum-presets {
     gap: var(--spacing-2);
   }
 
-  .drum-slider {
-    width: 100px;
+  .drum-presets-buttons {
+    gap: var(--spacing-2);
   }
 
+  .drum-preset-btn {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: 0.625rem;
+    min-height: 36px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 360px) {
   .drum-sequencer {
     padding: var(--spacing-3);
   }
 
   .drum-track {
-    grid-template-columns: 70px 1fr;
-  }
-
-  .drum-track-label {
-    font-size: 0.625rem;
-  }
-
-  .drum-volume-slider {
-    width: 40px;
-  }
-
-  .drum-volume-value {
-    display: none;
+    grid-template-columns: 50px 1fr;
   }
 
   .drum-track-steps {
@@ -420,42 +483,8 @@
   }
 
   .drum-step {
-    width: 18px;
-    height: 18px;
-    border-radius: var(--radius-sm);
-  }
-
-  .drum-presets {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .drum-preset-btn {
-    padding: var(--spacing-2);
-    font-size: 0.625rem;
-    min-height: var(--touch-target-min);
-  }
-}
-
-/* Small mobile */
-@media (max-width: 360px) {
-  .drum-track {
-    grid-template-columns: 40px 1fr;
-  }
-
-  .drum-track-steps {
-    gap: 2px;
-  }
-
-  .drum-track-steps > :nth-child(5),
-  .drum-track-steps > :nth-child(9),
-  .drum-track-steps > :nth-child(13) {
-    margin-left: 3px;
-  }
-
-  .drum-step {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
   }
 }
 
