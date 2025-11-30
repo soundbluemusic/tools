@@ -36,25 +36,6 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
   const shareTitle = title || (typeof document !== 'undefined' ? document.title : '');
   const shareText = description || shareTitle;
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen]);
-
   // Close dropdown on Escape key
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -75,11 +56,18 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
     setCopied(false);
   }, []);
 
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   const handleCopyLink = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => {
+        setCopied(false);
+        setIsOpen(false);
+      }, 1500);
     } catch {
       // Fallback for older browsers
       const textArea = document.createElement('textarea');
@@ -91,7 +79,10 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => {
+        setCopied(false);
+        setIsOpen(false);
+      }, 1500);
     }
   }, [shareUrl]);
 
@@ -110,42 +101,44 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
     }
   }, [shareTitle, shareText, shareUrl]);
 
-  // Social share URLs (using official share APIs - no copyright issues)
+  // Social share URLs with icons (using official share APIs - no copyright issues)
   const shareLinks = [
     {
       name: 'X',
       label: t.common.share.twitter,
+      icon: '𝕏',
       url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`,
     },
     {
       name: 'Facebook',
       label: t.common.share.facebook,
+      icon: 'f',
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
     },
     {
       name: 'LinkedIn',
       label: t.common.share.linkedin,
+      icon: 'in',
       url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
     },
     {
       name: 'WhatsApp',
       label: t.common.share.whatsapp,
+      icon: '💬',
       url: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareTitle} ${shareUrl}`)}`,
     },
     {
       name: 'Telegram',
       label: t.common.share.telegram,
+      icon: '✈',
       url: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`,
     },
   ];
 
-  const handleShareClick = useCallback(
-    (shareLink: string) => {
-      window.open(shareLink, '_blank', 'noopener,noreferrer,width=600,height=400');
-      setIsOpen(false);
-    },
-    []
-  );
+  const handleShareClick = useCallback((shareLink: string) => {
+    window.open(shareLink, '_blank', 'noopener,noreferrer,width=600,height=400');
+    setIsOpen(false);
+  }, []);
 
   const hasNativeShare = typeof navigator !== 'undefined' && 'share' in navigator;
 
@@ -167,57 +160,68 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
       </button>
 
       {isOpen && (
-        <div
-          ref={dropdownRef}
-          className="share-dropdown"
-          role="menu"
-          aria-label={t.common.share.button}
-        >
-          {/* Copy Link */}
-          <button
-            type="button"
-            className="share-dropdown-item"
-            onClick={handleCopyLink}
-            role="menuitem"
-          >
-            <span className="share-item-icon" aria-hidden="true">
-              🔗
-            </span>
-            <span className="share-item-label">
-              {copied ? t.common.share.copied : t.common.share.copyLink}
-            </span>
-          </button>
+        <>
+          {/* Backdrop to capture clicks outside */}
+          <div className="share-backdrop" onClick={handleClose} aria-hidden="true" />
 
-          {/* Native Share (mobile) */}
-          {hasNativeShare && (
+          <div
+            ref={dropdownRef}
+            className="share-dropdown"
+            role="menu"
+            aria-label={t.common.share.button}
+          >
+            {/* Copy Link */}
             <button
               type="button"
-              className="share-dropdown-item"
-              onClick={handleNativeShare}
+              className={cn(
+                'share-dropdown-item',
+                copied && 'share-dropdown-item--success'
+              )}
+              onClick={handleCopyLink}
               role="menuitem"
             >
               <span className="share-item-icon" aria-hidden="true">
-                📤
+                {copied ? '✓' : '🔗'}
               </span>
-              <span className="share-item-label">{t.common.share.more}</span>
+              <span className="share-item-label">
+                {copied ? t.common.share.copied : t.common.share.copyLink}
+              </span>
             </button>
-          )}
 
-          <div className="share-dropdown-divider" role="separator" />
+            {/* Native Share (mobile) */}
+            {hasNativeShare && (
+              <button
+                type="button"
+                className="share-dropdown-item"
+                onClick={handleNativeShare}
+                role="menuitem"
+              >
+                <span className="share-item-icon" aria-hidden="true">
+                  📤
+                </span>
+                <span className="share-item-label">{t.common.share.more}</span>
+              </button>
+            )}
 
-          {/* Social Share Links */}
-          {shareLinks.map((link) => (
-            <button
-              key={link.name}
-              type="button"
-              className="share-dropdown-item"
-              onClick={() => handleShareClick(link.url)}
-              role="menuitem"
-            >
-              <span className="share-item-label">{link.label}</span>
-            </button>
-          ))}
-        </div>
+            <div className="share-dropdown-divider" role="separator" />
+
+            {/* Social Share Links */}
+            {shareLinks.map((link) => (
+              <button
+                key={link.name}
+                type="button"
+                className="share-dropdown-item"
+                onClick={() => handleShareClick(link.url)}
+                role="menuitem"
+              >
+                <span className="share-item-icon" aria-hidden="true">
+                  {link.icon}
+                </span>
+                <span className="share-item-label">{link.label}</span>
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
