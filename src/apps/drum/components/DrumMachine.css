@@ -120,6 +120,8 @@
   border-radius: var(--radius-lg);
   padding: var(--spacing-4);
   overflow-x: auto;
+  touch-action: none;
+  user-select: none;
 }
 
 .drum-track {

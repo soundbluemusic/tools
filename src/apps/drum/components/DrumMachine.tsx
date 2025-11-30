@@ -120,6 +120,8 @@ export const DrumMachine = memo(function DrumMachine() {
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
   const intervalRef = useRef<number | null>(null);
+  const isDraggingRef = useRef(false);
+  const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
 
   /**
    * Get or create audio context
@@ -307,13 +309,87 @@ export const DrumMachine = memo(function DrumMachine() {
   }, []);
 
   /**
-   * Toggle a step
+   * Set a step to a specific value (for drag painting)
    */
-  const toggleStep = useCallback((inst: Instrument, step: number) => {
+  const setStep = useCallback((inst: Instrument, step: number, value: boolean) => {
     setPattern((prev) => ({
       ...prev,
-      [inst]: prev[inst].map((val, i) => (i === step ? (val ? 0 : 1) : val)),
+      [inst]: prev[inst].map((val, i) => (i === step ? (value ? 1 : 0) : val)),
     }));
+  }, []);
+
+  /**
+   * Handle drag start on a step
+   */
+  const handleStepMouseDown = useCallback(
+    (inst: Instrument, step: number) => {
+      isDraggingRef.current = true;
+      // Determine paint mode based on current step state (toggle it)
+      const currentValue = pattern[inst][step];
+      paintModeRef.current = !currentValue;
+      setStep(inst, step, !currentValue);
+    },
+    [pattern, setStep]
+  );
+
+  /**
+   * Handle mouse enter while dragging
+   */
+  const handleStepMouseEnter = useCallback(
+    (inst: Instrument, step: number) => {
+      if (isDraggingRef.current && paintModeRef.current !== null) {
+        setStep(inst, step, paintModeRef.current);
+      }
+    },
+    [setStep]
+  );
+
+  /**
+   * Handle drag end
+   */
+  const handleDragEnd = useCallback(() => {
+    isDraggingRef.current = false;
+    paintModeRef.current = null;
+  }, []);
+
+  /**
+   * Handle touch move for mobile drag painting
+   */
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      if (!isDraggingRef.current || paintModeRef.current === null) return;
+
+      const touch = e.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+      if (element && element.classList.contains('drum-step')) {
+        const inst = element.getAttribute('data-instrument') as Instrument;
+        const step = parseInt(element.getAttribute('data-step') || '', 10);
+
+        if (inst && !isNaN(step)) {
+          setStep(inst, step, paintModeRef.current);
+        }
+      }
+    },
+    [setStep]
+  );
+
+  /**
+   * Add global mouse up listener for drag end
+   */
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      isDraggingRef.current = false;
+      paintModeRef.current = null;
+    };
+
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    window.addEventListener('touchend', handleGlobalMouseUp);
+
+    return () => {
+      window.removeEventListener('mouseup', handleGlobalMouseUp);
+      window.removeEventListener('touchend', handleGlobalMouseUp);
+    };
   }, []);
 
   /**
@@ -460,7 +536,13 @@ export const DrumMachine = memo(function DrumMachine() {
       </div>
 
       {/* Sequencer Grid */}
-      <div className="drum-sequencer">
+      <div
+        className="drum-sequencer"
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleDragEnd}
+      >
         {INSTRUMENTS.map((inst) => (
           <div key={inst} className="drum-track">
             <div className="drum-track-label">{getInstrumentLabel(inst)}</div>
@@ -473,7 +555,17 @@ export const DrumMachine = memo(function DrumMachine() {
                     pattern[inst][step] && 'drum-step--active',
                     isPlaying && currentStep === step && 'drum-step--playing'
                   )}
-                  onClick={() => toggleStep(inst, step)}
+                  data-instrument={inst}
+                  data-step={step}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    handleStepMouseDown(inst, step);
+                  }}
+                  onMouseEnter={() => handleStepMouseEnter(inst, step)}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    handleStepMouseDown(inst, step);
+                  }}
                   aria-label={`${getInstrumentLabel(inst)} ${drum.step} ${step + 1}`}
                   aria-pressed={Boolean(pattern[inst][step])}
                 />
