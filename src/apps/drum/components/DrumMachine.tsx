@@ -123,7 +123,9 @@ export const DrumMachine = memo(function DrumMachine() {
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
-  const intervalRef = useRef<number | null>(null);
+  const schedulerRef = useRef<number | null>(null);
+  const nextStepTimeRef = useRef<number>(0);
+  const currentStepRef = useRef<number>(0);
   const isDraggingRef = useRef(false);
   const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
 
@@ -140,14 +142,14 @@ export const DrumMachine = memo(function DrumMachine() {
   }, []);
 
   /**
-   * Play a single instrument sound
+   * Play a single instrument sound at a specific time
    */
   const playSound = useCallback(
-    (inst: Instrument) => {
+    (inst: Instrument, time?: number) => {
       const ctx = getAudioContext();
       if (!ctx) return;
 
-      const now = ctx.currentTime;
+      const startTime = time ?? ctx.currentTime;
       const volumeMultiplier = volumes[inst] / 100;
 
       switch (inst) {
@@ -156,18 +158,18 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           osc.connect(gain);
           gain.connect(ctx.destination);
-          osc.frequency.setValueAtTime(AUDIO.KICK.FREQUENCY_START, now);
+          osc.frequency.setValueAtTime(AUDIO.KICK.FREQUENCY_START, startTime);
           osc.frequency.exponentialRampToValueAtTime(
             AUDIO.KICK.FREQUENCY_END,
-            now + AUDIO.KICK.DURATION
+            startTime + AUDIO.KICK.DURATION
           );
-          gain.gain.setValueAtTime(AUDIO.KICK.GAIN * volumeMultiplier, now);
+          gain.gain.setValueAtTime(AUDIO.KICK.GAIN * volumeMultiplier, startTime);
           gain.gain.exponentialRampToValueAtTime(
             0.01,
-            now + AUDIO.KICK.DURATION
+            startTime + AUDIO.KICK.DURATION
           );
-          osc.start(now);
-          osc.stop(now + AUDIO.KICK.DURATION);
+          osc.start(startTime);
+          osc.stop(startTime + AUDIO.KICK.DURATION);
           break;
         }
         case 'snare': {
@@ -185,12 +187,12 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           source.connect(gain);
           gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(AUDIO.SNARE.GAIN * volumeMultiplier, now);
+          gain.gain.setValueAtTime(AUDIO.SNARE.GAIN * volumeMultiplier, startTime);
           gain.gain.exponentialRampToValueAtTime(
             0.01,
-            now + AUDIO.SNARE.DURATION
+            startTime + AUDIO.SNARE.DURATION
           );
-          source.start(now);
+          source.start(startTime);
           break;
         }
         case 'hihat':
@@ -218,10 +220,10 @@ export const DrumMachine = memo(function DrumMachine() {
           gain.connect(ctx.destination);
           gain.gain.setValueAtTime(
             (isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN) * volumeMultiplier,
-            now
+            startTime
           );
-          gain.gain.exponentialRampToValueAtTime(0.01, now + duration);
-          source.start(now);
+          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+          source.start(startTime);
           break;
         }
         case 'clap': {
@@ -239,12 +241,12 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           source.connect(gain);
           gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(AUDIO.CLAP.GAIN * volumeMultiplier, now);
+          gain.gain.setValueAtTime(AUDIO.CLAP.GAIN * volumeMultiplier, startTime);
           gain.gain.exponentialRampToValueAtTime(
             0.01,
-            now + AUDIO.CLAP.DURATION
+            startTime + AUDIO.CLAP.DURATION
           );
-          source.start(now);
+          source.start(startTime);
           break;
         }
       }
@@ -253,46 +255,74 @@ export const DrumMachine = memo(function DrumMachine() {
   );
 
   /**
-   * Advance sequencer to next step
+   * Schedule sounds for upcoming steps using Web Audio timing
+   * This is called frequently by requestAnimationFrame
    */
-  const advanceStep = useCallback(() => {
-    setCurrentStep((prev) => {
-      const nextStep = (prev + 1) % STEPS;
-      return nextStep;
-    });
-  }, []);
+  const scheduleStep = useCallback(
+    (stepIndex: number, time: number) => {
+      INSTRUMENTS.forEach((inst) => {
+        if (pattern[inst][stepIndex]) {
+          playSound(inst, time);
+        }
+      });
+    },
+    [pattern, playSound]
+  );
 
   /**
-   * Play sounds for current step
+   * Scheduler loop using requestAnimationFrame
+   * Schedules notes ahead of time for accurate timing
    */
-  useEffect(() => {
-    if (!isPlaying) return;
+  const scheduler = useCallback(() => {
+    const ctx = audioContextRef.current;
+    if (!ctx) return;
 
-    INSTRUMENTS.forEach((inst) => {
-      if (pattern[inst][currentStep]) {
-        playSound(inst);
-      }
-    });
-  }, [currentStep, isPlaying, pattern, playSound]);
+    const scheduleAheadTime = 0.1; // Schedule 100ms ahead
+    const stepDuration = 60 / tempo / 4; // Duration of one 16th note in seconds
+
+    // Schedule all notes that fall within the look-ahead window
+    while (nextStepTimeRef.current < ctx.currentTime + scheduleAheadTime) {
+      scheduleStep(currentStepRef.current, nextStepTimeRef.current);
+
+      // Update visual step (use setTimeout for UI sync)
+      const stepToShow = currentStepRef.current;
+      const timeUntilStep = (nextStepTimeRef.current - ctx.currentTime) * 1000;
+      setTimeout(() => {
+        setCurrentStep(stepToShow);
+      }, Math.max(0, timeUntilStep));
+
+      // Advance to next step
+      currentStepRef.current = (currentStepRef.current + 1) % STEPS;
+      nextStepTimeRef.current += stepDuration;
+    }
+
+    // Continue scheduling if still playing
+    schedulerRef.current = requestAnimationFrame(scheduler);
+  }, [tempo, scheduleStep]);
 
   /**
    * Start playback
    */
   const play = useCallback(() => {
-    getAudioContext(); // Initialize audio context
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
     if (!isPlaying) {
       setIsPlaying(true);
-      const interval = (60 / tempo / 4) * 1000; // 16th notes
-      intervalRef.current = window.setInterval(advanceStep, interval);
+      // Initialize timing from current audio context time
+      nextStepTimeRef.current = ctx.currentTime;
+      currentStepRef.current = currentStep;
+      // Start the scheduler
+      schedulerRef.current = requestAnimationFrame(scheduler);
     } else {
       // Pause
       setIsPlaying(false);
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+      if (schedulerRef.current) {
+        cancelAnimationFrame(schedulerRef.current);
+        schedulerRef.current = null;
       }
     }
-  }, [isPlaying, tempo, advanceStep, getAudioContext]);
+  }, [isPlaying, currentStep, getAudioContext, scheduler]);
 
   /**
    * Stop playback
@@ -300,9 +330,10 @@ export const DrumMachine = memo(function DrumMachine() {
   const stop = useCallback(() => {
     setIsPlaying(false);
     setCurrentStep(0);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
+    currentStepRef.current = 0;
+    if (schedulerRef.current) {
+      cancelAnimationFrame(schedulerRef.current);
+      schedulerRef.current = null;
     }
   }, []);
 
@@ -435,15 +466,9 @@ export const DrumMachine = memo(function DrumMachine() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newTempo = parseInt(e.target.value, 10);
       setTempo(newTempo);
-
-      // Restart interval if playing
-      if (isPlaying && intervalRef.current) {
-        clearInterval(intervalRef.current);
-        const interval = (60 / newTempo / 4) * 1000;
-        intervalRef.current = window.setInterval(advanceStep, interval);
-      }
+      // Scheduler will pick up new tempo automatically on next iteration
     },
-    [isPlaying, advanceStep]
+    []
   );
 
   /**
@@ -461,8 +486,8 @@ export const DrumMachine = memo(function DrumMachine() {
    */
   useEffect(() => {
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if (schedulerRef.current) {
+        cancelAnimationFrame(schedulerRef.current);
       }
       if (audioContextRef.current) {
         audioContextRef.current.close();
