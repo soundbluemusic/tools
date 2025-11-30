@@ -121,16 +121,15 @@
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--radius-lg);
-  padding: var(--spacing-5) var(--spacing-6);
-  overflow-x: auto;
+  padding: var(--spacing-4);
   touch-action: none;
   user-select: none;
 }
 
 .drum-track {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: var(--spacing-4);
+  grid-template-columns: 90px 1fr;
+  gap: var(--spacing-3);
   align-items: center;
   padding: var(--spacing-2) 0;
 }
@@ -164,7 +163,7 @@
 }
 
 .drum-volume-slider {
-  width: 80px;
+  width: 50px;
   height: 3px;
   background: var(--color-border-primary);
   border-radius: var(--radius-full);
@@ -196,29 +195,28 @@
 }
 
 .drum-volume-value {
-  font-family: var(--font-family-mono);
-  font-size: 0.625rem;
-  color: var(--color-text-tertiary);
-  min-width: 24px;
-  text-align: right;
+  display: none;
 }
 
 .drum-track-steps {
   display: flex;
-  gap: 8px;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 
 /* Beat group separation (every 4 steps) */
 .drum-track-steps > :nth-child(5),
 .drum-track-steps > :nth-child(9),
 .drum-track-steps > :nth-child(13) {
-  margin-left: 12px;
+  margin-left: 6px;
 }
 
 .drum-step {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 1;
+  max-width: 32px;
   background: var(--color-bg-secondary);
   border: 1.5px solid var(--color-border-primary);
   border-radius: var(--radius-md);
@@ -351,32 +349,16 @@
     justify-content: center;
   }
 
-  .drum-sequencer {
-    padding: var(--spacing-4) var(--spacing-5);
-  }
-
   .drum-track {
-    grid-template-columns: 110px 1fr;
-    gap: var(--spacing-3);
+    grid-template-columns: 80px 1fr;
   }
 
   .drum-volume-slider {
-    width: 60px;
-  }
-
-  .drum-track-steps {
-    gap: 5px;
-  }
-
-  .drum-track-steps > :nth-child(5),
-  .drum-track-steps > :nth-child(9),
-  .drum-track-steps > :nth-child(13) {
-    margin-left: 8px;
+    width: 40px;
   }
 
   .drum-step {
-    width: 26px;
-    height: 26px;
+    max-width: 28px;
   }
 }
 
@@ -393,29 +375,29 @@
   }
 
   .drum-btn {
-    padding: var(--spacing-2) var(--spacing-4);
+    padding: var(--spacing-2) var(--spacing-3);
     font-size: var(--font-size-xs);
-    min-height: 44px;
+    min-height: 40px;
     flex: 1;
-    min-width: 70px;
+    min-width: 60px;
   }
 
   .drum-tempo {
     flex-wrap: wrap;
-    gap: var(--spacing-3);
-    padding: var(--spacing-2) 0;
+    gap: var(--spacing-2);
   }
 
   .drum-slider {
-    width: 120px;
+    width: 100px;
   }
 
   .drum-sequencer {
-    padding: var(--spacing-4);
+    padding: var(--spacing-3);
   }
 
   .drum-track {
-    grid-template-columns: 80px 1fr;
+    grid-template-columns: 60px 1fr;
+    gap: var(--spacing-2);
     padding: var(--spacing-1) 0;
   }
 
@@ -424,26 +406,21 @@
   }
 
   .drum-volume-slider {
-    width: 50px;
-  }
-
-  .drum-volume-value {
-    display: none;
+    width: 35px;
   }
 
   .drum-track-steps {
-    gap: 4px;
+    gap: 3px;
   }
 
   .drum-track-steps > :nth-child(5),
   .drum-track-steps > :nth-child(9),
   .drum-track-steps > :nth-child(13) {
-    margin-left: 6px;
+    margin-left: 4px;
   }
 
   .drum-step {
-    width: 20px;
-    height: 20px;
+    max-width: 24px;
     border-radius: var(--radius-sm);
   }
 
@@ -458,33 +435,36 @@
   .drum-preset-btn {
     padding: var(--spacing-2) var(--spacing-3);
     font-size: 0.625rem;
-    min-height: 36px;
+    min-height: 32px;
   }
 }
 
 /* Small mobile */
 @media (max-width: 360px) {
   .drum-sequencer {
-    padding: var(--spacing-3);
+    padding: var(--spacing-2);
   }
 
   .drum-track {
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 45px 1fr;
   }
 
   .drum-track-steps {
-    gap: 3px;
+    gap: 2px;
   }
 
   .drum-track-steps > :nth-child(5),
   .drum-track-steps > :nth-child(9),
   .drum-track-steps > :nth-child(13) {
-    margin-left: 4px;
+    margin-left: 3px;
   }
 
   .drum-step {
-    width: 16px;
-    height: 16px;
+    max-width: 18px;
+  }
+
+  .drum-volume-slider {
+    width: 28px;
   }
 }
 
