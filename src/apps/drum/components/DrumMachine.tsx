@@ -126,8 +126,25 @@ export const DrumMachine = memo(function DrumMachine() {
   const schedulerRef = useRef<number | null>(null);
   const nextStepTimeRef = useRef<number>(0);
   const currentStepRef = useRef<number>(0);
+  const patternRef = useRef<Pattern>(pattern);
+  const tempoRef = useRef<number>(tempo);
+  const volumesRef = useRef<InstrumentVolumes>(volumes);
+  const isPlayingRef = useRef<boolean>(false);
   const isDraggingRef = useRef(false);
   const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
+
+  // Keep refs in sync with state
+  useEffect(() => {
+    patternRef.current = pattern;
+  }, [pattern]);
+
+  useEffect(() => {
+    tempoRef.current = tempo;
+  }, [tempo]);
+
+  useEffect(() => {
+    volumesRef.current = volumes;
+  }, [volumes]);
 
   /**
    * Get or create audio context
@@ -146,11 +163,11 @@ export const DrumMachine = memo(function DrumMachine() {
    */
   const playSound = useCallback(
     (inst: Instrument, time?: number) => {
-      const ctx = getAudioContext();
+      const ctx = audioContextRef.current;
       if (!ctx) return;
 
       const startTime = time ?? ctx.currentTime;
-      const volumeMultiplier = volumes[inst] / 100;
+      const volumeMultiplier = volumesRef.current[inst] / 100;
 
       switch (inst) {
         case 'kick': {
@@ -251,22 +268,22 @@ export const DrumMachine = memo(function DrumMachine() {
         }
       }
     },
-    [getAudioContext, volumes]
+    []
   );
 
   /**
    * Schedule sounds for upcoming steps using Web Audio timing
-   * This is called frequently by requestAnimationFrame
    */
   const scheduleStep = useCallback(
     (stepIndex: number, time: number) => {
+      const currentPattern = patternRef.current;
       INSTRUMENTS.forEach((inst) => {
-        if (pattern[inst][stepIndex]) {
+        if (currentPattern[inst][stepIndex]) {
           playSound(inst, time);
         }
       });
     },
-    [pattern, playSound]
+    [playSound]
   );
 
   /**
@@ -275,10 +292,10 @@ export const DrumMachine = memo(function DrumMachine() {
    */
   const scheduler = useCallback(() => {
     const ctx = audioContextRef.current;
-    if (!ctx) return;
+    if (!ctx || !isPlayingRef.current) return;
 
     const scheduleAheadTime = 0.1; // Schedule 100ms ahead
-    const stepDuration = 60 / tempo / 4; // Duration of one 16th note in seconds
+    const stepDuration = 60 / tempoRef.current / 4; // Duration of one 16th note in seconds
 
     // Schedule all notes that fall within the look-ahead window
     while (nextStepTimeRef.current < ctx.currentTime + scheduleAheadTime) {
@@ -298,7 +315,7 @@ export const DrumMachine = memo(function DrumMachine() {
 
     // Continue scheduling if still playing
     schedulerRef.current = requestAnimationFrame(scheduler);
-  }, [tempo, scheduleStep]);
+  }, [scheduleStep]);
 
   /**
    * Start playback
@@ -308,7 +325,12 @@ export const DrumMachine = memo(function DrumMachine() {
     if (!ctx) return;
 
     if (!isPlaying) {
+      // Resume audio context if suspended (browser autoplay policy)
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
       setIsPlaying(true);
+      isPlayingRef.current = true;
       // Initialize timing from current audio context time
       nextStepTimeRef.current = ctx.currentTime;
       currentStepRef.current = currentStep;
@@ -317,6 +339,7 @@ export const DrumMachine = memo(function DrumMachine() {
     } else {
       // Pause
       setIsPlaying(false);
+      isPlayingRef.current = false;
       if (schedulerRef.current) {
         cancelAnimationFrame(schedulerRef.current);
         schedulerRef.current = null;
@@ -329,6 +352,7 @@ export const DrumMachine = memo(function DrumMachine() {
    */
   const stop = useCallback(() => {
     setIsPlaying(false);
+    isPlayingRef.current = false;
     setCurrentStep(0);
     currentStepRef.current = 0;
     if (schedulerRef.current) {
