@@ -317,6 +317,17 @@ export const DrumMachine = memo(function DrumMachine() {
   }, []);
 
   /**
+   * Show status message
+   */
+  const showStatus = useCallback(
+    (text: string, type: 'success' | 'error' | 'info') => {
+      setStatusMessage({ text, type });
+      setTimeout(() => setStatusMessage(null), 3000);
+    },
+    []
+  );
+
+  /**
    * Load a preset
    */
   const loadPreset = useCallback(
@@ -352,17 +363,6 @@ export const DrumMachine = memo(function DrumMachine() {
       }
     },
     [isPlaying, advanceStep]
-  );
-
-  /**
-   * Show status message
-   */
-  const showStatus = useCallback(
-    (text: string, type: 'success' | 'error' | 'info') => {
-      setStatusMessage({ text, type });
-      setTimeout(() => setStatusMessage(null), 3000);
-    },
-    []
   );
 
   /**
