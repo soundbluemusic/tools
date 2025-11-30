@@ -1,5 +1,4 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import { useTranslations } from '../i18n/context';
 import { cn } from '../utils';
 
@@ -16,11 +15,6 @@ interface ShareButtonProps {
   compact?: boolean;
 }
 
-interface DropdownPosition {
-  top: number;
-  right: number;
-}
-
 /**
  * Share button component with social media sharing options
  * Uses standard web share URLs - no trademarked logos
@@ -35,51 +29,30 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [dropdownPosition, setDropdownPosition] = useState<DropdownPosition>({
-    top: 0,
-    right: 0,
-  });
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const shareUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
   const shareTitle = title || (typeof document !== 'undefined' ? document.title : '');
   const shareText = description || shareTitle;
 
-  // Calculate dropdown position based on button location
-  const updateDropdownPosition = useCallback(() => {
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setDropdownPosition({
-        top: rect.bottom + 8, // 8px gap
-        right: window.innerWidth - rect.right,
-      });
-    }
-  }, []);
-
-  // Update position when opening and on scroll/resize
+  // Close dropdown on scroll (standard UX pattern)
   useEffect(() => {
     if (isOpen) {
-      updateDropdownPosition();
-      window.addEventListener('scroll', updateDropdownPosition, true);
-      window.addEventListener('resize', updateDropdownPosition);
-      return () => {
-        window.removeEventListener('scroll', updateDropdownPosition, true);
-        window.removeEventListener('resize', updateDropdownPosition);
-      };
+      const handleScroll = () => setIsOpen(false);
+      window.addEventListener('scroll', handleScroll, true);
+      return () => window.removeEventListener('scroll', handleScroll, true);
     }
-  }, [isOpen, updateDropdownPosition]);
+  }, [isOpen]);
 
   // Close dropdown on Escape key
   useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false);
-        buttonRef.current?.focus();
-      }
-    };
-
     if (isOpen) {
+      const handleEscape = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          setIsOpen(false);
+          buttonRef.current?.focus();
+        }
+      };
       document.addEventListener('keydown', handleEscape);
       return () => document.removeEventListener('keydown', handleEscape);
     }
@@ -193,77 +166,65 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
         {!compact && <span className="share-button-text">{t.common.share.button}</span>}
       </button>
 
-      {isOpen &&
-        createPortal(
-          <>
-            {/* Backdrop to capture clicks outside */}
-            <div className="share-backdrop" onClick={handleClose} aria-hidden="true" />
+      {isOpen && (
+        <>
+          {/* Backdrop to capture clicks outside */}
+          <div className="share-backdrop" onClick={handleClose} aria-hidden="true" />
 
-            <div
-              ref={dropdownRef}
-              className="share-dropdown"
-              role="menu"
-              aria-label={t.common.share.button}
-              style={{
-                position: 'fixed',
-                top: dropdownPosition.top,
-                right: dropdownPosition.right,
-              }}
+          <div className="share-dropdown" role="menu" aria-label={t.common.share.button}>
+            {/* Copy Link */}
+            <button
+              type="button"
+              className={cn(
+                'share-dropdown-item',
+                copied && 'share-dropdown-item--success'
+              )}
+              onClick={handleCopyLink}
+              role="menuitem"
             >
-              {/* Copy Link */}
+              <span className="share-item-icon" aria-hidden="true">
+                {copied ? '✓' : '🔗'}
+              </span>
+              <span className="share-item-label">
+                {copied ? t.common.share.copied : t.common.share.copyLink}
+              </span>
+            </button>
+
+            {/* Native Share (mobile) */}
+            {hasNativeShare && (
               <button
                 type="button"
-                className={cn(
-                  'share-dropdown-item',
-                  copied && 'share-dropdown-item--success'
-                )}
-                onClick={handleCopyLink}
+                className="share-dropdown-item"
+                onClick={handleNativeShare}
                 role="menuitem"
               >
                 <span className="share-item-icon" aria-hidden="true">
-                  {copied ? '✓' : '🔗'}
+                  📤
                 </span>
-                <span className="share-item-label">
-                  {copied ? t.common.share.copied : t.common.share.copyLink}
-                </span>
+                <span className="share-item-label">{t.common.share.more}</span>
               </button>
+            )}
 
-              {/* Native Share (mobile) */}
-              {hasNativeShare && (
-                <button
-                  type="button"
-                  className="share-dropdown-item"
-                  onClick={handleNativeShare}
-                  role="menuitem"
-                >
-                  <span className="share-item-icon" aria-hidden="true">
-                    📤
-                  </span>
-                  <span className="share-item-label">{t.common.share.more}</span>
-                </button>
-              )}
+            <div className="share-dropdown-divider" role="separator" />
 
-              <div className="share-dropdown-divider" role="separator" />
-
-              {/* Social Share Links */}
-              {shareLinks.map((link) => (
-                <button
-                  key={link.name}
-                  type="button"
-                  className="share-dropdown-item"
-                  onClick={() => handleShareClick(link.url)}
-                  role="menuitem"
-                >
-                  <span className="share-item-icon" aria-hidden="true">
-                    {link.icon}
-                  </span>
-                  <span className="share-item-label">{link.label}</span>
-                </button>
-              ))}
-            </div>
-          </>,
-          document.body
-        )}
+            {/* Social Share Links */}
+            {shareLinks.map((link) => (
+              <button
+                key={link.name}
+                type="button"
+                className="share-dropdown-item"
+                onClick={() => handleShareClick(link.url)}
+                role="menuitem"
+              >
+                <span className="share-item-icon" aria-hidden="true">
+                  {link.icon}
+                </span>
+                <span className="share-item-label">{link.label}</span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 });

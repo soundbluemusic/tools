@@ -354,6 +354,8 @@
 }
 
 .tool-header {
+  position: relative;
+  z-index: var(--z-sticky);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
@@ -806,7 +808,10 @@
 }
 
 .share-dropdown {
-  z-index: var(--z-modal);
+  position: absolute;
+  top: calc(100% + var(--spacing-2));
+  right: 0;
+  z-index: var(--z-popover);
   min-width: 200px;
   padding: var(--spacing-2);
   background: var(--color-bg-secondary);
@@ -907,11 +912,11 @@
   }
 
   .share-dropdown {
-    position: fixed !important;
-    top: auto !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
     min-width: 100%;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     padding: var(--spacing-4) var(--spacing-4) var(--spacing-6);
