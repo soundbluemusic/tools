@@ -79,10 +79,13 @@ const Terms = memo(function Terms() {
           <section className="legal-section">
             <h2>4. 서비스 이용</h2>
             <h3>4.1 허용되는 사용</h3>
+            <p>
+              MIT 라이선스에 따라 다음과 같은 사용이 허용됩니다:
+            </p>
             <ul>
-              <li>개인적인 목적으로 도구 사용</li>
-              <li>비상업적 목적으로 도구 사용</li>
-              <li>MIT 라이선스 조건에 따른 코드 수정 및 재배포</li>
+              <li>개인적 및 상업적 목적으로 자유롭게 도구 사용</li>
+              <li>코드 수정, 복사, 병합, 출판, 배포, 서브라이선스 및 판매</li>
+              <li>단, 보호된 브랜드 자산(로고, 아이콘 등)은 제외</li>
             </ul>
 
             <h3>4.2 금지되는 사용</h3>
@@ -196,11 +199,17 @@ const Terms = memo(function Terms() {
         <section className="legal-section">
           <h2>4. Use of Service</h2>
           <h3>4.1 Permitted Use</h3>
+          <p>
+            Under the MIT License, the following uses are permitted:
+          </p>
           <ul>
-            <li>Personal use of the tools</li>
-            <li>Non-commercial use of the tools</li>
+            <li>Personal and commercial use of the tools</li>
             <li>
-              Modification and redistribution of code under MIT License terms
+              Modification, copying, merging, publishing, distributing,
+              sublicensing, and selling of the code
+            </li>
+            <li>
+              Note: Protected brand assets (logos, icons, etc.) are excluded
             </li>
           </ul>
 
