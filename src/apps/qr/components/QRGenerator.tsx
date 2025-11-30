@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, memo, useCallback, useMemo } from 'react';
+import { useState, useEffect, memo, useCallback, useMemo } from 'react';
+import QRious from 'qrious';
 import { useTranslations } from '../../../i18n';
 import { useDebounce } from '../../../hooks/useDebounce';
 import {
@@ -6,22 +7,8 @@ import {
   URL_DEBOUNCE_MS,
   COLOR_THRESHOLD,
   TIMEOUTS,
-  QRIOUS_CDN,
 } from '../constants';
 import './QRGenerator.css';
-
-declare global {
-  interface Window {
-    QRious: new (options: {
-      element: HTMLCanvasElement;
-      value: string;
-      size: number;
-      level: string;
-      background: string;
-      foreground: string;
-    }) => void;
-  }
-}
 
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type ColorMode = 'black' | 'white';
@@ -33,9 +20,6 @@ const QRGenerator = memo(function QRGenerator() {
   const [qrBlack, setQrBlack] = useState<string | null>(null);
   const [qrWhite, setQrWhite] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [libraryError, setLibraryError] = useState<string | null>(null);
-  const isLibraryLoaded = useRef(false);
-  const isLibraryLoading = useRef(false);
 
   // Debounce URL for QR generation (input stays responsive)
   const debouncedUrl = useDebounce(url, URL_DEBOUNCE_MS);
@@ -92,55 +76,12 @@ const QRGenerator = memo(function QRGenerator() {
     return canvas.toDataURL('image/png');
   }, []);
 
-  const loadQRLibrary = useCallback(() => {
-    return new Promise<void>((resolve, reject) => {
-      // Already loaded
-      if (window.QRious) {
-        isLibraryLoaded.current = true;
-        resolve();
-        return;
-      }
-      // Already loading
-      if (isLibraryLoading.current) {
-        resolve();
-        return;
-      }
-      // Already loaded via ref
-      if (isLibraryLoaded.current) {
-        resolve();
-        return;
-      }
-
-      isLibraryLoading.current = true;
-      const script = document.createElement('script');
-      script.src = QRIOUS_CDN.URL;
-      script.integrity = QRIOUS_CDN.INTEGRITY;
-      script.crossOrigin = 'anonymous';
-
-      script.onload = () => {
-        isLibraryLoaded.current = true;
-        isLibraryLoading.current = false;
-        setLibraryError(null);
-        resolve();
-      };
-
-      script.onerror = () => {
-        isLibraryLoading.current = false;
-        const errorMsg = 'QR 라이브러리 로드 실패';
-        setLibraryError(errorMsg);
-        reject(new Error(errorMsg));
-      };
-
-      document.head.appendChild(script);
-    });
-  }, []);
-
   const createQR = useCallback(
     (text: string, level: ErrorLevel) => {
-      if (!window.QRious || !text.trim()) return;
+      if (!text.trim()) return;
 
       const canvas1 = document.createElement('canvas');
-      new window.QRious({
+      new QRious({
         element: canvas1,
         value: text,
         size: QR_SIZE,
@@ -153,7 +94,7 @@ const QRGenerator = memo(function QRGenerator() {
       setQrBlack(blackQR);
 
       const canvas2 = document.createElement('canvas');
-      new window.QRious({
+      new QRious({
         element: canvas2,
         value: text,
         size: QR_SIZE,
@@ -167,12 +108,6 @@ const QRGenerator = memo(function QRGenerator() {
     },
     [makeTransparent]
   );
-
-  useEffect(() => {
-    loadQRLibrary().catch(() => {
-      // Error already handled in loadQRLibrary
-    });
-  }, [loadQRLibrary]);
 
   useEffect(() => {
     if (!debouncedUrl.trim()) {
@@ -411,33 +346,7 @@ const QRGenerator = memo(function QRGenerator() {
             <div className="qr-preview-card">
               <h3>{colorMode === 'black' ? qrT.blackQrCode : qrT.whiteQrCode}</h3>
               <div className={`qr-preview ${colorMode === 'black' ? 'light-bg' : 'dark-bg'}`}>
-                {libraryError ? (
-                  <div className={`qr-placeholder qr-error ${colorMode === 'black' ? 'light' : 'dark'}`}>
-                    <svg
-                      className="qr-placeholder-icon"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                      />
-                    </svg>
-                    <p>{libraryError}</p>
-                    <button
-                      className="qr-retry-btn"
-                      onClick={() => {
-                        setLibraryError(null);
-                        loadQRLibrary().catch(() => {});
-                      }}
-                    >
-                      {commonT.errorBoundary.retry}
-                    </button>
-                  </div>
-                ) : currentQR ? (
+                {currentQR ? (
                   <img
                     src={currentQR}
                     alt={`${colorMode === 'black' ? 'Black' : 'White'} QR Code`}
