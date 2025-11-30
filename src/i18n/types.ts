@@ -9,7 +9,8 @@ export type Language = 'ko' | 'en';
 export interface CommonTranslation {
   // Footer
   footer: {
-    about: string;
+    privacy: string;
+    terms: string;
     github: string;
     sitemap: string;
     opensource: string;
