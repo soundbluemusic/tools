@@ -682,6 +682,10 @@
   opacity: 0.5;
 }
 
+.footer-share {
+  margin-bottom: 1.5rem;
+}
+
 /* Mobile footer adjustments */
 @media (max-width: 480px) {
   .footer {
@@ -695,6 +699,10 @@
 
   .footer-link {
     font-size: 0.8rem;
+  }
+
+  .footer-share {
+    margin-bottom: 1rem;
   }
 }
 

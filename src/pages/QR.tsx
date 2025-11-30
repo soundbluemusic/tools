@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { QRGenerator } from '../apps/qr/components/QRGenerator';
+import { ShareButton } from '../components/ShareButton';
 import { useTranslations } from '../i18n';
 import { useSEO } from '../hooks';
 
@@ -19,7 +20,11 @@ const QR = memo(function QR() {
   });
 
   return (
-    <PageLayout title={qr.title} description={qr.subtitle}>
+    <PageLayout
+      title={qr.title}
+      description={qr.subtitle}
+      actions={<ShareButton title={qr.title} description={qr.subtitle} />}
+    >
       <QRGenerator />
     </PageLayout>
   );
