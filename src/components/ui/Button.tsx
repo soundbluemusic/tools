@@ -59,6 +59,8 @@ export const Button = memo(
           className
         )}
         disabled={disabled || loading}
+        aria-busy={loading || undefined}
+        aria-disabled={disabled || loading || undefined}
         {...props}
       >
         {loading && <span className="btn-spinner" aria-hidden="true" />}

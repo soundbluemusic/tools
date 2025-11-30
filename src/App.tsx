@@ -5,6 +5,7 @@ import { Footer } from './components/Footer';
 import { LanguageToggle } from './components/LanguageToggle';
 import { ThemeToggle } from './components/ThemeToggle';
 import { PWAPrompt } from './components/PWAPrompt';
+import { SkipLink } from './components/SkipLink';
 import { Loader } from './components/ui';
 import { LanguageProvider } from './i18n';
 import { ThemeProvider } from './hooks';
@@ -73,7 +74,8 @@ const App = memo(function App() {
         <LanguageProvider>
           <ErrorBoundary>
             <NavigationProvider>
-              <main className="main-content">
+              <SkipLink />
+              <main id="main-content" className="main-content" role="main">
                 <Suspense fallback={<PageLoader />}>
                   <Routes>
                     {ROUTES.map((route) => (
