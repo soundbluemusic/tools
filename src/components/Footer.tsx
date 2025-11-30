@@ -15,6 +15,14 @@ export const Footer = memo(function Footer() {
         <Link to="/about" className="footer-link">
           {t.common.footer.about}
         </Link>
+        <a
+          href="https://github.com/soundbluemusic/tools"
+          className="footer-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t.common.footer.github}
+        </a>
         <Link to="/sitemap" className="footer-link">
           {t.common.footer.sitemap}
         </Link>
