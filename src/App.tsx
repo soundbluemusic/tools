@@ -17,6 +17,7 @@ import NotFound from './pages/NotFound';
 // Tool pages - lazy loaded for code splitting
 const Metronome = lazy(() => import('./pages/Metronome'));
 const Drum = lazy(() => import('./pages/Drum'));
+const DrumSynth = lazy(() => import('./pages/DrumSynth'));
 const QR = lazy(() => import('./pages/QR'));
 
 // Info pages - lazy loaded (rarely visited)
@@ -46,6 +47,7 @@ const ROUTES = [
   { path: '/', element: <Home />, lazy: false },
   { path: '/metronome', element: <Metronome />, lazy: true },
   { path: '/drum', element: <Drum />, lazy: true },
+  { path: '/drum-synth', element: <DrumSynth />, lazy: true },
   { path: '/qr', element: <QR />, lazy: true },
   { path: '/sitemap', element: <Sitemap />, lazy: true },
   { path: '/opensource', element: <OpenSource />, lazy: true },
