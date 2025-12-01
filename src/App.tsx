@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Root Application Component
+ *
+ * ARCHITECTURE: Frontend-Only (No Backend)
+ * - This is a 100% client-side application with NO backend server
+ * - All data is stored locally via localStorage
+ * - PWA with Service Worker enables full offline functionality
+ * - No API calls, no server authentication, no external data fetching
+ */
+
 import { memo, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';

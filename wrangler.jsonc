@@ -1,48 +1,10 @@
 {
-  // Cloudflare Pages Configuration
+  // Cloudflare Pages Configuration (Static Site Only - No Workers)
   // https://developers.cloudflare.com/pages/configuration/wrangler-configuration/
+  //
+  // ARCHITECTURE: Frontend-Only (No Backend)
+  // This is a pure static site deployment with NO server-side code.
 
   "name": "productivity-tools",
-  "compatibility_date": "2025-11-27",
-
-  // Pages 정적 자산 설정
-  "assets": {
-    "directory": "./dist",
-    // HTML 처리 최적화
-    "html_handling": "auto-trailing-slash",
-    // 404 페이지 처리
-    "not_found_handling": "single-page-application"
-  },
-
-  // 빌드 설정
-  "build": {
-    "command": "npm run build",
-    "cwd": ".",
-    "watch_dir": "src"
-  },
-
-  // 개발 서버 설정
-  "dev": {
-    "port": 8788,
-    "local_protocol": "http"
-  },
-
-  // 프로덕션 환경 변수 (민감한 정보는 Cloudflare 대시보드에서 설정)
-  "vars": {
-    "ENVIRONMENT": "production"
-  },
-
-  // 배포 환경별 설정
-  "env": {
-    "production": {
-      "vars": {
-        "ENVIRONMENT": "production"
-      }
-    },
-    "preview": {
-      "vars": {
-        "ENVIRONMENT": "preview"
-      }
-    }
-  }
+  "pages_build_output_dir": "./dist"
 }

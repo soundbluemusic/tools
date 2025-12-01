@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "A collection of utility tools built with React",
+  "description": "Frontend-only PWA utility tools - No backend, works offline, all data stays local",
   "author": "Tools Team",
   "license": "MIT",
   "scripts": {

@@ -1,3 +1,13 @@
+/**
+ * Vite Configuration for Frontend-Only PWA
+ *
+ * ARCHITECTURE: No Backend
+ * - This app is 100% client-side with NO backend server
+ * - PWA configuration enables full offline functionality
+ * - All assets are cached by Service Worker for offline use
+ * - Deployed as static files to Cloudflare Pages CDN
+ */
+
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
