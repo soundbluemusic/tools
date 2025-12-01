@@ -5,7 +5,7 @@
  */
 
 import type { Pattern, Instrument } from '../constants';
-import { STEPS, INSTRUMENTS, createEmptyPattern } from '../constants';
+import { STEPS, createEmptyPattern } from '../constants';
 
 /**
  * Reverse mapping: MIDI note number to instrument
