@@ -5,9 +5,10 @@ import {
   useCallback,
   useDeferredValue,
   useTransition,
+  useEffect,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { APPS } from '../constants/apps';
+import { loadApps } from '../constants/apps';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
 import AppList from '../components/AppList';
@@ -80,6 +81,18 @@ const Home = memo(function Home() {
     isHomePage: true,
   });
 
+  // Apps state - loaded asynchronously for code splitting
+  const [apps, setApps] = useState<App[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load apps on mount
+  useEffect(() => {
+    loadApps().then((loadedApps) => {
+      setApps(loadedApps);
+      setIsLoading(false);
+    });
+  }, []);
+
   // Search state with deferred value for smooth typing
   const [searchQuery, setSearchQuery] = useState('');
   const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -103,12 +116,12 @@ const Home = memo(function Home() {
 
   // Filter and sort apps - only recompute when inputs change
   const filteredApps = useMemo(() => {
-    let apps = APPS;
+    let result = apps;
 
     // Apply search filter (search in both languages for better UX)
     if (deferredSearchQuery.trim()) {
       const query = deferredSearchQuery.toLowerCase().trim();
-      apps = APPS.filter(
+      result = apps.filter(
         (app) =>
           app.name.ko.toLowerCase().includes(query) ||
           app.name.en.toLowerCase().includes(query) ||
@@ -118,8 +131,8 @@ const Home = memo(function Home() {
     }
 
     // Apply sorting with current language
-    return sortApps(apps, sortBy, language);
-  }, [deferredSearchQuery, sortBy, language]);
+    return sortApps(result, sortBy, language);
+  }, [apps, deferredSearchQuery, sortBy, language]);
 
   // Optimized search handler - immediate state update
   const handleSearchChange = useCallback(
@@ -203,13 +216,13 @@ const Home = memo(function Home() {
       {/* App List - Direct render without Suspense */}
       <AppList
         apps={filteredApps}
-        isPending={isSearchPending || isPending}
+        isPending={isSearchPending || isPending || isLoading}
         language={language}
         ariaLabel={appListAriaLabel}
       />
 
       {/* No Results Message */}
-      {filteredApps.length === 0 && searchQuery && (
+      {filteredApps.length === 0 && searchQuery && !isLoading && (
         <p className="no-results">
           {language === 'ko'
             ? `"${searchQuery}"${homeT.noResults}`

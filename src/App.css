@@ -347,82 +347,7 @@
   }
 }
 
-/* ==========================================================================
-   Tool Page Styles - View Transitions compatible
-   ========================================================================== */
-.tool-page {
-  /* GPU layer for page transitions */
-  transform: var(--gpu-transform);
-}
-
-/* View Transition animations */
-@keyframes page-enter {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Apply enter animation when page loads */
-.tool-page {
-  animation: page-enter 0.15s ease-out;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--text-color);
-  text-decoration: none;
-  padding: 0.5rem 0;
-  margin-bottom: 1rem;
-  opacity: 0.7;
-  transform: var(--gpu-transform);
-  transition: opacity var(--transition-fast) ease-out;
-}
-
-.back-link:hover {
-  opacity: 1;
-}
-
-.tool-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  contain: layout style;
-}
-
-.tool-header-content {
-  flex: 1;
-}
-
-.tool-title {
-  font-size: clamp(1.25rem, 5vw, 1.5rem);
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--text-color);
-}
-
-.tool-desc {
-  color: var(--color-text-secondary, #666);
-  margin: 0;
-  font-size: 0.95rem;
-}
-
-.tool-content {
-  background: var(--color-bg-secondary, var(--bg-color));
-  border-radius: 12px;
-  border: 1px solid var(--color-border-secondary, transparent);
-  padding: 2rem;
-  contain: layout style;
-  transform: var(--gpu-transform);
-}
+/* Tool page styles moved to src/styles/tool-page.css for code splitting */
 
 /* ==========================================================================
    Home Page Enter Animation
@@ -487,15 +412,6 @@
     padding: 1.25rem 1rem;
   }
 
-  .tool-header {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .tool-content {
-    padding: 1.5rem;
-  }
-
   .footer-menu {
     gap: 1.25rem;
   }
@@ -525,15 +441,6 @@
   .app-item {
     padding: 0.875rem 1rem;
   }
-
-  .tool-header {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .tool-content {
-    padding: 1.25rem;
-  }
 }
 
 /* ==========================================================================
@@ -548,61 +455,13 @@
     padding: 0.75rem;
   }
 
-  .tool-content {
-    padding: 1rem;
-  }
-
   .footer-menu {
     flex-direction: column;
     gap: 0.75rem;
   }
 }
 
-/* ==========================================================================
-   404 Not Found Page
-   ========================================================================== */
-.not-found {
-  text-align: center;
-  padding: 4rem 2rem;
-}
-
-.not-found-code {
-  font-size: 6rem;
-  font-weight: 700;
-  color: var(--text-color);
-  margin: 0;
-  line-height: 1;
-  opacity: 0.3;
-}
-
-.not-found-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-color);
-  margin: 1rem 0 0.5rem;
-}
-
-.not-found-message {
-  color: var(--color-text-secondary, #666);
-  margin: 0 0 2rem;
-  font-size: 0.95rem;
-}
-
-.not-found-link {
-  display: inline-block;
-  color: var(--color-text-inverse, #fff);
-  background: var(--accent-color);
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: background-color var(--transition-fast) ease-out;
-}
-
-.not-found-link:hover {
-  background: var(--accent-hover);
-}
+/* 404 page styles moved to src/styles/not-found.css for code splitting */
 
 /* ==========================================================================
    View Transitions API Support
@@ -706,34 +565,4 @@
   }
 }
 
-/* ==========================================================================
-   QR Code Generator Page - Full width layout
-   ========================================================================== */
-.qr-page {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  transform: var(--gpu-transform);
-  animation: page-enter 0.15s ease-out;
-}
-
-.qr-page .back-link {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 100;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  backdrop-filter: blur(8px);
-}
-
-/* Safe area support for QR page back link */
-@supports (top: env(safe-area-inset-top)) {
-  .qr-page .back-link {
-    top: calc(1rem + env(safe-area-inset-top));
-    left: calc(1rem + env(safe-area-inset-left));
-  }
-}
+/* QR page styles moved to src/styles/qr-page.css for code splitting */

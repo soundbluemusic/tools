@@ -1,7 +1,11 @@
-import { memo } from 'react';
+import { memo, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslations } from '../i18n';
-import { ShareButton } from './ShareButton';
+
+// Lazy load ShareButton to reduce initial bundle size
+const ShareButton = lazy(() =>
+  import('./ShareButton').then((m) => ({ default: m.ShareButton }))
+);
 
 /**
  * Footer component with menu links and copyright
@@ -11,9 +15,11 @@ export const Footer = memo(function Footer() {
 
   return (
     <footer className="footer">
-      {/* Share Button */}
+      {/* Share Button - lazy loaded */}
       <div className="footer-share">
-        <ShareButton />
+        <Suspense fallback={null}>
+          <ShareButton />
+        </Suspense>
       </div>
 
       {/* Footer Menu */}

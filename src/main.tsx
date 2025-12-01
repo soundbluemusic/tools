@@ -34,3 +34,19 @@ if (import.meta.env.DEV) {
     env: import.meta.env.MODE,
   };
 }
+
+// Defer Service Worker registration to after initial render
+// This improves initial page load performance
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  // Wait for page to be fully loaded before registering SW
+  window.addEventListener('load', () => {
+    // Additional delay to ensure React has rendered
+    setTimeout(() => {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .catch((error) => {
+          console.warn('SW registration failed:', error);
+        });
+    }, 2000); // 2 second delay after load
+  });
+}
