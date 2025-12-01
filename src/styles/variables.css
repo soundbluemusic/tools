@@ -152,6 +152,24 @@
   --container-md: 800px;
   --container-lg: 1024px;
   --container-xl: 1280px;
+  --container-max: 1440px;
+
+  /* ============================================
+   * Navigation Layout
+   * ============================================ */
+  /* Desktop Sidebar */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 72px;
+  --sidebar-transition: var(--transition-normal) var(--ease-default);
+
+  /* Mobile Bottom Navigation */
+  --bottom-nav-height: 56px;
+  --bottom-nav-icon-size: 24px;
+  --bottom-nav-label-size: 12px;
+
+  /* Command Palette */
+  --command-palette-width: 560px;
+  --command-palette-max-height: 420px;
 
   /* ============================================
    * Responsive Breakpoints

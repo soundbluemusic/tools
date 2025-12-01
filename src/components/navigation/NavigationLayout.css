@@ -1,0 +1,58 @@
+/**
+ * Navigation Layout
+ * Responsive wrapper for desktop sidebar and mobile bottom nav
+ */
+
+.navigation-layout {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+}
+
+/* Main Content Area */
+.navigation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Prevent flex overflow */
+
+  /* Desktop: Account for sidebar width */
+  @media (min-width: 1024px) {
+    margin-left: var(--sidebar-width);
+    transition: margin-left var(--sidebar-transition);
+  }
+
+  /* Tablet: Account for collapsed sidebar */
+  @media (min-width: 1024px) and (max-width: 1279px) {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  /* Mobile: Account for bottom navigation */
+  @media (max-width: 1023px) {
+    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+  }
+}
+
+/* When sidebar is collapsed via JS, adjust content margin */
+.navigation-layout:has(.sidebar.collapsed) .navigation-content {
+  @media (min-width: 1024px) {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+}
+
+/* Ensure main content fills available space */
+.navigation-content > main {
+  flex: 1;
+}
+
+/* Ensure footer stays at bottom */
+.navigation-content > footer {
+  margin-top: auto;
+}
+
+/* Reduced motion - disable all layout transitions */
+@media (prefers-reduced-motion: reduce) {
+  .navigation-content {
+    transition: none;
+  }
+}
