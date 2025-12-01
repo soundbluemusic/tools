@@ -1,0 +1,3 @@
+# Sync README versions with package.json
+npm run sync-readme
+git add README.md
