@@ -50,7 +50,7 @@
 <Router {url}>
   <NavigationLayout apps={$apps}>
     <SkipLink />
-    <main id="main-content" class="main-content" role="main">
+    <main id="main-content" class="main-content">
       {#if $isLoading}
         <div class="page-loader">
           <Loader size="lg" />

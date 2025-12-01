@@ -16,4 +16,4 @@
   class={cn('skeleton', className)}
   style="width: {width}; height: {height}; border-radius: {radius};"
   aria-hidden="true"
-/>
+></div>
