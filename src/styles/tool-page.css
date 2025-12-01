@@ -3,7 +3,7 @@
    ========================================================================== */
 
 .tool-page {
-  padding: 24px 0;
+  padding: 24px 32px;
   /* GPU layer for page transitions */
   transform: translateZ(0);
   animation: tool-page-enter 0.15s ease-out;
@@ -67,7 +67,7 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .tool-page {
-    padding: 20px 0;
+    padding: 20px 24px;
   }
 
   .tool-header {
@@ -87,7 +87,7 @@
 
 @media (max-width: 480px) {
   .tool-page {
-    padding: 16px 0;
+    padding: 16px;
   }
 
   .tool-header {

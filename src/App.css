@@ -360,7 +360,7 @@
    Home Page Styles
    ========================================================================== */
 .home-page {
-  padding: 24px 0;
+  padding: 24px 32px;
   transform: var(--gpu-transform);
 }
 
@@ -386,9 +386,15 @@
   gap: 12px;
 }
 
+@media (max-width: 768px) {
+  .home-page {
+    padding: 20px 24px;
+  }
+}
+
 @media (max-width: 480px) {
   .home-page {
-    padding: 16px 0;
+    padding: 16px;
   }
 
   .home-header {
