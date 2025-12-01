@@ -1,38 +1,38 @@
 /**
- * Navigation Layout - Full Responsive
- * Mobile: Full width content + fixed bottom nav
- * Desktop: Sidebar + scrollable content
+ * Navigation Layout - Full Responsive with Fixed Header
+ * - Fixed header at top
+ * - Fixed sidebar on desktop
+ * - Centered main content with max-width
+ * - Sticky footer
  */
 
 .navigation-layout {
   display: flex;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
 }
 
-/* Mobile: Stack vertically */
-@media (max-width: 1023px) {
-  .navigation-layout {
-    flex-direction: column;
-  }
-}
-
-/* Desktop: Side by side */
-@media (min-width: 1024px) {
-  .navigation-layout {
-    flex-direction: row;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-}
-
-/* Main Content */
+/* Main Content Area */
 .navigation-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   width: 100%;
+  padding-top: 56px; /* Header height */
+}
+
+/* Content Wrapper - Centered with max-width */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
 }
 
 /* Mobile: Add space for bottom nav */
@@ -40,13 +40,62 @@
   .navigation-content {
     padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   }
+
+  .content-wrapper {
+    padding: 0 16px;
+  }
 }
 
-/* Desktop: Scrollable content */
+/* Desktop: Sidebar layout */
 @media (min-width: 1024px) {
+  .navigation-layout {
+    flex-direction: row;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
   .navigation-content {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    margin-left: 240px; /* Sidebar width */
+  }
+
+  .content-wrapper {
+    max-width: 960px;
+    padding: 0 32px;
+  }
+}
+
+/* Large screens: Wider content */
+@media (min-width: 1440px) {
+  .content-wrapper {
+    max-width: 1100px;
+    padding: 0 48px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .navigation-content {
+    padding-top: 52px; /* Smaller header on mobile */
+  }
+
+  .content-wrapper {
+    padding: 0 12px;
+  }
+}
+
+/* Safe area support */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .navigation-content {
+    padding-top: calc(56px + env(safe-area-inset-top));
+  }
+
+  @media (max-width: 480px) {
+    .navigation-content {
+      padding-top: calc(52px + env(safe-area-inset-top));
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { PageLayout } from '../components/layout';
 import { QRGenerator } from '../apps/qr/components/QRGenerator';
 import { ShareButton } from '../components/ShareButton';
@@ -20,10 +20,21 @@ const QR = memo(function QR() {
     canonicalPath: '/qr',
   });
 
+  // Breadcrumb items
+  const breadcrumb = useMemo(
+    () => [
+      { label: { ko: '홈', en: 'Home' }, href: '/' },
+      { label: { ko: '기타 도구', en: 'Other Tools' }, href: '/' },
+      { label: { ko: qr.title, en: qr.title } },
+    ],
+    [qr.title]
+  );
+
   return (
     <PageLayout
       title={qr.title}
       description={qr.subtitle}
+      breadcrumb={breadcrumb}
       actions={
         <>
           <EmbedButton title={qr.title} defaultWidth={400} defaultHeight={600} />

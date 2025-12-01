@@ -2,8 +2,6 @@ import { memo, useEffect, lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Footer } from './components/Footer';
-import { LanguageToggle } from './components/LanguageToggle';
-import { ThemeToggle } from './components/ThemeToggle';
 import { SkipLink } from './components/SkipLink';
 import { NavigationLayout } from './components/navigation';
 import { Loader } from './components/ui';
@@ -93,8 +91,6 @@ function AppContent() {
         </Suspense>
       </main>
       <Footer />
-      <ThemeToggle />
-      <LanguageToggle />
     </NavigationLayout>
   );
 }

@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { PageLayout } from '../components/layout';
 import { MetronomePlayer } from '../apps/metronome/components/MetronomePlayer';
 import { ShareButton } from '../components/ShareButton';
@@ -20,10 +20,21 @@ const Metronome = memo(function Metronome() {
     canonicalPath: '/metronome',
   });
 
+  // Breadcrumb items
+  const breadcrumb = useMemo(
+    () => [
+      { label: { ko: '홈', en: 'Home' }, href: '/' },
+      { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/' },
+      { label: { ko: metronome.title, en: metronome.title } },
+    ],
+    [metronome.title]
+  );
+
   return (
     <PageLayout
       title={metronome.title}
       description={metronome.description}
+      breadcrumb={breadcrumb}
       actions={
         <>
           <EmbedButton title={metronome.title} defaultWidth={400} defaultHeight={500} />
