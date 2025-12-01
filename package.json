@@ -23,6 +23,7 @@
     "generate-icons": "node scripts/generate-icons.mjs",
     "generate-og-image": "node scripts/generate-og-image.mjs",
     "convert-webp": "node scripts/convert-to-webp.mjs",
+    "sync-readme": "node scripts/sync-readme.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed"

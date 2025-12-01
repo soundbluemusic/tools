@@ -31,10 +31,10 @@ npm run validate
 
 | 분류 | 기술 |
 |:-----|:-----|
-| 프레임워크 | React 18 |
+| 프레임워크 | React 19 |
 | 라우팅 | React Router 7 |
 | 언어 | TypeScript 5 |
-| 빌드 | Vite 5 |
+| 빌드 | Vite 6 |
 | 테스트 | Vitest + React Testing Library |
 | 배포 | Cloudflare Pages |
 
