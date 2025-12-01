@@ -5,6 +5,9 @@
   "name": "productivity-tools",
   "compatibility_date": "2025-11-27",
 
+  // Pages 빌드 출력 디렉토리 (React/Vite)
+  "pages_build_output_dir": "./dist",
+
   // Pages 정적 자산 설정
   "assets": {
     "directory": "./dist",
