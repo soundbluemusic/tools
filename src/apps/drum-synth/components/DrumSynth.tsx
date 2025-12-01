@@ -24,7 +24,19 @@ import {
 import './DrumSynth.css';
 
 /**
- * Parameter Slider Component
+ * Drum icons for visual identification
+ */
+const DRUM_ICONS: Record<DrumType, string> = {
+  kick: '🔴',
+  snare: '🟠',
+  hihat: '🟡',
+  clap: '👏',
+  tom: '🔵',
+  rim: '🟣',
+};
+
+/**
+ * Parameter Slider Component - Enhanced for touch
  */
 interface ParamSliderProps {
   label: string;
@@ -48,20 +60,24 @@ const ParamSlider = memo(function ParamSlider({
   const displayValue = step < 1 ? value.toFixed(2) : value;
   return (
     <div className="synth-param">
-      <label className="synth-param-label">{label}</label>
-      <input
-        type="range"
-        className="synth-param-slider"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(parseFloat(e.target.value))}
-      />
-      <span className="synth-param-value">
-        {displayValue}
-        {unit}
-      </span>
+      <div className="synth-param-header">
+        <span className="synth-param-label">{label}</span>
+        <span className="synth-param-value">
+          {displayValue}
+          {unit}
+        </span>
+      </div>
+      <div className="synth-param-slider-wrap">
+        <input
+          type="range"
+          className="synth-param-slider"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(parseFloat(e.target.value))}
+        />
+      </div>
     </div>
   );
 });
@@ -71,7 +87,7 @@ const ParamSlider = memo(function ParamSlider({
  */
 const PlayIcon = memo(function PlayIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
       <polygon points="5 3 19 12 5 21 5 3" />
     </svg>
   );
@@ -83,8 +99,8 @@ const PlayIcon = memo(function PlayIcon() {
 const ResetIcon = memo(function ResetIcon() {
   return (
     <svg
-      width="16"
-      height="16"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -148,25 +164,20 @@ export const DrumSynth = memo(function DrumSynth() {
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
 
-      // Main oscillator for body
       const osc = ctx.createOscillator();
       const gainNode = ctx.createGain();
 
-      // Tone blend: 0 = sine, 100 = triangle
       osc.type = kickParams.tone > 50 ? 'triangle' : 'sine';
 
-      // Pitch envelope
       osc.frequency.setValueAtTime(kickParams.pitchStart, now);
       osc.frequency.exponentialRampToValueAtTime(
         Math.max(kickParams.pitchEnd, 0.01),
         now + kickParams.pitchDecay
       );
 
-      // Amplitude envelope
       gainNode.gain.setValueAtTime(volume, now);
       gainNode.gain.exponentialRampToValueAtTime(0.001, now + kickParams.ampDecay);
 
-      // Click layer (if click > 0)
       if (kickParams.click > 0) {
         const clickOsc = ctx.createOscillator();
         const clickGain = ctx.createGain();
@@ -180,7 +191,6 @@ export const DrumSynth = memo(function DrumSynth() {
         clickOsc.stop(now + 0.01);
       }
 
-      // Drive (distortion)
       if (kickParams.drive > 0) {
         const distortion = ctx.createWaveShaper();
         distortion.curve = makeDistortionCurve(kickParams.drive);
@@ -210,7 +220,6 @@ export const DrumSynth = memo(function DrumSynth() {
       const volume = masterVolume / 100;
       const toneMix = snareParams.toneMix / 100;
 
-      // Tone oscillator (body)
       const toneOsc = ctx.createOscillator();
       const toneGain = ctx.createGain();
       toneOsc.type = 'triangle';
@@ -226,7 +235,6 @@ export const DrumSynth = memo(function DrumSynth() {
       toneOsc.start(now);
       toneOsc.stop(now + snareParams.toneDecay + 0.1);
 
-      // Noise (snappy)
       const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * snareParams.noiseDecay, ctx.sampleRate);
       const noiseData = noiseBuffer.getChannelData(0);
       for (let i = 0; i < noiseBuffer.length; i++) {
@@ -263,11 +271,8 @@ export const DrumSynth = memo(function DrumSynth() {
 
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
-
-      // Calculate actual decay based on openness
       const actualDecay = hihatParams.decay + (hihatParams.openness / 100) * 0.3;
 
-      // Create metallic sound using multiple detuned oscillators
       const numOscs = 6;
       const baseFreq = 4000 + (hihatParams.pitch / 100) * 4000;
       const ratios = [1, 1.342, 1.2312, 1.6532, 1.9523, 2.1523];
@@ -294,7 +299,6 @@ export const DrumSynth = memo(function DrumSynth() {
         osc.stop(now + actualDecay + 0.1);
       }
 
-      // Add noise layer
       const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * actualDecay, ctx.sampleRate);
       const noiseData = noiseBuffer.getChannelData(0);
       for (let i = 0; i < noiseBuffer.length; i++) {
@@ -332,7 +336,6 @@ export const DrumSynth = memo(function DrumSynth() {
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
 
-      // Number of micro-attacks based on spread
       const numClaps = Math.floor(2 + (clapParams.spread / 100) * 4);
       const clapSpacing = 0.01 + (clapParams.spread / 100) * 0.02;
 
@@ -365,7 +368,6 @@ export const DrumSynth = memo(function DrumSynth() {
         noiseSource.start(clapTime);
       }
 
-      // Add reverb tail if reverb > 0
       if (clapParams.reverb > 0) {
         const reverbLength = 0.3 + (clapParams.reverb / 100) * 0.5;
         const reverbBuffer = ctx.createBuffer(1, ctx.sampleRate * reverbLength, ctx.sampleRate);
@@ -405,13 +407,11 @@ export const DrumSynth = memo(function DrumSynth() {
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
 
-      // Main tone oscillator
       const osc = ctx.createOscillator();
       const gainNode = ctx.createGain();
 
       osc.type = 'sine';
 
-      // Pitch envelope
       const pitchDrop = (tomParams.pitchDecay / 100) * tomParams.pitch * 0.3;
       osc.frequency.setValueAtTime(tomParams.pitch, now);
       osc.frequency.exponentialRampToValueAtTime(
@@ -419,13 +419,11 @@ export const DrumSynth = memo(function DrumSynth() {
         now + tomParams.decay * 0.3
       );
 
-      // Amplitude envelope
       const attackTime = 0.005 + (1 - tomParams.attack / 100) * 0.02;
       gainNode.gain.setValueAtTime(0, now);
       gainNode.gain.linearRampToValueAtTime(volume * 0.8, now + attackTime);
       gainNode.gain.exponentialRampToValueAtTime(0.001, now + tomParams.decay);
 
-      // Body resonance (second harmonic)
       const bodyOsc = ctx.createOscillator();
       const bodyGain = ctx.createGain();
       bodyOsc.type = 'sine';
@@ -457,7 +455,6 @@ export const DrumSynth = memo(function DrumSynth() {
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
 
-      // Click component
       if (rimParams.click > 0) {
         const clickOsc = ctx.createOscillator();
         const clickGain = ctx.createGain();
@@ -471,7 +468,6 @@ export const DrumSynth = memo(function DrumSynth() {
         clickOsc.stop(now + 0.01);
       }
 
-      // Metallic tone
       const metalOsc = ctx.createOscillator();
       const metalGain = ctx.createGain();
       metalOsc.type = 'triangle';
@@ -490,7 +486,6 @@ export const DrumSynth = memo(function DrumSynth() {
       metalOsc.start(now);
       metalOsc.stop(now + rimParams.decay + 0.1);
 
-      // Body/wood component
       if (rimParams.body > 0) {
         const bodyOsc = ctx.createOscillator();
         const bodyGain = ctx.createGain();
@@ -967,6 +962,28 @@ export const DrumSynth = memo(function DrumSynth() {
 
   return (
     <div className="drum-synth">
+      {/* Quick Play Pads - Prominent at top */}
+      <div className="synth-pads">
+        <span className="synth-pads-label">{drumSynth.quickPlay}</span>
+        <div className="synth-pads-grid">
+          {DRUM_TYPES.map((drum) => (
+            <button
+              key={drum}
+              className={cn(
+                'synth-pad',
+                `synth-pad--${drum}`,
+                isPlaying === drum && 'synth-pad--playing'
+              )}
+              onClick={() => playDrum(drum)}
+              aria-label={getDrumLabel(drum)}
+            >
+              <span className="synth-pad-icon">{DRUM_ICONS[drum]}</span>
+              <span>{getDrumLabel(drum)}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Drum Type Selector */}
       <div className="synth-selector">
         {DRUM_TYPES.map((drum) => (
@@ -979,13 +996,32 @@ export const DrumSynth = memo(function DrumSynth() {
             )}
             onClick={() => setSelectedDrum(drum)}
           >
-            {getDrumLabel(drum)}
+            <span className="synth-drum-icon">{DRUM_ICONS[drum]}</span>
+            <span className="synth-drum-label">{getDrumLabel(drum)}</span>
           </button>
         ))}
       </div>
 
       {/* Main Content */}
       <div className="synth-content">
+        {/* Parameter Controls */}
+        <div className="synth-params">
+          <div className="synth-params-header">
+            <h3 className="synth-params-title">
+              {DRUM_ICONS[selectedDrum]} {getDrumLabel(selectedDrum)} {drumSynth.parameters}
+            </h3>
+            <button
+              className="synth-reset-btn"
+              onClick={resetParams}
+              aria-label={drumSynth.reset}
+              title={drumSynth.reset}
+            >
+              <ResetIcon />
+            </button>
+          </div>
+          <div className="synth-params-grid">{renderParams()}</div>
+        </div>
+
         {/* Play Button */}
         <div className="synth-play-section">
           <button
@@ -1000,38 +1036,20 @@ export const DrumSynth = memo(function DrumSynth() {
             <span>{drumSynth.play}</span>
           </button>
         </div>
+      </div>
 
-        {/* Parameter Controls */}
-        <div className="synth-params">
-          <div className="synth-params-header">
-            <h3 className="synth-params-title">
-              {getDrumLabel(selectedDrum)} {drumSynth.parameters}
-            </h3>
-            <button
-              className="synth-reset-btn"
-              onClick={resetParams}
-              aria-label={drumSynth.reset}
-              title={drumSynth.reset}
-            >
-              <ResetIcon />
-            </button>
-          </div>
-          <div className="synth-params-grid">{renderParams()}</div>
-        </div>
-
-        {/* Master Section */}
-        <div className="synth-master">
-          <h3 className="synth-section-title">{drumSynth.master}</h3>
-          <ParamSlider
-            label={drumSynth.volume}
-            value={params.master.volume}
-            min={MASTER_RANGES.volume.min}
-            max={MASTER_RANGES.volume.max}
-            step={MASTER_RANGES.volume.step}
-            unit="%"
-            onChange={(v) => updateParam('master', 'volume', v)}
-          />
-        </div>
+      {/* Master Section */}
+      <div className="synth-master">
+        <h3 className="synth-section-title">{drumSynth.master}</h3>
+        <ParamSlider
+          label={drumSynth.volume}
+          value={params.master.volume}
+          min={MASTER_RANGES.volume.min}
+          max={MASTER_RANGES.volume.max}
+          step={MASTER_RANGES.volume.step}
+          unit="%"
+          onChange={(v) => updateParam('master', 'volume', v)}
+        />
       </div>
 
       {/* Presets */}
@@ -1056,23 +1074,6 @@ export const DrumSynth = memo(function DrumSynth() {
               </button>
             );
           })}
-        </div>
-      </div>
-
-      {/* Quick Play Pads */}
-      <div className="synth-pads">
-        <span className="synth-pads-label">{drumSynth.quickPlay}</span>
-        <div className="synth-pads-grid">
-          {DRUM_TYPES.map((drum) => (
-            <button
-              key={drum}
-              className={cn('synth-pad', isPlaying === drum && 'synth-pad--playing')}
-              onClick={() => playDrum(drum)}
-              aria-label={getDrumLabel(drum)}
-            >
-              {getDrumLabel(drum)}
-            </button>
-          ))}
         </div>
       </div>
     </div>
