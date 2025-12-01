@@ -281,6 +281,8 @@ export const DrumMachine = memo(function DrumMachine() {
     text: string;
     type: 'success' | 'error' | 'info';
   } | null>(null);
+  const [dragLoopIndex, setDragLoopIndex] = useState<number | null>(null);
+  const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(null);
 
   // Derived state: current pattern being edited
   const pattern = loops[currentLoopIndex];
@@ -876,6 +878,57 @@ export const DrumMachine = memo(function DrumMachine() {
   }, [currentLoopIndex, loops.length]);
 
   /**
+   * Handle loop drag start
+   */
+  const handleLoopDragStart = useCallback((index: number) => {
+    setDragLoopIndex(index);
+  }, []);
+
+  /**
+   * Handle loop drag over
+   */
+  const handleLoopDragOver = useCallback((index: number) => {
+    if (dragLoopIndex !== null && dragLoopIndex !== index) {
+      setDragOverLoopIndex(index);
+    }
+  }, [dragLoopIndex]);
+
+  /**
+   * Handle loop drag end - reorder loops
+   */
+  const handleLoopDragEnd = useCallback(() => {
+    if (dragLoopIndex !== null && dragOverLoopIndex !== null && dragLoopIndex !== dragOverLoopIndex) {
+      setLoops((prev) => {
+        const newLoops = [...prev];
+        const [draggedLoop] = newLoops.splice(dragLoopIndex, 1);
+        newLoops.splice(dragOverLoopIndex, 0, draggedLoop);
+        return newLoops;
+      });
+      // Update current loop index if needed
+      if (currentLoopIndex === dragLoopIndex) {
+        setCurrentLoopIndex(dragOverLoopIndex);
+      } else if (
+        dragLoopIndex < currentLoopIndex && dragOverLoopIndex >= currentLoopIndex
+      ) {
+        setCurrentLoopIndex((prev) => prev - 1);
+      } else if (
+        dragLoopIndex > currentLoopIndex && dragOverLoopIndex <= currentLoopIndex
+      ) {
+        setCurrentLoopIndex((prev) => prev + 1);
+      }
+    }
+    setDragLoopIndex(null);
+    setDragOverLoopIndex(null);
+  }, [dragLoopIndex, dragOverLoopIndex, currentLoopIndex]);
+
+  /**
+   * Handle loop drag leave
+   */
+  const handleLoopDragLeave = useCallback(() => {
+    setDragOverLoopIndex(null);
+  }, []);
+
+  /**
    * Handle tempo change
    */
   const handleTempoChange = useCallback(
@@ -1017,23 +1070,36 @@ export const DrumMachine = memo(function DrumMachine() {
 
       {/* Loop Controls */}
       <div className="drum-loop-controls">
-        <span className="drum-loop-label">{drum.loop}</span>
-        <div className="drum-loop-blocks">
-          {loops.map((_, index) => (
-            <button
-              key={index}
-              className={cn(
-                'drum-loop-block',
-                index === currentLoopIndex && 'drum-loop-block--selected',
-                isPlaying && index === playingLoopIndex && 'drum-loop-block--playing'
-              )}
-              onClick={() => setCurrentLoopIndex(index)}
-              aria-label={`${drum.loop} ${index + 1}`}
-              title={`${drum.loop} ${index + 1}`}
-            >
-              {index + 1}
-            </button>
-          ))}
+        <div className="drum-loop-row">
+          <span className="drum-loop-label">{drum.loop}</span>
+          <div className="drum-loop-blocks">
+            {loops.map((_, index) => (
+              <button
+                key={index}
+                className={cn(
+                  'drum-loop-block',
+                  index === currentLoopIndex && 'drum-loop-block--selected',
+                  isPlaying && index === playingLoopIndex && 'drum-loop-block--playing',
+                  dragLoopIndex === index && 'drum-loop-block--dragging',
+                  dragOverLoopIndex === index && 'drum-loop-block--drag-over'
+                )}
+                draggable
+                onDragStart={() => handleLoopDragStart(index)}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  handleLoopDragOver(index);
+                }}
+                onDragLeave={handleLoopDragLeave}
+                onDragEnd={handleLoopDragEnd}
+                onDrop={handleLoopDragEnd}
+                onClick={() => setCurrentLoopIndex(index)}
+                aria-label={`${drum.loop} ${index + 1}`}
+                title={`${drum.loop} ${index + 1}`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="drum-loop-actions">
           <button
