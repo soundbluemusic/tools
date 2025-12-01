@@ -27,11 +27,6 @@ export const NavigationLayout = memo(function NavigationLayout({
 }: NavigationLayoutProps) {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
 
-  // Open command palette
-  const openCommandPalette = useCallback(() => {
-    setIsCommandPaletteOpen(true);
-  }, []);
-
   // Close command palette
   const closeCommandPalette = useCallback(() => {
     setIsCommandPaletteOpen(false);
@@ -63,7 +58,7 @@ export const NavigationLayout = memo(function NavigationLayout({
   return (
     <div className="navigation-layout">
       {/* Desktop Sidebar - CSS controls visibility */}
-      <Sidebar apps={apps} onSearchClick={openCommandPalette} />
+      <Sidebar apps={apps} />
 
       {/* Main Content */}
       <div className="navigation-content">
@@ -71,7 +66,7 @@ export const NavigationLayout = memo(function NavigationLayout({
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}
-      <BottomNav onSearchClick={openCommandPalette} />
+      <BottomNav />
 
       {/* Command Palette (Universal) */}
       <CommandPalette
