@@ -1,36 +1,6 @@
 {
-  // Cloudflare Pages Configuration for SvelteKit
-  // https://developers.cloudflare.com/pages/configuration/wrangler-configuration/
-
   "name": "productivity-tools",
-  "compatibility_date": "2025-11-27",
-  "compatibility_flags": ["nodejs_compat"],
-
-  // SvelteKit adapter-cloudflare output directory
   "pages_build_output_dir": ".svelte-kit/cloudflare",
-
-  // 개발 서버 설정
-  "dev": {
-    "port": 8788,
-    "local_protocol": "http"
-  },
-
-  // 프로덕션 환경 변수 (민감한 정보는 Cloudflare 대시보드에서 설정)
-  "vars": {
-    "ENVIRONMENT": "production"
-  },
-
-  // 배포 환경별 설정
-  "env": {
-    "production": {
-      "vars": {
-        "ENVIRONMENT": "production"
-      }
-    },
-    "preview": {
-      "vars": {
-        "ENVIRONMENT": "preview"
-      }
-    }
-  }
+  "compatibility_date": "2024-11-01",
+  "compatibility_flags": ["nodejs_compat"]
 }
