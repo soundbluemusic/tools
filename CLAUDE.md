@@ -2,12 +2,20 @@
 
 ## Project Overview
 
-**Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface.
+**Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
 
 **Current Tools:**
-- Contract Analysis (`/contract`) - Legal document analysis
 - Metronome (`/metronome`) - Music tempo tool
+- Drum Machine (`/drum`) - Drum pattern practice sequencer with MIDI import/export
+- Drum Sound Synth (`/drum-synth`) - Web Audio drum sound synthesizer with detailed parameter control
 - QR Code Generator (`/qr`) - Generate QR codes with customization
+
+**Additional Pages:**
+- Sitemap (`/sitemap`) - Site navigation
+- Open Source (`/opensource`) - Open source information
+- Tools Used (`/tools-used`) - Technologies used
+- Privacy (`/privacy`) - Privacy policy
+- Terms (`/terms`) - Terms of service
 
 ## Technology Stack
 
@@ -16,10 +24,12 @@
 | Framework | React | ^18.3.1 |
 | Routing | React Router DOM | ^7.9.6 |
 | Language | TypeScript | ^5.5.3 |
-| Build Tool | Vite | ^5.4.1 |
-| Testing | Vitest + React Testing Library | ^2.1.8 |
+| Build Tool | Vite | ^6.4.1 |
+| Unit Testing | Vitest + React Testing Library | ^3.2.4 |
+| E2E Testing | Playwright | ^1.48.0 |
 | Linting | ESLint | ^9.9.0 |
 | Formatting | Prettier | ^3.4.2 |
+| PWA | vite-plugin-pwa | ^1.2.0 |
 | Deployment | Cloudflare Pages | - |
 
 **Node.js Requirement:** >=18.0.0
@@ -30,61 +40,108 @@
 src/
 ├── apps/                    # Feature modules (auto-loaded via glob)
 │   └── [app-name]/
-│       ├── config.ts        # App metadata (name, desc, icon, size)
-│       └── components/      # App-specific components
+│       ├── config.ts        # App metadata (bilingual name/desc, icon, size, order)
+│       ├── constants.ts     # App-specific constants
+│       ├── components/      # App-specific components
+│       └── utils/           # App-specific utilities
 │
 ├── components/              # Shared React components
 │   ├── layout/              # Layout components (Container, Layout, PageLayout)
-│   ├── ui/                  # Primitive UI components (Button, Input, Select, etc.)
+│   ├── navigation/          # Navigation system
+│   │   ├── Sidebar.tsx      # Desktop sidebar navigation
+│   │   ├── BottomNav.tsx    # Mobile bottom navigation
+│   │   ├── CommandPalette.tsx # Cmd+K quick navigation
+│   │   └── NavigationLayout.tsx # Main navigation wrapper
+│   ├── ui/                  # Primitive UI components
+│   │   ├── Button.tsx       # Button with variants
+│   │   ├── Input.tsx        # Input field
+│   │   ├── Select.tsx       # Select dropdown
+│   │   ├── Loader.tsx       # Loading spinner
+│   │   └── Skeleton.tsx     # Skeleton loading states
 │   ├── AppCard.tsx          # App card with hover prefetch
 │   ├── AppGrid.tsx          # Memoized grid container
+│   ├── AppList.tsx          # List view for apps
+│   ├── AppItem.tsx          # Individual app item
+│   ├── Breadcrumb.tsx       # Page breadcrumb navigation
+│   ├── Header.tsx           # Page header component
+│   ├── Footer.tsx           # Site footer
 │   ├── ErrorBoundary.tsx    # Error catching with HOC wrapper
-│   ├── LanguageToggle.tsx   # Floating language toggle button
-│   └── Footer.tsx
+│   ├── LanguageToggle.tsx   # Language switch button
+│   ├── ThemeToggle.tsx      # Dark/Light mode toggle
+│   ├── SkipLink.tsx         # Accessibility skip navigation
+│   ├── ShareButton.tsx      # Social sharing button
+│   └── EmbedButton.tsx      # Embed code generator
 │
 ├── pages/                   # Route page components
 │   ├── Home.tsx             # Main dashboard with search/sort
-│   ├── Contract.tsx
 │   ├── Metronome.tsx
+│   ├── Drum.tsx
+│   ├── DrumSynth.tsx
 │   ├── QR.tsx
+│   ├── Sitemap.tsx
+│   ├── OpenSource.tsx
+│   ├── ToolsUsed.tsx
+│   ├── Privacy.tsx
+│   ├── Terms.tsx
 │   └── NotFound.tsx
 │
 ├── hooks/                   # Custom React hooks
 │   ├── useSearch.ts         # Searchable lists with deferred value
 │   ├── useSort.ts           # Sorting logic
-│   ├── useDebounce.ts
+│   ├── useDebounce.ts       # Debounce utility
 │   ├── useLocalStorage.ts   # localStorage persistence + cross-tab sync
-│   └── useMediaQuery.ts
+│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useIsMobile, useReducedMotion)
+│   ├── useTheme.tsx         # Theme context (ThemeProvider)
+│   ├── useApps.tsx          # Apps context (AppsProvider) for lazy-loaded apps
+│   ├── useSEO.ts            # SEO meta tags management
+│   ├── useViewTransition.ts # View Transitions API support
+│   └── useA11y.ts           # Accessibility hooks (useFocusTrap, useArrowNavigation, useAnnounce)
 │
 ├── i18n/                    # Internationalization
 │   ├── context.tsx          # Language context provider
 │   ├── types.ts             # Translation type definitions
-│   └── translations/        # Translation files (common.ts, qr.ts)
+│   ├── index.ts             # Barrel export
+│   └── translations/        # Translation files
+│       ├── common.ts        # Shared translations
+│       ├── metronome.ts
+│       ├── drum.ts
+│       ├── drum-synth.ts
+│       └── qr.ts
 │
 ├── constants/               # App metadata and constants
 │   ├── apps.ts              # Auto-loaded app list (uses import.meta.glob)
-│   └── sortOptions.ts
+│   ├── sortOptions.ts       # Sort options for app list
+│   └── index.ts             # Barrel export
 │
 ├── utils/                   # Utility functions
 │   ├── cn.ts                # ClassNames utility
 │   ├── format.ts            # Formatting utilities
-│   └── storage.ts           # localStorage helpers
+│   ├── storage.ts           # localStorage helpers
+│   └── sizeClass.ts         # Size class utilities
 │
 ├── types/                   # TypeScript type definitions
-│   ├── index.ts             # Core interfaces (App, AppConfig)
-│   └── env.d.ts             # Environment variable types
+│   ├── index.ts             # Core interfaces (App, AppConfig, etc.)
+│   ├── env.d.ts             # Environment variable types
+│   └── qrious.d.ts          # QRious library types
 │
 ├── styles/                  # Global stylesheets
-│   ├── variables.css        # CSS custom properties
-│   ├── base.css
-│   └── components.css
+│   ├── index.css            # Main entry (imports others)
+│   ├── variables.css        # CSS custom properties (design tokens)
+│   ├── base.css             # Base/reset styles
+│   └── components.css       # Component styles
 │
 ├── test/                    # Testing utilities
 │   ├── setup.ts             # Vitest setup (mocks browser APIs)
 │   └── test-utils.tsx       # Custom render functions
 │
 ├── App.tsx                  # Root component with routing
+├── App.css                  # App-level styles
 └── main.tsx                 # React app entry point
+
+scripts/                     # Build utilities
+├── generate-icons.mjs       # Generate PWA icons
+├── generate-og-image.mjs    # Generate OpenGraph images
+└── convert-to-webp.mjs      # Convert images to WebP format
 ```
 
 ## Key Architecture Patterns
@@ -94,55 +151,142 @@ src/
 Apps are automatically discovered via Vite's `import.meta.glob()` in `src/constants/apps.ts`. To add a new app:
 
 1. Create folder: `src/apps/[app-name]/`
-2. Add `config.ts` with metadata:
+2. Add `config.ts` with bilingual metadata:
 ```typescript
-import { AppConfig } from '../../types';
+import type { AppConfig } from '../../types';
 
 const config: AppConfig = {
-  name: 'App Name',           // Display name
-  desc: 'Description',        // Brief description
-  icon: '🔧',                 // Emoji icon
-  size: 1024,                 // Size in bytes (for sorting)
+  name: {
+    ko: '앱 이름',           // Korean name
+    en: 'App Name',         // English name
+  },
+  desc: {
+    ko: '설명',              // Korean description
+    en: 'Description',       // English description
+  },
+  icon: '🔧',                // Emoji icon
+  size: 1024,                // Size in bytes (for sorting)
+  order: 1,                  // Display order (lower = first, optional)
 };
 
 export default config;
 ```
 3. Create page component in `src/pages/[AppName].tsx`
-4. Add route in `src/App.tsx`
+4. Add lazy import and route in `src/App.tsx`:
+```tsx
+const MyApp = lazy(() => import('./pages/MyApp'));
+// In ROUTES array:
+{ path: '/my-app', element: <MyApp />, lazy: true },
+```
+5. Add translations in `src/i18n/translations/my-app.ts`
 
-### 2. Internationalization (i18n)
+### 2. Navigation System
+
+The app uses a responsive navigation system:
+
+- **Desktop (≥768px)**: Sidebar navigation with collapsible menu
+- **Mobile (<768px)**: Bottom navigation bar
+- **Command Palette**: Cmd/Ctrl+K for quick navigation
+
+```tsx
+// NavigationLayout wraps all content
+<NavigationLayout apps={apps}>
+  <main>{/* content */}</main>
+</NavigationLayout>
+```
+
+### 3. Internationalization (i18n)
 
 - Context-based system with localStorage persistence
 - Supports Korean (ko) and English (en)
 - Auto-detects browser language on first visit
-- Global floating toggle button
+- Language toggle button in header
 
 **Adding translations:**
 ```typescript
 // src/i18n/translations/[module].ts
 export const translations = {
-  ko: { key: 'Korean text' },
+  ko: { key: '한국어 텍스트' },
   en: { key: 'English text' },
 };
 ```
 
-### 3. Component Patterns
+**Usage:**
+```tsx
+import { useLanguage } from '../i18n';
+
+function MyComponent() {
+  const { language, t } = useLanguage();
+  return <span>{t.common.myKey}</span>;
+}
+```
+
+### 4. Theme System
+
+- Three theme modes: `system`, `light`, `dark`
+- Uses `data-theme` attribute on `<html>` element
+- System preference detection with manual override
+- Persisted in localStorage
+
+```tsx
+import { useTheme } from '../hooks';
+
+function ThemeExample() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  // theme: 'system' | 'light' | 'dark'
+  // resolvedTheme: 'light' | 'dark' (actual applied theme)
+}
+```
+
+### 5. Component Patterns
 
 - **Memoization**: Use `memo()`, `useMemo()`, `useCallback()` for performance
 - **Error Boundaries**: Wrap feature components with `withErrorBoundary` HOC
 - **UI Components**: Use primitives from `src/components/ui/`
+- **Lazy Loading**: Tool pages are lazy-loaded for code splitting
 
-### 4. Styling
+### 6. Styling
 
-- CSS Modules + CSS Variables
-- Dark/Light mode via `prefers-color-scheme`
+- CSS Modules + CSS Custom Properties (Design Tokens)
+- Dark/Light mode via `prefers-color-scheme` and `data-theme` attribute
 - GPU-optimized animations (transform/opacity only)
-- Respect `prefers-reduced-motion`
+- Respects `prefers-reduced-motion`
 
-**Available CSS variables:**
-- `--bg-color`, `--text-color`, `--border-color`
-- `--item-hover-bg`, `--search-bg`
-- `--transition-fast`, `--transition-normal`
+**Key CSS Variables (from `src/styles/variables.css`):**
+
+```css
+/* Colors */
+--color-bg-primary, --color-bg-secondary, --color-bg-tertiary
+--color-text-primary, --color-text-secondary, --color-text-tertiary
+--color-border-primary, --color-border-secondary
+--color-interactive-hover, --color-interactive-active
+
+/* Typography */
+--font-size-xs to --font-size-3xl
+--font-weight-normal, --font-weight-medium, --font-weight-semibold
+
+/* Spacing */
+--spacing-1 to --spacing-16
+
+/* Layout */
+--sidebar-width: 240px
+--bottom-nav-height: 56px
+--container-max: 1440px
+
+/* Transitions */
+--transition-fast: 150ms
+--transition-normal: 250ms
+
+/* Z-Index */
+--z-dropdown to --z-tooltip (100-700)
+
+/* Responsive Breakpoints */
+--breakpoint-xs: 320px
+--breakpoint-sm: 480px
+--breakpoint-md: 768px
+--breakpoint-lg: 1024px
+--breakpoint-xl: 1280px
+```
 
 ## Development Commands
 
@@ -161,14 +305,24 @@ npm run format           # Format code with Prettier
 npm run format:check     # Check formatting
 npm run typecheck        # TypeScript type checking only
 
-# Testing
+# Unit Testing
 npm run test             # Run tests in watch mode
 npm run test:run         # Run tests once
 npm run test:coverage    # Generate coverage report
 npm run test:ui          # Interactive test UI
 
+# E2E Testing
+npm run test:e2e         # Run Playwright tests
+npm run test:e2e:ui      # Playwright interactive UI
+npm run test:e2e:headed  # Run with visible browser
+
 # Full Validation
 npm run validate         # typecheck + lint + test:run
+
+# Asset Generation
+npm run generate-icons   # Generate PWA icons from source
+npm run generate-og-image # Generate OpenGraph images
+npm run convert-webp     # Convert images to WebP format
 ```
 
 ## Code Conventions
@@ -177,21 +331,24 @@ npm run validate         # typecheck + lint + test:run
 - Strict mode enabled (strict null checks, no unused variables)
 - Use interfaces for object shapes, types for unions/primitives
 - Export types from `src/types/index.ts`
+- Use `type` imports: `import type { App } from '../types'`
 
 ### React
 - Functional components only (no class components)
 - Automatic JSX runtime (no `import React` needed)
 - Prefer `memo()` for components receiving stable props
 - Use custom hooks for reusable logic
+- Wrap pages in `Suspense` for lazy loading
 
 ### File Naming
 - Components: `PascalCase.tsx`
 - Hooks: `useCamelCase.ts`
 - Utilities: `camelCase.ts`
 - Tests: `*.test.ts` or `*.test.tsx`
+- CSS: `ComponentName.css` (co-located with component)
 
 ### Imports
-- Absolute imports from `src/` (configured via tsconfig paths)
+- Use relative imports within modules
 - Group imports: React > Third-party > Local components > Local utils/hooks > Types > CSS
 
 ### Formatting (Prettier)
@@ -203,12 +360,12 @@ npm run validate         # typecheck + lint + test:run
 
 ## Testing Guidelines
 
+### Unit Tests (Vitest)
 - **Framework**: Vitest + React Testing Library
 - **Test location**: Co-locate with source files (`*.test.ts`)
 - **Setup file**: `src/test/setup.ts` (mocks matchMedia, ResizeObserver, IntersectionObserver)
 
 ```typescript
-// Example test
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MyComponent } from './MyComponent';
@@ -221,21 +378,30 @@ describe('MyComponent', () => {
 });
 ```
 
+### E2E Tests (Playwright)
+- Located in project root
+- Tests user flows across pages
+- Supports visual regression testing
+
 ## Performance Considerations
 
-1. **Code Splitting**: Vendor chunks separated (React/Router)
-2. **Prefetching**: App cards prefetch on hover
-3. **CSS Containment**: Use `contain: layout style` for isolation
-4. **Memoization**: Prevent unnecessary re-renders
-5. **Deferred Values**: Use `useDeferredValue` for search inputs
+1. **Code Splitting**: Tool pages are lazy-loaded with `React.lazy()`
+2. **Vendor Chunks**: React, React Router, and QRious separated
+3. **Prefetching**: App cards prefetch on hover
+4. **CSS Containment**: Use `contain: layout style` for isolation
+5. **Memoization**: Prevent unnecessary re-renders with `memo()`, `useMemo()`, `useCallback()`
+6. **Deferred Values**: Use `useDeferredValue` for search inputs
+7. **PWA Caching**: Service Worker caches assets for offline use
 
 ## Build Configuration
 
 **Vite settings** (`vite.config.ts`):
-- Target: ES2020 (modern browsers)
+- Target: ESNext (modern browsers)
 - Minification: esbuild with identifier minification
-- Chunk size warning: 300KB
+- Chunk size warning: 250KB
 - Console/debugger dropped in production
+- PWA manifest with icons and screenshots
+- Service Worker with caching strategies
 
 **TypeScript settings** (`tsconfig.app.json`):
 - Target: ES2020
@@ -247,44 +413,50 @@ describe('MyComponent', () => {
 - **Platform**: Cloudflare Pages
 - **Config**: `wrangler.jsonc`
 - **Build output**: `dist/` directory
+- **PWA**: Auto-updating Service Worker
 
 ## Common Tasks
 
 ### Adding a New Tool/App
 
 1. Create app folder: `src/apps/my-tool/`
-2. Add `config.ts` with metadata
+2. Add `config.ts` with bilingual metadata (including `order` for positioning)
 3. Create components in `src/apps/my-tool/components/`
 4. Create page: `src/pages/MyTool.tsx`
-5. Add route in `src/App.tsx`:
-```tsx
-<Route path="/my-tool" element={<MyTool />} />
-```
-6. Add translations if needed in `src/i18n/translations/`
+5. Add lazy import and route in `src/App.tsx`
+6. Add translations in `src/i18n/translations/my-tool.ts`
 
 ### Adding a New UI Component
 
 1. Create in `src/components/ui/ComponentName.tsx`
-2. Export from `src/components/ui/index.ts`
-3. Add tests in `src/components/ui/ComponentName.test.tsx`
+2. Create co-located styles: `src/components/ui/ComponentName.css`
+3. Export from `src/components/ui/index.ts`
+4. Add tests in `src/components/ui/ComponentName.test.tsx`
 
 ### Adding Translations
 
 1. Create/update file in `src/i18n/translations/`
 2. Define both `ko` and `en` keys
-3. Use via `useLanguage()` hook:
-```tsx
-const { t, translations } = useLanguage();
-// Access: translations.module.key
-```
+3. Import and merge in `src/i18n/context.tsx` if new file
+4. Use via `useLanguage()` hook
+
+### Updating Theme Colors
+
+1. Edit `src/styles/variables.css`
+2. Update both light mode (`:root`) and dark mode sections
+3. Use semantic color names (e.g., `--color-text-primary`)
 
 ## Important Notes for AI Assistants
 
 1. **No React import needed**: JSX runtime is automatic
 2. **Use existing UI components**: Check `src/components/ui/` before creating new ones
 3. **Memoize appropriately**: Performance is prioritized
-4. **Maintain i18n**: Add translations for both KO and EN
+4. **Maintain i18n**: Add translations for both KO and EN with bilingual config
 5. **Follow existing patterns**: Check similar files for conventions
 6. **Run validation before commits**: `npm run validate`
-7. **Keep chunks small**: Monitor bundle size (300KB warning threshold)
+7. **Keep chunks small**: Monitor bundle size (250KB warning threshold)
 8. **Test browser APIs**: Mock in `src/test/setup.ts` if needed
+9. **Use lazy loading**: New tool pages should be lazy-loaded
+10. **Respect theme system**: Use CSS variables, not hard-coded colors
+11. **PWA awareness**: App works offline; test Service Worker behavior
+12. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
