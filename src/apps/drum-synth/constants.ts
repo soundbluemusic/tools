@@ -113,12 +113,12 @@ export interface ClapParams {
 }
 
 export const CLAP_RANGES = {
-  filterFreq: { min: 800, max: 4000, default: 1500, step: 50 },
-  filterQ: { min: 0.5, max: 5, default: 1.5, step: 0.1 },
-  decay: { min: 0.05, max: 1.5, default: 0.35, step: 0.01 },
-  spread: { min: 0, max: 100, default: 50, step: 1 },
-  tone: { min: 0, max: 100, default: 50, step: 1 },
-  reverb: { min: 0, max: 100, default: 30, step: 1 },
+  filterFreq: { min: 800, max: 3000, default: 1200, step: 50 },
+  filterQ: { min: 0.3, max: 3, default: 0.8, step: 0.1 },
+  decay: { min: 0.08, max: 0.6, default: 0.18, step: 0.01 },
+  spread: { min: 0, max: 100, default: 40, step: 1 },
+  tone: { min: 0, max: 100, default: 55, step: 1 },
+  reverb: { min: 0, max: 100, default: 20, step: 1 },
 } as const;
 
 export const DEFAULT_CLAP: ClapParams = {
@@ -238,7 +238,7 @@ export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
     kick: { pitchStart: 150, pitchEnd: 40, pitchDecay: 0.15, ampDecay: 1.0, click: 20, drive: 10, tone: 0 },
     snare: { toneFreq: 180, toneDecay: 0.1, noiseDecay: 0.25, noiseFilter: 2500, toneMix: 35, snappy: 50 },
     hihat: { filterFreq: 8000, filterQ: 1, decay: 0.06, openness: 0, pitch: 50, ring: 20 },
-    clap: { filterFreq: 1200, filterQ: 1.5, decay: 0.4, spread: 60, tone: 40, reverb: 40 },
+    clap: { filterFreq: 1100, filterQ: 0.7, decay: 0.2, spread: 50, tone: 45, reverb: 30 },
     tom: { pitch: 120, pitchDecay: 40, decay: 0.5, body: 70, attack: 40 },
     rim: { pitch: 800, decay: 0.04, metallic: 60, body: 50, click: 70 },
     master: { volume: 80, compressor: 20 },
@@ -247,7 +247,7 @@ export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
     kick: { pitchStart: 180, pitchEnd: 35, pitchDecay: 0.08, ampDecay: 0.6, click: 60, drive: 40, tone: 20 },
     snare: { toneFreq: 220, toneDecay: 0.08, noiseDecay: 0.15, noiseFilter: 4000, toneMix: 30, snappy: 80 },
     hihat: { filterFreq: 10000, filterQ: 2, decay: 0.04, openness: 10, pitch: 70, ring: 40 },
-    clap: { filterFreq: 2000, filterQ: 2, decay: 0.25, spread: 30, tone: 70, reverb: 20 },
+    clap: { filterFreq: 1500, filterQ: 1.2, decay: 0.12, spread: 25, tone: 75, reverb: 10 },
     tom: { pitch: 100, pitchDecay: 50, decay: 0.3, body: 50, attack: 70 },
     rim: { pitch: 1000, decay: 0.03, metallic: 80, body: 30, click: 90 },
     master: { volume: 85, compressor: 50 },
@@ -256,7 +256,7 @@ export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
     kick: { pitchStart: 100, pitchEnd: 50, pitchDecay: 0.2, ampDecay: 0.9, click: 10, drive: 5, tone: 30 },
     snare: { toneFreq: 150, toneDecay: 0.2, noiseDecay: 0.3, noiseFilter: 2000, toneMix: 50, snappy: 30 },
     hihat: { filterFreq: 6000, filterQ: 0.8, decay: 0.1, openness: 20, pitch: 30, ring: 15 },
-    clap: { filterFreq: 1000, filterQ: 1, decay: 0.45, spread: 70, tone: 30, reverb: 50 },
+    clap: { filterFreq: 1000, filterQ: 0.5, decay: 0.25, spread: 65, tone: 30, reverb: 45 },
     tom: { pitch: 130, pitchDecay: 20, decay: 0.6, body: 80, attack: 30 },
     rim: { pitch: 600, decay: 0.06, metallic: 40, body: 60, click: 50 },
     master: { volume: 75, compressor: 40 },
@@ -265,7 +265,7 @@ export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
     kick: { pitchStart: 120, pitchEnd: 45, pitchDecay: 0.12, ampDecay: 0.7, click: 15, drive: 0, tone: 10 },
     snare: { toneFreq: 200, toneDecay: 0.12, noiseDecay: 0.18, noiseFilter: 3500, toneMix: 45, snappy: 55 },
     hihat: { filterFreq: 9000, filterQ: 1.2, decay: 0.05, openness: 5, pitch: 55, ring: 25 },
-    clap: { filterFreq: 1400, filterQ: 1.3, decay: 0.3, spread: 45, tone: 55, reverb: 25 },
+    clap: { filterFreq: 1200, filterQ: 0.8, decay: 0.15, spread: 35, tone: 55, reverb: 15 },
     tom: { pitch: 140, pitchDecay: 25, decay: 0.4, body: 55, attack: 55 },
     rim: { pitch: 850, decay: 0.045, metallic: 65, body: 45, click: 75 },
     master: { volume: 80, compressor: 25 },
@@ -274,7 +274,7 @@ export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
     kick: { pitchStart: 80, pitchEnd: 55, pitchDecay: 0.1, ampDecay: 0.5, click: 50, drive: 0, tone: 60 },
     snare: { toneFreq: 240, toneDecay: 0.15, noiseDecay: 0.22, noiseFilter: 4500, toneMix: 55, snappy: 70 },
     hihat: { filterFreq: 7000, filterQ: 0.7, decay: 0.12, openness: 30, pitch: 40, ring: 50 },
-    clap: { filterFreq: 1800, filterQ: 1, decay: 0.35, spread: 80, tone: 45, reverb: 60 },
+    clap: { filterFreq: 1300, filterQ: 0.6, decay: 0.22, spread: 70, tone: 50, reverb: 40 },
     tom: { pitch: 180, pitchDecay: 15, decay: 0.55, body: 75, attack: 45 },
     rim: { pitch: 700, decay: 0.055, metallic: 50, body: 70, click: 65 },
     master: { volume: 75, compressor: 35 },

@@ -324,61 +324,125 @@ export const DrumSynth = memo(function DrumSynth() {
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
 
-      const numClaps = Math.floor(2 + (clapParams.spread / 100) * 4);
-      const clapSpacing = 0.01 + (clapParams.spread / 100) * 0.02;
+      // Real clap characteristics:
+      // - Multiple micro-hits from fingers colliding
+      // - Sharp initial transient (crack)
+      // - Broadband noise with emphasis 1-3kHz
+      // - Very fast attack, medium decay
 
+      const numClaps = Math.floor(3 + (clapParams.spread / 100) * 5);
+      const baseSpacing = 0.008; // ~8ms between hits for realistic feel
+
+      // Create main clap layers
       for (let c = 0; c < numClaps; c++) {
-        const clapTime = now + c * clapSpacing;
+        // Randomize timing slightly for organic feel
+        const randomOffset = (Math.random() - 0.5) * 0.006;
+        const clapTime = now + c * baseSpacing * (1 + clapParams.spread / 200) + randomOffset;
 
-        const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * clapParams.decay, ctx.sampleRate);
+        // Each clap hit duration
+        const hitDuration = clapParams.decay * (0.7 + Math.random() * 0.3);
+        const bufferLength = Math.max(ctx.sampleRate * hitDuration, ctx.sampleRate * 0.1);
+
+        const noiseBuffer = ctx.createBuffer(1, bufferLength, ctx.sampleRate);
         const noiseData = noiseBuffer.getChannelData(0);
+
+        // Generate noise with natural envelope baked in
         for (let i = 0; i < noiseBuffer.length; i++) {
-          noiseData[i] = Math.random() * 2 - 1;
+          const t = i / ctx.sampleRate;
+          // Sharp attack (~2ms), then exponential decay
+          const attackEnv = Math.min(1, t / 0.002);
+          const decayEnv = Math.exp(-t / (hitDuration * 0.3));
+          noiseData[i] = (Math.random() * 2 - 1) * attackEnv * decayEnv;
         }
 
         const noiseSource = ctx.createBufferSource();
         noiseSource.buffer = noiseBuffer;
 
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        const filterOffset = (clapParams.tone / 100) * 1000;
-        filter.frequency.setValueAtTime(clapParams.filterFreq + filterOffset, clapTime);
-        filter.Q.setValueAtTime(clapParams.filterQ, clapTime);
+        // Bandpass filter for body (1-3kHz range)
+        const bpFilter = ctx.createBiquadFilter();
+        bpFilter.type = 'bandpass';
+        const freqVariation = 1 + (Math.random() - 0.5) * 0.2;
+        const baseFreq = clapParams.filterFreq + (clapParams.tone / 100) * 800;
+        bpFilter.frequency.setValueAtTime(baseFreq * freqVariation, clapTime);
+        bpFilter.Q.setValueAtTime(clapParams.filterQ * 0.8, clapTime);
+
+        // High shelf for presence/air
+        const highShelf = ctx.createBiquadFilter();
+        highShelf.type = 'highshelf';
+        highShelf.frequency.setValueAtTime(3000, clapTime);
+        highShelf.gain.setValueAtTime(3 + (clapParams.tone / 100) * 4, clapTime);
 
         const gain = ctx.createGain();
-        const clapVolume = volume * 0.3 * (1 - c * 0.15);
-        gain.gain.setValueAtTime(clapVolume, clapTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, clapTime + clapParams.decay);
+        // First hit loudest, subsequent hits softer with variation
+        const hitVolume = volume * 0.35 * (c === 0 ? 1 : 0.6 + Math.random() * 0.3) * Math.pow(0.85, c);
+        gain.gain.setValueAtTime(hitVolume, clapTime);
 
-        noiseSource.connect(filter);
-        filter.connect(gain);
+        noiseSource.connect(bpFilter);
+        bpFilter.connect(highShelf);
+        highShelf.connect(gain);
         gain.connect(ctx.destination);
         noiseSource.start(clapTime);
       }
 
+      // Initial transient "crack" - very short, high frequency burst
+      const crackDuration = 0.015;
+      const crackBuffer = ctx.createBuffer(1, ctx.sampleRate * crackDuration, ctx.sampleRate);
+      const crackData = crackBuffer.getChannelData(0);
+      for (let i = 0; i < crackBuffer.length; i++) {
+        const t = i / ctx.sampleRate;
+        // Ultra-fast decay for crack
+        const env = Math.exp(-t / 0.003);
+        crackData[i] = (Math.random() * 2 - 1) * env;
+      }
+
+      const crackSource = ctx.createBufferSource();
+      crackSource.buffer = crackBuffer;
+
+      const crackFilter = ctx.createBiquadFilter();
+      crackFilter.type = 'highpass';
+      crackFilter.frequency.setValueAtTime(2500 + (clapParams.tone / 100) * 2000, now);
+      crackFilter.Q.setValueAtTime(0.7, now);
+
+      const crackGain = ctx.createGain();
+      crackGain.gain.setValueAtTime(volume * 0.4, now);
+
+      crackSource.connect(crackFilter);
+      crackFilter.connect(crackGain);
+      crackGain.connect(ctx.destination);
+      crackSource.start(now);
+
+      // Room/reverb tail
       if (clapParams.reverb > 0) {
-        const reverbLength = 0.3 + (clapParams.reverb / 100) * 0.5;
+        const reverbLength = 0.15 + (clapParams.reverb / 100) * 0.35;
         const reverbBuffer = ctx.createBuffer(1, ctx.sampleRate * reverbLength, ctx.sampleRate);
         const reverbData = reverbBuffer.getChannelData(0);
         for (let i = 0; i < reverbBuffer.length; i++) {
-          reverbData[i] = (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.1));
+          const t = i / ctx.sampleRate;
+          reverbData[i] = (Math.random() * 2 - 1) * Math.exp(-t / (reverbLength * 0.4));
         }
 
         const reverbSource = ctx.createBufferSource();
         reverbSource.buffer = reverbBuffer;
 
-        const reverbFilter = ctx.createBiquadFilter();
-        reverbFilter.type = 'lowpass';
-        reverbFilter.frequency.setValueAtTime(2000, now);
+        const reverbLowpass = ctx.createBiquadFilter();
+        reverbLowpass.type = 'lowpass';
+        reverbLowpass.frequency.setValueAtTime(2500, now);
+
+        const reverbHighpass = ctx.createBiquadFilter();
+        reverbHighpass.type = 'highpass';
+        reverbHighpass.frequency.setValueAtTime(400, now);
 
         const reverbGain = ctx.createGain();
-        reverbGain.gain.setValueAtTime(volume * (clapParams.reverb / 100) * 0.15, now + clapParams.decay);
-        reverbGain.gain.exponentialRampToValueAtTime(0.001, now + clapParams.decay + reverbLength);
+        const reverbStart = now + clapParams.decay * 0.3;
+        reverbGain.gain.setValueAtTime(0, reverbStart);
+        reverbGain.gain.linearRampToValueAtTime(volume * (clapParams.reverb / 100) * 0.2, reverbStart + 0.01);
+        reverbGain.gain.exponentialRampToValueAtTime(0.001, reverbStart + reverbLength);
 
-        reverbSource.connect(reverbFilter);
-        reverbFilter.connect(reverbGain);
+        reverbSource.connect(reverbHighpass);
+        reverbHighpass.connect(reverbLowpass);
+        reverbLowpass.connect(reverbGain);
         reverbGain.connect(ctx.destination);
-        reverbSource.start(now + clapParams.decay * 0.5);
+        reverbSource.start(reverbStart);
       }
     },
     [getAudioContext]
