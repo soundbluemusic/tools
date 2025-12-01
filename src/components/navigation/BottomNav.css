@@ -65,8 +65,8 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   .bottom-nav {
-    background: #212121;
-    border-top-color: #383838;
+    background: #0f0f0f;
+    border-top-color: #272727;
   }
 
   .bottom-nav-item {
@@ -79,8 +79,8 @@
 }
 
 [data-theme="dark"] .bottom-nav {
-  background: #212121;
-  border-top-color: #383838;
+  background: #0f0f0f;
+  border-top-color: #272727;
 }
 
 [data-theme="dark"] .bottom-nav-item {

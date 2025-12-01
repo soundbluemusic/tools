@@ -1,12 +1,26 @@
 /**
- * Navigation Layout
- * Responsive wrapper for desktop sidebar and mobile bottom nav
+ * Navigation Layout (YouTube/OpenAI Style)
+ *
+ * Desktop: Full-height flex container with sidebar + scrollable content
+ * Mobile: Normal flow with fixed bottom navigation
  */
 
+/* Root layout container */
 .navigation-layout {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  min-height: 100dvh;
+}
+
+/* Desktop: Side-by-side layout */
+@media (min-width: 1024px) {
+  .navigation-layout {
+    flex-direction: row;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden; /* Prevent body scroll on desktop */
+  }
 }
 
 /* Main Content Area */
@@ -14,22 +28,14 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-width: 0; /* Prevent flex overflow */
-  width: 100%;
+  min-width: 0;
 }
 
-/* Desktop: Account for sidebar width */
+/* Desktop: Scrollable content area */
 @media (min-width: 1024px) {
   .navigation-content {
-    margin-left: var(--sidebar-width, 240px);
-    transition: margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-/* Tablet: Account for collapsed sidebar */
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .navigation-content {
-    margin-left: var(--sidebar-collapsed-width, 72px);
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
@@ -37,13 +43,6 @@
 @media (max-width: 1023px) {
   .navigation-content {
     padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
-  }
-}
-
-/* When sidebar is collapsed via JS, adjust content margin */
-@media (min-width: 1024px) {
-  .navigation-layout:has(.sidebar.collapsed) .navigation-content {
-    margin-left: var(--sidebar-collapsed-width, 72px);
   }
 }
 
@@ -57,8 +56,9 @@
   margin-top: auto;
 }
 
-/* Reduced motion - disable all layout transitions */
+/* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
+  .navigation-layout,
   .navigation-content {
     transition: none;
   }
