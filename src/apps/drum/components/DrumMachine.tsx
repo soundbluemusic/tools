@@ -16,6 +16,7 @@ import {
   type InstrumentVolumes,
 } from '../constants';
 import { exportMidi } from '../utils/midiExport';
+import { importMidiFile } from '../utils/midiImport';
 import './DrumMachine.css';
 
 /**
@@ -129,6 +130,29 @@ const DownloadIcon = memo(function DownloadIcon() {
 });
 
 /**
+ * Upload/Import icon SVG
+ */
+const UploadIcon = memo(function UploadIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" y1="3" x2="12" y2="15" />
+    </svg>
+  );
+});
+
+/**
  * DrumMachine Component
  * A 16-step drum sequencer with Web Audio synthesis
  */
@@ -157,6 +181,7 @@ export const DrumMachine = memo(function DrumMachine() {
   const isPlayingRef = useRef<boolean>(false);
   const isDraggingRef = useRef(false);
   const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   // Velocity drag refs
   const velocityDragRef = useRef<{
     inst: Instrument;
@@ -616,6 +641,37 @@ export const DrumMachine = memo(function DrumMachine() {
   }, [pattern, tempo, drum.exportSuccess, showStatus]);
 
   /**
+   * Trigger file input for MIDI import
+   */
+  const handleImportClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  /**
+   * Handle MIDI file import
+   */
+  const handleFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const result = await importMidiFile(file);
+
+      if (result) {
+        setPattern(result.pattern);
+        setTempo(result.tempo);
+        showStatus(drum.importSuccess, 'success');
+      } else {
+        showStatus(drum.importError, 'error');
+      }
+
+      // Reset input so same file can be selected again
+      e.target.value = '';
+    },
+    [drum.importSuccess, drum.importError, showStatus]
+  );
+
+  /**
    * Handle tempo change
    */
   const handleTempoChange = useCallback(
@@ -722,6 +778,22 @@ export const DrumMachine = memo(function DrumMachine() {
             <DownloadIcon />
             <span>{drum.exportMidi}</span>
           </button>
+          <button
+            className="drum-btn drum-btn--import"
+            onClick={handleImportClick}
+            aria-label={drum.importMidi}
+          >
+            <UploadIcon />
+            <span>{drum.importMidi}</span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".mid,.midi,audio/midi,audio/x-midi"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            aria-hidden="true"
+          />
         </div>
 
         <div className="drum-tempo">

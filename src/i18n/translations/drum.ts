@@ -31,9 +31,12 @@ export const drumKo: DrumTranslation = {
   presetTrap: '트랩',
   presetBreakbeat: '브레이크비트',
   presetMinimal: '미니멀',
-  // Export
+  // Export/Import
   exportMidi: 'MIDI 내보내기',
   exportSuccess: 'MIDI 파일을 다운로드했습니다',
+  importMidi: 'MIDI 가져오기',
+  importSuccess: 'MIDI 파일을 불러왔습니다',
+  importError: 'MIDI 파일을 읽을 수 없습니다',
   // Status
   loadedPreset: '{preset} 프리셋을 불러왔습니다',
 };
@@ -69,9 +72,12 @@ export const drumEn: DrumTranslation = {
   presetTrap: 'Trap',
   presetBreakbeat: 'Breakbeat',
   presetMinimal: 'Minimal',
-  // Export
+  // Export/Import
   exportMidi: 'Export MIDI',
   exportSuccess: 'MIDI file downloaded',
+  importMidi: 'Import MIDI',
+  importSuccess: 'MIDI file loaded',
+  importError: 'Cannot read MIDI file',
   // Status
   loadedPreset: 'Loaded {preset} preset',
 };

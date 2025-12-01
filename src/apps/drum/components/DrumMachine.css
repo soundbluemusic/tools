@@ -59,11 +59,13 @@
   border-color: var(--color-accent-hover);
 }
 
-.drum-btn--export {
+.drum-btn--export,
+.drum-btn--import {
   background: var(--color-bg-tertiary);
 }
 
-.drum-btn--export:hover {
+.drum-btn--export:hover,
+.drum-btn--import:hover {
   background: var(--color-accent-primary);
   border-color: var(--color-accent-primary);
   color: var(--color-text-inverse);
