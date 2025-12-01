@@ -1,25 +1,13 @@
 {
-  // Cloudflare Pages Configuration
+  // Cloudflare Pages Configuration for SvelteKit
   // https://developers.cloudflare.com/pages/configuration/wrangler-configuration/
 
   "name": "productivity-tools",
   "compatibility_date": "2025-11-27",
+  "compatibility_flags": ["nodejs_compat"],
 
-  // Pages 정적 자산 설정
-  "assets": {
-    "directory": "./dist",
-    // HTML 처리 최적화
-    "html_handling": "auto-trailing-slash",
-    // 404 페이지 처리
-    "not_found_handling": "single-page-application"
-  },
-
-  // 빌드 설정
-  "build": {
-    "command": "npm run build",
-    "cwd": ".",
-    "watch_dir": "src"
-  },
+  // SvelteKit adapter-cloudflare output directory
+  "pages_build_output_dir": ".svelte-kit/cloudflare",
 
   // 개발 서버 설정
   "dev": {

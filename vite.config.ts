@@ -7,7 +7,10 @@ export default defineConfig(({ mode }) => ({
     sveltekit(),
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: null,
+      injectRegister: 'auto',
+      strategies: 'generateSW',
+      scope: '/',
+      base: '/',
       includeAssets: ['icons/icon.svg'],
       manifest: {
         name: 'Productivity Tools',
@@ -101,6 +104,7 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        navigateFallback: null,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -129,20 +133,6 @@ export default defineConfig(({ mode }) => ({
                 statuses: [0, 200]
               }
             }
-          },
-          {
-            urlPattern: /^https:\/\/soundbluemusic\.com\/.*/i,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'soundblue-assets-cache',
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 30
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
           }
         ],
         cleanupOutdatedCaches: true,
@@ -150,7 +140,7 @@ export default defineConfig(({ mode }) => ({
         clientsClaim: true
       },
       devOptions: {
-        enabled: true
+        enabled: false
       }
     })
   ],
@@ -160,17 +150,6 @@ export default defineConfig(({ mode }) => ({
     cssCodeSplit: true,
     cssMinify: 'esbuild',
     sourcemap: false,
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('qrious')) {
-              return 'qr-vendor';
-            }
-          }
-        }
-      }
-    },
     reportCompressedSize: true,
     chunkSizeWarningLimit: 250,
     assetsInlineLimit: 4096
