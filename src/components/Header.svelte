@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { link } from 'svelte-routing';
   import { language, toggleLanguage, theme, resolvedTheme, cycleTheme } from '../stores';
   import type { Theme } from '../stores';
   import ThemeIcon from './ui/ThemeIcon.svelte';
@@ -31,7 +30,7 @@
 <header class="site-header">
   <div class="header-inner">
     <!-- Logo -->
-    <a href="/" use:link class="header-logo">
+    <a href="/" class="header-logo">
       <span class="header-logo-text">tools</span>
       <span class="header-logo-badge">beta</span>
     </a>

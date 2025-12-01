@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { link } from 'svelte-routing';
   import { t } from '../stores';
   import ShareButton from './ShareButton.svelte';
 </script>
@@ -12,10 +11,10 @@
 
   <!-- Footer Menu -->
   <nav class="footer-menu" aria-label="Footer navigation">
-    <a href="/privacy" use:link class="footer-link">
+    <a href="/privacy" class="footer-link">
       {$t.common.footer.privacy}
     </a>
-    <a href="/terms" use:link class="footer-link">
+    <a href="/terms" class="footer-link">
       {$t.common.footer.terms}
     </a>
     <a
@@ -26,13 +25,13 @@
     >
       {$t.common.footer.github}
     </a>
-    <a href="/sitemap" use:link class="footer-link">
+    <a href="/sitemap" class="footer-link">
       {$t.common.footer.sitemap}
     </a>
-    <a href="/opensource" use:link class="footer-link">
+    <a href="/opensource" class="footer-link">
       {$t.common.footer.opensource}
     </a>
-    <a href="/tools-used" use:link class="footer-link">
+    <a href="/tools-used" class="footer-link">
       {$t.common.footer.toolsUsed}
     </a>
   </nav>

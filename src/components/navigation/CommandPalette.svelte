@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { navigate } from 'svelte-routing';
+  import { goto } from '$app/navigation';
   import { language } from '../../stores';
   import type { App } from '../../types';
   import './CommandPalette.css';
@@ -30,7 +30,7 @@
       labelKo: '홈으로 이동',
       labelEn: 'Go to Home',
       icon: 'home',
-      action: () => navigate('/'),
+      action: () => goto('/'),
       keywords: ['home', 'main', '홈', '메인'],
     },
     {
@@ -38,7 +38,7 @@
       labelKo: '사이트맵 보기',
       labelEn: 'View Sitemap',
       icon: 'grid',
-      action: () => navigate('/sitemap'),
+      action: () => goto('/sitemap'),
       keywords: ['sitemap', 'all', '사이트맵', '전체'],
     },
   ];
@@ -110,7 +110,7 @@
       case 'Enter':
         e.preventDefault();
         if (selectedIndex < filteredApps.length) {
-          navigate(filteredApps[selectedIndex].url);
+          goto(filteredApps[selectedIndex].url);
           onClose();
         } else {
           const actionIndex = selectedIndex - filteredApps.length;
@@ -127,7 +127,7 @@
 
   function handleItemClick(index: number) {
     if (index < filteredApps.length) {
-      navigate(filteredApps[index].url);
+      goto(filteredApps[index].url);
     } else {
       const actionIndex = index - filteredApps.length;
       filteredActions[actionIndex]?.action();

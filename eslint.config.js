@@ -5,7 +5,7 @@ import svelte from 'eslint-plugin-svelte';
 import svelteParser from 'svelte-eslint-parser';
 
 export default tseslint.config(
-  { ignores: ['dist', '.svelte-kit', 'node_modules'] },
+  { ignores: ['dist', '.svelte-kit', 'node_modules', 'build'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,js}'],

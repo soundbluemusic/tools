@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { link } from 'svelte-routing';
   import { language } from '../stores';
   import './Breadcrumb.css';
 
@@ -18,7 +17,7 @@
       {@const label = item.label[$language]}
       <li class="breadcrumb-item">
         {#if !isLast && item.href}
-          <a href={item.href} use:link class="breadcrumb-link">
+          <a href={item.href} class="breadcrumb-link">
             {#if index === 0}
               <svg
                 class="breadcrumb-home-icon"

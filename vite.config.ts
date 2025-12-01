@@ -1,5 +1,5 @@
 /**
- * Vite Configuration for Frontend-Only PWA
+ * Vite Configuration for Frontend-Only PWA with SvelteKit
  *
  * ARCHITECTURE: No Backend
  * - This app is 100% client-side with NO backend server
@@ -9,14 +9,14 @@
  */
 
 import { defineConfig } from 'vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { sveltekit } from '@sveltejs/kit/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 // Cloudflare Pages 최적화 설정
 export default defineConfig(({ mode }) => ({
   plugins: [
-    svelte(),
+    sveltekit(),
     VitePWA({
       registerType: 'autoUpdate',
       // Defer SW registration to after initial render
@@ -166,95 +166,23 @@ export default defineConfig(({ mode }) => ({
         clientsClaim: true,
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
     }),
   ],
   build: {
     // Target modern browsers for smaller bundles (Cloudflare Edge 호환)
     target: 'esnext',
-    // Use esbuild for fast minification (built-in)
-    minify: 'esbuild',
-    // CSS code splitting
-    cssCodeSplit: true,
     // CSS minification target
     cssMinify: 'esbuild',
     // No source maps in production
     sourcemap: false,
-    // Chunk splitting configuration
-    rollupOptions: {
-      output: {
-        // Manual chunk splitting for optimal Cloudflare CDN caching
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            // Svelte core
-            if (id.includes('svelte')) {
-              return 'svelte-vendor';
-            }
-            // Svelte Router
-            if (id.includes('svelte-routing')) {
-              return 'router-vendor';
-            }
-            // QRious 등 기타 라이브러리
-            if (id.includes('qrious')) {
-              return 'qr-vendor';
-            }
-          }
-        },
-        // Optimize chunk file names with content hash (Cloudflare immutable caching)
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
-          const ext = assetInfo.name?.split('.').pop() || '';
-          if (/png|jpe?g|svg|gif|webp|ico/i.test(ext)) {
-            return 'assets/img/[name]-[hash][extname]';
-          }
-          if (/css/i.test(ext)) {
-            return 'assets/css/[name]-[hash][extname]';
-          }
-          if (/woff2?|ttf|eot/i.test(ext)) {
-            return 'assets/fonts/[name]-[hash][extname]';
-          }
-          return 'assets/[name]-[hash][extname]';
-        },
-        // ES 모듈 형식 (최신 브라우저 최적화)
-        format: 'es',
-        // 청크 간 공유 코드 최적화
-        compact: true,
-      },
-      // Tree shaking optimization
-      treeshake: {
-        moduleSideEffects: 'no-external',
-        propertyReadSideEffects: false,
-        // 사용되지 않는 export 제거
-        preset: 'recommended',
-      },
-    },
     // Report compressed size (Brotli/gzip)
     reportCompressedSize: true,
     // Chunk size warning limit (Cloudflare Pages 권장)
     chunkSizeWarningLimit: 250,
     // Asset inline limit - 작은 파일은 인라인 (네트워크 요청 감소)
     assetsInlineLimit: 4096,
-    // 모듈 프리로드 폴리필 비활성화 (최신 브라우저만 지원)
-    modulePreload: {
-      polyfill: false,
-    },
-  },
-  // Optimize dependencies
-  optimizeDeps: {
-    include: ['svelte', 'svelte-routing'],
-    // Use esbuild for dependency optimization
-    esbuildOptions: {
-      target: 'es2020',
-    },
-  },
-  // Development server
-  server: {
-    // Pre-bundle dependencies for faster startup
-    warmup: {
-      clientFiles: ['./src/main.ts', './src/App.svelte'],
-    },
   },
   // Preview server config
   preview: {
@@ -268,8 +196,5 @@ export default defineConfig(({ mode }) => ({
     // Drop console in production
     drop: mode === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none',
-    minifyIdentifiers: true,
-    minifySyntax: true,
-    minifyWhitespace: true,
   },
 }));

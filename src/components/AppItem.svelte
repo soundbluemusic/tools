@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { link } from 'svelte-routing';
   import type { App } from '../types';
   import type { Language } from '../i18n/types';
 
@@ -12,7 +11,6 @@
 
 <a
   href={app.url}
-  use:link
   class="app-item"
   aria-label="{name} - {desc}"
 >
