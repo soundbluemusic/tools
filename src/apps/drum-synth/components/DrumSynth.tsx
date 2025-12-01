@@ -140,6 +140,9 @@ export const DrumSynth = memo(function DrumSynth() {
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
+  // Cached buffers for performance
+  const noiseBufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
+  const distortionCurveCache = useRef<Map<number, Float32Array>>(new Map());
 
   /**
    * Get or create audio context
@@ -154,16 +157,41 @@ export const DrumSynth = memo(function DrumSynth() {
   }, []);
 
   /**
-   * Create distortion curve for drive effect
+   * Get or create cached noise buffer
    */
-  const makeDistortionCurve = useCallback((amount: number): Float32Array<ArrayBuffer> => {
+  const getNoiseBuffer = useCallback((ctx: AudioContext, duration: number): AudioBuffer => {
+    const key = `noise-${Math.round(duration * 1000)}`;
+    const cached = noiseBufferCacheRef.current.get(key);
+    if (cached && cached.sampleRate === ctx.sampleRate) {
+      return cached;
+    }
+    const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < buffer.length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    noiseBufferCacheRef.current.set(key, buffer);
+    return buffer;
+  }, []);
+
+  /**
+   * Create distortion curve for drive effect (cached by amount)
+   */
+  const makeDistortionCurve = useCallback((amount: number): Float32Array => {
+    // Round to avoid too many cache entries
+    const roundedAmount = Math.round(amount);
+    const cached = distortionCurveCache.current.get(roundedAmount);
+    if (cached) {
+      return cached;
+    }
     const samples = 44100;
-    const curve = new Float32Array(samples) as Float32Array<ArrayBuffer>;
-    const k = (amount / 100) * 50;
+    const curve = new Float32Array(samples);
+    const k = (roundedAmount / 100) * 50;
     for (let i = 0; i < samples; i++) {
       const x = (i * 2) / samples - 1;
       curve[i] = ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
     }
+    distortionCurveCache.current.set(roundedAmount, curve);
     return curve;
   }, []);
 
@@ -249,12 +277,8 @@ export const DrumSynth = memo(function DrumSynth() {
       toneOsc.start(now);
       toneOsc.stop(now + snareParams.toneDecay + 0.1);
 
-      const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * snareParams.noiseDecay, ctx.sampleRate);
-      const noiseData = noiseBuffer.getChannelData(0);
-      for (let i = 0; i < noiseBuffer.length; i++) {
-        noiseData[i] = Math.random() * 2 - 1;
-      }
-
+      // Use cached noise buffer for better performance
+      const noiseBuffer = getNoiseBuffer(ctx, snareParams.noiseDecay);
       const noiseSource = ctx.createBufferSource();
       noiseSource.buffer = noiseBuffer;
 
@@ -272,7 +296,7 @@ export const DrumSynth = memo(function DrumSynth() {
       noiseGain.connect(ctx.destination);
       noiseSource.start(now);
     },
-    [getAudioContext]
+    [getAudioContext, getNoiseBuffer]
   );
 
   /**
@@ -313,12 +337,8 @@ export const DrumSynth = memo(function DrumSynth() {
         osc.stop(now + actualDecay + 0.1);
       }
 
-      const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * actualDecay, ctx.sampleRate);
-      const noiseData = noiseBuffer.getChannelData(0);
-      for (let i = 0; i < noiseBuffer.length; i++) {
-        noiseData[i] = Math.random() * 2 - 1;
-      }
-
+      // Use cached noise buffer for better performance
+      const noiseBuffer = getNoiseBuffer(ctx, actualDecay);
       const noiseSource = ctx.createBufferSource();
       noiseSource.buffer = noiseBuffer;
 
@@ -336,7 +356,7 @@ export const DrumSynth = memo(function DrumSynth() {
       noiseGain.connect(ctx.destination);
       noiseSource.start(now);
     },
-    [getAudioContext]
+    [getAudioContext, getNoiseBuffer]
   );
 
   /**

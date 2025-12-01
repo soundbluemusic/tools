@@ -36,18 +36,25 @@
 /* ============================================
  * Theme Transition
  * Smooth color transition when switching themes
+ * Only applied to key elements for performance
  * ============================================ */
-:root,
-:root *,
-:root *::before,
-:root *::after {
+body,
+.app-card,
+.app-item,
+.sidebar,
+.bottom-nav,
+.command-palette,
+.tool-header,
+.tool-content,
+.home-page,
+button,
+input,
+select,
+a {
   transition:
     background-color 150ms ease-out,
     border-color 150ms ease-out,
-    color 150ms ease-out,
-    fill 150ms ease-out,
-    stroke 150ms ease-out,
-    box-shadow 150ms ease-out;
+    color 150ms ease-out;
 }
 
 /* Body */

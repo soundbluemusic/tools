@@ -4,11 +4,9 @@ import {
   useMemo,
   useCallback,
   useTransition,
-  useEffect,
 } from 'react';
-import { loadApps } from '../constants/apps';
 import { useLanguage } from '../i18n';
-import { useSEO } from '../hooks';
+import { useSEO, useApps } from '../hooks';
 import AppList from '../components/AppList';
 import type { App, SortOption } from '../types';
 import type { Language } from '../i18n/types';
@@ -79,17 +77,8 @@ const Home = memo(function Home() {
     isHomePage: true,
   });
 
-  // Apps state - loaded asynchronously for code splitting
-  const [apps, setApps] = useState<App[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load apps on mount
-  useEffect(() => {
-    loadApps().then((loadedApps) => {
-      setApps(loadedApps);
-      setIsLoading(false);
-    });
-  }, []);
+  // Use shared apps from context (loaded once by AppsProvider)
+  const { apps, isLoading } = useApps();
 
   // Sort state with transition for non-blocking updates
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');

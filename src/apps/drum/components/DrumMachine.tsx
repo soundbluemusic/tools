@@ -303,6 +303,8 @@ export const DrumMachine = memo(function DrumMachine() {
   const isDraggingRef = useRef(false);
   const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // Cached noise buffers for performance (avoid regenerating on every hit)
+  const noiseBufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
   // Velocity drag refs
   const velocityDragRef = useRef<{
     inst: Instrument;
@@ -335,6 +337,26 @@ export const DrumMachine = memo(function DrumMachine() {
           .webkitAudioContext)();
     }
     return audioContextRef.current;
+  }, []);
+
+  /**
+   * Get or create cached noise buffer
+   * Caches noise buffers by duration to avoid expensive regeneration on every hit
+   */
+  const getNoiseBuffer = useCallback((ctx: AudioContext, duration: number): AudioBuffer => {
+    const key = `noise-${duration}`;
+    const cached = noiseBufferCacheRef.current.get(key);
+    if (cached && cached.sampleRate === ctx.sampleRate) {
+      return cached;
+    }
+    // Create new noise buffer
+    const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < buffer.length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    noiseBufferCacheRef.current.set(key, buffer);
+    return buffer;
   }, []);
 
   /**
@@ -373,15 +395,8 @@ export const DrumMachine = memo(function DrumMachine() {
           break;
         }
         case 'snare': {
-          const buffer = ctx.createBuffer(
-            1,
-            ctx.sampleRate * AUDIO.SNARE.DURATION,
-            ctx.sampleRate
-          );
-          const data = buffer.getChannelData(0);
-          for (let i = 0; i < buffer.length; i++) {
-            data[i] = Math.random() * 2 - 1;
-          }
+          // Use cached noise buffer for better performance
+          const buffer = getNoiseBuffer(ctx, AUDIO.SNARE.DURATION);
           const source = ctx.createBufferSource();
           source.buffer = buffer;
           const gain = ctx.createGain();
@@ -401,12 +416,8 @@ export const DrumMachine = memo(function DrumMachine() {
           const duration = isOpen
             ? AUDIO.OPENHAT.DURATION
             : AUDIO.HIHAT.DURATION;
-          const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-          const data = buffer.getChannelData(0);
-          for (let i = 0; i < buffer.length; i++) {
-            data[i] =
-              (Math.random() * 2 - 1) * Math.exp(-i / (ctx.sampleRate * 0.1));
-          }
+          // Use cached noise buffer for better performance
+          const buffer = getNoiseBuffer(ctx, duration);
           const source = ctx.createBufferSource();
           source.buffer = buffer;
           const gain = ctx.createGain();
@@ -427,15 +438,8 @@ export const DrumMachine = memo(function DrumMachine() {
           break;
         }
         case 'clap': {
-          const buffer = ctx.createBuffer(
-            1,
-            ctx.sampleRate * AUDIO.CLAP.DURATION,
-            ctx.sampleRate
-          );
-          const data = buffer.getChannelData(0);
-          for (let i = 0; i < buffer.length; i++) {
-            data[i] = Math.random() * 2 - 1;
-          }
+          // Use cached noise buffer for better performance
+          const buffer = getNoiseBuffer(ctx, AUDIO.CLAP.DURATION);
           const source = ctx.createBufferSource();
           source.buffer = buffer;
           const gain = ctx.createGain();
@@ -451,7 +455,7 @@ export const DrumMachine = memo(function DrumMachine() {
         }
       }
     },
-    []
+    [getNoiseBuffer]
   );
 
   /**

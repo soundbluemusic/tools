@@ -200,8 +200,9 @@ export const CommandPalette = memo(function CommandPalette({
     }
   }, [selectedIndex, totalResults, filteredResults, navigate, onClose]);
 
-  // Handle item click
-  const handleItemClick = useCallback((index: number) => {
+  // Handle item click - uses data-index attribute to avoid inline functions
+  const handleItemClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const index = parseInt(e.currentTarget.dataset.index || '0', 10);
     if (index < filteredResults.apps.length) {
       navigate(filteredResults.apps[index].url);
     } else {
@@ -211,12 +212,23 @@ export const CommandPalette = memo(function CommandPalette({
     onClose();
   }, [filteredResults, navigate, onClose]);
 
+  // Handle mouse enter - uses data-index attribute to avoid inline functions
+  const handleItemMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const index = parseInt(e.currentTarget.dataset.index || '0', 10);
+    setSelectedIndex(index);
+  }, []);
+
   // Handle backdrop click
   const handleBackdropClick = useCallback((e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
   }, [onClose]);
+
+  // Handle query change - memoized to avoid recreation
+  const handleQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  }, []);
 
   const t = {
     placeholder: language === 'ko' ? '검색 또는 명령어...' : 'Search or type a command...',
@@ -249,7 +261,7 @@ export const CommandPalette = memo(function CommandPalette({
             className="command-palette-input"
             placeholder={t.placeholder}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleQueryChange}
             onKeyDown={handleKeyDown}
             aria-label={t.placeholder}
             autoComplete="off"
@@ -276,9 +288,10 @@ export const CommandPalette = memo(function CommandPalette({
                     <button
                       key={app.id}
                       data-command-item
+                      data-index={index}
                       className={`command-palette-item ${selectedIndex === index ? 'selected' : ''}`}
-                      onClick={() => handleItemClick(index)}
-                      onMouseEnter={() => setSelectedIndex(index)}
+                      onClick={handleItemClick}
+                      onMouseEnter={handleItemMouseEnter}
                     >
                       <span className="command-palette-item-icon" aria-hidden="true">
                         {app.icon}
@@ -307,9 +320,10 @@ export const CommandPalette = memo(function CommandPalette({
                       <button
                         key={action.id}
                         data-command-item
+                        data-index={itemIndex}
                         className={`command-palette-item ${selectedIndex === itemIndex ? 'selected' : ''}`}
-                        onClick={() => handleItemClick(itemIndex)}
-                        onMouseEnter={() => setSelectedIndex(itemIndex)}
+                        onClick={handleItemClick}
+                        onMouseEnter={handleItemMouseEnter}
                       >
                         <span className="command-palette-item-icon" aria-hidden="true">
                           {action.icon}
