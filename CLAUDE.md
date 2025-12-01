@@ -1,5 +1,17 @@
 # CLAUDE.md - AI Assistant Guide for Productivity Tools
 
+## Architecture: Frontend-Only (No Backend)
+
+> **IMPORTANT**: This is a **100% client-side application**. There is **NO backend server**.
+>
+> - All processing happens in the browser using Web APIs
+> - Data is stored locally via `localStorage` (no server database)
+> - PWA with Service Worker enables **full offline functionality**
+> - No user accounts, no server authentication, no API calls to external services
+> - Privacy-first: all user data stays on the device
+>
+> This architecture is intentional for privacy, performance, and offline reliability.
+
 ## Project Overview
 
 **Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
@@ -460,3 +472,4 @@ describe('MyComponent', () => {
 10. **Respect theme system**: Use CSS variables, not hard-coded colors
 11. **PWA awareness**: App works offline; test Service Worker behavior
 12. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
+13. **NO BACKEND**: Never add backend code, API endpoints, or server dependencies. This is a frontend-only application designed for offline use. All data must be handled client-side (localStorage, IndexedDB, or in-memory).

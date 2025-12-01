@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Application Entry Point
+ *
+ * ARCHITECTURE: Frontend-Only PWA (No Backend)
+ * - Static files served via Cloudflare Pages CDN
+ * - Service Worker enables offline functionality
+ * - All user data stored in browser localStorage
+ * - No server-side processing or database
+ */
+
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
