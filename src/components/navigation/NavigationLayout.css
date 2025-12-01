@@ -1,60 +1,57 @@
 /**
- * Navigation Layout - Full Width with Fixed Header & Sidebar
- * - Fixed header at top
- * - Fixed sidebar on desktop (position: fixed)
- * - Full width content area (no padding - pages handle their own)
+ * Navigation Layout - True Full Width
+ * No constraints, edge-to-edge layout
  */
 
 .navigation-layout {
-  display: flex;
-  flex-direction: column;
+  position: relative;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
 }
 
-/* Main Content Area */
+/* Main Content Area - Full width */
 .navigation-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
   width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   padding-top: 56px; /* Header height */
 }
 
-/* Content Wrapper - Full width, no padding */
+/* Content Wrapper - Full width, no constraints */
 .content-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   width: 100%;
+  min-height: calc(100vh - 56px);
+  min-height: calc(100dvh - 56px);
 }
 
-/* Mobile: Add space for bottom nav */
+/* Mobile: Space for bottom nav */
 @media (max-width: 1023px) {
   .navigation-content {
     padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   }
 }
 
-/* Desktop: Sidebar layout */
+/* Desktop: Offset for sidebar */
 @media (min-width: 1024px) {
   .navigation-content {
-    margin-left: 240px; /* Sidebar width */
-    overflow-y: auto;
-    overflow-x: hidden;
+    padding-left: 240px; /* Sidebar width */
   }
 }
 
-/* Small mobile */
+/* Small mobile header */
 @media (max-width: 480px) {
   .navigation-content {
-    padding-top: 52px; /* Smaller header on mobile */
+    padding-top: 52px;
+  }
+
+  .content-wrapper {
+    min-height: calc(100vh - 52px);
+    min-height: calc(100dvh - 52px);
   }
 }
 
-/* Safe area support */
+/* Safe area */
 @supports (padding-top: env(safe-area-inset-top)) {
   .navigation-content {
     padding-top: calc(56px + env(safe-area-inset-top));
