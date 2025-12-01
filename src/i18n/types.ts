@@ -218,6 +218,8 @@ export interface DrumTranslation {
   clearAllLoops: string;
   // Status
   loadedPreset: string;
+  // Synthesis info
+  synthesisInfo: string;
 }
 
 /**

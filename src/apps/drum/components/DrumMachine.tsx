@@ -1234,6 +1234,11 @@ export const DrumMachine = memo(function DrumMachine() {
         </div>
       </div>
 
+      {/* Synthesis Info */}
+      <div className="drum-synthesis-info">
+        {drum.synthesisInfo}
+      </div>
+
       {/* Status Message */}
       {statusMessage && (
         <div className={cn('drum-status', `drum-status--${statusMessage.type}`)}>

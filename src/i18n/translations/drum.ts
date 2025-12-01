@@ -49,6 +49,9 @@ export const drumKo: DrumTranslation = {
   clearAllLoops: '모든 루프가 초기화됩니다',
   // Status
   loadedPreset: '{preset} 프리셋을 불러왔습니다',
+  // Synthesis info
+  synthesisInfo:
+    '모든 드럼 소리는 Web Audio API로 실시간 합성됩니다. 킥: 주파수 스윕 오실레이터 (150→40Hz), 스네어/클랩: 화이트 노이즈 + 엔벨로프, 하이햇: 고역 필터링된 노이즈',
 };
 
 export const drumEn: DrumTranslation = {
@@ -100,4 +103,7 @@ export const drumEn: DrumTranslation = {
   clearAllLoops: 'All loops will be cleared',
   // Status
   loadedPreset: 'Loaded {preset} preset',
+  // Synthesis info
+  synthesisInfo:
+    'All drum sounds are synthesized in real-time using Web Audio API. Kick: frequency sweep oscillator (150→40Hz), Snare/Clap: white noise + envelope, Hi-hat: high-pass filtered noise',
 };
