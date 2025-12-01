@@ -1064,7 +1064,10 @@ export const DrumMachine = memo(function DrumMachine() {
             onChange={handleTempoChange}
             aria-label={drum.tempo}
           />
-          <span className="drum-tempo-value">{tempo} BPM</span>
+          <span className="drum-tempo-value">
+            {tempo} BPM
+            <span className="drum-tempo-duration">({(240 / tempo).toFixed(1)}s)</span>
+          </span>
         </div>
       </div>
 
