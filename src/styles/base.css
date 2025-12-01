@@ -33,6 +33,23 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ============================================
+ * Theme Transition
+ * Smooth color transition when switching themes
+ * ============================================ */
+:root,
+:root *,
+:root *::before,
+:root *::after {
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out,
+    color 150ms ease-out,
+    fill 150ms ease-out,
+    stroke 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+
 /* Body */
 body {
   min-width: 320px;
