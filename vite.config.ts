@@ -9,28 +9,14 @@
  */
 
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// React Compiler configuration
-// https://react.dev/learn/react-compiler
-const ReactCompilerConfig = {
-  target: '18', // React 18 compatibility
-};
-
 // https://vitejs.dev/config/
-// Cloudflare Pages 최적화 설정 + React Compiler (자동 메모이제이션)
+// Cloudflare Pages 최적화 설정
 export default defineConfig(({ mode }) => ({
   plugins: [
-    react({
-      // Use automatic JSX runtime for smaller bundles
-      jsxRuntime: 'automatic',
-      // Enable React Compiler for automatic memoization
-      // Replaces manual memo(), useMemo(), useCallback()
-      babel: {
-        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
-      },
-    }),
+    svelte(),
     VitePWA({
       registerType: 'autoUpdate',
       // Defer SW registration to after initial render
@@ -201,16 +187,12 @@ export default defineConfig(({ mode }) => ({
         // Manual chunk splitting for optimal Cloudflare CDN caching
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // React core - 가장 안정적인 의존성
-            if (
-              id.includes('react') ||
-              id.includes('react-dom') ||
-              id.includes('scheduler')
-            ) {
-              return 'react-vendor';
+            // Svelte core
+            if (id.includes('svelte')) {
+              return 'svelte-vendor';
             }
-            // React Router - 별도 청크로 분리 (업데이트 빈도 다름)
-            if (id.includes('react-router')) {
+            // Svelte Router
+            if (id.includes('svelte-routing')) {
               return 'router-vendor';
             }
             // QRious 등 기타 라이브러리
@@ -261,7 +243,7 @@ export default defineConfig(({ mode }) => ({
   },
   // Optimize dependencies
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom'],
+    include: ['svelte', 'svelte-routing'],
     // Use esbuild for dependency optimization
     esbuildOptions: {
       target: 'es2020',
@@ -271,7 +253,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     // Pre-bundle dependencies for faster startup
     warmup: {
-      clientFiles: ['./src/main.tsx', './src/App.tsx'],
+      clientFiles: ['./src/main.ts', './src/App.svelte'],
     },
   },
   // Preview server config

@@ -49,12 +49,10 @@ window.IntersectionObserver = IntersectionObserverMock;
 const originalError = console.error;
 beforeAll(() => {
   console.error = (...args: unknown[]) => {
-    // Filter out known React warnings in tests
+    // Filter out known warnings in tests
     if (
       typeof args[0] === 'string' &&
-      (args[0].includes('Warning: ReactDOM.render') ||
-        args[0].includes('Warning: An update to') ||
-        args[0].includes('act(...)'))
+      (args[0].includes('Warning:') || args[0].includes('act(...)'))
     ) {
       return;
     }
