@@ -1,6 +1,8 @@
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useViewTransition } from '../hooks/useViewTransition';
+import '../styles/not-found.css';
+import '../styles/tool-page.css';
 
 /**
  * 404 Not Found Page

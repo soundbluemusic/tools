@@ -12,6 +12,8 @@ export default defineConfig(({ mode }) => ({
     }),
     VitePWA({
       registerType: 'autoUpdate',
+      // Defer SW registration to after initial render
+      injectRegister: null,
       includeAssets: ['icons/icon.svg'],
       manifest: {
         name: 'Productivity Tools',

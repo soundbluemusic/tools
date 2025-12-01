@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '../../utils';
 import { useTranslations } from '../../i18n/context';
 import { useViewTransition } from '../../hooks/useViewTransition';
+import '../../styles/tool-page.css';
 
 interface PageLayoutProps {
   /** Page title */

@@ -41,31 +41,32 @@ export const DEFAULT_VOLUMES: InstrumentVolumes = {
 
 /**
  * Audio synthesis configuration
+ * Parameters optimized based on TR-808/909 research
  */
 export const AUDIO = {
   KICK: {
-    FREQUENCY_START: 60,
-    FREQUENCY_END: 0.01,
-    DURATION: 0.5,
+    FREQUENCY_START: 150, // Higher start for punchy attack (research: 150-220Hz)
+    FREQUENCY_END: 40, // Sub-bass end frequency (research: 40-55Hz)
+    DURATION: 0.5, // Amplitude decay (research: 0.5-0.6s)
     GAIN: 1,
   },
   SNARE: {
-    DURATION: 0.2,
+    DURATION: 0.2, // Noise decay (research: 0.2s)
     GAIN: 0.3,
   },
   HIHAT: {
-    DURATION: 0.05,
+    DURATION: 0.05, // TR-808 fixed 50ms decay
     GAIN: 0.1,
-    FILTER_FREQUENCY: 8000,
+    FILTER_FREQUENCY: 10000, // Brighter metallic sound (research: 10,000Hz bandpass)
   },
   OPENHAT: {
-    DURATION: 0.3,
+    DURATION: 0.5, // Extended decay for open hat (research: 0.5-1s)
     GAIN: 0.1,
-    FILTER_FREQUENCY: 8000,
+    FILTER_FREQUENCY: 10000,
   },
   CLAP: {
-    DURATION: 0.1,
-    GAIN: 0.2,
+    DURATION: 0.15, // Multi-trigger timing ~40-50ms attack + decay
+    GAIN: 0.25,
   },
 } as const;
 

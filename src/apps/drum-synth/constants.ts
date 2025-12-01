@@ -21,11 +21,11 @@ export interface KickParams {
 }
 
 export const KICK_RANGES = {
-  pitchStart: { min: 30, max: 200, default: 60, step: 1 },
-  pitchEnd: { min: 20, max: 80, default: 30, step: 1 },
-  pitchDecay: { min: 0.01, max: 0.5, default: 0.12, step: 0.01 },
+  pitchStart: { min: 60, max: 250, default: 150, step: 1 }, // Research: 150-220Hz for punchy attack
+  pitchEnd: { min: 20, max: 80, default: 40, step: 1 }, // Research: 40-55Hz sub-bass
+  pitchDecay: { min: 0.01, max: 0.5, default: 0.1, step: 0.01 }, // Research: 0.1s for 808-style
   ampDecay: { min: 0.1, max: 3, default: 0.5, step: 0.01 },
-  click: { min: 0, max: 100, default: 0, step: 1 },
+  click: { min: 0, max: 100, default: 20, step: 1 }, // Slight click for definition
   drive: { min: 0, max: 100, default: 0, step: 1 },
   tone: { min: 0, max: 100, default: 0, step: 1 },
 } as const;
@@ -83,12 +83,12 @@ export interface HihatParams {
 }
 
 export const HIHAT_RANGES = {
-  filterFreq: { min: 4000, max: 14000, default: 8000, step: 100 },
-  filterQ: { min: 0.5, max: 10, default: 1, step: 0.1 },
-  decay: { min: 0.02, max: 1, default: 0.05, step: 0.01 },
+  filterFreq: { min: 4000, max: 14000, default: 10000, step: 100 }, // Research: 10,000Hz bandpass
+  filterQ: { min: 0.5, max: 10, default: 1.5, step: 0.1 }, // Slight resonance for metallic character
+  decay: { min: 0.02, max: 1, default: 0.05, step: 0.01 }, // TR-808 fixed 50ms for closed
   openness: { min: 0, max: 100, default: 0, step: 1 },
-  pitch: { min: 0, max: 100, default: 50, step: 1 },
-  ring: { min: 0, max: 100, default: 20, step: 1 },
+  pitch: { min: 0, max: 100, default: 60, step: 1 }, // Higher pitch for brighter sound
+  ring: { min: 0, max: 100, default: 30, step: 1 }, // More metallic ring
 } as const;
 
 export const DEFAULT_HIHAT: HihatParams = {
@@ -113,12 +113,12 @@ export interface ClapParams {
 }
 
 export const CLAP_RANGES = {
-  filterFreq: { min: 800, max: 3000, default: 1200, step: 50 },
-  filterQ: { min: 0.3, max: 3, default: 0.8, step: 0.1 },
-  decay: { min: 0.05, max: 0.6, default: 0.1, step: 0.01 },
-  spread: { min: 0, max: 100, default: 30, step: 1 },
+  filterFreq: { min: 800, max: 3000, default: 1000, step: 50 }, // Research: 1000Hz bandpass center
+  filterQ: { min: 0.3, max: 3, default: 2.0, step: 0.1 }, // Research: Q ~2 (TR-909 uses 1.95)
+  decay: { min: 0.05, max: 0.6, default: 0.15, step: 0.01 }, // Longer for reverb tail
+  spread: { min: 0, max: 100, default: 50, step: 1 }, // Research: 4 pulses, 10ms apart
   tone: { min: 0, max: 100, default: 50, step: 1 },
-  reverb: { min: 0, max: 100, default: 0, step: 1 },
+  reverb: { min: 0, max: 100, default: 20, step: 1 }, // Slight reverb for room character
 } as const;
 
 export const DEFAULT_CLAP: ClapParams = {
@@ -234,47 +234,52 @@ export interface DrumPreset {
 }
 
 export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
+  // Classic TR-808 sound based on research parameters
   classic808: {
-    kick: { pitchStart: 60, pitchEnd: 30, pitchDecay: 0.12, ampDecay: 0.5, click: 0, drive: 0, tone: 0 },
-    snare: { toneFreq: 180, toneDecay: 0.1, noiseDecay: 0.2, noiseFilter: 3000, toneMix: 30, snappy: 50 },
-    hihat: { filterFreq: 8000, filterQ: 1, decay: 0.05, openness: 0, pitch: 50, ring: 20 },
-    clap: { filterFreq: 1200, filterQ: 0.8, decay: 0.1, spread: 30, tone: 50, reverb: 0 },
+    kick: { pitchStart: 150, pitchEnd: 40, pitchDecay: 0.1, ampDecay: 0.5, click: 20, drive: 0, tone: 0 },
+    snare: { toneFreq: 185, toneDecay: 0.1, noiseDecay: 0.2, noiseFilter: 3000, toneMix: 30, snappy: 50 },
+    hihat: { filterFreq: 10000, filterQ: 1.5, decay: 0.05, openness: 0, pitch: 60, ring: 30 },
+    clap: { filterFreq: 1000, filterQ: 2.0, decay: 0.15, spread: 50, tone: 50, reverb: 20 },
     tom: { pitch: 120, pitchDecay: 40, decay: 0.4, body: 60, attack: 50 },
     rim: { pitch: 800, decay: 0.04, metallic: 70, body: 40, click: 80 },
     master: { volume: 80, compressor: 20 },
   },
+  // Hard techno with punchy transients
   hardTechno: {
-    kick: { pitchStart: 80, pitchEnd: 25, pitchDecay: 0.08, ampDecay: 0.4, click: 50, drive: 30, tone: 20 },
+    kick: { pitchStart: 180, pitchEnd: 35, pitchDecay: 0.08, ampDecay: 0.4, click: 50, drive: 30, tone: 20 },
     snare: { toneFreq: 220, toneDecay: 0.08, noiseDecay: 0.15, noiseFilter: 4000, toneMix: 25, snappy: 80 },
-    hihat: { filterFreq: 10000, filterQ: 2, decay: 0.03, openness: 0, pitch: 70, ring: 40 },
-    clap: { filterFreq: 1500, filterQ: 1.2, decay: 0.08, spread: 20, tone: 70, reverb: 0 },
+    hihat: { filterFreq: 12000, filterQ: 2.5, decay: 0.03, openness: 0, pitch: 70, ring: 40 },
+    clap: { filterFreq: 1200, filterQ: 2.5, decay: 0.1, spread: 40, tone: 70, reverb: 0 },
     tom: { pitch: 100, pitchDecay: 50, decay: 0.3, body: 50, attack: 70 },
     rim: { pitch: 1000, decay: 0.03, metallic: 80, body: 30, click: 90 },
     master: { volume: 85, compressor: 50 },
   },
+  // Lo-fi with warm, muffled character
   lofi: {
-    kick: { pitchStart: 55, pitchEnd: 35, pitchDecay: 0.15, ampDecay: 0.6, click: 0, drive: 5, tone: 30 },
+    kick: { pitchStart: 100, pitchEnd: 45, pitchDecay: 0.15, ampDecay: 0.6, click: 10, drive: 5, tone: 30 },
     snare: { toneFreq: 150, toneDecay: 0.15, noiseDecay: 0.25, noiseFilter: 2000, toneMix: 40, snappy: 30 },
     hihat: { filterFreq: 6000, filterQ: 0.8, decay: 0.08, openness: 10, pitch: 30, ring: 15 },
-    clap: { filterFreq: 1000, filterQ: 0.5, decay: 0.15, spread: 50, tone: 35, reverb: 30 },
+    clap: { filterFreq: 900, filterQ: 1.5, decay: 0.18, spread: 60, tone: 35, reverb: 40 },
     tom: { pitch: 130, pitchDecay: 20, decay: 0.5, body: 80, attack: 30 },
     rim: { pitch: 600, decay: 0.06, metallic: 40, body: 60, click: 50 },
     master: { volume: 75, compressor: 40 },
   },
+  // Minimal with clean, precise sounds
   minimal: {
-    kick: { pitchStart: 50, pitchEnd: 30, pitchDecay: 0.1, ampDecay: 0.45, click: 0, drive: 0, tone: 0 },
+    kick: { pitchStart: 130, pitchEnd: 40, pitchDecay: 0.1, ampDecay: 0.45, click: 15, drive: 0, tone: 0 },
     snare: { toneFreq: 200, toneDecay: 0.1, noiseDecay: 0.18, noiseFilter: 3500, toneMix: 30, snappy: 55 },
-    hihat: { filterFreq: 9000, filterQ: 1.2, decay: 0.04, openness: 0, pitch: 55, ring: 25 },
-    clap: { filterFreq: 1200, filterQ: 0.8, decay: 0.1, spread: 25, tone: 55, reverb: 0 },
+    hihat: { filterFreq: 10000, filterQ: 1.5, decay: 0.04, openness: 0, pitch: 55, ring: 25 },
+    clap: { filterFreq: 1000, filterQ: 2.0, decay: 0.12, spread: 45, tone: 55, reverb: 10 },
     tom: { pitch: 140, pitchDecay: 25, decay: 0.35, body: 55, attack: 55 },
     rim: { pitch: 850, decay: 0.04, metallic: 65, body: 45, click: 75 },
     master: { volume: 80, compressor: 25 },
   },
+  // Acoustic-style with natural character
   acoustic: {
-    kick: { pitchStart: 70, pitchEnd: 40, pitchDecay: 0.08, ampDecay: 0.35, click: 40, drive: 0, tone: 50 },
+    kick: { pitchStart: 120, pitchEnd: 50, pitchDecay: 0.08, ampDecay: 0.35, click: 40, drive: 0, tone: 50 },
     snare: { toneFreq: 240, toneDecay: 0.12, noiseDecay: 0.2, noiseFilter: 4500, toneMix: 45, snappy: 70 },
-    hihat: { filterFreq: 7000, filterQ: 0.7, decay: 0.1, openness: 20, pitch: 40, ring: 50 },
-    clap: { filterFreq: 1300, filterQ: 0.6, decay: 0.12, spread: 55, tone: 50, reverb: 25 },
+    hihat: { filterFreq: 8000, filterQ: 1.0, decay: 0.1, openness: 20, pitch: 40, ring: 50 },
+    clap: { filterFreq: 1100, filterQ: 1.8, decay: 0.15, spread: 55, tone: 50, reverb: 30 },
     tom: { pitch: 180, pitchDecay: 15, decay: 0.45, body: 75, attack: 45 },
     rim: { pitch: 700, decay: 0.05, metallic: 50, body: 70, click: 65 },
     master: { volume: 75, compressor: 35 },

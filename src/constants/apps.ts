@@ -15,16 +15,21 @@ import type { App, AppConfig, AppList } from '../types';
  * - url: Generated from folder name (e.g., /contract, /qr)
  */
 const appModules = import.meta.glob<{ default: AppConfig }>(
-  '../apps/*/config.ts',
-  { eager: true }
+  '../apps/*/config.ts'
 );
+
+/** Cache for loaded apps */
+let appsCache: App[] | null = null;
+let loadingPromise: Promise<App[]> | null = null;
 
 /**
  * Parse loaded app modules into App objects
  * Sorted by order field for stable ordering across environments
  */
-function parseAppModules(): App[] {
-  const apps = Object.entries(appModules).map(([path, module]) => {
+function parseAppModules(
+  modules: Record<string, { default: AppConfig }>
+): App[] {
+  const apps = Object.entries(modules).map(([path, module]) => {
     // Extract folder name from path: '../apps/contract/config.ts' -> 'contract'
     const pathParts = path.split('/');
     const folderName = pathParts[pathParts.length - 2];
@@ -51,11 +56,50 @@ function parseAppModules(): App[] {
   }));
 }
 
-/** Immutable list of all loaded apps */
-export const APPS: AppList = Object.freeze(parseAppModules());
+/**
+ * Load all apps asynchronously (lazy loading)
+ * Results are cached for subsequent calls
+ */
+export async function loadApps(): Promise<App[]> {
+  // Return cached apps if available
+  if (appsCache) {
+    return appsCache;
+  }
 
-/** Total number of loaded apps */
-export const APPS_COUNT = APPS.length;
+  // Reuse existing loading promise to prevent duplicate loads
+  if (loadingPromise) {
+    return loadingPromise;
+  }
+
+  // Load all app configs in parallel
+  loadingPromise = Promise.all(
+    Object.entries(appModules).map(async ([path, loader]) => {
+      const module = await loader();
+      return [path, module] as const;
+    })
+  ).then((entries) => {
+    const modules = Object.fromEntries(entries);
+    appsCache = parseAppModules(modules);
+    loadingPromise = null;
+    return appsCache;
+  });
+
+  return loadingPromise;
+}
+
+/**
+ * Get cached apps synchronously (returns empty array if not loaded)
+ * Use loadApps() for guaranteed data
+ */
+export function getAppsSync(): AppList {
+  return appsCache ? Object.freeze(appsCache) : [];
+}
+
+/** @deprecated Use loadApps() instead for lazy loading */
+export const APPS: AppList = [];
+
+/** Total number of loaded apps (0 until loaded) */
+export const APPS_COUNT = 0;
 
 /**
  * Find an app by its ID

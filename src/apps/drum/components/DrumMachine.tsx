@@ -271,6 +271,8 @@ export const DrumMachine = memo(function DrumMachine() {
 
   // State
   const [loops, setLoops] = useState<MultiLoopPattern>(createInitialLoops);
+  const [loopIds, setLoopIds] = useState<number[]>([1]); // Track original loop numbers
+  const [nextLoopId, setNextLoopId] = useState(2); // Next available loop ID
   const [currentLoopIndex, setCurrentLoopIndex] = useState(0);
   const [tempo, setTempo] = useState<number>(TEMPO_RANGE.DEFAULT);
   const [volumes, setVolumes] = useState<InstrumentVolumes>({ ...DEFAULT_VOLUMES });
@@ -284,8 +286,9 @@ export const DrumMachine = memo(function DrumMachine() {
   const [dragLoopIndex, setDragLoopIndex] = useState<number | null>(null);
   const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(null);
 
-  // Derived state: current pattern being edited
-  const pattern = loops[currentLoopIndex];
+  // Derived state: which loop to display (playing loop during playback, editing loop otherwise)
+  const displayLoopIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
+  const pattern = loops[displayLoopIndex];
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -576,23 +579,26 @@ export const DrumMachine = memo(function DrumMachine() {
     }
     // Reset to single empty loop
     setLoops(createInitialLoops());
+    setLoopIds([1]);
+    setNextLoopId(2);
     setCurrentLoopIndex(0);
     setPlayingLoopIndex(0);
     currentPlayingLoopRef.current = 0;
   }, [loops.length, drum.clearAllLoops, showStatus]);
 
   /**
-   * Set a step velocity value in current loop
+   * Set a step velocity value in displayed loop (follows playback during play)
    */
   const setStepVelocity = useCallback((inst: Instrument, step: number, velocity: number) => {
     setLoops((prev) => {
+      const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
       const newLoops = [...prev];
-      const newPattern = { ...newLoops[currentLoopIndex] };
+      const newPattern = { ...newLoops[targetIndex] };
       newPattern[inst] = newPattern[inst].map((val, i) => (i === step ? velocity : val));
-      newLoops[currentLoopIndex] = newPattern;
+      newLoops[targetIndex] = newPattern;
       return newLoops;
     });
-  }, [currentLoopIndex]);
+  }, [currentLoopIndex, isPlaying, playingLoopIndex]);
 
   /**
    * Handle drag start on a step
@@ -825,8 +831,10 @@ export const DrumMachine = memo(function DrumMachine() {
       return;
     }
     setLoops((prev) => [...prev, createEmptyPattern()]);
+    setLoopIds((prev) => [...prev, nextLoopId]);
+    setNextLoopId((prev) => prev + 1);
     setCurrentLoopIndex(loops.length);
-  }, [loops.length, drum.maxLoopsReached, showStatus]);
+  }, [loops.length, nextLoopId, drum.maxLoopsReached, showStatus]);
 
   /**
    * Copy current loop and add as new loop
@@ -837,8 +845,10 @@ export const DrumMachine = memo(function DrumMachine() {
       return;
     }
     setLoops((prev) => [...prev, copyPattern(prev[currentLoopIndex])]);
+    setLoopIds((prev) => [...prev, nextLoopId]);
+    setNextLoopId((prev) => prev + 1);
     setCurrentLoopIndex(loops.length);
-  }, [loops.length, currentLoopIndex, drum.maxLoopsReached, showStatus]);
+  }, [loops.length, currentLoopIndex, nextLoopId, drum.maxLoopsReached, showStatus]);
 
   /**
    * Remove current loop
@@ -846,6 +856,7 @@ export const DrumMachine = memo(function DrumMachine() {
   const removeCurrentLoop = useCallback(() => {
     if (loops.length <= 1) return; // Keep at least one loop
     setLoops((prev) => prev.filter((_, i) => i !== currentLoopIndex));
+    setLoopIds((prev) => prev.filter((_, i) => i !== currentLoopIndex));
     setCurrentLoopIndex((prev) => (prev > 0 ? prev - 1 : 0));
   }, [loops.length, currentLoopIndex]);
 
@@ -860,6 +871,12 @@ export const DrumMachine = memo(function DrumMachine() {
         [newLoops[currentLoopIndex], newLoops[currentLoopIndex - 1]];
       return newLoops;
     });
+    setLoopIds((prev) => {
+      const newIds = [...prev];
+      [newIds[currentLoopIndex - 1], newIds[currentLoopIndex]] =
+        [newIds[currentLoopIndex], newIds[currentLoopIndex - 1]];
+      return newIds;
+    });
     setCurrentLoopIndex((prev) => prev - 1);
   }, [currentLoopIndex]);
 
@@ -873,6 +890,12 @@ export const DrumMachine = memo(function DrumMachine() {
       [newLoops[currentLoopIndex], newLoops[currentLoopIndex + 1]] =
         [newLoops[currentLoopIndex + 1], newLoops[currentLoopIndex]];
       return newLoops;
+    });
+    setLoopIds((prev) => {
+      const newIds = [...prev];
+      [newIds[currentLoopIndex], newIds[currentLoopIndex + 1]] =
+        [newIds[currentLoopIndex + 1], newIds[currentLoopIndex]];
+      return newIds;
     });
     setCurrentLoopIndex((prev) => prev + 1);
   }, [currentLoopIndex, loops.length]);
@@ -903,6 +926,13 @@ export const DrumMachine = memo(function DrumMachine() {
         const [draggedLoop] = newLoops.splice(dragLoopIndex, 1);
         newLoops.splice(dragOverLoopIndex, 0, draggedLoop);
         return newLoops;
+      });
+      // Reorder loop IDs to match
+      setLoopIds((prev) => {
+        const newIds = [...prev];
+        const [draggedId] = newIds.splice(dragLoopIndex, 1);
+        newIds.splice(dragOverLoopIndex, 0, draggedId);
+        return newIds;
       });
       // Update current loop index if needed
       if (currentLoopIndex === dragLoopIndex) {
@@ -1081,7 +1111,7 @@ export const DrumMachine = memo(function DrumMachine() {
           <div className="drum-loop-blocks">
             {loops.map((_, index) => (
               <button
-                key={index}
+                key={loopIds[index]}
                 className={cn(
                   'drum-loop-block',
                   index === currentLoopIndex && 'drum-loop-block--selected',
@@ -1099,10 +1129,10 @@ export const DrumMachine = memo(function DrumMachine() {
                 onDragEnd={handleLoopDragEnd}
                 onDrop={handleLoopDragEnd}
                 onClick={() => setCurrentLoopIndex(index)}
-                aria-label={`${drum.loop} ${index + 1}`}
-                title={`${drum.loop} ${index + 1}`}
+                aria-label={`${drum.loop} ${loopIds[index]}`}
+                title={`${drum.loop} ${loopIds[index]}`}
               >
-                {index + 1}
+                {loopIds[index]}
               </button>
             ))}
           </div>
