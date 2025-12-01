@@ -4,7 +4,7 @@
  * Generates Standard MIDI File (SMF) format 0 from drum patterns
  */
 
-import type { Pattern, Instrument } from '../constants';
+import type { Instrument, MultiLoopPattern } from '../constants';
 import { STEPS } from '../constants';
 
 /**
@@ -122,19 +122,20 @@ function createTrackNameEvent(name: string): number[] {
 }
 
 interface MidiExportOptions {
-  pattern: Pattern;
+  loops: MultiLoopPattern;
   tempo: number;
   filename?: string;
 }
 
 /**
- * Generate MIDI file data from drum pattern
+ * Generate MIDI file data from drum patterns (multiple loops)
  */
 export function generateMidiData(options: MidiExportOptions): Uint8Array {
-  const { pattern, tempo } = options;
+  const { loops, tempo } = options;
 
   // Calculate ticks per step (16th note = 1/4 of a beat)
   const ticksPerStep = MIDI.TICKS_PER_BEAT / 4;
+  const ticksPerLoop = STEPS * ticksPerStep;
 
   // Note duration (slightly less than step duration for separation)
   const noteDuration = Math.floor(ticksPerStep * 0.9);
@@ -157,30 +158,35 @@ export function generateMidiData(options: MidiExportOptions): Uint8Array {
 
   const events: NoteEvent[] = [];
 
-  // Generate note events for each step
-  for (let step = 0; step < STEPS; step++) {
-    const stepTick = step * ticksPerStep;
+  // Generate note events for each loop and step
+  for (let loopIndex = 0; loopIndex < loops.length; loopIndex++) {
+    const pattern = loops[loopIndex];
+    const loopStartTick = loopIndex * ticksPerLoop;
 
-    for (const instrument of Object.keys(pattern) as Instrument[]) {
-      const velocity = pattern[instrument][step];
-      if (velocity > 0) {
-        const note = DRUM_NOTES[instrument];
-        // Scale velocity from 0-100 to 0-127
-        const midiVelocity = Math.min(127, Math.round((velocity / 100) * 127));
+    for (let step = 0; step < STEPS; step++) {
+      const stepTick = loopStartTick + step * ticksPerStep;
 
-        events.push({
-          tick: stepTick,
-          type: 'on',
-          note,
-          velocity: midiVelocity,
-        });
+      for (const instrument of Object.keys(pattern) as Instrument[]) {
+        const velocity = pattern[instrument][step];
+        if (velocity > 0) {
+          const note = DRUM_NOTES[instrument];
+          // Scale velocity from 0-100 to 0-127
+          const midiVelocity = Math.min(127, Math.round((velocity / 100) * 127));
 
-        events.push({
-          tick: stepTick + noteDuration,
-          type: 'off',
-          note,
-          velocity: 0,
-        });
+          events.push({
+            tick: stepTick,
+            type: 'on',
+            note,
+            velocity: midiVelocity,
+          });
+
+          events.push({
+            tick: stepTick + noteDuration,
+            type: 'off',
+            note,
+            velocity: 0,
+          });
+        }
       }
     }
   }
@@ -209,8 +215,8 @@ export function generateMidiData(options: MidiExportOptions): Uint8Array {
   }
 
   // Add end of track event
-  // Delta time to make the pattern exactly 1 bar (16 steps)
-  const endTick = STEPS * ticksPerStep;
+  // Delta time to make the pattern exactly N bars (N loops * 16 steps)
+  const endTick = loops.length * ticksPerLoop;
   const endDelta = endTick - lastTick;
   trackData.push(...writeVLQ(endDelta), ...MIDI.END_OF_TRACK);
 

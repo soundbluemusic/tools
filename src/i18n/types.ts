@@ -206,6 +206,13 @@ export interface DrumTranslation {
   importMidi: string;
   importSuccess: string;
   importError: string;
+  // Loop controls
+  loop: string;
+  loopOf: string;
+  addLoop: string;
+  removeLoop: string;
+  copyLoop: string;
+  maxLoopsReached: string;
   // Status
   loadedPreset: string;
 }

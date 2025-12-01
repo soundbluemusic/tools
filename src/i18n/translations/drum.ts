@@ -37,6 +37,13 @@ export const drumKo: DrumTranslation = {
   importMidi: 'MIDI 가져오기',
   importSuccess: 'MIDI 파일을 불러왔습니다',
   importError: 'MIDI 파일을 읽을 수 없습니다',
+  // Loop controls
+  loop: '루프',
+  loopOf: '{current} / {total}',
+  addLoop: '루프 추가',
+  removeLoop: '루프 삭제',
+  copyLoop: '루프 복사',
+  maxLoopsReached: '최대 루프 수에 도달했습니다',
   // Status
   loadedPreset: '{preset} 프리셋을 불러왔습니다',
 };
@@ -78,6 +85,13 @@ export const drumEn: DrumTranslation = {
   importMidi: 'Import MIDI',
   importSuccess: 'MIDI file loaded',
   importError: 'Cannot read MIDI file',
+  // Loop controls
+  loop: 'Loop',
+  loopOf: '{current} / {total}',
+  addLoop: 'Add Loop',
+  removeLoop: 'Remove Loop',
+  copyLoop: 'Copy Loop',
+  maxLoopsReached: 'Maximum loops reached',
   // Status
   loadedPreset: 'Loaded {preset} preset',
 };
