@@ -1,6 +1,7 @@
-import { memo, useState, useCallback, useRef, useEffect } from 'react';
+import { memo, useState, useCallback, useRef } from 'react';
 import { useTranslations } from '../i18n/context';
-import { cn } from '../utils';
+import { cn, copyToClipboard } from '../utils';
+import { useDropdown, useDropdownToggle } from '../hooks';
 
 interface EmbedButtonProps {
   /** URL to embed (defaults to current page) */
@@ -43,69 +44,15 @@ export const EmbedButton = memo<EmbedButtonProps>(function EmbedButton({
   // Generate iframe code
   const iframeCode = `<iframe src="${embedUrl}" width="${width}" height="${height}" frameborder="0" title="${embedTitle}" allow="autoplay"></iframe>`;
 
-  // Close dropdown on click outside
-  useEffect(() => {
-    if (isOpen) {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen]);
+  const handleClose = useCallback(() => setIsOpen(false), []);
+  useDropdown({ containerRef, buttonRef, isOpen, onClose: handleClose });
 
-  // Close dropdown on scroll
-  useEffect(() => {
-    if (isOpen) {
-      const handleScroll = () => setIsOpen(false);
-      window.addEventListener('scroll', handleScroll, true);
-      return () => window.removeEventListener('scroll', handleScroll, true);
-    }
-  }, [isOpen]);
-
-  // Close dropdown on Escape key
-  useEffect(() => {
-    if (isOpen) {
-      const handleEscape = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          setIsOpen(false);
-          buttonRef.current?.focus();
-        }
-      };
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
-    }
-  }, [isOpen]);
-
-  const handleToggle = useCallback(() => {
-    setIsOpen((prev) => !prev);
-    setCopied(false);
-  }, []);
+  const handleToggle = useDropdownToggle(setIsOpen, setCopied);
 
   const handleCopyCode = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(iframeCode);
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = iframeCode;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    }
+    await copyToClipboard(iframeCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }, [iframeCode]);
 
   const handleWidthChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

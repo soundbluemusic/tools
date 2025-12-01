@@ -1,6 +1,11 @@
 import type { App, AppConfig, AppList } from '../types';
 
 /**
+ * Music app paths - used for navigation grouping
+ */
+export const MUSIC_APP_PATHS = ['/metronome', '/drum', '/drum-synth'] as const;
+
+/**
  * Auto-load apps from src/apps/[name]/config.ts
  *
  * Each app should have a config.ts file with:

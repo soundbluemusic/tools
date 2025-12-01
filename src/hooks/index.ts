@@ -24,3 +24,5 @@ export {
   useId,
 } from './useA11y';
 export { useApps, AppsProvider } from './useApps';
+export { useDropdown, useDropdownToggle } from './useDropdown';
+export { useIsActive } from './useIsActive';
