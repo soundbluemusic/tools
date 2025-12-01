@@ -1,0 +1,9 @@
+/**
+ * UI Components barrel export
+ */
+export { default as Button } from './Button.svelte';
+export { default as Input } from './Input.svelte';
+export { default as Loader } from './Loader.svelte';
+export { default as Select } from './Select.svelte';
+export { default as Skeleton } from './Skeleton.svelte';
+export { default as ThemeIcon } from './ThemeIcon.svelte';

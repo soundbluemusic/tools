@@ -6,5 +6,5 @@
   // This is a pure static site deployment with NO server-side code.
 
   "name": "productivity-tools",
-  "pages_build_output_dir": "./dist"
+  "pages_build_output_dir": "./build"
 }

@@ -1,5 +1,5 @@
 /**
- * Vite Configuration for Frontend-Only PWA
+ * Vite Configuration for SvelteKit Frontend-Only PWA
  *
  * ARCHITECTURE: No Backend
  * - This app is 100% client-side with NO backend server
@@ -8,18 +8,15 @@
  * - Deployed as static files to Cloudflare Pages CDN
  */
 
-import { defineConfig } from 'vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import { sveltekit } from '@sveltejs/kit/vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { defineConfig } from 'vite';
 
-// https://vitejs.dev/config/
-// Cloudflare Pages 최적화 설정
 export default defineConfig(({ mode }) => ({
   plugins: [
-    svelte(),
+    sveltekit(),
     VitePWA({
       registerType: 'autoUpdate',
-      // Defer SW registration to after initial render
       injectRegister: null,
       includeAssets: ['icons/icon.svg'],
       manifest: {
@@ -113,7 +110,6 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
-        // Cache strategies
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
         runtimeCaching: [
           {
@@ -123,7 +119,7 @@ export default defineConfig(({ mode }) => ({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                maxAgeSeconds: 60 * 60 * 24 * 365,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -137,21 +133,7 @@ export default defineConfig(({ mode }) => ({
               cacheName: 'gstatic-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200],
-              },
-            },
-          },
-          {
-            urlPattern: /^https:\/\/soundbluemusic\.com\/.*/i,
-            handler: 'StaleWhileRevalidate',
-            options: {
-              cacheName: 'soundblue-assets-cache',
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                maxAgeSeconds: 60 * 60 * 24 * 365,
               },
               cacheableResponse: {
                 statuses: [0, 200],
@@ -159,9 +141,7 @@ export default defineConfig(({ mode }) => ({
             },
           },
         ],
-        // Clean up outdated caches
         cleanupOutdatedCaches: true,
-        // Skip waiting for faster updates
         skipWaiting: true,
         clientsClaim: true,
       },
@@ -171,105 +151,25 @@ export default defineConfig(({ mode }) => ({
     }),
   ],
   build: {
-    // Target modern browsers for smaller bundles (Cloudflare Edge 호환)
     target: 'esnext',
-    // Use esbuild for fast minification (built-in)
     minify: 'esbuild',
-    // CSS code splitting
     cssCodeSplit: true,
-    // CSS minification target
     cssMinify: 'esbuild',
-    // No source maps in production
     sourcemap: false,
-    // Chunk splitting configuration
-    rollupOptions: {
-      output: {
-        // Manual chunk splitting for optimal Cloudflare CDN caching
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            // Svelte core
-            if (id.includes('svelte')) {
-              return 'svelte-vendor';
-            }
-            // Svelte Router
-            if (id.includes('svelte-routing')) {
-              return 'router-vendor';
-            }
-            // QRious 등 기타 라이브러리
-            if (id.includes('qrious')) {
-              return 'qr-vendor';
-            }
-          }
-        },
-        // Optimize chunk file names with content hash (Cloudflare immutable caching)
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: (assetInfo) => {
-          const ext = assetInfo.name?.split('.').pop() || '';
-          if (/png|jpe?g|svg|gif|webp|ico/i.test(ext)) {
-            return 'assets/img/[name]-[hash][extname]';
-          }
-          if (/css/i.test(ext)) {
-            return 'assets/css/[name]-[hash][extname]';
-          }
-          if (/woff2?|ttf|eot/i.test(ext)) {
-            return 'assets/fonts/[name]-[hash][extname]';
-          }
-          return 'assets/[name]-[hash][extname]';
-        },
-        // ES 모듈 형식 (최신 브라우저 최적화)
-        format: 'es',
-        // 청크 간 공유 코드 최적화
-        compact: true,
-      },
-      // Tree shaking optimization
-      treeshake: {
-        moduleSideEffects: 'no-external',
-        propertyReadSideEffects: false,
-        // 사용되지 않는 export 제거
-        preset: 'recommended',
-      },
-    },
-    // Report compressed size (Brotli/gzip)
-    reportCompressedSize: true,
-    // Chunk size warning limit (Cloudflare Pages 권장)
     chunkSizeWarningLimit: 250,
-    // Asset inline limit - 작은 파일은 인라인 (네트워크 요청 감소)
     assetsInlineLimit: 4096,
-    // 모듈 프리로드 폴리필 비활성화 (최신 브라우저만 지원)
     modulePreload: {
       polyfill: false,
     },
   },
-  // Optimize dependencies
   optimizeDeps: {
-    include: ['svelte', 'svelte-routing'],
-    // Use esbuild for dependency optimization
+    include: ['svelte'],
     esbuildOptions: {
       target: 'es2020',
     },
   },
-  // Development server
-  server: {
-    // Pre-bundle dependencies for faster startup
-    warmup: {
-      clientFiles: ['./src/main.ts', './src/App.svelte'],
-    },
-  },
-  // Preview server config
-  preview: {
-    // Enable caching headers
-    headers: {
-      'Cache-Control': 'public, max-age=31536000',
-    },
-  },
-  // esbuild options
   esbuild: {
-    // Drop console in production
     drop: mode === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none',
-    minifyIdentifiers: true,
-    minifySyntax: true,
-    minifyWhitespace: true,
   },
 }));
