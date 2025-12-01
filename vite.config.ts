@@ -5,7 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 // React Compiler configuration
 // https://react.dev/learn/react-compiler
 const ReactCompilerConfig = {
-  target: '18', // React 18 compatibility
+  target: '19', // React 19
 };
 
 // https://vitejs.dev/config/
