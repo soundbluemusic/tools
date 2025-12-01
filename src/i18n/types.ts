@@ -223,6 +223,68 @@ export interface DrumTranslation {
 }
 
 /**
+ * Drum Synth specific translations
+ */
+export interface DrumSynthTranslation {
+  title: string;
+  description: string;
+  seo: SEOTranslation;
+  // Drum types
+  kick: string;
+  snare: string;
+  hihat: string;
+  clap: string;
+  tom: string;
+  rim: string;
+  // Actions
+  play: string;
+  reset: string;
+  // Parameters
+  parameters: string;
+  master: string;
+  volume: string;
+  // Kick parameters
+  pitchStart: string;
+  pitchEnd: string;
+  pitchDecay: string;
+  ampDecay: string;
+  click: string;
+  drive: string;
+  tone: string;
+  // Snare parameters
+  toneFreq: string;
+  toneDecay: string;
+  noiseDecay: string;
+  noiseFilter: string;
+  toneMix: string;
+  snappy: string;
+  // Hihat parameters
+  filterFreq: string;
+  filterQ: string;
+  decay: string;
+  openness: string;
+  pitch: string;
+  ring: string;
+  // Clap parameters
+  spread: string;
+  reverb: string;
+  // Tom parameters
+  body: string;
+  attack: string;
+  // Rim parameters
+  metallic: string;
+  // Presets
+  presets: string;
+  presetClassic808: string;
+  presetHardTechno: string;
+  presetLofi: string;
+  presetMinimal: string;
+  presetAcoustic: string;
+  // Quick play
+  quickPlay: string;
+}
+
+/**
  * All translations combined
  */
 export interface Translations {
@@ -230,6 +292,7 @@ export interface Translations {
   qr: QRTranslation;
   metronome: MetronomeTranslation;
   drum: DrumTranslation;
+  drumSynth: DrumSynthTranslation;
 }
 
 /**

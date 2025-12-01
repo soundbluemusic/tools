@@ -4,6 +4,7 @@ import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
 import { metronomeKo, metronomeEn } from './translations/metronome';
 import { drumKo, drumEn } from './translations/drum';
+import { drumSynthKo, drumSynthEn } from './translations/drum-synth';
 import { getStorageItem, setStorageItem, createEnumValidator } from '../utils/storage';
 
 /**
@@ -15,12 +16,14 @@ const allTranslations: AllTranslations = {
     qr: qrKo,
     metronome: metronomeKo,
     drum: drumKo,
+    drumSynth: drumSynthKo,
   },
   en: {
     common: commonEn,
     qr: qrEn,
     metronome: metronomeEn,
     drum: drumEn,
+    drumSynth: drumSynthEn,
   },
 };
 
