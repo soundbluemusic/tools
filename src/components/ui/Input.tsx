@@ -63,8 +63,8 @@ export const Input = memo(
             sizeClass,
             error && 'input--error',
             disabled && 'input--disabled',
-            startAdornment && 'input--with-start-adornment',
-            endAdornment && 'input--with-end-adornment',
+            !!startAdornment && 'input--with-start-adornment',
+            !!endAdornment && 'input--with-end-adornment',
             className
           )}
           disabled={disabled}
