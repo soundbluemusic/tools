@@ -21,6 +21,7 @@ import {
   DEFAULT_ALL_PARAMS,
   SYNTH_PRESETS,
 } from '../constants';
+import { exportDrum, exportAllDrums, type ExportFormat } from '../utils/audioExport';
 import './DrumSynth.css';
 
 /**
@@ -101,6 +102,26 @@ const ResetIcon = memo(function ResetIcon() {
 });
 
 /**
+ * Download Icon
+ */
+const DownloadIcon = memo(function DownloadIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+});
+
+/**
  * DrumSynth Component
  * Detailed drum sound synthesis with parameter control
  */
@@ -111,6 +132,11 @@ export const DrumSynth = memo(function DrumSynth() {
   const [selectedDrum, setSelectedDrum] = useState<DrumType>('kick');
   const [params, setParams] = useState<AllDrumParams>(DEFAULT_ALL_PARAMS);
   const [isPlaying, setIsPlaying] = useState<DrumType | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{
+    text: string;
+    type: 'success' | 'error';
+  } | null>(null);
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -631,6 +657,54 @@ export const DrumSynth = memo(function DrumSynth() {
   }, []);
 
   /**
+   * Show status message
+   */
+  const showStatus = useCallback((text: string, type: 'success' | 'error') => {
+    setStatusMessage({ text, type });
+    setTimeout(() => setStatusMessage(null), 3000);
+  }, []);
+
+  /**
+   * Export current drum sound
+   */
+  const handleExport = useCallback(
+    async (format: ExportFormat) => {
+      if (isExporting) return;
+
+      setIsExporting(true);
+      try {
+        await exportDrum(selectedDrum, params, format);
+        showStatus(drumSynth.exportSuccess, 'success');
+      } catch {
+        showStatus(drumSynth.exportError, 'error');
+      } finally {
+        setIsExporting(false);
+      }
+    },
+    [selectedDrum, params, isExporting, drumSynth, showStatus]
+  );
+
+  /**
+   * Export all drum sounds
+   */
+  const handleExportAll = useCallback(
+    async (format: ExportFormat) => {
+      if (isExporting) return;
+
+      setIsExporting(true);
+      try {
+        await exportAllDrums(params, format);
+        showStatus(drumSynth.exportSuccess, 'success');
+      } catch {
+        showStatus(drumSynth.exportError, 'error');
+      } finally {
+        setIsExporting(false);
+      }
+    },
+    [params, isExporting, drumSynth, showStatus]
+  );
+
+  /**
    * Get translated drum name
    */
   const getDrumLabel = useCallback(
@@ -1125,6 +1199,54 @@ export const DrumSynth = memo(function DrumSynth() {
           })}
         </div>
       </div>
+
+      {/* Export Section */}
+      <div className="synth-export">
+        <span className="synth-export-label">{drumSynth.export}</span>
+        <div className="synth-export-buttons">
+          <button
+            className={cn('synth-export-btn', isExporting && 'synth-export-btn--disabled')}
+            onClick={() => handleExport('wav')}
+            disabled={isExporting}
+            title={`${getDrumLabel(selectedDrum)} - ${drumSynth.exportWav}`}
+          >
+            <DownloadIcon />
+            <span>{drumSynth.exportWav}</span>
+          </button>
+          <button
+            className={cn('synth-export-btn', isExporting && 'synth-export-btn--disabled')}
+            onClick={() => handleExport('mp3')}
+            disabled={isExporting}
+            title={`${getDrumLabel(selectedDrum)} - ${drumSynth.exportCompressed}`}
+          >
+            <DownloadIcon />
+            <span>{drumSynth.exportCompressed}</span>
+          </button>
+          <button
+            className={cn(
+              'synth-export-btn',
+              'synth-export-btn--all',
+              isExporting && 'synth-export-btn--disabled'
+            )}
+            onClick={() => handleExportAll('wav')}
+            disabled={isExporting}
+            title={drumSynth.exportAll}
+          >
+            <DownloadIcon />
+            <span>{drumSynth.exportAll}</span>
+          </button>
+        </div>
+        {isExporting && (
+          <div className="synth-export-status">{drumSynth.exporting}</div>
+        )}
+      </div>
+
+      {/* Status Message */}
+      {statusMessage && (
+        <div className={cn('synth-status', `synth-status--${statusMessage.type}`)}>
+          {statusMessage.text}
+        </div>
+      )}
     </div>
   );
 });

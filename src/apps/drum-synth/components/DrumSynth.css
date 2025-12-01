@@ -382,6 +382,127 @@
 }
 
 /* ============================================
+   Export Section
+   ============================================ */
+.synth-export {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem;
+  background: var(--bg-secondary, #f8f9fa);
+  border-radius: 12px;
+}
+
+.synth-export-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-secondary, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.synth-export-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.synth-export-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  flex: 1;
+  min-width: 120px;
+  padding: 0.625rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-color, #333);
+  background: var(--bg-color, #fff);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.synth-export-btn:hover:not(:disabled) {
+  background: var(--item-hover-bg, #f0f0f0);
+  border-color: var(--text-secondary, #999);
+}
+
+.synth-export-btn:focus-visible {
+  outline: 2px solid var(--text-color, #333);
+  outline-offset: 2px;
+}
+
+.synth-export-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.synth-export-btn--all {
+  background: var(--text-color, #333);
+  color: var(--bg-color, #fff);
+  border-color: var(--text-color, #333);
+}
+
+.synth-export-btn--all:hover:not(:disabled) {
+  background: var(--text-secondary, #555);
+  border-color: var(--text-secondary, #555);
+}
+
+.synth-export-btn svg {
+  flex-shrink: 0;
+}
+
+.synth-export-status {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #666);
+  text-align: center;
+  padding: 0.5rem;
+}
+
+/* ============================================
+   Status Message
+   ============================================ */
+.synth-status {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  animation: synth-status-slide-in 0.2s ease-out;
+}
+
+.synth-status--success {
+  background: #22c55e;
+  color: #fff;
+}
+
+.synth-status--error {
+  background: #ef4444;
+  color: #fff;
+}
+
+@keyframes synth-status-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ============================================
    Dark Mode
    ============================================ */
 @media (prefers-color-scheme: dark) {
@@ -465,6 +586,31 @@
 
   .synth-preset-btn:hover {
     background: var(--item-hover-bg, #333);
+  }
+
+  .synth-export {
+    background: var(--bg-secondary, #1a1a1a);
+  }
+
+  .synth-export-btn {
+    color: var(--text-color, #e5e5e5);
+    background: var(--bg-color, #2a2a2a);
+    border-color: var(--border-color, #444);
+  }
+
+  .synth-export-btn:hover:not(:disabled) {
+    background: var(--item-hover-bg, #333);
+  }
+
+  .synth-export-btn--all {
+    background: var(--text-color, #eee);
+    color: var(--bg-color, #1a1a1a);
+    border-color: var(--text-color, #eee);
+  }
+
+  .synth-export-btn--all:hover:not(:disabled) {
+    background: var(--text-secondary, #ccc);
+    border-color: var(--text-secondary, #ccc);
   }
 }
 
@@ -594,6 +740,7 @@
   .synth-pad,
   .synth-preset-btn,
   .synth-reset-btn,
+  .synth-export-btn,
   .synth-param-slider::-webkit-slider-thumb {
     transition: none;
   }
@@ -603,6 +750,10 @@
   .synth-pad:active,
   .synth-pad--playing {
     transform: none;
+  }
+
+  .synth-status {
+    animation: none;
   }
 }
 

@@ -282,6 +282,14 @@ export interface DrumSynthTranslation {
   presetAcoustic: string;
   // Quick play
   quickPlay: string;
+  // Export
+  export: string;
+  exportWav: string;
+  exportCompressed: string;
+  exportAll: string;
+  exporting: string;
+  exportSuccess: string;
+  exportError: string;
 }
 
 /**

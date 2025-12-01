@@ -65,6 +65,14 @@ export const drumSynthKo: DrumSynthTranslation = {
   presetAcoustic: '어쿠스틱',
   // Quick play
   quickPlay: '퀵 플레이',
+  // Export
+  export: '내보내기',
+  exportWav: 'WAV 다운로드',
+  exportCompressed: '압축 파일 다운로드',
+  exportAll: '모든 드럼 내보내기',
+  exporting: '내보내는 중...',
+  exportSuccess: '내보내기 완료',
+  exportError: '내보내기 실패',
 };
 
 /**
@@ -132,4 +140,12 @@ export const drumSynthEn: DrumSynthTranslation = {
   presetAcoustic: 'Acoustic',
   // Quick play
   quickPlay: 'Quick Play',
+  // Export
+  export: 'Export',
+  exportWav: 'Download WAV',
+  exportCompressed: 'Download Compressed',
+  exportAll: 'Export All Drums',
+  exporting: 'Exporting...',
+  exportSuccess: 'Export complete',
+  exportError: 'Export failed',
 };
