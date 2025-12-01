@@ -24,19 +24,7 @@ import {
 import './DrumSynth.css';
 
 /**
- * Drum icons for visual identification
- */
-const DRUM_ICONS: Record<DrumType, string> = {
-  kick: '🔴',
-  snare: '🟠',
-  hihat: '🟡',
-  clap: '👏',
-  tom: '🔵',
-  rim: '🟣',
-};
-
-/**
- * Parameter Slider Component - Enhanced for touch
+ * Parameter Slider Component
  */
 interface ParamSliderProps {
   label: string;
@@ -962,7 +950,7 @@ export const DrumSynth = memo(function DrumSynth() {
 
   return (
     <div className="drum-synth">
-      {/* Quick Play Pads - Prominent at top */}
+      {/* Quick Play Pads */}
       <div className="synth-pads">
         <span className="synth-pads-label">{drumSynth.quickPlay}</span>
         <div className="synth-pads-grid">
@@ -971,14 +959,12 @@ export const DrumSynth = memo(function DrumSynth() {
               key={drum}
               className={cn(
                 'synth-pad',
-                `synth-pad--${drum}`,
                 isPlaying === drum && 'synth-pad--playing'
               )}
               onClick={() => playDrum(drum)}
               aria-label={getDrumLabel(drum)}
             >
-              <span className="synth-pad-icon">{DRUM_ICONS[drum]}</span>
-              <span>{getDrumLabel(drum)}</span>
+              {getDrumLabel(drum)}
             </button>
           ))}
         </div>
@@ -996,8 +982,7 @@ export const DrumSynth = memo(function DrumSynth() {
             )}
             onClick={() => setSelectedDrum(drum)}
           >
-            <span className="synth-drum-icon">{DRUM_ICONS[drum]}</span>
-            <span className="synth-drum-label">{getDrumLabel(drum)}</span>
+            {getDrumLabel(drum)}
           </button>
         ))}
       </div>
@@ -1008,7 +993,7 @@ export const DrumSynth = memo(function DrumSynth() {
         <div className="synth-params">
           <div className="synth-params-header">
             <h3 className="synth-params-title">
-              {DRUM_ICONS[selectedDrum]} {getDrumLabel(selectedDrum)} {drumSynth.parameters}
+              {getDrumLabel(selectedDrum)} {drumSynth.parameters}
             </h3>
             <button
               className="synth-reset-btn"
