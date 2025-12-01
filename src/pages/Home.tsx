@@ -3,11 +3,9 @@ import {
   useState,
   useMemo,
   useCallback,
-  useDeferredValue,
   useTransition,
   useEffect,
 } from 'react';
-import { Link } from 'react-router-dom';
 import { loadApps } from '../constants/apps';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
@@ -93,10 +91,6 @@ const Home = memo(function Home() {
     });
   }, []);
 
-  // Search state with deferred value for smooth typing
-  const [searchQuery, setSearchQuery] = useState('');
-  const deferredSearchQuery = useDeferredValue(searchQuery);
-
   // Sort state with transition for non-blocking updates
   const [sortBy, setSortBy] = useState<SortOption>('name-asc');
   const [isPending, startTransition] = useTransition();
@@ -114,38 +108,10 @@ const Home = memo(function Home() {
     [homeT.sort]
   );
 
-  // Filter and sort apps - only recompute when inputs change
-  const filteredApps = useMemo(() => {
-    let result = apps;
-
-    // Apply search filter (search in both languages for better UX)
-    if (deferredSearchQuery.trim()) {
-      const query = deferredSearchQuery.toLowerCase().trim();
-      result = apps.filter(
-        (app) =>
-          app.name.ko.toLowerCase().includes(query) ||
-          app.name.en.toLowerCase().includes(query) ||
-          app.desc.ko.toLowerCase().includes(query) ||
-          app.desc.en.toLowerCase().includes(query)
-      );
-    }
-
-    // Apply sorting with current language
-    return sortApps(result, sortBy, language);
-  }, [apps, deferredSearchQuery, sortBy, language]);
-
-  // Optimized search handler - immediate state update
-  const handleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    },
-    []
-  );
-
-  // Clear search
-  const handleClearSearch = useCallback(() => {
-    setSearchQuery('');
-  }, []);
+  // Sort apps - only recompute when inputs change
+  const sortedApps = useMemo(() => {
+    return sortApps(apps, sortBy, language);
+  }, [apps, sortBy, language]);
 
   // Sort change with transition for smooth UI
   const handleSortChange = useCallback(
@@ -157,46 +123,17 @@ const Home = memo(function Home() {
     []
   );
 
-  // Check if search is pending
-  const isSearchPending = searchQuery !== deferredSearchQuery;
-
   // Aria label for app list
   const appListAriaLabel = language === 'ko' ? '사용 가능한 도구' : 'Available tools';
 
   return (
-    <main className="container home-page" role="main">
-      {/* Header */}
-      <header className="header">
-        <Link to="/" className="title-link">
-          <h1 className="title">tools <span className="beta-badge">beta</span></h1>
-        </Link>
-
-        {/* Search and Sort Controls */}
-        <div className="controls">
-          {/* Search Input */}
-          <div className="search-container">
-            <input
-              type="search"
-              className="search-input"
-              placeholder={homeT.searchPlaceholder}
-              value={searchQuery}
-              onChange={handleSearchChange}
-              aria-label={homeT.searchAriaLabel}
-              autoComplete="off"
-              spellCheck="false"
-            />
-            {searchQuery && (
-              <button
-                className="search-clear"
-                onClick={handleClearSearch}
-                aria-label={homeT.clearSearchAriaLabel}
-                type="button"
-              >
-                ×
-              </button>
-            )}
-          </div>
-
+    <div className="home-page">
+      {/* Page Header with Controls */}
+      <div className="home-header">
+        <h1 className="home-title">
+          {language === 'ko' ? '모든 도구' : 'All Tools'}
+        </h1>
+        <div className="home-controls">
           {/* Sort Dropdown */}
           <select
             className="sort-dropdown"
@@ -211,25 +148,25 @@ const Home = memo(function Home() {
             ))}
           </select>
         </div>
-      </header>
+      </div>
 
-      {/* App List - Direct render without Suspense */}
+      {/* App Grid */}
       <AppList
-        apps={filteredApps}
-        isPending={isSearchPending || isPending || isLoading}
+        apps={sortedApps}
+        isPending={isPending || isLoading}
         language={language}
         ariaLabel={appListAriaLabel}
       />
 
       {/* No Results Message */}
-      {filteredApps.length === 0 && searchQuery && !isLoading && (
+      {sortedApps.length === 0 && !isLoading && (
         <p className="no-results">
           {language === 'ko'
-            ? `"${searchQuery}"${homeT.noResults}`
-            : `${homeT.noResults} "${searchQuery}"`}
+            ? '도구가 없습니다.'
+            : 'No tools found.'}
         </p>
       )}
-    </main>
+    </div>
   );
 });
 

@@ -46,20 +46,17 @@
   }
 }
 
-/* Base styles with GPU acceleration */
+/* Base styles */
 #root {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile */
-  /* Promote to own layer for smoother scrolling */
-  transform: var(--gpu-transform);
+  /* Note: Do NOT add transform here - it breaks position: fixed for sidebar/header */
 }
 
-/* Container for page content */
+/* Container for page content - Full width */
 .container {
   width: 100%;
-  max-width: 1024px;
-  margin: 0 auto;
   padding: 2rem 1.5rem;
 }
 
@@ -186,13 +183,12 @@
 }
 
 /* ==========================================================================
-   App List - Clean minimal card
+   App List - CSS Grid for uniform spacing
    ========================================================================== */
 .app-list {
-  background: var(--color-bg-secondary, var(--bg-color));
-  border-radius: 12px;
-  border: 1px solid var(--color-border-secondary, transparent);
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
   /* CSS containment for layout isolation - major performance boost */
   contain: content;
   /* GPU layer for smooth scrolling */
@@ -206,53 +202,56 @@
 }
 
 /* ==========================================================================
-   App Item - GPU accelerated hover effects
+   App Item - Card style with uniform height
    ========================================================================== */
 .app-item {
-  display: block;
-  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 16px 20px;
   text-decoration: none;
   color: var(--text-color);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--color-bg-secondary, var(--bg-color));
+  border: 1px solid var(--color-border-secondary, transparent);
+  border-radius: 12px;
   /* CSS containment - isolates repaints */
   contain: layout style paint;
   /* GPU layer for smooth hover */
   transform: var(--gpu-transform);
-  /* Background color transition using pseudo-element for better performance */
   position: relative;
   z-index: 0;
+  transition: border-color var(--transition-fast) ease-out,
+              box-shadow var(--transition-fast) ease-out;
 }
 
-/* Use pseudo-element for background to avoid triggering layout */
-.app-item::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--item-hover-bg);
-  opacity: 0;
-  z-index: -1;
-  transition: opacity var(--transition-fast) ease-out;
+.app-item:hover {
+  border-color: var(--color-border-primary, #ddd);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.app-item:last-child {
-  border-bottom: none;
-}
-
-.app-item:hover::before {
-  opacity: 1;
-}
-
-.app-item:active::before {
-  opacity: 1;
-  background: var(--color-interactive-active, rgba(0, 0, 0, 0.1));
+.app-item:active {
+  box-shadow: none;
 }
 
 .app-item-text {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1.5;
   /* Prevent text from triggering reflow */
   contain: layout style;
+}
+
+/* Single column on smaller screens */
+@media (max-width: 640px) {
+  .app-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .app-item {
+    min-height: 56px;
+    padding: 14px 16px;
+  }
 }
 
 /* No results message */
@@ -357,10 +356,61 @@
 /* Tool page styles moved to src/styles/tool-page.css for code splitting */
 
 /* ==========================================================================
-   Home Page Enter Animation
+   Home Page Styles
    ========================================================================== */
 .home-page {
+  padding: 24px 32px;
   transform: var(--gpu-transform);
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.home-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.home-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    padding: 20px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: 16px;
+  }
+
+  .home-header {
+    margin-bottom: 16px;
+  }
+
+  .home-title {
+    font-size: 1.25rem;
+  }
+
+  .home-controls {
+    width: 100%;
+  }
+
+  .home-controls .sort-dropdown {
+    flex: 1;
+  }
 }
 
 .home-page.entering {
@@ -512,13 +562,14 @@
 }
 
 /* ==========================================================================
-   Footer Styles
+   Footer Styles - Sticky footer that stays at bottom
    ========================================================================== */
 .footer {
-  margin-top: 3rem;
-  padding: 2rem 0;
+  margin-top: auto;
+  padding: 2rem 1.5rem;
   text-align: center;
   border-top: 1px solid var(--border-color);
+  background: var(--color-bg-primary, #fff);
 }
 
 .footer-menu {

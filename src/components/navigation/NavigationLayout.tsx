@@ -1,4 +1,5 @@
 import { memo, useState, useCallback, useEffect } from 'react';
+import { Header } from '../Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { CommandPalette } from './CommandPalette';
@@ -13,7 +14,8 @@ interface NavigationLayoutProps {
 /**
  * Navigation Layout Wrapper
  * Provides responsive navigation structure:
- * - Desktop: Left sidebar (240px, collapsible to 72px)
+ * - Fixed header with logo, search, and controls
+ * - Desktop: Left sidebar (240px)
  * - Mobile/Tablet: Bottom navigation bar (56px + safe area)
  * - Universal: Command palette (Cmd+K)
  *
@@ -26,6 +28,11 @@ export const NavigationLayout = memo(function NavigationLayout({
   children,
 }: NavigationLayoutProps) {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+  // Open command palette
+  const openCommandPalette = useCallback(() => {
+    setIsCommandPaletteOpen(true);
+  }, []);
 
   // Close command palette
   const closeCommandPalette = useCallback(() => {
@@ -57,12 +64,17 @@ export const NavigationLayout = memo(function NavigationLayout({
 
   return (
     <div className="navigation-layout">
+      {/* Fixed Header */}
+      <Header onSearchClick={openCommandPalette} />
+
       {/* Desktop Sidebar - CSS controls visibility */}
       <Sidebar apps={apps} />
 
-      {/* Main Content */}
+      {/* Main Content Wrapper */}
       <div className="navigation-content">
-        {children}
+        <div className="content-wrapper">
+          {children}
+        </div>
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}

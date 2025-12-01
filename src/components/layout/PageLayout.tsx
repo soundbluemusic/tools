@@ -1,19 +1,20 @@
-import { memo, useMemo, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { memo, type ReactNode } from 'react';
 import { cn } from '../../utils';
-import { useTranslations } from '../../i18n/context';
-import { useViewTransition } from '../../hooks/useViewTransition';
+import { Breadcrumb } from '../Breadcrumb';
 import '../../styles/tool-page.css';
+
+interface BreadcrumbItem {
+  label: { ko: string; en: string };
+  href?: string;
+}
 
 interface PageLayoutProps {
   /** Page title */
   title: string;
   /** Page description */
   description?: string;
-  /** Show back link */
-  showBackLink?: boolean;
-  /** Back link URL */
-  backUrl?: string;
+  /** Breadcrumb items */
+  breadcrumb?: BreadcrumbItem[];
   /** Children content */
   children: ReactNode;
   /** Additional class names */
@@ -24,34 +25,21 @@ interface PageLayoutProps {
 
 /**
  * Reusable page layout component for tool pages
- * - Optimized with View Transitions API for smooth navigation
+ * - Includes breadcrumb navigation for better UX
  * - GPU accelerated animations via CSS
  */
 export const PageLayout = memo<PageLayoutProps>(function PageLayout({
   title,
   description,
-  showBackLink = true,
-  backUrl = '/',
+  breadcrumb,
   children,
   className,
   actions,
 }) {
-  const { common } = useTranslations();
-  const { createClickHandler } = useViewTransition();
-
-  // Memoized back click handler using shared View Transition hook
-  const handleBackClick = useMemo(
-    () => createClickHandler(backUrl),
-    [createClickHandler, backUrl]
-  );
-
   return (
-    <main className={cn('container', 'tool-page', className)} role="main">
-      {showBackLink && (
-        <Link to={backUrl} className="back-link" onClick={handleBackClick}>
-          {common.common.backButton}
-        </Link>
-      )}
+    <div className={cn('tool-page', className)}>
+      {/* Breadcrumb Navigation */}
+      {breadcrumb && breadcrumb.length > 0 && <Breadcrumb items={breadcrumb} />}
 
       <header className="tool-header">
         <div className="tool-header-content">
@@ -62,7 +50,7 @@ export const PageLayout = memo<PageLayoutProps>(function PageLayout({
       </header>
 
       <div className="tool-content">{children}</div>
-    </main>
+    </div>
   );
 });
 

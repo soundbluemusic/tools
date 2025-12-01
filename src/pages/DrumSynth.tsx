@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { PageLayout } from '../components/layout';
 import { DrumSynth as DrumSynthComponent } from '../apps/drum-synth/components';
 import { ShareButton } from '../components/ShareButton';
@@ -21,10 +21,21 @@ const DrumSynth = memo(function DrumSynth() {
     canonicalPath: '/drum-synth',
   });
 
+  // Breadcrumb items
+  const breadcrumb = useMemo(
+    () => [
+      { label: { ko: '홈', en: 'Home' }, href: '/' },
+      { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/' },
+      { label: { ko: drumSynth.title, en: drumSynth.title } },
+    ],
+    [drumSynth.title]
+  );
+
   return (
     <PageLayout
       title={drumSynth.title}
       description={drumSynth.description}
+      breadcrumb={breadcrumb}
       actions={
         <>
           <EmbedButton title={drumSynth.title} defaultWidth={500} defaultHeight={700} />

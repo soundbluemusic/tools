@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { PageLayout } from '../components/layout';
 import { DrumMachine } from '../apps/drum/components/DrumMachine';
 import { ShareButton } from '../components/ShareButton';
@@ -20,10 +20,21 @@ const Drum = memo(function Drum() {
     canonicalPath: '/drum',
   });
 
+  // Breadcrumb items
+  const breadcrumb = useMemo(
+    () => [
+      { label: { ko: '홈', en: 'Home' }, href: '/' },
+      { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/' },
+      { label: { ko: drum.title, en: drum.title } },
+    ],
+    [drum.title]
+  );
+
   return (
     <PageLayout
       title={drum.title}
       description={drum.description}
+      breadcrumb={breadcrumb}
       actions={
         <>
           <EmbedButton title={drum.title} defaultWidth={500} defaultHeight={600} />

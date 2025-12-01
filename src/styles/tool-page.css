@@ -3,6 +3,7 @@
    ========================================================================== */
 
 .tool-page {
+  padding: 24px 32px;
   /* GPU layer for page transitions */
   transform: translateZ(0);
   animation: tool-page-enter 0.15s ease-out;
@@ -19,23 +20,6 @@
   }
 }
 
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--text-color);
-  text-decoration: none;
-  padding: 0.5rem 0;
-  margin-bottom: 1rem;
-  opacity: 0.7;
-  transform: translateZ(0);
-  transition: opacity var(--transition-fast) ease-out;
-}
-
-.back-link:hover {
-  opacity: 1;
-}
-
 .tool-header {
   display: flex;
   justify-content: space-between;
@@ -47,10 +31,11 @@
 
 .tool-header-content {
   flex: 1;
+  min-width: 0;
 }
 
 .tool-title {
-  font-size: clamp(1.25rem, 5vw, 1.5rem);
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   color: var(--text-color);
@@ -60,6 +45,14 @@
   color: var(--color-text-secondary, #666);
   margin: 0;
   font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tool-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .tool-content {
@@ -73,9 +66,18 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .tool-page {
+    padding: 20px 24px;
+  }
+
   .tool-header {
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  .tool-actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .tool-content {
@@ -84,13 +86,18 @@
 }
 
 @media (max-width: 480px) {
+  .tool-page {
+    padding: 16px;
+  }
+
   .tool-header {
-    flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 1rem;
   }
 
   .tool-content {
     padding: 1.25rem;
+    border-radius: 8px;
   }
 }
 
