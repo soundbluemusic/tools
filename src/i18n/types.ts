@@ -200,8 +200,26 @@ export interface DrumTranslation {
   presetTrap: string;
   presetBreakbeat: string;
   presetMinimal: string;
+  // Export/Import
+  exportMidi: string;
+  exportSuccess: string;
+  importMidi: string;
+  importSuccess: string;
+  importError: string;
+  // Loop controls
+  loop: string;
+  loopOf: string;
+  addLoop: string;
+  removeLoop: string;
+  copyLoop: string;
+  moveLoopLeft: string;
+  moveLoopRight: string;
+  maxLoopsReached: string;
+  clearAllLoops: string;
   // Status
   loadedPreset: string;
+  // Synthesis info
+  synthesisInfo: string;
 }
 
 /**

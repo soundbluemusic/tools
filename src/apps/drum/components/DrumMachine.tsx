@@ -10,11 +10,16 @@ import {
   AUDIO,
   PRESETS,
   DEFAULT_VOLUMES,
+  MAX_LOOPS,
   createEmptyPattern,
+  createInitialLoops,
+  copyPattern,
   type Instrument,
-  type Pattern,
   type InstrumentVolumes,
+  type MultiLoopPattern,
 } from '../constants';
+import { exportMidi } from '../utils/midiExport';
+import { importMidiFile } from '../utils/midiImport';
 import './DrumMachine.css';
 
 /**
@@ -105,6 +110,159 @@ const ClearIcon = memo(function ClearIcon() {
 });
 
 /**
+ * Download/Export icon SVG
+ */
+const DownloadIcon = memo(function DownloadIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+});
+
+/**
+ * Upload/Import icon SVG
+ */
+const UploadIcon = memo(function UploadIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" y1="3" x2="12" y2="15" />
+    </svg>
+  );
+});
+
+/**
+ * Plus icon SVG for adding loops
+ */
+const PlusIcon = memo(function PlusIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+});
+
+/**
+ * Minus icon SVG for removing loops
+ */
+const MinusIcon = memo(function MinusIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="5" y1="12" x2="19" y2="12" />
+    </svg>
+  );
+});
+
+/**
+ * Copy icon SVG for copying loops
+ */
+const CopyIcon = memo(function CopyIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+});
+
+/**
+ * Chevron left icon SVG
+ */
+const ChevronLeftIcon = memo(function ChevronLeftIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  );
+});
+
+/**
+ * Chevron right icon SVG
+ */
+const ChevronRightIcon = memo(function ChevronRightIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  );
+});
+
+/**
  * DrumMachine Component
  * A 16-step drum sequencer with Web Audio synthesis
  */
@@ -112,27 +270,36 @@ export const DrumMachine = memo(function DrumMachine() {
   const { drum } = useTranslations();
 
   // State
-  const [pattern, setPattern] = useState<Pattern>(createEmptyPattern);
+  const [loops, setLoops] = useState<MultiLoopPattern>(createInitialLoops);
+  const [currentLoopIndex, setCurrentLoopIndex] = useState(0);
   const [tempo, setTempo] = useState<number>(TEMPO_RANGE.DEFAULT);
   const [volumes, setVolumes] = useState<InstrumentVolumes>({ ...DEFAULT_VOLUMES });
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [playingLoopIndex, setPlayingLoopIndex] = useState(0);
   const [statusMessage, setStatusMessage] = useState<{
     text: string;
     type: 'success' | 'error' | 'info';
   } | null>(null);
+  const [dragLoopIndex, setDragLoopIndex] = useState<number | null>(null);
+  const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(null);
+
+  // Derived state: current pattern being edited
+  const pattern = loops[currentLoopIndex];
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
   const schedulerRef = useRef<number | null>(null);
   const nextStepTimeRef = useRef<number>(0);
   const currentStepRef = useRef<number>(0);
-  const patternRef = useRef<Pattern>(pattern);
+  const loopsRef = useRef<MultiLoopPattern>(loops);
+  const currentPlayingLoopRef = useRef<number>(0);
   const tempoRef = useRef<number>(tempo);
   const volumesRef = useRef<InstrumentVolumes>(volumes);
   const isPlayingRef = useRef<boolean>(false);
   const isDraggingRef = useRef(false);
   const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   // Velocity drag refs
   const velocityDragRef = useRef<{
     inst: Instrument;
@@ -144,8 +311,8 @@ export const DrumMachine = memo(function DrumMachine() {
 
   // Keep refs in sync with state
   useEffect(() => {
-    patternRef.current = pattern;
-  }, [pattern]);
+    loopsRef.current = loops;
+  }, [loops]);
 
   useEffect(() => {
     tempoRef.current = tempo;
@@ -288,8 +455,9 @@ export const DrumMachine = memo(function DrumMachine() {
    * Schedule sounds for upcoming steps using Web Audio timing
    */
   const scheduleStep = useCallback(
-    (stepIndex: number, time: number) => {
-      const currentPattern = patternRef.current;
+    (stepIndex: number, loopIndex: number, time: number) => {
+      const currentPattern = loopsRef.current[loopIndex];
+      if (!currentPattern) return;
       INSTRUMENTS.forEach((inst) => {
         const velocity = currentPattern[inst][stepIndex];
         if (velocity > 0) {
@@ -313,17 +481,27 @@ export const DrumMachine = memo(function DrumMachine() {
 
     // Schedule all notes that fall within the look-ahead window
     while (nextStepTimeRef.current < ctx.currentTime + scheduleAheadTime) {
-      scheduleStep(currentStepRef.current, nextStepTimeRef.current);
+      scheduleStep(currentStepRef.current, currentPlayingLoopRef.current, nextStepTimeRef.current);
 
-      // Update visual step (use setTimeout for UI sync)
+      // Update visual step and loop (use setTimeout for UI sync)
       const stepToShow = currentStepRef.current;
+      const loopToShow = currentPlayingLoopRef.current;
       const timeUntilStep = (nextStepTimeRef.current - ctx.currentTime) * 1000;
       setTimeout(() => {
         setCurrentStep(stepToShow);
+        setPlayingLoopIndex(loopToShow);
       }, Math.max(0, timeUntilStep));
 
       // Advance to next step
-      currentStepRef.current = (currentStepRef.current + 1) % STEPS;
+      currentStepRef.current = currentStepRef.current + 1;
+
+      // Check if we need to advance to next loop
+      if (currentStepRef.current >= STEPS) {
+        currentStepRef.current = 0;
+        currentPlayingLoopRef.current =
+          (currentPlayingLoopRef.current + 1) % loopsRef.current.length;
+      }
+
       nextStepTimeRef.current += stepDuration;
     }
 
@@ -369,6 +547,8 @@ export const DrumMachine = memo(function DrumMachine() {
     isPlayingRef.current = false;
     setCurrentStep(0);
     currentStepRef.current = 0;
+    setPlayingLoopIndex(0);
+    currentPlayingLoopRef.current = 0;
     if (schedulerRef.current) {
       cancelAnimationFrame(schedulerRef.current);
       schedulerRef.current = null;
@@ -376,21 +556,43 @@ export const DrumMachine = memo(function DrumMachine() {
   }, []);
 
   /**
-   * Clear pattern
+   * Show status message
    */
-  const clear = useCallback(() => {
-    setPattern(createEmptyPattern());
-  }, []);
+  const showStatus = useCallback(
+    (text: string, type: 'success' | 'error' | 'info') => {
+      setStatusMessage({ text, type });
+      setTimeout(() => setStatusMessage(null), 3000);
+    },
+    []
+  );
 
   /**
-   * Set a step velocity value
+   * Clear all loops and reset to initial state
+   */
+  const clear = useCallback(() => {
+    // If multiple loops exist, show warning message
+    if (loops.length > 1) {
+      showStatus(drum.clearAllLoops, 'info');
+    }
+    // Reset to single empty loop
+    setLoops(createInitialLoops());
+    setCurrentLoopIndex(0);
+    setPlayingLoopIndex(0);
+    currentPlayingLoopRef.current = 0;
+  }, [loops.length, drum.clearAllLoops, showStatus]);
+
+  /**
+   * Set a step velocity value in current loop
    */
   const setStepVelocity = useCallback((inst: Instrument, step: number, velocity: number) => {
-    setPattern((prev) => ({
-      ...prev,
-      [inst]: prev[inst].map((val, i) => (i === step ? velocity : val)),
-    }));
-  }, []);
+    setLoops((prev) => {
+      const newLoops = [...prev];
+      const newPattern = { ...newLoops[currentLoopIndex] };
+      newPattern[inst] = newPattern[inst].map((val, i) => (i === step ? velocity : val));
+      newLoops[currentLoopIndex] = newPattern;
+      return newLoops;
+    });
+  }, [currentLoopIndex]);
 
   /**
    * Handle drag start on a step
@@ -549,35 +751,182 @@ export const DrumMachine = memo(function DrumMachine() {
   }, [handleMouseMove, setStepVelocity]);
 
   /**
-   * Show status message
-   */
-  const showStatus = useCallback(
-    (text: string, type: 'success' | 'error' | 'info') => {
-      setStatusMessage({ text, type });
-      setTimeout(() => setStatusMessage(null), 3000);
-    },
-    []
-  );
-
-  /**
-   * Load a preset
+   * Load a preset into current loop
    */
   const loadPreset = useCallback(
     (presetName: string) => {
       const preset = PRESETS[presetName];
       if (preset) {
-        setPattern({
-          kick: [...preset.kick],
-          snare: [...preset.snare],
-          hihat: [...preset.hihat],
-          openhat: [...preset.openhat],
-          clap: [...preset.clap],
+        setLoops((prev) => {
+          const newLoops = [...prev];
+          newLoops[currentLoopIndex] = copyPattern(preset);
+          return newLoops;
         });
         showStatus(drum.loadedPreset.replace('{preset}', presetName), 'success');
       }
     },
-    [drum.loadedPreset, showStatus]
+    [currentLoopIndex, drum.loadedPreset, showStatus]
   );
+
+  /**
+   * Export all loops as MIDI file
+   */
+  const handleExportMidi = useCallback(() => {
+    exportMidi({
+      loops,
+      tempo,
+      filename: 'drum-pattern',
+    });
+    showStatus(drum.exportSuccess, 'success');
+  }, [loops, tempo, drum.exportSuccess, showStatus]);
+
+  /**
+   * Trigger file input for MIDI import
+   */
+  const handleImportClick = useCallback(() => {
+    fileInputRef.current?.click();
+  }, []);
+
+  /**
+   * Handle MIDI file import
+   */
+  const handleFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const result = await importMidiFile(file);
+
+      if (result) {
+        // Import into current loop
+        setLoops((prev) => {
+          const newLoops = [...prev];
+          newLoops[currentLoopIndex] = result.pattern;
+          return newLoops;
+        });
+        setTempo(result.tempo);
+        showStatus(drum.importSuccess, 'success');
+      } else {
+        showStatus(drum.importError, 'error');
+      }
+
+      // Reset input so same file can be selected again
+      e.target.value = '';
+    },
+    [currentLoopIndex, drum.importSuccess, drum.importError, showStatus]
+  );
+
+  /**
+   * Add a new empty loop
+   */
+  const addLoop = useCallback(() => {
+    if (loops.length >= MAX_LOOPS) {
+      showStatus(drum.maxLoopsReached, 'error');
+      return;
+    }
+    setLoops((prev) => [...prev, createEmptyPattern()]);
+    setCurrentLoopIndex(loops.length);
+  }, [loops.length, drum.maxLoopsReached, showStatus]);
+
+  /**
+   * Copy current loop and add as new loop
+   */
+  const copyCurrentLoop = useCallback(() => {
+    if (loops.length >= MAX_LOOPS) {
+      showStatus(drum.maxLoopsReached, 'error');
+      return;
+    }
+    setLoops((prev) => [...prev, copyPattern(prev[currentLoopIndex])]);
+    setCurrentLoopIndex(loops.length);
+  }, [loops.length, currentLoopIndex, drum.maxLoopsReached, showStatus]);
+
+  /**
+   * Remove current loop
+   */
+  const removeCurrentLoop = useCallback(() => {
+    if (loops.length <= 1) return; // Keep at least one loop
+    setLoops((prev) => prev.filter((_, i) => i !== currentLoopIndex));
+    setCurrentLoopIndex((prev) => (prev > 0 ? prev - 1 : 0));
+  }, [loops.length, currentLoopIndex]);
+
+  /**
+   * Move current loop left (swap with previous)
+   */
+  const moveLoopLeft = useCallback(() => {
+    if (currentLoopIndex <= 0) return;
+    setLoops((prev) => {
+      const newLoops = [...prev];
+      [newLoops[currentLoopIndex - 1], newLoops[currentLoopIndex]] =
+        [newLoops[currentLoopIndex], newLoops[currentLoopIndex - 1]];
+      return newLoops;
+    });
+    setCurrentLoopIndex((prev) => prev - 1);
+  }, [currentLoopIndex]);
+
+  /**
+   * Move current loop right (swap with next)
+   */
+  const moveLoopRight = useCallback(() => {
+    if (currentLoopIndex >= loops.length - 1) return;
+    setLoops((prev) => {
+      const newLoops = [...prev];
+      [newLoops[currentLoopIndex], newLoops[currentLoopIndex + 1]] =
+        [newLoops[currentLoopIndex + 1], newLoops[currentLoopIndex]];
+      return newLoops;
+    });
+    setCurrentLoopIndex((prev) => prev + 1);
+  }, [currentLoopIndex, loops.length]);
+
+  /**
+   * Handle loop drag start
+   */
+  const handleLoopDragStart = useCallback((index: number) => {
+    setDragLoopIndex(index);
+  }, []);
+
+  /**
+   * Handle loop drag over
+   */
+  const handleLoopDragOver = useCallback((index: number) => {
+    if (dragLoopIndex !== null && dragLoopIndex !== index) {
+      setDragOverLoopIndex(index);
+    }
+  }, [dragLoopIndex]);
+
+  /**
+   * Handle loop drag end - reorder loops
+   */
+  const handleLoopDragEnd = useCallback(() => {
+    if (dragLoopIndex !== null && dragOverLoopIndex !== null && dragLoopIndex !== dragOverLoopIndex) {
+      setLoops((prev) => {
+        const newLoops = [...prev];
+        const [draggedLoop] = newLoops.splice(dragLoopIndex, 1);
+        newLoops.splice(dragOverLoopIndex, 0, draggedLoop);
+        return newLoops;
+      });
+      // Update current loop index if needed
+      if (currentLoopIndex === dragLoopIndex) {
+        setCurrentLoopIndex(dragOverLoopIndex);
+      } else if (
+        dragLoopIndex < currentLoopIndex && dragOverLoopIndex >= currentLoopIndex
+      ) {
+        setCurrentLoopIndex((prev) => prev - 1);
+      } else if (
+        dragLoopIndex > currentLoopIndex && dragOverLoopIndex <= currentLoopIndex
+      ) {
+        setCurrentLoopIndex((prev) => prev + 1);
+      }
+    }
+    setDragLoopIndex(null);
+    setDragOverLoopIndex(null);
+  }, [dragLoopIndex, dragOverLoopIndex, currentLoopIndex]);
+
+  /**
+   * Handle loop drag leave
+   */
+  const handleLoopDragLeave = useCallback(() => {
+    setDragOverLoopIndex(null);
+  }, []);
 
   /**
    * Handle tempo change
@@ -678,6 +1027,30 @@ export const DrumMachine = memo(function DrumMachine() {
             <ClearIcon />
             <span>{drum.clear}</span>
           </button>
+          <button
+            className="drum-btn drum-btn--export"
+            onClick={handleExportMidi}
+            aria-label={drum.exportMidi}
+          >
+            <DownloadIcon />
+            <span>{drum.exportMidi}</span>
+          </button>
+          <button
+            className="drum-btn drum-btn--import"
+            onClick={handleImportClick}
+            aria-label={drum.importMidi}
+          >
+            <UploadIcon />
+            <span>{drum.importMidi}</span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".mid,.midi,audio/midi,audio/x-midi"
+            onChange={handleFileChange}
+            style={{ display: 'none' }}
+            aria-hidden="true"
+          />
         </div>
 
         <div className="drum-tempo">
@@ -691,7 +1064,95 @@ export const DrumMachine = memo(function DrumMachine() {
             onChange={handleTempoChange}
             aria-label={drum.tempo}
           />
-          <span className="drum-tempo-value">{tempo} BPM</span>
+          <span className="drum-tempo-value">
+            {tempo} BPM
+            <span className="drum-tempo-duration">
+              {loops.length > 1 && `x${loops.length} `}
+              ({((240 / tempo) * loops.length).toFixed(1)}s)
+            </span>
+          </span>
+        </div>
+      </div>
+
+      {/* Loop Controls */}
+      <div className="drum-loop-controls">
+        <div className="drum-loop-row">
+          <span className="drum-loop-label">{drum.loop}</span>
+          <div className="drum-loop-blocks">
+            {loops.map((_, index) => (
+              <button
+                key={index}
+                className={cn(
+                  'drum-loop-block',
+                  index === currentLoopIndex && 'drum-loop-block--selected',
+                  isPlaying && index === playingLoopIndex && 'drum-loop-block--playing',
+                  dragLoopIndex === index && 'drum-loop-block--dragging',
+                  dragOverLoopIndex === index && 'drum-loop-block--drag-over'
+                )}
+                draggable
+                onDragStart={() => handleLoopDragStart(index)}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  handleLoopDragOver(index);
+                }}
+                onDragLeave={handleLoopDragLeave}
+                onDragEnd={handleLoopDragEnd}
+                onDrop={handleLoopDragEnd}
+                onClick={() => setCurrentLoopIndex(index)}
+                aria-label={`${drum.loop} ${index + 1}`}
+                title={`${drum.loop} ${index + 1}`}
+              >
+                {index + 1}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="drum-loop-actions">
+          <button
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={moveLoopLeft}
+            disabled={currentLoopIndex <= 0}
+            aria-label={drum.moveLoopLeft}
+            title={drum.moveLoopLeft}
+          >
+            <ChevronLeftIcon />
+          </button>
+          <button
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={moveLoopRight}
+            disabled={currentLoopIndex >= loops.length - 1}
+            aria-label={drum.moveLoopRight}
+            title={drum.moveLoopRight}
+          >
+            <ChevronRightIcon />
+          </button>
+          <button
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={addLoop}
+            disabled={loops.length >= MAX_LOOPS}
+            aria-label={drum.addLoop}
+            title={drum.addLoop}
+          >
+            <PlusIcon />
+          </button>
+          <button
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={copyCurrentLoop}
+            disabled={loops.length >= MAX_LOOPS}
+            aria-label={drum.copyLoop}
+            title={drum.copyLoop}
+          >
+            <CopyIcon />
+          </button>
+          <button
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={removeCurrentLoop}
+            disabled={loops.length <= 1}
+            aria-label={drum.removeLoop}
+            title={drum.removeLoop}
+          >
+            <MinusIcon />
+          </button>
         </div>
       </div>
 
@@ -771,6 +1232,11 @@ export const DrumMachine = memo(function DrumMachine() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Synthesis Info */}
+      <div className="drum-synthesis-info">
+        {drum.synthesisInfo}
       </div>
 
       {/* Status Message */}

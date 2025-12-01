@@ -3,6 +3,8 @@
  */
 
 export const STEPS = 16;
+export const MAX_LOOPS = 8;
+export const DEFAULT_LOOP_COUNT = 1;
 
 export const INSTRUMENTS = ['kick', 'snare', 'hihat', 'openhat', 'clap'] as const;
 export type Instrument = (typeof INSTRUMENTS)[number];
@@ -122,5 +124,30 @@ export function createEmptyPattern(): Pattern {
     hihat: new Array(STEPS).fill(0),
     openhat: new Array(STEPS).fill(0),
     clap: new Array(STEPS).fill(0),
+  };
+}
+
+/**
+ * Multi-loop pattern type (array of patterns)
+ */
+export type MultiLoopPattern = Pattern[];
+
+/**
+ * Create initial multi-loop pattern with one empty loop
+ */
+export function createInitialLoops(): MultiLoopPattern {
+  return [createEmptyPattern()];
+}
+
+/**
+ * Deep copy a pattern
+ */
+export function copyPattern(pattern: Pattern): Pattern {
+  return {
+    kick: [...pattern.kick],
+    snare: [...pattern.snare],
+    hihat: [...pattern.hihat],
+    openhat: [...pattern.openhat],
+    clap: [...pattern.clap],
   };
 }
