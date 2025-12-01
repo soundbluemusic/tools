@@ -212,7 +212,10 @@ export interface DrumTranslation {
   addLoop: string;
   removeLoop: string;
   copyLoop: string;
+  moveLoopLeft: string;
+  moveLoopRight: string;
   maxLoopsReached: string;
+  clearAllLoops: string;
   // Status
   loadedPreset: string;
 }

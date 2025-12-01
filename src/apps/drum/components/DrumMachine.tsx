@@ -554,15 +554,30 @@ export const DrumMachine = memo(function DrumMachine() {
   }, []);
 
   /**
-   * Clear current loop pattern
+   * Show status message
+   */
+  const showStatus = useCallback(
+    (text: string, type: 'success' | 'error' | 'info') => {
+      setStatusMessage({ text, type });
+      setTimeout(() => setStatusMessage(null), 3000);
+    },
+    []
+  );
+
+  /**
+   * Clear all loops and reset to initial state
    */
   const clear = useCallback(() => {
-    setLoops((prev) => {
-      const newLoops = [...prev];
-      newLoops[currentLoopIndex] = createEmptyPattern();
-      return newLoops;
-    });
-  }, [currentLoopIndex]);
+    // If multiple loops exist, show warning message
+    if (loops.length > 1) {
+      showStatus(drum.clearAllLoops, 'info');
+    }
+    // Reset to single empty loop
+    setLoops(createInitialLoops());
+    setCurrentLoopIndex(0);
+    setPlayingLoopIndex(0);
+    currentPlayingLoopRef.current = 0;
+  }, [loops.length, drum.clearAllLoops, showStatus]);
 
   /**
    * Set a step velocity value in current loop
@@ -734,17 +749,6 @@ export const DrumMachine = memo(function DrumMachine() {
   }, [handleMouseMove, setStepVelocity]);
 
   /**
-   * Show status message
-   */
-  const showStatus = useCallback(
-    (text: string, type: 'success' | 'error' | 'info') => {
-      setStatusMessage({ text, type });
-      setTimeout(() => setStatusMessage(null), 3000);
-    },
-    []
-  );
-
-  /**
    * Load a preset into current loop
    */
   const loadPreset = useCallback(
@@ -811,20 +815,6 @@ export const DrumMachine = memo(function DrumMachine() {
   );
 
   /**
-   * Navigate to previous loop
-   */
-  const goToPrevLoop = useCallback(() => {
-    setCurrentLoopIndex((prev) => (prev > 0 ? prev - 1 : loops.length - 1));
-  }, [loops.length]);
-
-  /**
-   * Navigate to next loop
-   */
-  const goToNextLoop = useCallback(() => {
-    setCurrentLoopIndex((prev) => (prev < loops.length - 1 ? prev + 1 : 0));
-  }, [loops.length]);
-
-  /**
    * Add a new empty loop
    */
   const addLoop = useCallback(() => {
@@ -856,6 +846,34 @@ export const DrumMachine = memo(function DrumMachine() {
     setLoops((prev) => prev.filter((_, i) => i !== currentLoopIndex));
     setCurrentLoopIndex((prev) => (prev > 0 ? prev - 1 : 0));
   }, [loops.length, currentLoopIndex]);
+
+  /**
+   * Move current loop left (swap with previous)
+   */
+  const moveLoopLeft = useCallback(() => {
+    if (currentLoopIndex <= 0) return;
+    setLoops((prev) => {
+      const newLoops = [...prev];
+      [newLoops[currentLoopIndex - 1], newLoops[currentLoopIndex]] =
+        [newLoops[currentLoopIndex], newLoops[currentLoopIndex - 1]];
+      return newLoops;
+    });
+    setCurrentLoopIndex((prev) => prev - 1);
+  }, [currentLoopIndex]);
+
+  /**
+   * Move current loop right (swap with next)
+   */
+  const moveLoopRight = useCallback(() => {
+    if (currentLoopIndex >= loops.length - 1) return;
+    setLoops((prev) => {
+      const newLoops = [...prev];
+      [newLoops[currentLoopIndex], newLoops[currentLoopIndex + 1]] =
+        [newLoops[currentLoopIndex + 1], newLoops[currentLoopIndex]];
+      return newLoops;
+    });
+    setCurrentLoopIndex((prev) => prev + 1);
+  }, [currentLoopIndex, loops.length]);
 
   /**
    * Handle tempo change
@@ -999,26 +1017,43 @@ export const DrumMachine = memo(function DrumMachine() {
 
       {/* Loop Controls */}
       <div className="drum-loop-controls">
-        <div className="drum-loop-nav">
+        <span className="drum-loop-label">{drum.loop}</span>
+        <div className="drum-loop-blocks">
+          {loops.map((_, index) => (
+            <button
+              key={index}
+              className={cn(
+                'drum-loop-block',
+                index === currentLoopIndex && 'drum-loop-block--selected',
+                isPlaying && index === playingLoopIndex && 'drum-loop-block--playing'
+              )}
+              onClick={() => setCurrentLoopIndex(index)}
+              aria-label={`${drum.loop} ${index + 1}`}
+              title={`${drum.loop} ${index + 1}`}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <div className="drum-loop-actions">
           <button
-            className="drum-loop-btn"
-            onClick={goToPrevLoop}
-            aria-label="Previous loop"
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={moveLoopLeft}
+            disabled={currentLoopIndex <= 0}
+            aria-label={drum.moveLoopLeft}
+            title={drum.moveLoopLeft}
           >
             <ChevronLeftIcon />
           </button>
-          <span className={cn('drum-loop-indicator', isPlaying && playingLoopIndex === currentLoopIndex && 'drum-loop-indicator--playing')}>
-            {drum.loop} {drum.loopOf.replace('{current}', String(currentLoopIndex + 1)).replace('{total}', String(loops.length))}
-          </span>
           <button
-            className="drum-loop-btn"
-            onClick={goToNextLoop}
-            aria-label="Next loop"
+            className="drum-loop-btn drum-loop-btn--action"
+            onClick={moveLoopRight}
+            disabled={currentLoopIndex >= loops.length - 1}
+            aria-label={drum.moveLoopRight}
+            title={drum.moveLoopRight}
           >
             <ChevronRightIcon />
           </button>
-        </div>
-        <div className="drum-loop-actions">
           <button
             className="drum-loop-btn drum-loop-btn--action"
             onClick={addLoop}

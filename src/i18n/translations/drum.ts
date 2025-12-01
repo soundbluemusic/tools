@@ -43,7 +43,10 @@ export const drumKo: DrumTranslation = {
   addLoop: '루프 추가',
   removeLoop: '루프 삭제',
   copyLoop: '루프 복사',
+  moveLoopLeft: '루프 왼쪽으로 이동',
+  moveLoopRight: '루프 오른쪽으로 이동',
   maxLoopsReached: '최대 루프 수에 도달했습니다',
+  clearAllLoops: '모든 루프가 초기화됩니다',
   // Status
   loadedPreset: '{preset} 프리셋을 불러왔습니다',
 };
@@ -91,7 +94,10 @@ export const drumEn: DrumTranslation = {
   addLoop: 'Add Loop',
   removeLoop: 'Remove Loop',
   copyLoop: 'Copy Loop',
+  moveLoopLeft: 'Move loop left',
+  moveLoopRight: 'Move loop right',
   maxLoopsReached: 'Maximum loops reached',
+  clearAllLoops: 'All loops will be cleared',
   // Status
   loadedPreset: 'Loaded {preset} preset',
 };
