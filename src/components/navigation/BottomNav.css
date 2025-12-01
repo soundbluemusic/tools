@@ -1,30 +1,27 @@
 /**
- * Mobile Bottom Navigation (YouTube Style)
- * Fixed at bottom, always visible on mobile
+ * Bottom Navigation - Mobile Only
+ * Fixed at bottom with safe area support
  */
 
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-
-  height: 56px;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-
-  background: #fff;
-  border-top: 1px solid #e5e5e5;
+  display: none;
 }
 
-/* Hide on desktop */
-@media (min-width: 1024px) {
+/* Mobile: Show bottom nav */
+@media (max-width: 1023px) {
   .bottom-nav {
-    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: #fff;
+    border-top: 1px solid #e5e5e5;
   }
 }
 
@@ -35,12 +32,9 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  height: 100%;
-  padding: 8px 0;
-
+  height: 56px;
   color: #606060;
   text-decoration: none;
-
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -52,17 +46,16 @@
 .bottom-nav-icon {
   width: 24px;
   height: 24px;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 /* Label */
 .bottom-nav-label {
   font-size: 10px;
   font-weight: 500;
-  line-height: 1;
 }
 
-/* Dark mode */
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .bottom-nav {
     background: #0f0f0f;

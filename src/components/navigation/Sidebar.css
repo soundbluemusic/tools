@@ -1,59 +1,46 @@
 /**
- * Desktop Sidebar Navigation (YouTube/OpenAI Style)
- *
- * NOT position: fixed - instead uses flexbox in parent container
- * This allows proper layout without margin hacks
+ * Sidebar - Desktop Only
+ * Hidden on mobile, fixed width on desktop
  */
 
 .sidebar {
-  /* Flex properties - fixed width, no grow/shrink */
-  flex: 0 0 240px;
-  width: 240px;
-
-  /* Hidden on mobile/tablet */
   display: none;
-
-  /* Internal layout */
-  flex-direction: column;
-
-  /* Styling */
-  background: #fff;
-  border-right: 1px solid #e5e5e5;
-
-  /* Scrollable when content overflows */
-  overflow-y: auto;
-  overflow-x: hidden;
 }
 
-/* Show on desktop */
+/* Desktop: Show sidebar */
 @media (min-width: 1024px) {
   .sidebar {
     display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 240px;
+    height: 100%;
+    background: #fff;
+    border-right: 1px solid #e5e5e5;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
-/* Navigation container */
+/* Navigation */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: 8px 12px;
+  padding: 8px;
 }
 
 /* Navigation Item */
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 0 12px;
+  gap: 16px;
   height: 40px;
-
+  padding: 0 12px;
+  border-radius: 8px;
   color: #0f0f0f;
   text-decoration: none;
   font-size: 14px;
-  font-weight: 400;
-  border-radius: 10px;
-
-  transition: background-color 150ms ease;
+  transition: background-color 100ms;
 }
 
 .sidebar-item:hover {
@@ -61,7 +48,7 @@
 }
 
 .sidebar-item.active {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.1);
   font-weight: 600;
 }
 
@@ -77,12 +64,10 @@
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  line-height: 1;
 }
 
 /* Label */
 .sidebar-label {
-  flex: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -91,42 +76,35 @@
 /* Divider */
 .sidebar-divider {
   height: 1px;
-  margin: 12px 0;
+  margin: 8px 0;
   background: #e5e5e5;
 }
 
 /* Section Title */
 .sidebar-section-title {
-  padding: 16px 12px 8px;
+  padding: 12px 12px 4px;
   color: #606060;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Custom Scrollbar */
+/* Scrollbar - only show on hover */
 .sidebar::-webkit-scrollbar {
-  width: 8px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
+  width: 6px;
 }
 
 .sidebar::-webkit-scrollbar-thumb {
   background: transparent;
+  border-radius: 3px;
 }
 
 .sidebar:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.15);
 }
 
-/* ============================================
-   Dark Mode
-   ============================================ */
-
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   .sidebar {
     background: #0f0f0f;
@@ -142,7 +120,7 @@
   }
 
   .sidebar-item.active {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
   }
 
   .sidebar-divider {
@@ -154,7 +132,7 @@
   }
 
   .sidebar:hover::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
   }
 }
 
@@ -172,7 +150,7 @@
 }
 
 [data-theme="dark"] .sidebar-item.active {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 [data-theme="dark"] .sidebar-divider {
@@ -181,14 +159,4 @@
 
 [data-theme="dark"] .sidebar-section-title {
   color: #aaa;
-}
-
-/* ============================================
-   Reduced Motion
-   ============================================ */
-
-@media (prefers-reduced-motion: reduce) {
-  .sidebar-item {
-    transition: none;
-  }
 }

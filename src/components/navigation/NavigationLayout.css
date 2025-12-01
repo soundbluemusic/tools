@@ -1,65 +1,52 @@
 /**
- * Navigation Layout (YouTube/OpenAI Style)
- *
- * Desktop: Full-height flex container with sidebar + scrollable content
- * Mobile: Normal flow with fixed bottom navigation
+ * Navigation Layout - Full Responsive
+ * Mobile: Full width content + fixed bottom nav
+ * Desktop: Sidebar + scrollable content
  */
 
-/* Root layout container */
 .navigation-layout {
   display: flex;
-  flex-direction: column;
+  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
 }
 
-/* Desktop: Side-by-side layout */
+/* Mobile: Stack vertically */
+@media (max-width: 1023px) {
+  .navigation-layout {
+    flex-direction: column;
+  }
+}
+
+/* Desktop: Side by side */
 @media (min-width: 1024px) {
   .navigation-layout {
     flex-direction: row;
     height: 100vh;
     height: 100dvh;
-    overflow: hidden; /* Prevent body scroll on desktop */
+    overflow: hidden;
   }
 }
 
-/* Main Content Area */
+/* Main Content */
 .navigation-content {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   min-width: 0;
+  width: 100%;
 }
 
-/* Desktop: Scrollable content area */
-@media (min-width: 1024px) {
-  .navigation-content {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-}
-
-/* Mobile: Account for bottom navigation */
+/* Mobile: Add space for bottom nav */
 @media (max-width: 1023px) {
   .navigation-content {
     padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   }
 }
 
-/* Ensure main content fills available space */
-.navigation-content > main {
-  flex: 1;
-}
-
-/* Ensure footer stays at bottom */
-.navigation-content > footer {
-  margin-top: auto;
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .navigation-layout,
+/* Desktop: Scrollable content */
+@media (min-width: 1024px) {
   .navigation-content {
-    transition: none;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 }
