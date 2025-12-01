@@ -2,9 +2,10 @@ import js from '@eslint/js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import svelte from 'eslint-plugin-svelte';
+import svelteParser from 'svelte-eslint-parser';
 
 export default tseslint.config(
-  { ignores: ['dist', '.svelte-kit'] },
+  { ignores: ['dist', '.svelte-kit', 'node_modules'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,js}'],
@@ -20,6 +21,10 @@ export default tseslint.config(
     },
     languageOptions: {
       globals: globals.browser,
+      parser: svelteParser,
+      parserOptions: {
+        parser: tseslint.parser,
+      },
     },
     rules: {
       ...svelte.configs.recommended.rules,

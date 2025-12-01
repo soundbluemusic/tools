@@ -4,7 +4,7 @@
   import '../styles/tool-page.css';
 </script>
 
-<main class="container tool-page" role="main">
+<main class="container tool-page">
   <div class="not-found">
     <h1 class="not-found-code">404</h1>
     <h2 class="not-found-title">페이지를 찾을 수 없습니다</h2>

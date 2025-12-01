@@ -15,7 +15,6 @@
   use:link
   class="app-item"
   aria-label="{name} - {desc}"
-  role="listitem"
 >
   <span class="app-item-text">{name}</span>
 </a>

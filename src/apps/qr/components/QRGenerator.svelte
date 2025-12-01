@@ -235,8 +235,9 @@
         <h2>{qr.urlInput}</h2>
 
         <div class="qr-input-group">
-          <label>{qr.urlLabel}</label>
+          <label for="qr-url-input">{qr.urlLabel}</label>
           <input
+            id="qr-url-input"
             type="text"
             bind:value={url}
             on:input={handleUrlInput}
