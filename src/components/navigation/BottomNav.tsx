@@ -1,6 +1,8 @@
 import { memo } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
+import { useIsActive } from '../../hooks';
+import { MUSIC_APP_PATHS } from '../../constants/apps';
 import './BottomNav.css';
 
 /**
@@ -11,16 +13,9 @@ import './BottomNav.css';
  */
 export const BottomNav = memo(function BottomNav() {
   const { language } = useLanguage();
-  const location = useLocation();
+  const { isActive, pathname } = useIsActive();
 
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
-
-  const isMusicActive = ['/metronome', '/drum', '/drum-synth'].some(p =>
-    location.pathname.startsWith(p)
-  );
+  const isMusicActive = MUSIC_APP_PATHS.some(p => pathname.startsWith(p));
 
   return (
     <nav className="bottom-nav">

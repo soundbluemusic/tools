@@ -2,13 +2,24 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// React Compiler configuration
+// https://react.dev/learn/react-compiler
+const ReactCompilerConfig = {
+  target: '18', // React 18 compatibility
+};
+
 // https://vitejs.dev/config/
-// Cloudflare Pages 최적화 설정
+// Cloudflare Pages 최적화 설정 + React Compiler (자동 메모이제이션)
 export default defineConfig(({ mode }) => ({
   plugins: [
     react({
       // Use automatic JSX runtime for smaller bundles
       jsxRuntime: 'automatic',
+      // Enable React Compiler for automatic memoization
+      // Replaces manual memo(), useMemo(), useCallback()
+      babel: {
+        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
+      },
     }),
     VitePWA({
       registerType: 'autoUpdate',

@@ -1,6 +1,7 @@
-import { memo, useState, useCallback, useRef, useEffect } from 'react';
+import { memo, useState, useCallback, useRef } from 'react';
 import { useTranslations } from '../i18n/context';
-import { cn } from '../utils';
+import { cn, copyToClipboard } from '../utils';
+import { useDropdown, useDropdownToggle } from '../hooks';
 
 interface ShareButtonProps {
   /** URL to share (defaults to current page) */
@@ -36,72 +37,18 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
   const shareTitle = title || (typeof document !== 'undefined' ? document.title : '');
   const shareText = description || shareTitle;
 
-  // Close dropdown on click outside
-  useEffect(() => {
-    if (isOpen) {
-      const handleClickOutside = (event: MouseEvent) => {
-        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-          setIsOpen(false);
-        }
-      };
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isOpen]);
+  const handleClose = useCallback(() => setIsOpen(false), []);
+  useDropdown({ containerRef, buttonRef, isOpen, onClose: handleClose });
 
-  // Close dropdown on scroll (standard UX pattern)
-  useEffect(() => {
-    if (isOpen) {
-      const handleScroll = () => setIsOpen(false);
-      window.addEventListener('scroll', handleScroll, true);
-      return () => window.removeEventListener('scroll', handleScroll, true);
-    }
-  }, [isOpen]);
-
-  // Close dropdown on Escape key
-  useEffect(() => {
-    if (isOpen) {
-      const handleEscape = (event: KeyboardEvent) => {
-        if (event.key === 'Escape') {
-          setIsOpen(false);
-          buttonRef.current?.focus();
-        }
-      };
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
-    }
-  }, [isOpen]);
-
-  const handleToggle = useCallback(() => {
-    setIsOpen((prev) => !prev);
-    setCopied(false);
-  }, []);
-
+  const handleToggle = useDropdownToggle(setIsOpen, setCopied);
 
   const handleCopyLink = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setIsOpen(false);
-      }, 1500);
-    } catch {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = shareUrl;
-      textArea.style.position = 'fixed';
-      textArea.style.opacity = '0';
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => {
-        setCopied(false);
-        setIsOpen(false);
-      }, 1500);
-    }
+    await copyToClipboard(shareUrl);
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+      setIsOpen(false);
+    }, 1500);
   }, [shareUrl]);
 
   const handleNativeShare = useCallback(async () => {

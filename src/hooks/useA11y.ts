@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useId as useReactId } from 'react';
 
 /**
  * Accessibility utilities and hooks
@@ -169,15 +169,9 @@ export function usePrefersReducedMotion(): boolean {
 
 /**
  * Generate unique ID for accessibility
+ * Wrapper around React 18's useId with optional prefix
  */
-let idCounter = 0;
 export function useId(prefix = 'a11y'): string {
-  const idRef = useRef<string | null>(null);
-
-  if (idRef.current === null) {
-    idCounter += 1;
-    idRef.current = `${prefix}-${idCounter}`;
-  }
-
-  return idRef.current;
+  const reactId = useReactId();
+  return `${prefix}${reactId}`;
 }

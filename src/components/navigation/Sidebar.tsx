@@ -1,6 +1,8 @@
-import { memo } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { memo, useMemo } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
+import { useIsActive } from '../../hooks';
+import { MUSIC_APP_PATHS } from '../../constants/apps';
 import type { App } from '../../types';
 import './Sidebar.css';
 
@@ -16,22 +18,13 @@ interface SidebarProps {
  */
 export const Sidebar = memo(function Sidebar({ apps }: SidebarProps) {
   const { language } = useLanguage();
-  const location = useLocation();
+  const { isActive } = useIsActive();
 
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
-
-  // Get music apps
-  const musicApps = apps.filter(app =>
-    ['/metronome', '/drum', '/drum-synth'].includes(app.url)
-  );
-
-  // Get other apps
-  const otherApps = apps.filter(app =>
-    !['/metronome', '/drum', '/drum-synth'].includes(app.url)
-  );
+  // Memoize filtered apps
+  const { musicApps, otherApps } = useMemo(() => ({
+    musicApps: apps.filter(app => (MUSIC_APP_PATHS as readonly string[]).includes(app.url)),
+    otherApps: apps.filter(app => !(MUSIC_APP_PATHS as readonly string[]).includes(app.url)),
+  }), [apps]);
 
   return (
     <aside className="sidebar">
