@@ -1,9 +1,9 @@
 /// <reference types="vitest" />
 import { defineConfig } from 'vite';
-import { svelte } from '@sveltejs/vite-plugin-svelte';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [svelte({ hot: !process.env.VITEST })],
+  plugins: [react()],
   test: {
     // Use jsdom for DOM environment
     environment: 'jsdom',
@@ -12,20 +12,25 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
 
     // Test file patterns
-    include: ['src/**/*.{test,spec}.{ts,svelte}'],
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
 
     // Coverage configuration
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['src/**/*.{ts,svelte}'],
+      include: ['src/**/*.{ts,tsx}'],
       exclude: [
-        'src/**/*.test.{ts,svelte}',
-        'src/**/*.spec.{ts,svelte}',
+        'src/**/*.test.{ts,tsx}',
+        'src/**/*.spec.{ts,tsx}',
         'src/test/**',
         'src/types/**',
         'src/**/*.d.ts',
       ],
+    },
+
+    // Type checking
+    typecheck: {
+      enabled: true,
     },
 
     // Global test settings
