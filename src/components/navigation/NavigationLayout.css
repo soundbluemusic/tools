@@ -1,9 +1,8 @@
 /**
- * Navigation Layout - Full Responsive with Fixed Header
+ * Navigation Layout - Full Width with Fixed Header & Sidebar
  * - Fixed header at top
- * - Fixed sidebar on desktop
- * - Centered main content with max-width
- * - Sticky footer
+ * - Fixed sidebar on desktop (position: fixed)
+ * - Full width content area
  */
 
 .navigation-layout {
@@ -24,14 +23,12 @@
   padding-top: 56px; /* Header height */
 }
 
-/* Content Wrapper - Centered with max-width */
+/* Content Wrapper - Full width */
 .content-wrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   padding: 0 24px;
 }
 
@@ -48,30 +45,20 @@
 
 /* Desktop: Sidebar layout */
 @media (min-width: 1024px) {
-  .navigation-layout {
-    flex-direction: row;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-
   .navigation-content {
-    height: 100%;
+    margin-left: 240px; /* Sidebar width */
     overflow-y: auto;
     overflow-x: hidden;
-    margin-left: 240px; /* Sidebar width */
   }
 
   .content-wrapper {
-    max-width: 960px;
     padding: 0 32px;
   }
 }
 
-/* Large screens: Wider content */
+/* Large screens */
 @media (min-width: 1440px) {
   .content-wrapper {
-    max-width: 1100px;
     padding: 0 48px;
   }
 }

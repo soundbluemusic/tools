@@ -55,11 +55,9 @@
   transform: var(--gpu-transform);
 }
 
-/* Container for page content */
+/* Container for page content - Full width */
 .container {
   width: 100%;
-  max-width: 1024px;
-  margin: 0 auto;
   padding: 2rem 1.5rem;
 }
 
