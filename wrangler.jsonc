@@ -8,22 +8,6 @@
   // Pages 빌드 출력 디렉토리 (React/Vite)
   "pages_build_output_dir": "./dist",
 
-  // Pages 정적 자산 설정
-  "assets": {
-    "directory": "./dist",
-    // HTML 처리 최적화
-    "html_handling": "auto-trailing-slash",
-    // 404 페이지 처리
-    "not_found_handling": "single-page-application"
-  },
-
-  // 빌드 설정
-  "build": {
-    "command": "npm run build",
-    "cwd": ".",
-    "watch_dir": "src"
-  },
-
   // 개발 서버 설정
   "dev": {
     "port": 8788,
