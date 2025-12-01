@@ -46,13 +46,12 @@
   }
 }
 
-/* Base styles with GPU acceleration */
+/* Base styles */
 #root {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh; /* Dynamic viewport height for mobile */
-  /* Promote to own layer for smoother scrolling */
-  transform: var(--gpu-transform);
+  /* Note: Do NOT add transform here - it breaks position: fixed for sidebar/header */
 }
 
 /* Container for page content - Full width */

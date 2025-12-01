@@ -6,13 +6,7 @@
  * Layout Components
  * ============================================ */
 
-/* Root container */
-#root {
-  width: 100%;
-  max-width: var(--container-lg);
-  margin: 0 auto;
-  padding: var(--spacing-8) var(--spacing-6);
-}
+/* Note: #root styles moved to App.css for full-width layout support */
 
 /* Container sizes */
 .container { max-width: var(--container-md); margin: 0 auto; }
@@ -603,18 +597,7 @@
  * Tablet Responsive (768px - 1024px)
  * ============================================ */
 
-@media (max-width: 1024px) {
-  #root {
-    max-width: var(--container-md);
-    padding: var(--spacing-6) var(--spacing-5);
-  }
-}
-
 @media (max-width: 768px) {
-  #root {
-    padding: var(--spacing-5) var(--spacing-4);
-  }
-
   .header {
     margin-bottom: var(--spacing-5);
   }
@@ -643,10 +626,6 @@
  * ============================================ */
 
 @media (max-width: 480px) {
-  #root {
-    padding: var(--spacing-4) var(--spacing-3);
-  }
-
   .header {
     margin-bottom: var(--spacing-4);
   }
@@ -718,10 +697,6 @@
  * ============================================ */
 
 @media (max-width: 360px) {
-  #root {
-    padding: var(--spacing-3) var(--spacing-2);
-  }
-
   .app-item {
     padding: var(--spacing-3);
   }
