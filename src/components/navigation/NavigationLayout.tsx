@@ -1,5 +1,4 @@
 import { memo, useState, useCallback, useEffect } from 'react';
-import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { CommandPalette } from './CommandPalette';
@@ -17,13 +16,16 @@ interface NavigationLayoutProps {
  * - Desktop: Left sidebar (240px, collapsible to 72px)
  * - Mobile/Tablet: Bottom navigation bar (56px + safe area)
  * - Universal: Command palette (Cmd+K)
+ *
+ * Note: Both sidebar and bottom nav are always rendered,
+ * CSS handles visibility based on viewport size.
+ * This prevents hydration mismatches and flickering.
  */
 export const NavigationLayout = memo(function NavigationLayout({
   apps,
   children,
 }: NavigationLayoutProps) {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   // Open command palette
   const openCommandPalette = useCallback(() => {
@@ -60,20 +62,16 @@ export const NavigationLayout = memo(function NavigationLayout({
 
   return (
     <div className="navigation-layout">
-      {/* Desktop Sidebar */}
-      {isDesktop && (
-        <Sidebar apps={apps} onSearchClick={openCommandPalette} />
-      )}
+      {/* Desktop Sidebar - CSS controls visibility */}
+      <Sidebar apps={apps} onSearchClick={openCommandPalette} />
 
       {/* Main Content */}
       <div className="navigation-content">
         {children}
       </div>
 
-      {/* Mobile Bottom Navigation */}
-      {!isDesktop && (
-        <BottomNav onSearchClick={openCommandPalette} />
-      )}
+      {/* Mobile Bottom Navigation - CSS controls visibility */}
+      <BottomNav onSearchClick={openCommandPalette} />
 
       {/* Command Palette (Universal) */}
       <CommandPalette
