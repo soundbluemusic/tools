@@ -77,6 +77,9 @@ export type DeepReadonly<T> = T extends object
   ? { readonly [P in keyof T]: DeepReadonly<T[P]> }
   : T;
 
+/** Extract props type from a component */
+export type PropsOf<C> = C extends React.ComponentType<infer P> ? P : never;
+
 /** Make all properties nullable */
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
@@ -87,9 +90,19 @@ export type Nullable<T> = { [P in keyof T]: T[P] | null };
 /** Base props for all components */
 export interface BaseComponentProps {
   /** Additional class names */
-  class?: string;
+  className?: string;
   /** Test ID for testing */
   'data-testid'?: string;
+}
+
+/** Props with children */
+export interface WithChildren {
+  children: React.ReactNode;
+}
+
+/** Props with optional children */
+export interface WithOptionalChildren {
+  children?: React.ReactNode;
 }
 
 // ============================================
@@ -148,20 +161,22 @@ export function createAsyncState<T>(): AsyncState<T> {
 }
 
 // ============================================
-// Event Types (Svelte compatible)
+// Event Types
 // ============================================
 
 /** Mouse event handler */
-export type MouseEventHandler = (e: MouseEvent) => void;
+export type MouseEventHandler<T = HTMLElement> = React.MouseEventHandler<T>;
 
 /** Keyboard event handler */
-export type KeyboardEventHandler = (e: KeyboardEvent) => void;
+export type KeyboardEventHandler<T = HTMLElement> =
+  React.KeyboardEventHandler<T>;
 
-/** Input event handler */
-export type InputEventHandler = (e: Event) => void;
+/** Change event handler */
+export type ChangeEventHandler<T = HTMLInputElement> =
+  React.ChangeEventHandler<T>;
 
 /** Focus event handler */
-export type FocusEventHandler = (e: FocusEvent) => void;
+export type FocusEventHandler<T = HTMLElement> = React.FocusEventHandler<T>;
 
 /** Form event handler */
-export type FormEventHandler = (e: SubmitEvent) => void;
+export type FormEventHandler<T = HTMLFormElement> = React.FormEventHandler<T>;
