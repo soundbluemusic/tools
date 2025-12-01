@@ -14,7 +14,7 @@
 
 ## Project Overview
 
-**Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
+**Productivity Tools** is a Svelte 5 + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
 
 **Current Tools:**
 - Metronome (`/metronome`) - Music tempo tool
@@ -33,14 +33,14 @@
 
 | Category | Technology | Version |
 |----------|-----------|---------|
-| Framework | React | ^18.3.1 |
-| Routing | React Router DOM | ^7.9.6 |
+| Framework | Svelte | ^5.33.0 |
+| Routing | svelte-routing | ^2.13.0 |
 | Language | TypeScript | ^5.5.3 |
 | Build Tool | Vite | ^6.4.1 |
-| Unit Testing | Vitest + React Testing Library | ^3.2.4 |
+| Unit Testing | Vitest + Svelte Testing Library | ^3.2.4 |
 | E2E Testing | Playwright | ^1.48.0 |
-| Linting | ESLint | ^9.9.0 |
-| Formatting | Prettier | ^3.4.2 |
+| Linting | ESLint + eslint-plugin-svelte | ^9.9.0 |
+| Formatting | Prettier + prettier-plugin-svelte | ^3.4.2 |
 | PWA | vite-plugin-pwa | ^1.2.0 |
 | Deployment | Cloudflare Pages | - |
 
@@ -57,60 +57,53 @@ src/
 │       ├── components/      # App-specific components
 │       └── utils/           # App-specific utilities
 │
-├── components/              # Shared React components
+├── components/              # Shared Svelte components
 │   ├── layout/              # Layout components (Container, Layout, PageLayout)
 │   ├── navigation/          # Navigation system
-│   │   ├── Sidebar.tsx      # Desktop sidebar navigation
-│   │   ├── BottomNav.tsx    # Mobile bottom navigation
-│   │   ├── CommandPalette.tsx # Cmd+K quick navigation
-│   │   └── NavigationLayout.tsx # Main navigation wrapper
+│   │   ├── Sidebar.svelte      # Desktop sidebar navigation
+│   │   ├── BottomNav.svelte    # Mobile bottom navigation
+│   │   ├── CommandPalette.svelte # Cmd+K quick navigation
+│   │   └── NavigationLayout.svelte # Main navigation wrapper
 │   ├── ui/                  # Primitive UI components
-│   │   ├── Button.tsx       # Button with variants
-│   │   ├── Input.tsx        # Input field
-│   │   ├── Select.tsx       # Select dropdown
-│   │   ├── Loader.tsx       # Loading spinner
-│   │   └── Skeleton.tsx     # Skeleton loading states
-│   ├── AppCard.tsx          # App card with hover prefetch
-│   ├── AppGrid.tsx          # Memoized grid container
-│   ├── AppList.tsx          # List view for apps
-│   ├── AppItem.tsx          # Individual app item
-│   ├── Breadcrumb.tsx       # Page breadcrumb navigation
-│   ├── Header.tsx           # Page header component
-│   ├── Footer.tsx           # Site footer
-│   ├── ErrorBoundary.tsx    # Error catching with HOC wrapper
-│   ├── LanguageToggle.tsx   # Language switch button
-│   ├── ThemeToggle.tsx      # Dark/Light mode toggle
-│   ├── SkipLink.tsx         # Accessibility skip navigation
-│   ├── ShareButton.tsx      # Social sharing button
-│   └── EmbedButton.tsx      # Embed code generator
+│   │   ├── Button.svelte       # Button with variants
+│   │   ├── Input.svelte        # Input field
+│   │   ├── Select.svelte       # Select dropdown
+│   │   ├── Loader.svelte       # Loading spinner
+│   │   └── Skeleton.svelte     # Skeleton loading states
+│   ├── AppCard.svelte          # App card with hover prefetch
+│   ├── AppGrid.svelte          # Grid container
+│   ├── AppList.svelte          # List view for apps
+│   ├── AppItem.svelte          # Individual app item
+│   ├── Breadcrumb.svelte       # Page breadcrumb navigation
+│   ├── Header.svelte           # Page header component
+│   ├── Footer.svelte           # Site footer
+│   ├── ErrorBoundary.svelte    # Error catching component
+│   ├── LanguageToggle.svelte   # Language switch button
+│   ├── ThemeToggle.svelte      # Dark/Light mode toggle
+│   ├── SkipLink.svelte         # Accessibility skip navigation
+│   ├── ShareButton.svelte      # Social sharing button
+│   └── EmbedButton.svelte      # Embed code generator
 │
 ├── pages/                   # Route page components
-│   ├── Home.tsx             # Main dashboard with search/sort
-│   ├── Metronome.tsx
-│   ├── Drum.tsx
-│   ├── DrumSynth.tsx
-│   ├── QR.tsx
-│   ├── Sitemap.tsx
-│   ├── OpenSource.tsx
-│   ├── ToolsUsed.tsx
-│   ├── Privacy.tsx
-│   ├── Terms.tsx
-│   └── NotFound.tsx
+│   ├── Home.svelte             # Main dashboard with search/sort
+│   ├── Metronome.svelte
+│   ├── Drum.svelte
+│   ├── DrumSynth.svelte
+│   ├── QR.svelte
+│   ├── Sitemap.svelte
+│   ├── OpenSource.svelte
+│   ├── ToolsUsed.svelte
+│   ├── Privacy.svelte
+│   ├── Terms.svelte
+│   └── NotFound.svelte
 │
-├── hooks/                   # Custom React hooks
-│   ├── useSearch.ts         # Searchable lists with deferred value
-│   ├── useSort.ts           # Sorting logic
-│   ├── useDebounce.ts       # Debounce utility
-│   ├── useLocalStorage.ts   # localStorage persistence + cross-tab sync
-│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useIsMobile, useReducedMotion)
-│   ├── useTheme.tsx         # Theme context (ThemeProvider)
-│   ├── useApps.tsx          # Apps context (AppsProvider) for lazy-loaded apps
-│   ├── useSEO.ts            # SEO meta tags management
-│   ├── useViewTransition.ts # View Transitions API support
-│   └── useA11y.ts           # Accessibility hooks (useFocusTrap, useArrowNavigation, useAnnounce)
+├── stores/                  # Svelte stores (state management)
+│   ├── theme.ts             # Theme store (dark/light/system mode)
+│   ├── language.ts          # Language store (i18n)
+│   ├── apps.ts              # Apps store (app list management)
+│   └── index.ts             # Barrel export
 │
 ├── i18n/                    # Internationalization
-│   ├── context.tsx          # Language context provider
 │   ├── types.ts             # Translation type definitions
 │   ├── index.ts             # Barrel export
 │   └── translations/        # Translation files
@@ -143,12 +136,11 @@ src/
 │   └── components.css       # Component styles
 │
 ├── test/                    # Testing utilities
-│   ├── setup.ts             # Vitest setup (mocks browser APIs)
-│   └── test-utils.tsx       # Custom render functions
+│   └── setup.ts             # Vitest setup (mocks browser APIs)
 │
-├── App.tsx                  # Root component with routing
+├── App.svelte               # Root component with routing
 ├── App.css                  # App-level styles
-└── main.tsx                 # React app entry point
+└── main.ts                  # Svelte app entry point
 
 scripts/                     # Build utilities
 ├── generate-icons.mjs       # Generate PWA icons
@@ -183,12 +175,10 @@ const config: AppConfig = {
 
 export default config;
 ```
-3. Create page component in `src/pages/[AppName].tsx`
-4. Add lazy import and route in `src/App.tsx`:
-```tsx
-const MyApp = lazy(() => import('./pages/MyApp'));
-// In ROUTES array:
-{ path: '/my-app', element: <MyApp />, lazy: true },
+3. Create page component in `src/pages/[AppName].svelte`
+4. Add route in `src/App.svelte`:
+```svelte
+<Route path="/my-app" component={MyApp} />
 ```
 5. Add translations in `src/i18n/translations/my-app.ts`
 
@@ -200,16 +190,16 @@ The app uses a responsive navigation system:
 - **Mobile (<768px)**: Bottom navigation bar
 - **Command Palette**: Cmd/Ctrl+K for quick navigation
 
-```tsx
-// NavigationLayout wraps all content
-<NavigationLayout apps={apps}>
-  <main>{/* content */}</main>
+```svelte
+<!-- NavigationLayout wraps all content -->
+<NavigationLayout apps={$apps}>
+  <main>{@render children()}</main>
 </NavigationLayout>
 ```
 
 ### 3. Internationalization (i18n)
 
-- Context-based system with localStorage persistence
+- Store-based system with localStorage persistence
 - Supports Korean (ko) and English (en)
 - Auto-detects browser language on first visit
 - Language toggle button in header
@@ -224,13 +214,12 @@ export const translations = {
 ```
 
 **Usage:**
-```tsx
-import { useLanguage } from '../i18n';
+```svelte
+<script lang="ts">
+  import { language, t } from '../stores';
+</script>
 
-function MyComponent() {
-  const { language, t } = useLanguage();
-  return <span>{t.common.myKey}</span>;
-}
+<span>{$t.common.myKey}</span>
 ```
 
 ### 4. Theme System
@@ -240,22 +229,20 @@ function MyComponent() {
 - System preference detection with manual override
 - Persisted in localStorage
 
-```tsx
-import { useTheme } from '../hooks';
-
-function ThemeExample() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  // theme: 'system' | 'light' | 'dark'
-  // resolvedTheme: 'light' | 'dark' (actual applied theme)
-}
+```svelte
+<script lang="ts">
+  import { theme, setTheme, resolvedTheme } from '../stores';
+  // $theme: 'system' | 'light' | 'dark'
+  // $resolvedTheme: 'light' | 'dark' (actual applied theme)
+</script>
 ```
 
 ### 5. Component Patterns
 
-- **Memoization**: Use `memo()`, `useMemo()`, `useCallback()` for performance
-- **Error Boundaries**: Wrap feature components with `withErrorBoundary` HOC
+- **Reactivity**: Svelte's built-in reactivity handles state changes automatically
+- **Error Handling**: Use ErrorBoundary component for error catching
 - **UI Components**: Use primitives from `src/components/ui/`
-- **Lazy Loading**: Tool pages are lazy-loaded for code splitting
+- **Stores**: Use Svelte stores for shared state management
 
 ### 6. Styling
 
@@ -345,23 +332,22 @@ npm run convert-webp     # Convert images to WebP format
 - Export types from `src/types/index.ts`
 - Use `type` imports: `import type { App } from '../types'`
 
-### React
-- Functional components only (no class components)
-- Automatic JSX runtime (no `import React` needed)
-- Prefer `memo()` for components receiving stable props
-- Use custom hooks for reusable logic
-- Wrap pages in `Suspense` for lazy loading
+### Svelte
+- Use `<script lang="ts">` for TypeScript in components
+- Use Svelte stores for shared state
+- Use `$:` reactive statements for derived values
+- Use `onMount`, `onDestroy` for lifecycle
 
 ### File Naming
-- Components: `PascalCase.tsx`
-- Hooks: `useCamelCase.ts`
+- Components: `PascalCase.svelte`
+- Stores: `camelCase.ts`
 - Utilities: `camelCase.ts`
-- Tests: `*.test.ts` or `*.test.tsx`
+- Tests: `*.test.ts`
 - CSS: `ComponentName.css` (co-located with component)
 
 ### Imports
 - Use relative imports within modules
-- Group imports: React > Third-party > Local components > Local utils/hooks > Types > CSS
+- Group imports: Svelte > Third-party > Local components > Local stores/utils > Types > CSS
 
 ### Formatting (Prettier)
 - 80 character line width
@@ -373,18 +359,18 @@ npm run convert-webp     # Convert images to WebP format
 ## Testing Guidelines
 
 ### Unit Tests (Vitest)
-- **Framework**: Vitest + React Testing Library
+- **Framework**: Vitest + Svelte Testing Library
 - **Test location**: Co-locate with source files (`*.test.ts`)
 - **Setup file**: `src/test/setup.ts` (mocks matchMedia, ResizeObserver, IntersectionObserver)
 
 ```typescript
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/svelte';
 import { describe, it, expect } from 'vitest';
-import { MyComponent } from './MyComponent';
+import MyComponent from './MyComponent.svelte';
 
 describe('MyComponent', () => {
   it('renders correctly', () => {
-    render(<MyComponent />);
+    render(MyComponent);
     expect(screen.getByText('Expected text')).toBeInTheDocument();
   });
 });
@@ -397,13 +383,11 @@ describe('MyComponent', () => {
 
 ## Performance Considerations
 
-1. **Code Splitting**: Tool pages are lazy-loaded with `React.lazy()`
-2. **Vendor Chunks**: React, React Router, and QRious separated
-3. **Prefetching**: App cards prefetch on hover
-4. **CSS Containment**: Use `contain: layout style` for isolation
-5. **Memoization**: Prevent unnecessary re-renders with `memo()`, `useMemo()`, `useCallback()`
-6. **Deferred Values**: Use `useDeferredValue` for search inputs
-7. **PWA Caching**: Service Worker caches assets for offline use
+1. **Vendor Chunks**: Svelte runtime and QRious separated
+2. **Prefetching**: App cards prefetch on hover
+3. **CSS Containment**: Use `contain: layout style` for isolation
+4. **Svelte Reactivity**: Built-in fine-grained reactivity, no manual memoization needed
+5. **PWA Caching**: Service Worker caches assets for offline use
 
 ## Build Configuration
 
@@ -434,23 +418,23 @@ describe('MyComponent', () => {
 1. Create app folder: `src/apps/my-tool/`
 2. Add `config.ts` with bilingual metadata (including `order` for positioning)
 3. Create components in `src/apps/my-tool/components/`
-4. Create page: `src/pages/MyTool.tsx`
-5. Add lazy import and route in `src/App.tsx`
+4. Create page: `src/pages/MyTool.svelte`
+5. Add route in `src/App.svelte`
 6. Add translations in `src/i18n/translations/my-tool.ts`
 
 ### Adding a New UI Component
 
-1. Create in `src/components/ui/ComponentName.tsx`
+1. Create in `src/components/ui/ComponentName.svelte`
 2. Create co-located styles: `src/components/ui/ComponentName.css`
 3. Export from `src/components/ui/index.ts`
-4. Add tests in `src/components/ui/ComponentName.test.tsx`
+4. Add tests in `src/components/ui/ComponentName.test.ts`
 
 ### Adding Translations
 
 1. Create/update file in `src/i18n/translations/`
 2. Define both `ko` and `en` keys
-3. Import and merge in `src/i18n/context.tsx` if new file
-4. Use via `useLanguage()` hook
+3. Import and merge in `src/stores/language.ts` if new file
+4. Use via `import { t } from '../stores'` and `$t`
 
 ### Updating Theme Colors
 
@@ -460,16 +444,15 @@ describe('MyComponent', () => {
 
 ## Important Notes for AI Assistants
 
-1. **No React import needed**: JSX runtime is automatic
+1. **Use Svelte syntax**: Components use `.svelte` files with `<script lang="ts">`
 2. **Use existing UI components**: Check `src/components/ui/` before creating new ones
-3. **Memoize appropriately**: Performance is prioritized
+3. **Use stores for state**: Shared state uses Svelte stores in `src/stores/`
 4. **Maintain i18n**: Add translations for both KO and EN with bilingual config
 5. **Follow existing patterns**: Check similar files for conventions
 6. **Run validation before commits**: `npm run validate`
 7. **Keep chunks small**: Monitor bundle size (250KB warning threshold)
 8. **Test browser APIs**: Mock in `src/test/setup.ts` if needed
-9. **Use lazy loading**: New tool pages should be lazy-loaded
-10. **Respect theme system**: Use CSS variables, not hard-coded colors
-11. **PWA awareness**: App works offline; test Service Worker behavior
-12. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
-13. **NO BACKEND**: Never add backend code, API endpoints, or server dependencies. This is a frontend-only application designed for offline use. All data must be handled client-side (localStorage, IndexedDB, or in-memory).
+9. **Respect theme system**: Use CSS variables, not hard-coded colors
+10. **PWA awareness**: App works offline; test Service Worker behavior
+11. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
+12. **NO BACKEND**: Never add backend code, API endpoints, or server dependencies. This is a frontend-only application designed for offline use. All data must be handled client-side (localStorage, IndexedDB, or in-memory).
