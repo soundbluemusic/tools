@@ -286,8 +286,9 @@ export const DrumMachine = memo(function DrumMachine() {
   const [dragLoopIndex, setDragLoopIndex] = useState<number | null>(null);
   const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(null);
 
-  // Derived state: current pattern being edited
-  const pattern = loops[currentLoopIndex];
+  // Derived state: which loop to display (playing loop during playback, editing loop otherwise)
+  const displayLoopIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
+  const pattern = loops[displayLoopIndex];
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -586,17 +587,18 @@ export const DrumMachine = memo(function DrumMachine() {
   }, [loops.length, drum.clearAllLoops, showStatus]);
 
   /**
-   * Set a step velocity value in current loop
+   * Set a step velocity value in displayed loop (follows playback during play)
    */
   const setStepVelocity = useCallback((inst: Instrument, step: number, velocity: number) => {
     setLoops((prev) => {
+      const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
       const newLoops = [...prev];
-      const newPattern = { ...newLoops[currentLoopIndex] };
+      const newPattern = { ...newLoops[targetIndex] };
       newPattern[inst] = newPattern[inst].map((val, i) => (i === step ? velocity : val));
-      newLoops[currentLoopIndex] = newPattern;
+      newLoops[targetIndex] = newPattern;
       return newLoops;
     });
-  }, [currentLoopIndex]);
+  }, [currentLoopIndex, isPlaying, playingLoopIndex]);
 
   /**
    * Handle drag start on a step
