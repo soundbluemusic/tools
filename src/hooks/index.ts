@@ -23,3 +23,4 @@ export {
   usePrefersReducedMotion,
   useId,
 } from './useA11y';
+export { useApps, AppsProvider } from './useApps';

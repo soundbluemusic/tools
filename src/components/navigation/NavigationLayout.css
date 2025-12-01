@@ -1,0 +1,52 @@
+/**
+ * Navigation Layout - Full Responsive
+ * Mobile: Full width content + fixed bottom nav
+ * Desktop: Sidebar + scrollable content
+ */
+
+.navigation-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Mobile: Stack vertically */
+@media (max-width: 1023px) {
+  .navigation-layout {
+    flex-direction: column;
+  }
+}
+
+/* Desktop: Side by side */
+@media (min-width: 1024px) {
+  .navigation-layout {
+    flex-direction: row;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+}
+
+/* Main Content */
+.navigation-content {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Mobile: Add space for bottom nav */
+@media (max-width: 1023px) {
+  .navigation-content {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* Desktop: Scrollable content */
+@media (min-width: 1024px) {
+  .navigation-content {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

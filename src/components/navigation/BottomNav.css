@@ -1,0 +1,85 @@
+/**
+ * Bottom Navigation - Mobile Only
+ * Fixed at bottom with safe area support
+ */
+
+.bottom-nav {
+  display: none;
+}
+
+/* Mobile: Show bottom nav */
+@media (max-width: 1023px) {
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: #fff;
+    border-top: 1px solid #e5e5e5;
+  }
+}
+
+/* Navigation Item */
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 56px;
+  color: #606060;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bottom-nav-item.active {
+  color: #0f0f0f;
+}
+
+/* Icon */
+.bottom-nav-icon {
+  width: 24px;
+  height: 24px;
+  margin-bottom: 2px;
+}
+
+/* Label */
+.bottom-nav-label {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .bottom-nav {
+    background: #0f0f0f;
+    border-top-color: #272727;
+  }
+
+  .bottom-nav-item {
+    color: #aaa;
+  }
+
+  .bottom-nav-item.active {
+    color: #fff;
+  }
+}
+
+[data-theme="dark"] .bottom-nav {
+  background: #0f0f0f;
+  border-top-color: #272727;
+}
+
+[data-theme="dark"] .bottom-nav-item {
+  color: #aaa;
+}
+
+[data-theme="dark"] .bottom-nav-item.active {
+  color: #fff;
+}

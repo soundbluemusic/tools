@@ -5,9 +5,10 @@ import { Footer } from './components/Footer';
 import { LanguageToggle } from './components/LanguageToggle';
 import { ThemeToggle } from './components/ThemeToggle';
 import { SkipLink } from './components/SkipLink';
+import { NavigationLayout } from './components/navigation';
 import { Loader } from './components/ui';
 import { LanguageProvider } from './i18n';
-import { ThemeProvider } from './hooks';
+import { ThemeProvider, AppsProvider, useApps } from './hooks';
 import './App.css';
 
 // Critical pages - direct imports for instant loading
@@ -61,7 +62,7 @@ const ROUTES = [
  * Navigation wrapper handling scroll restoration on route changes
  * View Transitions are handled by useViewTransition hook in components
  */
-function NavigationProvider({ children }: { children: React.ReactNode }) {
+function ScrollToTop({ children }: { children: React.ReactNode }) {
   const location = useLocation();
 
   // Scroll to top on route change
@@ -73,31 +74,47 @@ function NavigationProvider({ children }: { children: React.ReactNode }) {
 }
 
 /**
+ * App content with navigation layout
+ * Uses apps context for navigation sidebar and command palette
+ */
+function AppContent() {
+  const { apps } = useApps();
+
+  return (
+    <NavigationLayout apps={apps}>
+      <SkipLink />
+      <main id="main-content" className="main-content" role="main">
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            {ROUTES.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </Suspense>
+      </main>
+      <Footer />
+      <ThemeToggle />
+      <LanguageToggle />
+    </NavigationLayout>
+  );
+}
+
+/**
  * Main Application Component
- * Optimized for instant page transitions
+ * Optimized for instant page transitions with responsive navigation
  */
 const App = memo(function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <LanguageProvider>
-          <ErrorBoundary>
-            <NavigationProvider>
-              <SkipLink />
-              <main id="main-content" className="main-content" role="main">
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    {ROUTES.map((route) => (
-                      <Route key={route.path} path={route.path} element={route.element} />
-                    ))}
-                  </Routes>
-                </Suspense>
-              </main>
-              <Footer />
-              <ThemeToggle />
-              <LanguageToggle />
-            </NavigationProvider>
-          </ErrorBoundary>
+          <AppsProvider>
+            <ErrorBoundary>
+              <ScrollToTop>
+                <AppContent />
+              </ScrollToTop>
+            </ErrorBoundary>
+          </AppsProvider>
         </LanguageProvider>
       </ThemeProvider>
     </BrowserRouter>

@@ -49,11 +49,18 @@
 /* Base styles with GPU acceleration */
 #root {
   width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh; /* Dynamic viewport height for mobile */
+  /* Promote to own layer for smoother scrolling */
+  transform: var(--gpu-transform);
+}
+
+/* Container for page content */
+.container {
+  width: 100%;
   max-width: 1024px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
-  /* Promote to own layer for smoother scrolling */
-  transform: var(--gpu-transform);
 }
 
 /* Header styling */
@@ -401,14 +408,14 @@
 
 /* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
-  #root {
+  .container {
     max-width: 800px;
     padding: 1.5rem 1.25rem;
   }
 }
 
 @media (max-width: 768px) {
-  #root {
+  .container {
     padding: 1.25rem 1rem;
   }
 
@@ -421,7 +428,7 @@
    Mobile Optimizations (< 480px)
    ========================================================================== */
 @media (max-width: 480px) {
-  #root {
+  .container {
     padding: 1rem 0.75rem;
   }
 
@@ -447,7 +454,7 @@
    Small Mobile (< 360px)
    ========================================================================== */
 @media (max-width: 360px) {
-  #root {
+  .container {
     padding: 0.75rem 0.5rem;
   }
 
