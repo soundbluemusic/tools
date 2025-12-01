@@ -1066,7 +1066,10 @@ export const DrumMachine = memo(function DrumMachine() {
           />
           <span className="drum-tempo-value">
             {tempo} BPM
-            <span className="drum-tempo-duration">({(240 / tempo).toFixed(1)}s)</span>
+            <span className="drum-tempo-duration">
+              {loops.length > 1 && `x${loops.length} `}
+              ({((240 / tempo) * loops.length).toFixed(1)}s)
+            </span>
           </span>
         </div>
       </div>
