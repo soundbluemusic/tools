@@ -15,28 +15,35 @@
   display: flex;
   flex-direction: column;
   min-width: 0; /* Prevent flex overflow */
+  width: 100%;
+}
 
-  /* Desktop: Account for sidebar width */
-  @media (min-width: 1024px) {
-    margin-left: var(--sidebar-width);
-    transition: margin-left var(--sidebar-transition);
+/* Desktop: Account for sidebar width */
+@media (min-width: 1024px) {
+  .navigation-content {
+    margin-left: var(--sidebar-width, 240px);
+    transition: margin-left 250ms cubic-bezier(0.4, 0, 0.2, 1);
   }
+}
 
-  /* Tablet: Account for collapsed sidebar */
-  @media (min-width: 1024px) and (max-width: 1279px) {
-    margin-left: var(--sidebar-collapsed-width);
+/* Tablet: Account for collapsed sidebar */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .navigation-content {
+    margin-left: var(--sidebar-collapsed-width, 72px);
   }
+}
 
-  /* Mobile: Account for bottom navigation */
-  @media (max-width: 1023px) {
-    padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom));
+/* Mobile: Account for bottom navigation */
+@media (max-width: 1023px) {
+  .navigation-content {
+    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
   }
 }
 
 /* When sidebar is collapsed via JS, adjust content margin */
-.navigation-layout:has(.sidebar.collapsed) .navigation-content {
-  @media (min-width: 1024px) {
-    margin-left: var(--sidebar-collapsed-width);
+@media (min-width: 1024px) {
+  .navigation-layout:has(.sidebar.collapsed) .navigation-content {
+    margin-left: var(--sidebar-collapsed-width, 72px);
   }
 }
 
