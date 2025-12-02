@@ -8,6 +8,7 @@ export const commonKo: CommonTranslation = {
     sitemap: '사이트맵',
     opensource: '오픈소스',
     toolsUsed: '사용된 도구',
+    downloads: '다운로드',
   },
   home: {
     searchPlaceholder: '검색...',
@@ -80,6 +81,7 @@ export const commonEn: CommonTranslation = {
     sitemap: 'Sitemap',
     opensource: 'Open Source',
     toolsUsed: 'Tools Used',
+    downloads: 'Downloads',
   },
   home: {
     searchPlaceholder: 'Search...',

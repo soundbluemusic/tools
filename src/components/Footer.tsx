@@ -47,6 +47,9 @@ export const Footer = memo(function Footer() {
         <Link to="/tools-used" className="footer-link">
           {t.common.footer.toolsUsed}
         </Link>
+        <Link to="/downloads" className="footer-link">
+          {t.common.footer.downloads}
+        </Link>
       </nav>
 
       {/* Copyright */}
