@@ -245,6 +245,11 @@
     background: var(--color-interactive-hover, rgba(255, 255, 255, 0.1));
     color: var(--color-text-primary, #f1f1f1);
   }
+
+  .header-logo-badge {
+    background: var(--color-accent-primary, #60a5fa);
+    color: #000;
+  }
 }
 
 [data-theme='dark'] .site-header {
@@ -273,6 +278,11 @@
 [data-theme='dark'] .header-control-btn:hover {
   background: var(--color-interactive-hover, rgba(255, 255, 255, 0.1));
   color: var(--color-text-primary, #f1f1f1);
+}
+
+[data-theme='dark'] .header-logo-badge {
+  background: var(--color-accent-primary, #60a5fa);
+  color: #000;
 }
 
 /* Safe area support */
