@@ -2,13 +2,20 @@
    Open Source Libraries Page
    ========================================================================== */
 
+.opensource-notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+}
+
 .opensource-note {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   background: var(--color-bg-secondary);
   padding: var(--spacing-3) var(--spacing-4);
   border-radius: var(--radius-md);
-  margin-bottom: var(--spacing-6);
+  margin: 0;
   border-left: 3px solid var(--color-info);
 }
 
