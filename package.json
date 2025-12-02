@@ -27,7 +27,10 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build:standalone": "vite build --config vite.standalone.config.ts && tsx scripts/rename-standalone.ts",
+    "build:standalone:metronome": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
+    "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
   },
   "dependencies": {
     "qrious": "^4.0.2",
@@ -64,6 +67,7 @@
     "typescript-eslint": "^8.0.1",
     "vite": "^6.4.1",
     "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-singlefile": "^2.3.0",
     "vitest": "^3.2.4"
   },
   "engines": {
