@@ -266,7 +266,7 @@ const OpenSource = memo(function OpenSource() {
       language === 'ko'
         ? 'Tools에 사용된 오픈소스 라이브러리 목록'
         : 'List of open source libraries used in Tools',
-    canonicalPath: '/opensource',
+    basePath: '/opensource',
     noindex: true,
   });
 

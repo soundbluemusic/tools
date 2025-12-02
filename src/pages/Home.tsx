@@ -71,7 +71,7 @@ const Home = memo(function Home() {
   useSEO({
     description: homeSEO[language].description,
     keywords: homeSEO[language].keywords,
-    canonicalPath: '/',
+    basePath: '/',
     isHomePage: true,
   });
 

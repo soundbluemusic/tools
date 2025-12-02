@@ -22,7 +22,7 @@ export const Sidebar = memo(function Sidebar({
   apps,
   isOpen = true,
 }: SidebarProps) {
-  const { language } = useLanguage();
+  const { language, localizedPath } = useLanguage();
   const { isActive } = useIsActive();
 
   // Memoize filtered apps
@@ -48,7 +48,7 @@ export const Sidebar = memo(function Sidebar({
       <nav className="sidebar-nav">
         {/* Home */}
         <NavLink
-          to="/"
+          to={localizedPath('/')}
           className={`sidebar-item ${isActive('/') ? 'active' : ''}`}
         >
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -73,7 +73,7 @@ export const Sidebar = memo(function Sidebar({
         {musicApps.map((app) => (
           <NavLink
             key={app.url}
-            to={app.url}
+            to={localizedPath(app.url)}
             className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
           >
             <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
@@ -93,7 +93,7 @@ export const Sidebar = memo(function Sidebar({
         {combinedApps.map((app) => (
           <NavLink
             key={app.url}
-            to={app.url}
+            to={localizedPath(app.url)}
             className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
           >
             <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
@@ -113,7 +113,7 @@ export const Sidebar = memo(function Sidebar({
         {otherApps.map((app) => (
           <NavLink
             key={app.url}
-            to={app.url}
+            to={localizedPath(app.url)}
             className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
           >
             <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
@@ -127,7 +127,7 @@ export const Sidebar = memo(function Sidebar({
 
         {/* Downloads */}
         <NavLink
-          to="/downloads"
+          to={localizedPath('/downloads')}
           className={`sidebar-item ${isActive('/downloads') ? 'active' : ''}`}
         >
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -140,7 +140,7 @@ export const Sidebar = memo(function Sidebar({
 
         {/* Menu / Settings */}
         <NavLink
-          to="/sitemap"
+          to={localizedPath('/sitemap')}
           className={`sidebar-item ${isActive('/sitemap') ? 'active' : ''}`}
         >
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">

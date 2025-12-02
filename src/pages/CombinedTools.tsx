@@ -34,7 +34,7 @@ const CombinedTools = memo(function CombinedTools() {
     title: combinedToolsSEO[language].title,
     description: combinedToolsSEO[language].description,
     keywords: combinedToolsSEO[language].keywords,
-    canonicalPath: '/combined-tools',
+    basePath: '/combined-tools',
   });
 
   // Filter combined apps

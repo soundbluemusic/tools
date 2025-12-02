@@ -33,7 +33,7 @@ const OtherTools = memo(function OtherTools() {
     title: otherToolsSEO[language].title,
     description: otherToolsSEO[language].description,
     keywords: otherToolsSEO[language].keywords,
-    canonicalPath: '/other-tools',
+    basePath: '/other-tools',
   });
 
   // Filter non-music and non-combined apps

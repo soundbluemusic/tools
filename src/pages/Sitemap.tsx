@@ -162,7 +162,7 @@ const Sitemap = memo(function Sitemap() {
     title: pageContent.title[language],
     description: pageContent.seo[language].description,
     keywords: pageContent.seo[language].keywords,
-    canonicalPath: '/sitemap',
+    basePath: '/sitemap',
   });
 
   return (

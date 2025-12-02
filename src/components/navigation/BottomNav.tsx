@@ -21,7 +21,7 @@ export const BottomNav = memo(function BottomNav({
   onToggle,
   isOpen = true,
 }: BottomNavProps) {
-  const { language } = useLanguage();
+  const { language, localizedPath } = useLanguage();
   const { isActive, pathname } = useIsActive();
 
   const isMusicActive = MUSIC_APP_PATHS.some((p) => pathname.startsWith(p));
@@ -70,7 +70,7 @@ export const BottomNav = memo(function BottomNav({
       )}
       {/* Home */}
       <NavLink
-        to="/"
+        to={localizedPath('/')}
         className={`bottom-nav-item ${isActive('/') ? 'active' : ''}`}
       >
         <svg
@@ -91,7 +91,7 @@ export const BottomNav = memo(function BottomNav({
 
       {/* Music Tools */}
       <NavLink
-        to="/metronome"
+        to={localizedPath('/metronome')}
         className={`bottom-nav-item ${isMusicActive ? 'active' : ''}`}
       >
         <svg
@@ -112,7 +112,7 @@ export const BottomNav = memo(function BottomNav({
 
       {/* QR Code */}
       <NavLink
-        to="/qr"
+        to={localizedPath('/qr')}
         className={`bottom-nav-item ${isActive('/qr') ? 'active' : ''}`}
       >
         <svg
@@ -127,7 +127,7 @@ export const BottomNav = memo(function BottomNav({
 
       {/* More / Menu */}
       <NavLink
-        to="/sitemap"
+        to={localizedPath('/sitemap')}
         className={`bottom-nav-item ${isActive('/sitemap') ? 'active' : ''}`}
       >
         <svg

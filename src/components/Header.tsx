@@ -21,7 +21,7 @@ export const Header = memo(function Header({
   onSidebarToggle,
   isSidebarOpen = true,
 }: HeaderProps) {
-  const { language, toggleLanguage } = useLanguage();
+  const { language, toggleLanguage, localizedPath } = useLanguage();
   const { theme, toggleTheme } = useTheme();
 
   const handleSearchClick = useCallback(() => {
@@ -114,7 +114,7 @@ export const Header = memo(function Header({
 
       <div className="header-inner">
         {/* Logo */}
-        <Link to="/" className="header-logo">
+        <Link to={localizedPath('/')} className="header-logo">
           <span className="header-logo-text">tools</span>
           <span className="header-logo-badge">beta</span>
         </Link>

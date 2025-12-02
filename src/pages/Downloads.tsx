@@ -147,7 +147,7 @@ const Downloads = memo(function Downloads() {
       language === 'ko'
         ? '메트로놈, 드럼머신 등 도구를 독립 실행형 파일로 다운로드'
         : 'Download metronome, drum machine and other tools as standalone files',
-    canonicalPath: '/downloads',
+    basePath: '/downloads',
   });
 
   const handleDownload = useCallback(async (item: DownloadItem) => {

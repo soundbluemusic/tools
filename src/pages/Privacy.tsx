@@ -20,7 +20,7 @@ const Privacy = memo(function Privacy() {
   useSEO({
     title,
     description,
-    canonicalPath: '/privacy',
+    basePath: '/privacy',
     noindex: true,
   });
 
