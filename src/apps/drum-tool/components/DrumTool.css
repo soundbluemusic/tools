@@ -130,6 +130,29 @@
   }
 }
 
+/* Integration info */
+.drum-tool-integration-info {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #666);
+  text-align: center;
+  background: var(--color-bg-secondary, #f5f5f5);
+  border-radius: 8px;
+  border: 1px solid var(--color-border-primary, #e0e0e0);
+}
+
+[data-theme='dark'] .drum-tool-integration-info {
+  background: var(--color-bg-secondary, #1e1e1e);
+  border-color: var(--color-border-primary, #333);
+}
+
+@media (prefers-color-scheme: dark) {
+  .drum-tool-integration-info {
+    background: var(--color-bg-secondary, #1e1e1e);
+    border-color: var(--color-border-primary, #333);
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .drum-tool-panel--active {

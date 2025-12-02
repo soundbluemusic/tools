@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
 import { useIsActive } from '../../hooks';
-import { MUSIC_APP_PATHS } from '../../constants/apps';
+import { MUSIC_APP_PATHS, COMBINED_APP_PATHS } from '../../constants/apps';
 import type { App } from '../../types';
 import './Sidebar.css';
 
@@ -26,13 +26,18 @@ export const Sidebar = memo(function Sidebar({
   const { isActive } = useIsActive();
 
   // Memoize filtered apps
-  const { musicApps, otherApps } = useMemo(
+  const { musicApps, combinedApps, otherApps } = useMemo(
     () => ({
       musicApps: apps.filter((app) =>
         (MUSIC_APP_PATHS as readonly string[]).includes(app.url)
       ),
+      combinedApps: apps.filter((app) =>
+        (COMBINED_APP_PATHS as readonly string[]).includes(app.url)
+      ),
       otherApps: apps.filter(
-        (app) => !(MUSIC_APP_PATHS as readonly string[]).includes(app.url)
+        (app) =>
+          !(MUSIC_APP_PATHS as readonly string[]).includes(app.url) &&
+          !(COMBINED_APP_PATHS as readonly string[]).includes(app.url)
       ),
     }),
     [apps]
@@ -66,6 +71,26 @@ export const Sidebar = memo(function Sidebar({
         </div>
 
         {musicApps.map((app) => (
+          <NavLink
+            key={app.url}
+            to={app.url}
+            className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
+          >
+            <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
+            <span className="sidebar-label">
+              {language === 'ko' ? app.name.ko : app.name.en}
+            </span>
+          </NavLink>
+        ))}
+
+        <div className="sidebar-divider" />
+
+        {/* Combined Tools */}
+        <div className="sidebar-section-title">
+          {language === 'ko' ? '결합 도구' : 'Combined Tools'}
+        </div>
+
+        {combinedApps.map((app) => (
           <NavLink
             key={app.url}
             to={app.url}
