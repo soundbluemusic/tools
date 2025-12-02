@@ -101,6 +101,10 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
 >
 > 자유롭게 사용, 수정, 배포할 수 있습니다. 상업적 이용도 가능합니다.
 >
+> ## 아이콘 색상
+>
+> #9370DB
+>
 > ## 상표 가이드라인
 >
 > "SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다. 이 프로젝트를 포크하여 사용할 경우, `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요.

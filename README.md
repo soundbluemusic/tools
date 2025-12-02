@@ -101,6 +101,10 @@ A collection of utility tools built with React + TypeScript + Vite.
 >
 > Free to use, modify, and distribute. Commercial use is also permitted.
 >
+> ## Icon Color
+>
+> #9370DB
+>
 > ## Trademark Guidelines
 >
 > "SoundBlueMusic" name and logo are trademarks of SoundBlueMusic. When forking this project, please modify `src/constants/brand.ts` to replace with your own branding.
