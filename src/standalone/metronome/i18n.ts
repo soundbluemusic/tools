@@ -1,37 +1,27 @@
 /**
- * Simplified i18n for standalone metronome
+ * Standalone metronome i18n
+ * Compatible with MetronomeTranslation type from main app
  */
+import type { MetronomeTranslation } from '../../i18n/types';
 
 export type Language = 'ko' | 'en';
 
-export interface Translations {
-  title: string;
-  bpm: string;
-  volume: string;
-  timeSignature: string;
-  timer: string;
-  measure: string;
-  elapsed: string;
-  countdown: string;
-  slow: string;
-  fast: string;
-  quiet: string;
-  loud: string;
-  minutes: string;
-  seconds: string;
-  start: string;
-  stop: string;
-  perfectSync: string;
-  syncDescription: string;
-  precision: string;
+/** Extended translations for standalone app (includes header controls) */
+export interface StandaloneTranslations extends MetronomeTranslation {
   lightMode: string;
   darkMode: string;
   language: string;
 }
 
-export const translations: Record<Language, Translations> = {
+export const translations: Record<Language, StandaloneTranslations> = {
   ko: {
     title: '메트로놈',
+    description: '음악가를 위한 정밀 메트로놈',
+    seo: {
+      title: '메트로놈',
+      description: '음악가를 위한 정밀 메트로놈',
+      keywords: '메트로놈',
+    },
     bpm: '속도',
     volume: '볼륨',
     timeSignature: '박자',
@@ -47,6 +37,7 @@ export const translations: Record<Language, Translations> = {
     seconds: '초',
     start: '시작',
     stop: '일시정지',
+    reset: '초기화',
     perfectSync: '완벽 동기화',
     syncDescription:
       '완벽한 BPM-시간 동기화 | 60 BPM = 정확히 1초 | 120 BPM = 정확히 0.5초',
@@ -57,6 +48,12 @@ export const translations: Record<Language, Translations> = {
   },
   en: {
     title: 'Metronome',
+    description: 'Precision metronome for musicians',
+    seo: {
+      title: 'Metronome',
+      description: 'Precision metronome for musicians',
+      keywords: 'metronome',
+    },
     bpm: 'Tempo',
     volume: 'Volume',
     timeSignature: 'Time Sig.',
@@ -72,6 +69,7 @@ export const translations: Record<Language, Translations> = {
     seconds: 'sec',
     start: 'Start',
     stop: 'Pause',
+    reset: 'Reset',
     perfectSync: 'Perfect Sync',
     syncDescription:
       'Perfect BPM-Time Sync | 60 BPM = exactly 1s | 120 BPM = exactly 0.5s',
@@ -82,7 +80,7 @@ export const translations: Record<Language, Translations> = {
   },
 };
 
-export function getTranslations(lang: Language): Translations {
+export function getTranslations(lang: Language): StandaloneTranslations {
   return translations[lang];
 }
 

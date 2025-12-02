@@ -7,6 +7,7 @@ import {
   useReducer,
 } from 'react';
 import { useTranslations } from '../../../i18n';
+import type { MetronomeTranslation } from '../../../i18n/types';
 import {
   DEFAULTS,
   BPM_RANGE,
@@ -16,6 +17,16 @@ import {
   PENDULUM,
 } from '../constants';
 import './MetronomePlayer.css';
+
+/**
+ * Props for MetronomePlayer component
+ * When translations are provided, they are used directly (standalone mode)
+ * When not provided, useTranslations hook is used (main site mode)
+ */
+export interface MetronomePlayerProps {
+  /** Optional translations for standalone mode */
+  translations?: MetronomeTranslation;
+}
 
 // ============================================
 // Timer State Management
@@ -229,8 +240,11 @@ NoteIcon.displayName = 'NoteIcon';
 /**
  * MetronomePlayer component
  * Features accurate BPM timing, timer, and beat visualization
+ * Supports both main site mode (using i18n context) and standalone mode (using props)
  */
-const MetronomePlayer = memo(function MetronomePlayer() {
+const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
+  translations,
+}) {
   // Settings state (simple values, rarely change together)
   const [bpm, setBpm] = useState<number>(DEFAULTS.BPM);
   const [volume, setVolume] = useState<number>(DEFAULTS.VOLUME);
@@ -256,7 +270,9 @@ const MetronomePlayer = memo(function MetronomePlayer() {
     elapsedTime,
   } = timer;
 
-  const { metronome: t } = useTranslations();
+  // Use provided translations (standalone) or i18n context (main site)
+  const contextTranslations = useTranslations();
+  const t = translations ?? contextTranslations.metronome;
 
   // Timing refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -840,3 +856,4 @@ const MetronomePlayer = memo(function MetronomePlayer() {
 MetronomePlayer.displayName = 'MetronomePlayer';
 
 export { MetronomePlayer };
+export type { MetronomePlayerProps };

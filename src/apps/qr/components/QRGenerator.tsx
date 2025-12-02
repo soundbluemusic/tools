@@ -1,6 +1,7 @@
 import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import QRious from 'qrious';
 import { useTranslations } from '../../../i18n';
+import type { QRTranslation, CommonTranslation } from '../../../i18n/types';
 import { useDebounce } from '../../../hooks/useDebounce';
 import {
   QR_SIZE,
@@ -13,7 +14,22 @@ import './QRGenerator.css';
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type ColorMode = 'black' | 'white';
 
-const QRGenerator = memo(function QRGenerator() {
+/**
+ * Props for QRGenerator component
+ * When translations are provided, they are used directly (standalone mode)
+ * When not provided, useTranslations hook is used (main site mode)
+ */
+export interface QRGeneratorProps {
+  /** Optional translations for standalone mode */
+  translations?: {
+    qr: QRTranslation;
+    common: Pick<CommonTranslation, 'copyImage' | 'copied' | 'download'>;
+  };
+}
+
+const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
+  translations,
+}) {
   const [url, setUrl] = useState('');
   const [errorLevel, setErrorLevel] = useState<ErrorLevel>('H');
   const [colorMode, setColorMode] = useState<ColorMode>('black');
@@ -24,9 +40,10 @@ const QRGenerator = memo(function QRGenerator() {
   // Debounce URL for QR generation (input stays responsive)
   const debouncedUrl = useDebounce(url, URL_DEBOUNCE_MS);
 
-  const t = useTranslations();
-  const qrT = t.qr;
-  const commonT = t.common;
+  // Use provided translations (standalone) or i18n context (main site)
+  const contextTranslations = useTranslations();
+  const qrT = translations?.qr ?? contextTranslations.qr;
+  const commonT = translations?.common ?? contextTranslations.common;
 
   // Memoize errorLevels to prevent recreation on every render
   const errorLevels = useMemo(

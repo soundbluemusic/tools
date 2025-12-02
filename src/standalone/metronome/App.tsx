@@ -1,4 +1,4 @@
-import { MetronomePlayer } from './MetronomePlayer';
+import { MetronomePlayer } from '../../apps/metronome/components/MetronomePlayer';
 import { getTranslations } from './i18n';
 import { useStandaloneSettings } from '../common/useStandaloneSettings';
 
