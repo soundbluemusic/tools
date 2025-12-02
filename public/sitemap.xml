@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-  <!-- Homepage -->
   <url>
-    <loc>https://tools.soundbluemusic.com/</loc>
+    <loc>https://tools.soundbluemusic.com</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-  </url>
-
-  <!-- Tools -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/metronome</loc>
-    <lastmod>2025-12-02</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
 
   <url>
@@ -32,15 +23,21 @@
   </url>
 
   <url>
+    <loc>https://tools.soundbluemusic.com/metronome</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://tools.soundbluemusic.com/qr</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Info Pages -->
   <url>
-    <loc>https://tools.soundbluemusic.com/sitemap</loc>
+    <loc>https://tools.soundbluemusic.com/downloads</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -54,20 +51,19 @@
   </url>
 
   <url>
-    <loc>https://tools.soundbluemusic.com/tools-used</loc>
+    <loc>https://tools.soundbluemusic.com/sitemap</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://tools.soundbluemusic.com/downloads</loc>
+    <loc>https://tools.soundbluemusic.com/tools-used</loc>
     <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  <!-- Legal Pages -->
   <url>
     <loc>https://tools.soundbluemusic.com/privacy</loc>
     <lastmod>2025-12-02</lastmod>

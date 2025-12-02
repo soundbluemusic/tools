@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run generate-sitemap",
     "build": "tsc -b && vite build && npm run build:standalone:all",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
@@ -22,6 +23,7 @@
     "validate": "npm run typecheck && npm run lint && npm run test:run",
     "generate-icons": "tsx scripts/generate-icons.ts",
     "generate-og-image": "tsx scripts/generate-og-image.ts",
+    "generate-sitemap": "tsx scripts/generate-sitemap.ts",
     "convert-webp": "tsx scripts/convert-to-webp.ts",
     "sync-docs": "tsx scripts/sync-docs.ts",
     "test:e2e": "playwright test",
