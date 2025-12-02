@@ -31,9 +31,9 @@ const Privacy = memo(function Privacy() {
           <section className="legal-section">
             <h2>1. 개요</h2>
             <p>
-              Productivity Tools(이하 "서비스")는 사용자의 개인정보를 중요하게
-              생각합니다. 본 개인정보 처리방침은 서비스가 어떤 정보를 수집하고
-              어떻게 사용하는지 설명합니다.
+              Tools(이하 "서비스")는 사용자의 개인정보를 중요하게 생각합니다. 본
+              개인정보 처리방침은 서비스가 어떤 정보를 수집하고 어떻게
+              사용하는지 설명합니다.
             </p>
             <p className="legal-updated">최종 업데이트: 2025년 1월</p>
           </section>
@@ -149,8 +149,8 @@ const Privacy = memo(function Privacy() {
         <section className="legal-section">
           <h2>1. Overview</h2>
           <p>
-            Productivity Tools (the "Service") values your privacy. This Privacy
-            Policy explains what information we collect and how we use it.
+            Tools (the "Service") values your privacy. This Privacy Policy
+            explains what information we collect and how we use it.
           </p>
           <p className="legal-updated">Last updated: January 2025</p>
         </section>

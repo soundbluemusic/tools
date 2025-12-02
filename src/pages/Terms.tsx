@@ -32,9 +32,9 @@ const Terms = memo(function Terms() {
           <section className="legal-section">
             <h2>1. 약관의 동의</h2>
             <p>
-              Productivity Tools(이하 "서비스")를 이용함으로써 본 이용약관에
-              동의하는 것으로 간주됩니다. 본 약관에 동의하지 않는 경우 서비스
-              이용을 중단해 주시기 바랍니다.
+              Tools(이하 "서비스")를 이용함으로써 본 이용약관에 동의하는 것으로
+              간주됩니다. 본 약관에 동의하지 않는 경우 서비스 이용을 중단해
+              주시기 바랍니다.
             </p>
             <p className="legal-updated">최종 업데이트: 2025년 1월</p>
           </section>
@@ -42,8 +42,8 @@ const Terms = memo(function Terms() {
           <section className="legal-section">
             <h2>2. 서비스 설명</h2>
             <p>
-              본 서비스는 메트로놈, QR 코드 생성기 등 다양한 생산성 도구를
-              무료로 제공하는 웹 애플리케이션입니다.
+              본 서비스는 메트로놈, QR 코드 생성기 등 다양한 도구를 무료로
+              제공하는 웹 애플리케이션입니다.
             </p>
           </section>
 
@@ -148,9 +148,9 @@ const Terms = memo(function Terms() {
         <section className="legal-section">
           <h2>1. Acceptance of Terms</h2>
           <p>
-            By using Productivity Tools (the "Service"), you agree to these
-            Terms of Service. If you do not agree to these terms, please
-            discontinue use of the Service.
+            By using Tools (the "Service"), you agree to these Terms of Service.
+            If you do not agree to these terms, please discontinue use of the
+            Service.
           </p>
           <p className="legal-updated">Last updated: January 2025</p>
         </section>

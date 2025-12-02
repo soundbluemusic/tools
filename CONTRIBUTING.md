@@ -1,6 +1,6 @@
 # 기여 가이드
 
-Productivity Tools 프로젝트에 기여해 주셔서 감사합니다!
+Tools 프로젝트에 기여해 주셔서 감사합니다!
 
 ## 기여 방법
 
@@ -38,15 +38,15 @@ npm run validate
 
 [Conventional Commits](https://www.conventionalcommits.org/) 규칙 준수:
 
-| 타입 | 설명 |
-|:-----|:-----|
-| `feat` | 새 기능 |
-| `fix` | 버그 수정 |
-| `docs` | 문서 변경 |
+| 타입       | 설명                      |
+| :--------- | :------------------------ |
+| `feat`     | 새 기능                   |
+| `fix`      | 버그 수정                 |
+| `docs`     | 문서 변경                 |
 | `refactor` | 리팩토링 (기능 변경 없음) |
-| `perf` | 성능 개선 |
-| `test` | 테스트 추가/수정 |
-| `chore` | 빌드/설정 변경 |
+| `perf`     | 성능 개선                 |
+| `test`     | 테스트 추가/수정          |
+| `chore`    | 빌드/설정 변경            |
 
 **예시:**
 

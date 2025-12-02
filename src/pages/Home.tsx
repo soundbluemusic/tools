@@ -8,15 +8,15 @@ import type { Language } from '../i18n/types';
 const homeSEO = {
   ko: {
     description:
-      '무료 온라인 생산성 도구 모음. QR 코드 생성기로 고해상도 QR코드를 만들고, 정밀 메트로놈으로 음악 연습을 하세요. 모든 도구 100% 무료, 회원가입 불필요!',
+      '무료 온라인 도구 모음. QR 코드 생성기로 고해상도 QR코드를 만들고, 정밀 메트로놈으로 음악 연습을 하세요. 모든 도구 100% 무료, 회원가입 불필요!',
     keywords:
-      'QR코드 생성기, 무료 QR코드, 메트로놈 온라인, 무료 메트로놈, 온라인 도구, 생산성 도구, 무료 도구, productivity tools',
+      'QR코드 생성기, 무료 QR코드, 메트로놈 온라인, 무료 메트로놈, 온라인 도구, 무료 도구, free tools',
   },
   en: {
     description:
-      'Free online productivity tools. Create high-resolution QR codes and practice music with precision metronome. All tools 100% free, no signup required!',
+      'Free online tools. Create high-resolution QR codes and practice music with precision metronome. All tools 100% free, no signup required!',
     keywords:
-      'QR code generator, free QR code, online metronome, free metronome, online tools, productivity tools, free tools',
+      'QR code generator, free QR code, online metronome, free metronome, online tools, free tools',
   },
 };
 

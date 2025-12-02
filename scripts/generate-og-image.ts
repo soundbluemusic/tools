@@ -79,12 +79,12 @@ function generateSVGContent(config: OGImageConfig): string {
 
       <!-- Main title -->
       <text x="600" y="260" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="url(#text-gradient)" text-anchor="middle">
-        Productivity Tools
+        Tools
       </text>
 
       <!-- Subtitle -->
       <text x="600" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="32" fill="#e2e8f0" text-anchor="middle">
-        무료 온라인 생산성 도구 모음
+        무료 온라인 도구 모음
       </text>
 
       <!-- Tool icons representation -->

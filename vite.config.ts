@@ -27,9 +27,10 @@ export default defineConfig(({ mode }) => ({
       injectRegister: null,
       includeAssets: ['icons/icon.svg'],
       manifest: {
-        name: 'Productivity Tools',
+        name: 'Tools',
         short_name: 'Tools',
-        description: 'Useful web utilities and productivity tools',
+        description:
+          'Free online tools - QR code generator, metronome, drum machine and more',
         theme_color: '#242424',
         background_color: '#1a1a2e',
         display: 'standalone',

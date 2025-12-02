@@ -26,21 +26,21 @@ const pageContent = {
     en: 'Sitemap',
   },
   description: {
-    ko: 'Productivity Tools의 모든 페이지를 한눈에 확인하세요.',
-    en: 'View all pages of Productivity Tools at a glance.',
+    ko: 'Tools의 모든 페이지를 한눈에 확인하세요.',
+    en: 'View all pages of Tools at a glance.',
   },
   seo: {
     ko: {
       description:
-        'Productivity Tools 사이트맵 - QR 코드 생성기, 메트로놈 등 모든 무료 온라인 도구와 페이지 목록을 확인하세요.',
+        'Tools 사이트맵 - QR 코드 생성기, 메트로놈 등 모든 무료 온라인 도구와 페이지 목록을 확인하세요.',
       keywords:
-        '사이트맵, sitemap, Productivity Tools, 무료 도구, QR코드, 메트로놈, 온라인 도구 목록',
+        '사이트맵, sitemap, Tools, 무료 도구, QR코드, 메트로놈, 온라인 도구 목록',
     },
     en: {
       description:
-        'Productivity Tools Sitemap - Browse all free online tools including QR code generator, metronome, and more.',
+        'Tools Sitemap - Browse all free online tools including QR code generator, metronome, and more.',
       keywords:
-        'sitemap, Productivity Tools, free tools, QR code, metronome, online tools directory',
+        'sitemap, Tools, free tools, QR code, metronome, online tools directory',
     },
   },
   sections: {
@@ -84,8 +84,8 @@ function buildSitemapSections(): SitemapSection[] {
       {
         name: { ko: '홈', en: 'Home' },
         description: {
-          ko: '무료 온라인 생산성 도구 모음 - 모든 도구를 한 곳에서',
-          en: 'Free online productivity tools - All tools in one place',
+          ko: '무료 온라인 도구 모음 - 모든 도구를 한 곳에서',
+          en: 'Free online tools - All tools in one place',
         },
         url: '/',
         lastModified: today,
