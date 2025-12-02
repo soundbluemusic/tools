@@ -16,9 +16,9 @@ const ReactCompilerConfig = {
 // Available standalone apps
 const standaloneApps = {
   metronome: resolve(__dirname, 'src/standalone/metronome/index.html'),
-  // Add more apps here as they are created:
-  // drum: resolve(__dirname, 'src/standalone/drum/index.html'),
-  // qr: resolve(__dirname, 'src/standalone/qr/index.html'),
+  drum: resolve(__dirname, 'src/standalone/drum/index.html'),
+  'drum-synth': resolve(__dirname, 'src/standalone/drum-synth/index.html'),
+  qr: resolve(__dirname, 'src/standalone/qr/index.html'),
 };
 
 // Get app name from command line or build all

@@ -42,6 +42,87 @@ const DOWNLOADS: DownloadItem[] = [
       ],
     },
   },
+  {
+    id: 'drum',
+    name: { ko: '드럼머신', en: 'Drum Machine' },
+    description: {
+      ko: '16스텝 드럼 시퀀서. 테크노, 하우스, 트랩 등 다양한 프리셋과 멀티 루프 지원.',
+      en: '16-step drum sequencer with techno, house, trap presets and multi-loop support.',
+    },
+    fileName: 'drum.html',
+    fileSize: '~200KB',
+    icon: '🥁',
+    features: {
+      ko: [
+        '16스텝 시퀀서',
+        '5가지 드럼 사운드 (킥, 스네어, 하이햇, 오픈햇, 클랩)',
+        '최대 4개 루프 체인',
+        '5가지 프리셋 패턴',
+        '웹 오디오 실시간 합성',
+      ],
+      en: [
+        '16-step sequencer',
+        '5 drum sounds (kick, snare, hihat, open hat, clap)',
+        'Up to 4 loop chains',
+        '5 preset patterns',
+        'Real-time Web Audio synthesis',
+      ],
+    },
+  },
+  {
+    id: 'drum-synth',
+    name: { ko: '드럼 사운드 신스', en: 'Drum Sound Synth' },
+    description: {
+      ko: '세부 파라미터 조절이 가능한 드럼 사운드 신디사이저.',
+      en: 'Drum sound synthesizer with detailed parameter control.',
+    },
+    fileName: 'drum-synth.html',
+    fileSize: '~220KB',
+    icon: '🎛️',
+    features: {
+      ko: [
+        '6가지 드럼 타입 (킥, 스네어, 하이햇, 클랩, 탐, 림)',
+        '각 드럼별 세부 파라미터 조절',
+        '5가지 프리셋 (808, 하드 테크노, 로파이 등)',
+        '마스터 볼륨 컨트롤',
+        '실시간 사운드 미리듣기',
+      ],
+      en: [
+        '6 drum types (kick, snare, hihat, clap, tom, rim)',
+        'Detailed parameter control per drum',
+        '5 presets (808, Hard Techno, Lo-Fi, etc.)',
+        'Master volume control',
+        'Real-time sound preview',
+      ],
+    },
+  },
+  {
+    id: 'qr',
+    name: { ko: 'QR 코드 생성기', en: 'QR Code Generator' },
+    description: {
+      ko: '고복구율 투명 배경 QR 코드 생성기. 검정/흰색 QR 코드를 PNG로 다운로드.',
+      en: 'High-recovery transparent QR code generator. Download black/white QR as PNG.',
+    },
+    fileName: 'qr.html',
+    fileSize: '~250KB',
+    icon: '📱',
+    features: {
+      ko: [
+        '4가지 오류 복구 레벨 (L/M/Q/H)',
+        '검정 & 흰색 QR 코드',
+        '투명 배경 PNG (1024x1024)',
+        '클립보드 복사 지원',
+        '즉시 다운로드',
+      ],
+      en: [
+        '4 error correction levels (L/M/Q/H)',
+        'Black & white QR codes',
+        'Transparent PNG (1024x1024)',
+        'Clipboard copy support',
+        'Instant download',
+      ],
+    },
+  },
 ];
 
 /**
@@ -193,11 +274,11 @@ const Downloads = memo(function Downloads() {
         })}
       </section>
 
-      {/* Coming soon note */}
+      {/* Info note */}
       <p className="downloads-note">
         {language === 'ko'
-          ? '※ 더 많은 도구가 곧 추가될 예정입니다.'
-          : '※ More tools will be added soon.'}
+          ? '※ 모든 도구는 단일 HTML 파일로, 브라우저만 있으면 어디서든 작동합니다.'
+          : '※ All tools are single HTML files that work anywhere with a browser.'}
       </p>
     </PageLayout>
   );

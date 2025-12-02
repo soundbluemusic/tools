@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && npm run build:standalone:metronome:prod",
+    "build": "tsc -b && vite build && npm run build:standalone:all",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
@@ -29,8 +29,12 @@
     "test:e2e:headed": "playwright test --headed",
     "prepare": "husky",
     "build:standalone": "vite build --config vite.standalone.config.ts && tsx scripts/rename-standalone.ts",
+    "build:standalone:all": "npm run build:standalone:metronome:prod && npm run build:standalone:drum:prod && npm run build:standalone:drum-synth:prod && npm run build:standalone:qr:prod",
     "build:standalone:metronome": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
-    "build:standalone:metronome:prod": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts --outDir dist/standalone --emptyOutDir && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
+    "build:standalone:metronome:prod": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
+    "build:standalone:drum:prod": "STANDALONE_APP=drum vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/drum/index.html dist/standalone/drum.html && rm -rf dist/standalone/src",
+    "build:standalone:drum-synth:prod": "STANDALONE_APP=drum-synth vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/drum-synth/index.html dist/standalone/drum-synth.html && rm -rf dist/standalone/src",
+    "build:standalone:qr:prod": "STANDALONE_APP=qr vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/qr/index.html dist/standalone/qr.html && rm -rf dist/standalone/src",
     "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
   },
   "dependencies": {
