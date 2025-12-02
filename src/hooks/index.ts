@@ -15,7 +15,7 @@ export { useSort } from './useSort';
 export { useViewTransition } from './useViewTransition';
 export { useSEO } from './useSEO';
 export { useTheme, ThemeProvider } from './useTheme';
-export type { Theme, ResolvedTheme } from './useTheme';
+export type { Theme } from './useTheme';
 export {
   useFocusTrap,
   useArrowNavigation,
