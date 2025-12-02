@@ -827,6 +827,34 @@
   border-radius: var(--radius-md);
 }
 
+/* Footer variant - text link style */
+.share-button--footer {
+  padding: var(--spacing-1) var(--spacing-2);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.share-button--footer:hover {
+  background: var(--color-interactive-hover);
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  color: var(--color-text-primary);
+}
+
+.share-button--footer .share-button-icon-svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.share-button--footer:hover .share-button-icon-svg {
+  opacity: 1;
+}
+
 .share-button-icon {
   font-size: var(--font-size-base);
   line-height: 1;

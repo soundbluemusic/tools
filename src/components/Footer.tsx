@@ -18,7 +18,7 @@ export const Footer = memo(function Footer() {
       {/* Share Button - lazy loaded */}
       <div className="footer-share">
         <Suspense fallback={null}>
-          <ShareButton />
+          <ShareButton variant="footer" />
         </Suspense>
       </div>
 

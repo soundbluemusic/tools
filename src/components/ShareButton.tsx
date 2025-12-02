@@ -14,6 +14,8 @@ interface ShareButtonProps {
   className?: string;
   /** Compact mode - show only icon */
   compact?: boolean;
+  /** Button variant: default (pill style) or footer (text link style) */
+  variant?: 'default' | 'footer';
 }
 
 /**
@@ -26,6 +28,7 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
   description,
   className,
   compact = false,
+  variant = 'default',
 }) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -119,17 +122,47 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
       <button
         ref={buttonRef}
         type="button"
-        className={cn('share-button', compact && 'share-button--compact')}
+        className={cn(
+          'share-button',
+          compact && 'share-button--compact',
+          variant === 'footer' && 'share-button--footer'
+        )}
         onClick={handleToggle}
         aria-expanded={isOpen}
         aria-haspopup="true"
         aria-label={t.common.share.button}
       >
-        <span className="share-button-icon" aria-hidden="true">
-          ↗
-        </span>
-        {!compact && (
-          <span className="share-button-text">{t.common.share.button}</span>
+        {variant === 'footer' ? (
+          <>
+            <svg
+              className="share-button-icon-svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="18" cy="5" r="3" />
+              <circle cx="6" cy="12" r="3" />
+              <circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+            <span className="share-button-text">{t.common.share.button}</span>
+          </>
+        ) : (
+          <>
+            <span className="share-button-icon" aria-hidden="true">
+              ↗
+            </span>
+            {!compact && (
+              <span className="share-button-text">{t.common.share.button}</span>
+            )}
+          </>
         )}
       </button>
 
