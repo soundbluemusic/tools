@@ -5,20 +5,77 @@ import { useIsActive } from '../../hooks';
 import { MUSIC_APP_PATHS } from '../../constants/apps';
 import './BottomNav.css';
 
+interface BottomNavProps {
+  onToggle?: () => void;
+  isOpen?: boolean;
+}
+
 /**
  * Mobile Bottom Navigation (YouTube Style)
  * - Fixed at bottom
  * - 5 main tabs with icons + labels
  * - Active state highlight
+ * - Collapsible via toggle button
  */
-export const BottomNav = memo(function BottomNav() {
+export const BottomNav = memo(function BottomNav({
+  onToggle,
+  isOpen = true,
+}: BottomNavProps) {
   const { language } = useLanguage();
   const { isActive, pathname } = useIsActive();
 
   const isMusicActive = MUSIC_APP_PATHS.some((p) => pathname.startsWith(p));
 
   return (
-    <nav className="bottom-nav">
+    <nav className={`bottom-nav${isOpen ? '' : ' collapsed'}`}>
+      {/* Toggle Button */}
+      {onToggle && (
+        <button
+          onClick={onToggle}
+          className="bottom-nav-toggle"
+          title={
+            language === 'ko'
+              ? isOpen
+                ? '메뉴 닫기'
+                : '메뉴 열기'
+              : isOpen
+                ? 'Close menu'
+                : 'Open menu'
+          }
+          aria-label={
+            language === 'ko'
+              ? isOpen
+                ? '메뉴 닫기'
+                : '메뉴 열기'
+              : isOpen
+                ? 'Close menu'
+                : 'Open menu'
+          }
+          aria-expanded={isOpen}
+        >
+          <svg
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+          >
+            {isOpen ? (
+              <path
+                strokeWidth="2"
+                strokeLinecap="round"
+                d="M19 9l-7 7-7-7"
+              />
+            ) : (
+              <path
+                strokeWidth="2"
+                strokeLinecap="round"
+                d="M5 15l7-7 7 7"
+              />
+            )}
+          </svg>
+        </button>
+      )}
       {/* Home */}
       <NavLink
         to="/"

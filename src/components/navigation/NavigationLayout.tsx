@@ -29,10 +29,16 @@ export const NavigationLayout = memo(function NavigationLayout({
 }: NavigationLayoutProps) {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isBottomNavOpen, setIsBottomNavOpen] = useState(true);
 
   // Toggle sidebar
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
+  }, []);
+
+  // Toggle bottom nav
+  const toggleBottomNav = useCallback(() => {
+    setIsBottomNavOpen((prev) => !prev);
   }, []);
 
   // Open command palette
@@ -90,7 +96,7 @@ export const NavigationLayout = memo(function NavigationLayout({
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}
-      <BottomNav />
+      <BottomNav onToggle={toggleBottomNav} isOpen={isBottomNavOpen} />
 
       {/* Command Palette (Universal) */}
       <CommandPalette

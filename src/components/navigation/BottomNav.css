@@ -23,6 +23,48 @@
     background: #fff;
     border-top: 1px solid #e5e5e5;
   }
+
+  /* Collapsed state - hide nav items, only show toggle */
+  .bottom-nav.collapsed {
+    height: auto;
+    padding: 8px;
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+    justify-content: flex-end;
+  }
+
+  .bottom-nav.collapsed .bottom-nav-item {
+    display: none;
+  }
+}
+
+/* Toggle Button */
+.bottom-nav-toggle {
+  position: absolute;
+  top: -28px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 20px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  color: #606060;
+}
+
+.bottom-nav-toggle:active {
+  background: #f5f5f5;
+}
+
+.bottom-nav.collapsed .bottom-nav-toggle {
+  position: static;
+  width: 40px;
+  height: 32px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
 }
 
 /* Navigation Item */
@@ -82,4 +124,27 @@
 
 [data-theme='dark'] .bottom-nav-item.active {
   color: #fff;
+}
+
+/* Toggle Button - Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .bottom-nav-toggle {
+    background: #0f0f0f;
+    border-color: #272727;
+    color: #aaa;
+  }
+
+  .bottom-nav-toggle:active {
+    background: #1a1a1a;
+  }
+}
+
+[data-theme='dark'] .bottom-nav-toggle {
+  background: #0f0f0f;
+  border-color: #272727;
+  color: #aaa;
+}
+
+[data-theme='dark'] .bottom-nav-toggle:active {
+  background: #1a1a1a;
 }
