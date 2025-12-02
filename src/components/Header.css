@@ -159,10 +159,25 @@
   height: 16px;
 }
 
+/* Sidebar Toggle - Hidden on mobile */
+.header-sidebar-toggle {
+  display: none;
+}
+
 /* Desktop: Sidebar offset */
 @media (min-width: 1024px) {
   .header-inner {
     padding-left: 256px; /* Sidebar width + padding */
+  }
+
+  /* Show sidebar toggle on desktop */
+  .header-sidebar-toggle {
+    display: inline-flex;
+  }
+
+  /* Adjust header offset when sidebar collapsed */
+  .sidebar-collapsed .header-inner {
+    padding-left: 16px;
   }
 }
 

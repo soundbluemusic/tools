@@ -8,13 +8,19 @@ import './Header.css';
 
 interface HeaderProps {
   onSearchClick?: () => void;
+  onSidebarToggle?: () => void;
+  isSidebarOpen?: boolean;
 }
 
 /**
  * Fixed Header Component
  * YouTube/Docusaurus style header with logo, search, and controls
  */
-export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
+export const Header = memo(function Header({
+  onSearchClick,
+  onSidebarToggle,
+  isSidebarOpen = true,
+}: HeaderProps) {
   const { language, toggleLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
 
@@ -112,6 +118,56 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
               {language === 'ko' ? 'EN' : 'KO'}
             </span>
           </button>
+
+          {/* Sidebar Toggle - Desktop only */}
+          {onSidebarToggle && (
+            <button
+              onClick={onSidebarToggle}
+              className="header-control-btn header-sidebar-toggle"
+              title={
+                language === 'ko'
+                  ? isSidebarOpen
+                    ? '사이드바 닫기'
+                    : '사이드바 열기'
+                  : isSidebarOpen
+                    ? 'Close sidebar'
+                    : 'Open sidebar'
+              }
+              aria-label={
+                language === 'ko'
+                  ? isSidebarOpen
+                    ? '사이드바 닫기'
+                    : '사이드바 열기'
+                  : isSidebarOpen
+                    ? 'Close sidebar'
+                    : 'Open sidebar'
+              }
+              aria-expanded={isSidebarOpen}
+            >
+              <svg
+                className="header-icon"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                width="18"
+                height="18"
+              >
+                {isSidebarOpen ? (
+                  <path
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                ) : (
+                  <path
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    d="M4 6h16M4 12h10M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          )}
         </div>
       </div>
     </header>
