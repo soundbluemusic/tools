@@ -21,7 +21,7 @@
 
 | Category | Technology | Version |
 |----------|-----------|---------|
-| Framework | React | ^18.3.1 |
+| Framework | React | ^19.2.0 |
 | Routing | React Router DOM | ^7.9.6 |
 | Language | TypeScript | ^5.5.3 |
 | Build Tool | Vite | ^6.4.1 |

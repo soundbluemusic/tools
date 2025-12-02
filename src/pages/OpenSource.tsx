@@ -28,7 +28,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
     libraries: [
       {
         name: 'React',
-        version: '18.3.1',
+        version: '19.2.0',
         license: 'MIT',
         url: 'https://react.dev',
         description: {
@@ -38,7 +38,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
       },
       {
         name: 'React DOM',
-        version: '18.3.1',
+        version: '19.2.0',
         license: 'MIT',
         url: 'https://react.dev',
         description: {
@@ -153,7 +153,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
       },
       {
         name: 'Testing Library React',
-        version: '16.1.0',
+        version: '16.3.0',
         license: 'MIT',
         url: 'https://testing-library.com/react',
         description: {
