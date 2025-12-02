@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
 import { useSEO } from '../hooks';
-import { APPS } from '../constants/apps';
+import { APPS, BRAND } from '../constants';
 import './Sitemap.css';
-
-const BASE_URL = 'https://tools.soundbluemusic.com';
 
 interface SitemapSection {
   title: { ko: string; en: string };
@@ -206,7 +204,7 @@ const Sitemap = memo(function Sitemap() {
                     {item.description[language]}
                   </p>
                   <span className="sitemap-item-url">
-                    {BASE_URL}
+                    {BRAND.siteUrl}
                     {item.url}
                   </span>
                 </li>

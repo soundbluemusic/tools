@@ -1,35 +1,37 @@
 # Intellectual Property & Trademark Notice
 
-The following elements are the exclusive intellectual property and/or trademarks
-of SoundBlueMusic and are **NOT covered by the MIT License**:
+The following elements are intellectual property and **NOT covered by the MIT License**:
 
-- **Brand Names**: "SoundBlueMusic", "Sound Blue", and any variations thereof
-- **Logos**: All logos, icons, and brand imagery associated with SoundBlueMusic
+- **Brand Names**: The brand name configured in `src/constants/brand.ts`
+- **Logos**: All logos, icons, and brand imagery
 - **Images**: All images, graphics, and visual assets included in this project
 - **Audio**: All music, sound effects, and audio files included in this project
 - **Brand Identity**: Any other brand-related materials and assets
 
-## Restrictions
+## Fork-Friendly Design
 
-1. **No Unauthorized Use**: You may NOT use, copy, modify, distribute, or display
-   any of the above intellectual property or trademarks without explicit written
-   permission from SoundBlueMusic.
+This project is designed to be **fork-friendly**. When forking:
 
-2. **No Derivative Works**: Creating derivative works based on the protected
-   materials is strictly prohibited.
+1. **Update Brand Config**: Modify `src/constants/brand.ts` with your own branding
+2. **Replace Assets**: Replace logos, icons, and images with your own
+3. **Update Static Files**: Update `index.html`, `sitemap.xml`, `robots.txt` with your domain
 
-3. **No Commercial Use**: Commercial use of the protected materials in any form
-   is prohibited without prior authorization.
+See [README.md](./README.md) for detailed fork instructions.
 
-4. **Fork Requirements**: If you fork or use the source code from this project,
-   you MUST remove all protected materials (logos, images, audio, brand names)
-   and replace them with your own.
+## Restrictions for Original Branding
 
-## Contact
+If the original project has specific branding (e.g., from the upstream repository):
 
-For licensing inquiries regarding intellectual property and trademarks,
-please contact SoundBlueMusic.
+1. **No Unauthorized Use**: You may NOT use the original brand names, logos, or trademarks
+2. **No Derivative Works**: Creating derivative works using original protected materials is prohibited
+3. **Fork Requirements**: You MUST remove or replace all protected materials with your own
+
+## Note for Forkers
+
+The default configuration in this repository uses generic "Productivity Tools" branding.
+If you forked from an upstream repository with specific branding, ensure you have replaced
+all brand-specific content with your own.
 
 ---
 
-**© 2025 SoundBlueMusic. All Rights Reserved for Intellectual Property & Trademarks.**
+**The MIT License applies to the source code only. Brand assets require separate authorization from their owners.**

@@ -6,26 +6,26 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드 공식 문서�
 
 ### 앱 가이드
 
-| 앱 | 설명 |
-|:---|:-----|
-| [🎵 메트로놈](./apps/metronome.md) | 음악가를 위한 정밀 메트로놈 |
-| [🥁 드럼머신](./apps/drum.md) | 드럼 패턴 연습용 시퀀서 |
-| [📱 QR 코드 생성기](./apps/qr.md) | 투명 배경의 고해상도 QR 코드 생성 |
+| 앱                                            | 설명                                             |
+| :-------------------------------------------- | :----------------------------------------------- |
+| [🎵 메트로놈](./apps/metronome.md)            | 음악가를 위한 정밀 메트로놈                      |
+| [🥁 드럼머신](./apps/drum.md)                 | 드럼 패턴 연습용 시퀀서                          |
+| [📱 QR 코드 생성기](./apps/qr.md)             | 투명 배경의 고해상도 QR 코드 생성                |
 | [🎛️ 드럼 사운드 합성기](./apps/drum-synth.md) | 세밀한 파라미터 조절이 가능한 드럼 사운드 합성기 |
 
 ### 개발 문서
 
-| 문서 | 설명 |
-|:-----|:-----|
-| [개발 가이드](./development.md) | 로컬 개발 환경 설정 및 명령어 |
-| [아키텍처](./architecture.md) | 프로젝트 구조 및 설계 원칙 |
-| [기여 가이드](../CONTRIBUTING.md) | 프로젝트 기여 방법 |
+| 문서                              | 설명                          |
+| :-------------------------------- | :---------------------------- |
+| [개발 가이드](./development.md)   | 로컬 개발 환경 설정 및 명령어 |
+| [아키텍처](./architecture.md)     | 프로젝트 구조 및 설계 원칙    |
+| [기여 가이드](../CONTRIBUTING.md) | 프로젝트 기여 방법            |
 
 ## 빠른 시작
 
 ```bash
-# 저장소 클론
-git clone https://github.com/soundbluemusic/tools.git
+# 저장소 클론 (본인의 저장소 URL로 변경)
+git clone https://github.com/YOUR_USERNAME/tools.git
 cd tools
 
 # 의존성 설치
@@ -39,14 +39,14 @@ npm run dev
 
 ## 기술 스택
 
-| 분류 | 기술 | 버전 |
-|:-----|:-----|:-----|
-| 프레임워크 | React | 19 |
-| 라우팅 | React Router | 7 |
-| 언어 | TypeScript | 5 |
-| 빌드 | Vite | 6 |
-| 테스트 | Vitest + Playwright | - |
-| 배포 | Cloudflare Pages | - |
+| 분류       | 기술                | 버전 |
+| :--------- | :------------------ | :--- |
+| 프레임워크 | React               | 19   |
+| 라우팅     | React Router        | 7    |
+| 언어       | TypeScript          | 5    |
+| 빌드       | Vite                | 6    |
+| 테스트     | Vitest + Playwright | -    |
+| 배포       | Cloudflare Pages    | -    |
 
 ## 주요 기능
 
@@ -59,6 +59,11 @@ npm run dev
 ## 라이선스
 
 - **소스코드**: MIT License
-- **브랜드 자산**: © SoundBlueMusic. All Rights Reserved.
+- **브랜드 자산**: 각 브랜드 소유자의 권리가 보호됩니다
 
 자세한 내용은 [LICENSE](../LICENSE) 및 [TRADEMARKS](../TRADEMARKS.md)를 참조하세요.
+
+## 포크 시 브랜드 변경
+
+`src/constants/brand.ts` 파일을 수정하여 브랜드를 커스터마이징하세요.
+자세한 내용은 [README.md](../README.md)의 "포크 & 배포 가이드" 섹션을 참조하세요.

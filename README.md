@@ -55,24 +55,36 @@ npm run validate
 
 자세한 내용은 [LICENSE](./LICENSE) 파일을 참조하세요.
 
-### 지적재산권 및 상표 (Intellectual Property & Trademarks)
+## 포크 & 배포 가이드
 
-**다음 항목들은 MIT 라이선스의 적용을 받지 않으며, 무단 사용이 금지됩니다:**
+이 프로젝트는 **포크 친화적**으로 설계되었습니다. 브랜드 설정을 한 곳에서 관리할 수 있습니다.
 
-| 항목        | 설명                                                  |
-| :---------- | :---------------------------------------------------- |
-| 브랜드명    | "SoundBlueMusic", "Sound Blue" 및 모든 변형           |
-| 로고        | 모든 로고, 아이콘 및 브랜드 이미지                    |
-| 이미지      | 프로젝트에 포함된 모든 이미지 및 그래픽               |
-| 음악/오디오 | 프로젝트에 포함된 모든 음악, 음향 효과 및 오디오 파일 |
-| 브랜드 자산 | 기타 모든 브랜드 관련 자료                            |
+### 브랜드 커스터마이징
 
-**주의사항:**
+`src/constants/brand.ts` 파일을 수정하여 브랜드를 변경하세요:
 
-- 위 항목들의 무단 사용, 복제, 수정, 배포는 금지됩니다
-- 이 프로젝트를 포크하거나 소스코드를 사용할 경우, 보호되는 모든 자료(로고, 이미지, 오디오, 브랜드명)를 제거하고 본인의 것으로 교체해야 합니다
+```typescript
+export const BRAND = {
+  name: 'Your App Name', // 사이트 이름
+  copyrightHolder: 'Your Name', // 저작권 표시 이름
+  siteUrl: 'https://your-domain.com', // 사이트 URL
+  githubUrl: 'https://github.com/you/repo', // GitHub URL (빈 문자열로 숨김)
+  description: { ko: '...', en: '...' },
+  shareTitle: { ko: '...', en: '...' },
+};
+```
 
-**© 2025 SoundBlueMusic. All Rights Reserved for Intellectual Property & Trademarks.**
+### 정적 파일 수정 (선택)
+
+완전한 브랜딩을 위해 다음 파일들도 수정하세요:
+
+| 파일                  | 수정 내용                            |
+| :-------------------- | :----------------------------------- |
+| `index.html`          | 메타 태그, 구조화된 데이터 (JSON-LD) |
+| `public/sitemap.xml`  | 사이트맵 URL                         |
+| `public/robots.txt`   | 사이트맵 URL                         |
+| `public/icons/`       | 파비콘 및 PWA 아이콘                 |
+| `public/og-image.png` | 소셜 미디어 공유 이미지              |
 
 ---
 

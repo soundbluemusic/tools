@@ -4,6 +4,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { useSEO } from './useSEO';
+import { BRAND } from '../constants';
 
 describe('useSEO', () => {
   const originalTitle = document.title;
@@ -65,9 +66,7 @@ describe('useSEO', () => {
     );
 
     const link = document.querySelector('link[rel="canonical"]');
-    expect(link?.getAttribute('href')).toBe(
-      'https://tools.soundbluemusic.com/test-page'
-    );
+    expect(link?.getAttribute('href')).toBe(`${BRAND.siteUrl}/test-page`);
   });
 
   it('sets Open Graph tags', () => {
