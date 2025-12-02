@@ -1,7 +1,7 @@
 {
   "name": "tools",
   "private": true,
-  "version": "0.1.6-베타",
+  "version": "0.1.7-베타",
   "type": "module",
   "description": "A collection of utility tools built with React",
   "author": "Tools Team",
