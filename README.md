@@ -1,96 +1,114 @@
-<img src="public/icons/icon-72.png" alt="생활도구" width="32" height="32" align="left" style="margin-right: 8px;">
+<img src="public/icons/icon-72.png" alt="Tools" width="32" height="32" align="left" style="margin-right: 8px;">
 
 # Tools
 
-React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
+[![CI](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml/badge.svg)](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
 
-## 앱 목록
+A collection of utility tools built with React + TypeScript + Vite.
 
-| 앱                    | 설명                                             | 경로          |
-| :-------------------- | :----------------------------------------------- | :------------ |
-| 🎵 메트로놈           | 음악가를 위한 정밀 메트로놈                      | `/metronome`  |
-| 🥁 드럼머신           | 드럼 패턴 연습용 시퀀서                          | `/drum`       |
-| 📱 QR 코드 생성기     | 투명 배경의 고해상도 QR 코드 생성                | `/qr`         |
-| 🎛️ 드럼 사운드 합성기 | 세밀한 파라미터 조절이 가능한 드럼 사운드 합성기 | `/drum-synth` |
+🌐 **[한국어 README](./README.ko.md)**
 
-> 📖 자세한 문서는 [/docs](./docs/README.md)를 참조하세요.
+## Apps
 
-## 시작하기
+| App | Description | Path |
+| --- | ----------- | ---- |
+| 🎵 Metronome | Precision metronome for musicians | `/metronome` |
+| 🥁 Drum Machine | Drum pattern sequencer for practice | `/drum` |
+| 📱 QR Generator | High-resolution QR code generator with transparent background | `/qr` |
+| 🎛️ Drum Sound Synth | Drum sound synthesizer with detailed parameter control | `/drum-synth` |
 
-```bash
-# 설치
-npm install
-
-# 개발 서버 실행
-npm run dev
-
-# 프로덕션 빌드
-npm run build
-
-# 전체 검증 (타입체크 + 린트 + 테스트)
-npm run validate
-```
-
-## 기술 스택
-
-| 분류       | 기술                           |
-| :--------- | :----------------------------- |
-| 프레임워크 | React 19                       |
-| 라우팅     | React Router 7                 |
-| 언어       | TypeScript 5                   |
-| 빌드       | Vite 7                         |
-| 테스트     | Vitest + React Testing Library |
-| 배포       | Cloudflare Pages               |
-
-## UI 최적화
-
-- UI는 **14인치 MacBook** 기준으로 1차 최적화되어 있습니다
-- 다른 화면 크기에서도 사용 가능하지만, 14인치 MacBook에서 가장 최적의 경험을 제공합니다
-
-## 라이선스
-
-이 프로젝트는 [MIT License](./LICENSE)로 공개됩니다.
-
-자유롭게 사용, 수정, 배포할 수 있습니다. 상업적 이용도 가능합니다.
-
-### 상표 가이드라인
-
-"SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다. 이 프로젝트를 포크하여 사용할 경우, `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요.
-
-## 포크 & 배포 가이드
-
-이 프로젝트는 **포크 친화적**으로 설계되었습니다.
-
-### 1단계: 브랜드 변경
-
-`src/constants/brand.ts` 파일 하나만 수정하면 됩니다:
-
-```typescript
-export const BRAND = {
-  name: 'Your App Name',
-  copyrightHolder: 'Your Name',
-  siteUrl: 'https://your-domain.com',
-  githubUrl: 'https://github.com/you/repo',
-  // ...
-};
-```
-
-### 2단계: 정적 파일 (선택)
-
-| 파일                  | 수정 내용                            |
-| :-------------------- | :----------------------------------- |
-| `index.html`          | 메타 태그, 구조화된 데이터 (JSON-LD) |
-| `public/sitemap.xml`  | 사이트맵 URL                         |
-| `public/robots.txt`   | 사이트맵 URL                         |
-| `public/icons/`       | 파비콘 및 PWA 아이콘                 |
-| `public/og-image.png` | 소셜 미디어 공유 이미지              |
-
----
-
-## Inspiration
-
-Looking for ideas? Visit the [Claude Artifacts Gallery](https://claude.ai/artifacts) and check out the **Inspiration** tab to discover creative artifacts built by others with Claude.
-
----
-
-Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+> 📖 For detailed documentation, see [/docs](./docs/README.md).
+>
+> ## Getting Started
+>
+> ```bash
+> # Install dependencies
+> npm install
+>
+> # Start development server
+> npm run dev
+>
+> # Production build
+> npm run build
+>
+> # Full validation (typecheck + lint + test)
+> npm run validate
+> ```
+>
+> ## Tech Stack
+>
+> | Category | Technology |
+> | -------- | ---------- |
+> | Framework | React 19 |
+> | Routing | React Router 7 |
+> | Language | TypeScript 5 |
+> | Build | Vite 7 |
+> | Testing | Vitest + React Testing Library |
+> | Deployment | Cloudflare Pages |
+>
+> ## Features
+>
+> - 🎯 **PWA Support** - Works offline as a Progressive Web App
+> - - 🌙 **Dark Mode** - Clean dark theme interface
+>   - - 📱 **Responsive** - Optimized for various screen sizes
+>     - - ♿ **Accessible** - Built with accessibility in mind
+>       - - 🚀 **Fast** - Optimized bundle size and performance
+>        
+>         - ## Fork & Deploy Guide
+>        
+>         - This project is designed to be **fork-friendly**.
+>        
+>         - ### Step 1: Change Branding
+>
+> Just modify one file: `src/constants/brand.ts`
+>
+> ```typescript
+> export const BRAND = {
+>   name: 'Your App Name',
+>   copyrightHolder: 'Your Name',
+>   siteUrl: 'https://your-domain.com',
+>   githubUrl: 'https://github.com/you/repo',
+>   // ...
+> };
+> ```
+>
+> ### Step 2: Static Files (Optional)
+>
+> | File | What to Change |
+> | ---- | -------------- |
+> | `index.html` | Meta tags, JSON-LD structured data |
+> | `public/sitemap.xml` | Sitemap URLs |
+> | `public/robots.txt` | Sitemap URL |
+> | `public/icons/` | Favicon and PWA icons |
+> | `public/og-image.png` | Social media share image |
+>
+> ## Contributing
+>
+> We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
+>
+> Before submitting a PR, please run:
+>
+> ```bash
+> npm run validate
+> ```
+>
+> ## License
+>
+> This project is licensed under the [MIT License](./LICENSE).
+>
+> Free to use, modify, and distribute. Commercial use is also permitted.
+>
+> ## Trademark Guidelines
+>
+> "SoundBlueMusic" name and logo are trademarks of SoundBlueMusic. When forking this project, please modify `src/constants/brand.ts` to replace with your own branding.
+>
+> ## Inspiration
+>
+> Looking for ideas? Visit the [Claude Artifacts Gallery](https://claude.ai/artifacts) and check out the **Inspiration** tab to discover creative artifacts built by others with Claude.
+>
+> ---
+>
+> Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
