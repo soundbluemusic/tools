@@ -367,27 +367,6 @@
   transform: var(--gpu-transform);
 }
 
-.home-hero {
-  text-align: center;
-  margin-bottom: 32px;
-  padding: 24px 0;
-}
-
-.home-hero-title {
-  font-size: clamp(2rem, 5vw, 2.5rem);
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  color: var(--text-color);
-  letter-spacing: -0.02em;
-}
-
-.home-hero-tagline {
-  font-size: clamp(1rem, 2.5vw, 1.25rem);
-  font-weight: 400;
-  margin: 0;
-  color: var(--color-text-secondary, #666);
-}
-
 .home-header {
   display: flex;
   justify-content: space-between;
@@ -437,11 +416,6 @@
 @media (max-width: 480px) {
   .home-page {
     padding: 16px;
-  }
-
-  .home-hero {
-    margin-bottom: 24px;
-    padding: 16px 0;
   }
 
   .home-header {

@@ -116,17 +116,11 @@ const Home = memo(function Home() {
 
   return (
     <div className="home-page">
-      {/* Hero Section */}
-      <div className="home-hero">
-        <h1 className="home-hero-title">Tools</h1>
-        <p className="home-hero-tagline">Open Source Productivity Tools</p>
-      </div>
-
       {/* Page Header with Controls */}
       <div className="home-header">
-        <h2 className="home-title">
+        <h1 className="home-title">
           {language === 'ko' ? '모든 도구' : 'All Tools'}
-        </h2>
+        </h1>
         <div className="home-controls">
           {/* Sort Dropdown */}
           <select
