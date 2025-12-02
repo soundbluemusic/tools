@@ -5,8 +5,10 @@ export const qrKo: QRTranslation = {
   subtitle: '투명 배경의 고해상도 QR 코드를 생성합니다',
   seo: {
     title: '무료 QR코드 생성기 | 고해상도 투명 배경 QR코드 만들기',
-    description: '무료 온라인 QR코드 생성기. 투명 배경, 고해상도 512x512 PNG 다운로드. URL, 텍스트, 연락처 정보 등 다양한 QR코드를 즉시 생성하세요. 회원가입 불필요!',
-    keywords: 'QR코드 생성기, 무료 QR코드, QR코드 만들기, 투명 배경 QR코드, 고해상도 QR코드, 온라인 QR코드, QR code generator, free QR code',
+    description:
+      '무료 온라인 QR코드 생성기. 투명 배경, 고해상도 512x512 PNG 다운로드. URL, 텍스트, 연락처 정보 등 다양한 QR코드를 즉시 생성하세요. 회원가입 불필요!',
+    keywords:
+      'QR코드 생성기, 무료 QR코드, QR코드 만들기, 투명 배경 QR코드, 고해상도 QR코드, 온라인 QR코드, QR code generator, free QR code',
   },
   urlInput: 'URL 입력',
   urlLabel: '연결할 URL',
@@ -38,10 +40,13 @@ export const qrKo: QRTranslation = {
   footer: 'QR 코드를 즉시 생성 • 데이터 저장 안함 • 무료 사용',
   // Alert messages
   imageCopyNotSupported: '이미지 복사를 지원하지 않아 다운로드되었습니다.',
-  imageOpenedInNewTab: '이미지가 새 탭에서 열렸습니다. 이미지를 길게 눌러 저장하거나 복사하세요.',
+  imageOpenedInNewTab:
+    '이미지가 새 탭에서 열렸습니다. 이미지를 길게 눌러 저장하거나 복사하세요.',
   imageDownloaded: '이미지가 다운로드되었습니다.',
-  imageCopyConfirm: '이미지 복사가 지원되지 않습니다. 대신 다운로드하시겠습니까?',
-  popupBlocked: '팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.',
+  imageCopyConfirm:
+    '이미지 복사가 지원되지 않습니다. 대신 다운로드하시겠습니까?',
+  popupBlocked:
+    '팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.',
   downloadFailed: '다운로드에 실패했습니다. 이미지를 우클릭하여 저장해주세요.',
 };
 
@@ -50,8 +55,10 @@ export const qrEn: QRTranslation = {
   subtitle: 'Generate high-resolution QR codes with transparent backgrounds',
   seo: {
     title: 'Free QR Code Generator | High-Resolution Transparent QR Codes',
-    description: 'Free online QR code generator. Create high-resolution 512x512 PNG QR codes with transparent backgrounds. Generate QR codes for URLs, text, contacts instantly. No signup required!',
-    keywords: 'QR code generator, free QR code, make QR code, transparent QR code, high resolution QR code, online QR code, QR code maker',
+    description:
+      'Free online QR code generator. Create high-resolution 512x512 PNG QR codes with transparent backgrounds. Generate QR codes for URLs, text, contacts instantly. No signup required!',
+    keywords:
+      'QR code generator, free QR code, make QR code, transparent QR code, high resolution QR code, online QR code, QR code maker',
   },
   urlInput: 'URL Input',
   urlLabel: 'URL to connect',
@@ -83,7 +90,8 @@ export const qrEn: QRTranslation = {
   footer: 'Generate QR codes instantly • No data stored • Free to use',
   // Alert messages
   imageCopyNotSupported: 'Image copy not supported, downloaded instead.',
-  imageOpenedInNewTab: 'Image opened in new tab. Long press the image to save or copy.',
+  imageOpenedInNewTab:
+    'Image opened in new tab. Long press the image to save or copy.',
   imageDownloaded: 'Image downloaded.',
   imageCopyConfirm: 'Image copy not supported. Download instead?',
   popupBlocked: 'Popup blocked. Please disable popup blocking and try again.',

@@ -229,7 +229,9 @@
 }
 
 .drum-loop-block--selected.drum-loop-block--playing {
-  box-shadow: 0 0 0 3px var(--color-bg-tertiary), 0 0 0 5px var(--color-accent-primary);
+  box-shadow:
+    0 0 0 3px var(--color-bg-tertiary),
+    0 0 0 5px var(--color-accent-primary);
 }
 
 @keyframes drum-loop-pulse {
@@ -403,7 +405,9 @@
 }
 
 .drum-step--playing {
-  box-shadow: 0 0 0 2px var(--color-bg-tertiary), 0 0 0 4px var(--color-accent-primary);
+  box-shadow:
+    0 0 0 2px var(--color-bg-tertiary),
+    0 0 0 4px var(--color-accent-primary);
   transform: scale(1.08);
 }
 
@@ -715,11 +719,13 @@
 
 /* Dark mode adjustments for step playing indicator */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .drum-step--playing {
-    box-shadow: 0 0 0 2px var(--color-bg-tertiary), 0 0 0 4px var(--color-accent-primary);
+  :root:not([data-theme='light']) .drum-step--playing {
+    box-shadow:
+      0 0 0 2px var(--color-bg-tertiary),
+      0 0 0 4px var(--color-accent-primary);
   }
 }
 
-:root[data-theme="dark"] .drum-step--playing {
+:root[data-theme='dark'] .drum-step--playing {
   box-shadow: 0 0 0 3px rgba(236, 236, 236, 0.2);
 }

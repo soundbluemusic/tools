@@ -7,8 +7,10 @@ import {
 import { cn } from '../../utils';
 import { SIZE_CLASSES } from '../../utils/sizeClass';
 
-export interface InputProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'> {
+export interface InputProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'size'
+> {
   /** Input size variant */
   size?: 'sm' | 'md' | 'lg';
   /** Full width input */

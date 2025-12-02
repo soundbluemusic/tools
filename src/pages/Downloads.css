@@ -1,0 +1,221 @@
+/**
+ * Downloads Page Styles
+ */
+
+/* How to use section */
+.downloads-howto {
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.downloads-howto-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--spacing-4);
+  color: var(--color-text-primary);
+}
+
+.downloads-howto-steps {
+  list-style: decimal;
+  padding-left: var(--spacing-6);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.downloads-howto-steps li {
+  margin-bottom: var(--spacing-2);
+}
+
+/* Downloads list */
+.downloads-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+/* Download card */
+.download-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  transition: box-shadow var(--transition-fast) var(--ease-default);
+}
+
+.download-card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.download-card-header {
+  display: flex;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-4);
+}
+
+.download-card-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.download-card-info {
+  flex: 1;
+}
+
+.download-card-name {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+.download-card-desc {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* Features list */
+.download-card-features {
+  margin-bottom: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.download-card-features ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--spacing-2);
+}
+
+.download-card-features li {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding-left: var(--spacing-5);
+  position: relative;
+}
+
+.download-card-features li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--color-success);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Card footer */
+.download-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding-top: var(--spacing-4);
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.download-card-meta {
+  display: flex;
+  gap: var(--spacing-3);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.download-card-filename {
+  font-family: var(--font-family-mono);
+}
+
+.download-card-size {
+  opacity: 0.8;
+}
+
+/* Download button */
+.download-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-5);
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast) var(--ease-default);
+  cursor: pointer;
+  border: none;
+}
+
+.download-btn:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+.download-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.download-btn--success {
+  background: var(--color-success);
+}
+
+.download-btn--error {
+  background: var(--color-error);
+}
+
+.download-btn-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Note */
+.downloads-note {
+  margin-top: var(--spacing-8);
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .downloads-howto {
+    padding: var(--spacing-4);
+  }
+
+  .download-card {
+    padding: var(--spacing-4);
+  }
+
+  .download-card-header {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .download-card-icon {
+    font-size: 2rem;
+  }
+
+  .download-card-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .download-card-meta {
+    justify-content: center;
+    margin-bottom: var(--spacing-2);
+  }
+
+  .download-btn {
+    justify-content: center;
+  }
+}

@@ -6,7 +6,13 @@ export const STEPS = 16;
 export const MAX_LOOPS = 8;
 export const DEFAULT_LOOP_COUNT = 1;
 
-export const INSTRUMENTS = ['kick', 'snare', 'hihat', 'openhat', 'clap'] as const;
+export const INSTRUMENTS = [
+  'kick',
+  'snare',
+  'hihat',
+  'openhat',
+  'clap',
+] as const;
 export type Instrument = (typeof INSTRUMENTS)[number];
 
 export const TEMPO_RANGE = {

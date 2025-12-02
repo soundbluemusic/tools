@@ -15,6 +15,7 @@ export interface CommonTranslation {
     sitemap: string;
     opensource: string;
     toolsUsed: string;
+    downloads: string;
   };
   // Home page
   home: {

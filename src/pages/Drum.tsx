@@ -37,7 +37,11 @@ const Drum = memo(function Drum() {
       breadcrumb={breadcrumb}
       actions={
         <>
-          <EmbedButton title={drum.title} defaultWidth={500} defaultHeight={600} />
+          <EmbedButton
+            title={drum.title}
+            defaultWidth={500}
+            defaultHeight={600}
+          />
           <ShareButton title={drum.title} description={drum.description} />
         </>
       }

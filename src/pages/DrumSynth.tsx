@@ -38,8 +38,15 @@ const DrumSynth = memo(function DrumSynth() {
       breadcrumb={breadcrumb}
       actions={
         <>
-          <EmbedButton title={drumSynth.title} defaultWidth={500} defaultHeight={700} />
-          <ShareButton title={drumSynth.title} description={drumSynth.description} />
+          <EmbedButton
+            title={drumSynth.title}
+            defaultWidth={500}
+            defaultHeight={700}
+          />
+          <ShareButton
+            title={drumSynth.title}
+            description={drumSynth.description}
+          />
         </>
       }
     >

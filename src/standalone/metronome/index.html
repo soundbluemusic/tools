@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <meta name="theme-color" content="#1c1917" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Metronome</title>
+    <style>
+      /* Critical CSS - prevent FOUC */
+      html { background: #faf9f7; }
+      @media (prefers-color-scheme: dark) {
+        html:not([data-theme="light"]) { background: #1a1918; }
+      }
+      html[data-theme="dark"] { background: #1a1918; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

@@ -55,7 +55,9 @@ const Terms = memo(function Terms() {
             </p>
 
             <h3>3.2 보호되는 자산</h3>
-            <p>다음 항목들은 MIT 라이선스에 포함되지 않으며 별도로 보호됩니다:</p>
+            <p>
+              다음 항목들은 MIT 라이선스에 포함되지 않으며 별도로 보호됩니다:
+            </p>
             <ul>
               <li>
                 <strong>브랜드:</strong> "SoundBlueMusic", "Sound Blue" 등의
@@ -79,9 +81,7 @@ const Terms = memo(function Terms() {
           <section className="legal-section">
             <h2>4. 서비스 이용</h2>
             <h3>4.1 허용되는 사용</h3>
-            <p>
-              MIT 라이선스에 따라 다음과 같은 사용이 허용됩니다:
-            </p>
+            <p>MIT 라이선스에 따라 다음과 같은 사용이 허용됩니다:</p>
             <ul>
               <li>개인적 및 상업적 목적으로 자유롭게 도구 사용</li>
               <li>코드 수정, 복사, 병합, 출판, 배포, 서브라이선스 및 판매</li>
@@ -132,8 +132,8 @@ const Terms = memo(function Terms() {
           <section className="legal-section">
             <h2>8. 문의</h2>
             <p>
-              본 이용약관에 관한 문의사항은 GitHub 저장소의 Issues를 통해
-              연락해 주시기 바랍니다.
+              본 이용약관에 관한 문의사항은 GitHub 저장소의 Issues를 통해 연락해
+              주시기 바랍니다.
             </p>
           </section>
         </div>
@@ -157,9 +157,8 @@ const Terms = memo(function Terms() {
         <section className="legal-section">
           <h2>2. Service Description</h2>
           <p>
-            This Service is a web application that provides various
-            productivity tools such as a metronome, QR code generator, and more
-            for free.
+            This Service is a web application that provides various productivity
+            tools such as a metronome, QR code generator, and more for free.
           </p>
         </section>
 
@@ -199,9 +198,7 @@ const Terms = memo(function Terms() {
         <section className="legal-section">
           <h2>4. Use of Service</h2>
           <h3>4.1 Permitted Use</h3>
-          <p>
-            Under the MIT License, the following uses are permitted:
-          </p>
+          <p>Under the MIT License, the following uses are permitted:</p>
           <ul>
             <li>Personal and commercial use of the tools</li>
             <li>
@@ -249,8 +246,8 @@ const Terms = memo(function Terms() {
         <section className="legal-section">
           <h2>7. Changes to Terms</h2>
           <p>
-            These Terms of Service may be updated due to legal changes or
-            policy updates. Updated terms will be posted on this page.
+            These Terms of Service may be updated due to legal changes or policy
+            updates. Updated terms will be posted on this page.
           </p>
         </section>
 

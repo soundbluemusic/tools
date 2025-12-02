@@ -1,11 +1,4 @@
-import {
-  memo,
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useMemo,
-} from 'react';
+import { memo, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
 import type { App } from '../../types';
@@ -13,20 +6,47 @@ import './CommandPalette.css';
 
 // SVG Icons
 const SearchIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <circle cx="11" cy="11" r="8" />
     <path d="m21 21-4.35-4.35" />
   </svg>
 );
 
 const ArrowRightIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <path d="M5 12h14M12 5l7 7-7 7" />
   </svg>
 );
 
 const EnterIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
     <polyline points="9 10 4 15 9 20" />
     <path d="M20 4v7a4 4 0 0 1-4 4H4" />
   </svg>
@@ -65,36 +85,53 @@ export const CommandPalette = memo(function CommandPalette({
   const listRef = useRef<HTMLDivElement>(null);
 
   // Quick actions
-  const quickActions = useMemo<QuickAction[]>(() => [
-    {
-      id: 'home',
-      labelKo: '홈으로 이동',
-      labelEn: 'Go to Home',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-          <polyline points="9 22 9 12 15 12 15 22" />
-        </svg>
-      ),
-      action: () => navigate('/'),
-      keywords: ['home', 'main', '홈', '메인'],
-    },
-    {
-      id: 'sitemap',
-      labelKo: '사이트맵 보기',
-      labelEn: 'View Sitemap',
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <rect x="3" y="3" width="7" height="7" rx="1" />
-          <rect x="14" y="3" width="7" height="7" rx="1" />
-          <rect x="3" y="14" width="7" height="7" rx="1" />
-          <rect x="14" y="14" width="7" height="7" rx="1" />
-        </svg>
-      ),
-      action: () => navigate('/sitemap'),
-      keywords: ['sitemap', 'all', '사이트맵', '전체'],
-    },
-  ], [navigate]);
+  const quickActions = useMemo<QuickAction[]>(
+    () => [
+      {
+        id: 'home',
+        labelKo: '홈으로 이동',
+        labelEn: 'Go to Home',
+        icon: (
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg>
+        ),
+        action: () => navigate('/'),
+        keywords: ['home', 'main', '홈', '메인'],
+      },
+      {
+        id: 'sitemap',
+        labelKo: '사이트맵 보기',
+        labelEn: 'View Sitemap',
+        icon: (
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+        ),
+        action: () => navigate('/sitemap'),
+        keywords: ['sitemap', 'all', '사이트맵', '전체'],
+      },
+    ],
+    [navigate]
+  );
 
   // Filter results based on query
   const filteredResults = useMemo(() => {
@@ -141,7 +178,8 @@ export const CommandPalette = memo(function CommandPalette({
   }, [query, apps, quickActions]);
 
   // Total results count
-  const totalResults = filteredResults.apps.length + filteredResults.actions.length;
+  const totalResults =
+    filteredResults.apps.length + filteredResults.actions.length;
 
   // Reset selected index when results change
   useEffect(() => {
@@ -171,67 +209,83 @@ export const CommandPalette = memo(function CommandPalette({
   }, [selectedIndex]);
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setSelectedIndex((prev) => Math.min(prev + 1, totalResults - 1));
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setSelectedIndex((prev) => Math.max(prev - 1, 0));
-        break;
-      case 'Enter':
-        e.preventDefault();
-        // Execute selected action
-        if (selectedIndex < filteredResults.apps.length) {
-          navigate(filteredResults.apps[selectedIndex].url);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setSelectedIndex((prev) => Math.min(prev + 1, totalResults - 1));
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setSelectedIndex((prev) => Math.max(prev - 1, 0));
+          break;
+        case 'Enter':
+          e.preventDefault();
+          // Execute selected action
+          if (selectedIndex < filteredResults.apps.length) {
+            navigate(filteredResults.apps[selectedIndex].url);
+            onClose();
+          } else {
+            const actionIndex = selectedIndex - filteredResults.apps.length;
+            filteredResults.actions[actionIndex]?.action();
+            onClose();
+          }
+          break;
+        case 'Escape':
+          e.preventDefault();
           onClose();
-        } else {
-          const actionIndex = selectedIndex - filteredResults.apps.length;
-          filteredResults.actions[actionIndex]?.action();
-          onClose();
-        }
-        break;
-      case 'Escape':
-        e.preventDefault();
-        onClose();
-        break;
-    }
-  }, [selectedIndex, totalResults, filteredResults, navigate, onClose]);
+          break;
+      }
+    },
+    [selectedIndex, totalResults, filteredResults, navigate, onClose]
+  );
 
   // Handle item click - uses data-index attribute to avoid inline functions
-  const handleItemClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const index = parseInt(e.currentTarget.dataset.index || '0', 10);
-    if (index < filteredResults.apps.length) {
-      navigate(filteredResults.apps[index].url);
-    } else {
-      const actionIndex = index - filteredResults.apps.length;
-      filteredResults.actions[actionIndex]?.action();
-    }
-    onClose();
-  }, [filteredResults, navigate, onClose]);
+  const handleItemClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const index = parseInt(e.currentTarget.dataset.index || '0', 10);
+      if (index < filteredResults.apps.length) {
+        navigate(filteredResults.apps[index].url);
+      } else {
+        const actionIndex = index - filteredResults.apps.length;
+        filteredResults.actions[actionIndex]?.action();
+      }
+      onClose();
+    },
+    [filteredResults, navigate, onClose]
+  );
 
   // Handle mouse enter - uses data-index attribute to avoid inline functions
-  const handleItemMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const index = parseInt(e.currentTarget.dataset.index || '0', 10);
-    setSelectedIndex(index);
-  }, []);
+  const handleItemMouseEnter = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const index = parseInt(e.currentTarget.dataset.index || '0', 10);
+      setSelectedIndex(index);
+    },
+    []
+  );
 
   // Handle backdrop click
-  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  }, [onClose]);
+  const handleBackdropClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.target === e.currentTarget) {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
   // Handle query change - memoized to avoid recreation
-  const handleQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuery(e.target.value);
-  }, []);
+  const handleQueryChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setQuery(e.target.value);
+    },
+    []
+  );
 
   const t = {
-    placeholder: language === 'ko' ? '검색 또는 명령어...' : 'Search or type a command...',
+    placeholder:
+      language === 'ko' ? '검색 또는 명령어...' : 'Search or type a command...',
     tools: language === 'ko' ? '도구' : 'Tools',
     actions: language === 'ko' ? '빠른 실행' : 'Quick Actions',
     noResults: language === 'ko' ? '검색 결과가 없습니다' : 'No results found',
@@ -293,7 +347,10 @@ export const CommandPalette = memo(function CommandPalette({
                       onClick={handleItemClick}
                       onMouseEnter={handleItemMouseEnter}
                     >
-                      <span className="command-palette-item-icon" aria-hidden="true">
+                      <span
+                        className="command-palette-item-icon"
+                        aria-hidden="true"
+                      >
                         {app.icon}
                       </span>
                       <div className="command-palette-item-content">
@@ -313,7 +370,9 @@ export const CommandPalette = memo(function CommandPalette({
               {/* Quick Actions */}
               {filteredResults.actions.length > 0 && (
                 <div className="command-palette-section">
-                  <div className="command-palette-section-label">{t.actions}</div>
+                  <div className="command-palette-section-label">
+                    {t.actions}
+                  </div>
                   {filteredResults.actions.map((action, index) => {
                     const itemIndex = filteredResults.apps.length + index;
                     return (
@@ -325,12 +384,17 @@ export const CommandPalette = memo(function CommandPalette({
                         onClick={handleItemClick}
                         onMouseEnter={handleItemMouseEnter}
                       >
-                        <span className="command-palette-item-icon" aria-hidden="true">
+                        <span
+                          className="command-palette-item-icon"
+                          aria-hidden="true"
+                        >
                           {action.icon}
                         </span>
                         <div className="command-palette-item-content">
                           <span className="command-palette-item-title">
-                            {language === 'ko' ? action.labelKo : action.labelEn}
+                            {language === 'ko'
+                              ? action.labelKo
+                              : action.labelEn}
                           </span>
                         </div>
                         <ArrowRightIcon />
@@ -346,7 +410,9 @@ export const CommandPalette = memo(function CommandPalette({
         {/* Footer */}
         <div className="command-palette-footer">
           <div className="command-palette-hint">
-            <kbd><EnterIcon /></kbd>
+            <kbd>
+              <EnterIcon />
+            </kbd>
             <span>{t.hint}</span>
           </div>
           <div className="command-palette-hint">

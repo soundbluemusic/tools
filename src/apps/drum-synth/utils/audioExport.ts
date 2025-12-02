@@ -25,7 +25,8 @@ function makeDistortionCurve(amount: number): Float32Array<ArrayBuffer> {
   const k = (amount / 100) * 50;
   for (let i = 0; i < samples; i++) {
     const x = (i * 2) / samples - 1;
-    curve[i] = ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
+    curve[i] =
+      ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
   }
   return curve;
 }
@@ -104,13 +105,20 @@ function renderSnare(
     now + snareParams.toneDecay
   );
   toneGain.gain.setValueAtTime(volume * toneMix * 0.5, now);
-  toneGain.gain.exponentialRampToValueAtTime(0.001, now + snareParams.toneDecay);
+  toneGain.gain.exponentialRampToValueAtTime(
+    0.001,
+    now + snareParams.toneDecay
+  );
   toneOsc.connect(toneGain);
   toneGain.connect(ctx.destination);
   toneOsc.start(now);
   toneOsc.stop(now + snareParams.toneDecay + 0.1);
 
-  const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * snareParams.noiseDecay, ctx.sampleRate);
+  const noiseBuffer = ctx.createBuffer(
+    1,
+    ctx.sampleRate * snareParams.noiseDecay,
+    ctx.sampleRate
+  );
   const noiseData = noiseBuffer.getChannelData(0);
   for (let i = 0; i < noiseBuffer.length; i++) {
     noiseData[i] = Math.random() * 2 - 1;
@@ -126,7 +134,10 @@ function renderSnare(
 
   const noiseGain = ctx.createGain();
   noiseGain.gain.setValueAtTime(volume * (1 - toneMix) * 0.4, now);
-  noiseGain.gain.exponentialRampToValueAtTime(0.001, now + snareParams.noiseDecay);
+  noiseGain.gain.exponentialRampToValueAtTime(
+    0.001,
+    now + snareParams.noiseDecay
+  );
 
   noiseSource.connect(noiseFilter);
   noiseFilter.connect(noiseGain);
@@ -172,7 +183,11 @@ function renderHihat(
     osc.stop(now + actualDecay + 0.1);
   }
 
-  const noiseBuffer = ctx.createBuffer(1, ctx.sampleRate * actualDecay, ctx.sampleRate);
+  const noiseBuffer = ctx.createBuffer(
+    1,
+    ctx.sampleRate * actualDecay,
+    ctx.sampleRate
+  );
   const noiseData = noiseBuffer.getChannelData(0);
   for (let i = 0; i < noiseBuffer.length; i++) {
     noiseData[i] = Math.random() * 2 - 1;
@@ -184,7 +199,10 @@ function renderHihat(
   const noiseFilter = ctx.createBiquadFilter();
   noiseFilter.type = 'highpass';
   noiseFilter.frequency.setValueAtTime(hihatParams.filterFreq, now);
-  noiseFilter.Q.setValueAtTime(hihatParams.filterQ + hihatParams.ring / 50, now);
+  noiseFilter.Q.setValueAtTime(
+    hihatParams.filterQ + hihatParams.ring / 50,
+    now
+  );
 
   const noiseGain = ctx.createGain();
   noiseGain.gain.setValueAtTime(volume * 0.15, now);
@@ -212,9 +230,13 @@ function renderClap(
 
   for (let c = 0; c < numClaps; c++) {
     const randomOffset = (Math.random() - 0.5) * 0.006;
-    const clapTime = now + c * baseSpacing * (1 + clapParams.spread / 200) + randomOffset;
+    const clapTime =
+      now + c * baseSpacing * (1 + clapParams.spread / 200) + randomOffset;
     const hitDuration = clapParams.decay * (0.7 + Math.random() * 0.3);
-    const bufferLength = Math.max(ctx.sampleRate * hitDuration, ctx.sampleRate * 0.1);
+    const bufferLength = Math.max(
+      ctx.sampleRate * hitDuration,
+      ctx.sampleRate * 0.1
+    );
 
     const noiseBuffer = ctx.createBuffer(1, bufferLength, ctx.sampleRate);
     const noiseData = noiseBuffer.getChannelData(0);
@@ -242,7 +264,11 @@ function renderClap(
     highShelf.gain.setValueAtTime(3 + (clapParams.tone / 100) * 4, clapTime);
 
     const gain = ctx.createGain();
-    const hitVolume = volume * 0.35 * (c === 0 ? 1 : 0.6 + Math.random() * 0.3) * Math.pow(0.85, c);
+    const hitVolume =
+      volume *
+      0.35 *
+      (c === 0 ? 1 : 0.6 + Math.random() * 0.3) *
+      Math.pow(0.85, c);
     gain.gain.setValueAtTime(hitVolume, clapTime);
 
     noiseSource.connect(bpFilter);
@@ -254,7 +280,11 @@ function renderClap(
 
   // Crack
   const crackDuration = 0.015;
-  const crackBuffer = ctx.createBuffer(1, ctx.sampleRate * crackDuration, ctx.sampleRate);
+  const crackBuffer = ctx.createBuffer(
+    1,
+    ctx.sampleRate * crackDuration,
+    ctx.sampleRate
+  );
   const crackData = crackBuffer.getChannelData(0);
   for (let i = 0; i < crackBuffer.length; i++) {
     const t = i / ctx.sampleRate;
@@ -267,7 +297,10 @@ function renderClap(
 
   const crackFilter = ctx.createBiquadFilter();
   crackFilter.type = 'highpass';
-  crackFilter.frequency.setValueAtTime(2500 + (clapParams.tone / 100) * 2000, now);
+  crackFilter.frequency.setValueAtTime(
+    2500 + (clapParams.tone / 100) * 2000,
+    now
+  );
   crackFilter.Q.setValueAtTime(0.7, now);
 
   const crackGain = ctx.createGain();
@@ -281,11 +314,16 @@ function renderClap(
   // Reverb
   if (clapParams.reverb > 0) {
     const reverbLength = 0.15 + (clapParams.reverb / 100) * 0.35;
-    const reverbBuffer = ctx.createBuffer(1, ctx.sampleRate * reverbLength, ctx.sampleRate);
+    const reverbBuffer = ctx.createBuffer(
+      1,
+      ctx.sampleRate * reverbLength,
+      ctx.sampleRate
+    );
     const reverbData = reverbBuffer.getChannelData(0);
     for (let i = 0; i < reverbBuffer.length; i++) {
       const t = i / ctx.sampleRate;
-      reverbData[i] = (Math.random() * 2 - 1) * Math.exp(-t / (reverbLength * 0.4));
+      reverbData[i] =
+        (Math.random() * 2 - 1) * Math.exp(-t / (reverbLength * 0.4));
     }
 
     const reverbSource = ctx.createBufferSource();
@@ -306,7 +344,10 @@ function renderClap(
       volume * (clapParams.reverb / 100) * 0.2,
       reverbStart + 0.01
     );
-    reverbGain.gain.exponentialRampToValueAtTime(0.001, reverbStart + reverbLength);
+    reverbGain.gain.exponentialRampToValueAtTime(
+      0.001,
+      reverbStart + reverbLength
+    );
 
     reverbSource.connect(reverbHighpass);
     reverbHighpass.connect(reverbLowpass);
@@ -349,7 +390,10 @@ function renderTom(
   bodyOsc.type = 'sine';
   bodyOsc.frequency.setValueAtTime(tomParams.pitch * 1.5, now);
   bodyGain.gain.setValueAtTime(volume * (tomParams.body / 100) * 0.3, now);
-  bodyGain.gain.exponentialRampToValueAtTime(0.001, now + tomParams.decay * 0.6);
+  bodyGain.gain.exponentialRampToValueAtTime(
+    0.001,
+    now + tomParams.decay * 0.6
+  );
 
   osc.connect(gainNode);
   gainNode.connect(ctx.destination);
@@ -410,7 +454,10 @@ function renderRim(
     bodyOsc.type = 'sine';
     bodyOsc.frequency.setValueAtTime(rimParams.pitch * 0.5, now);
     bodyGain.gain.setValueAtTime((rimParams.body / 100) * volume * 0.3, now);
-    bodyGain.gain.exponentialRampToValueAtTime(0.001, now + rimParams.decay * 1.5);
+    bodyGain.gain.exponentialRampToValueAtTime(
+      0.001,
+      now + rimParams.decay * 1.5
+    );
     bodyOsc.connect(bodyGain);
     bodyGain.connect(ctx.destination);
     bodyOsc.start(now);
@@ -556,7 +603,11 @@ function writeString(view: DataView, offset: number, str: string): void {
  */
 export async function audioBufferToMp3(buffer: AudioBuffer): Promise<Blob> {
   // Check if MediaRecorder supports audio/mpeg or audio/webm
-  const mimeTypes = ['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus'];
+  const mimeTypes = [
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/ogg;codecs=opus',
+  ];
   let supportedType = '';
 
   for (const type of mimeTypes) {
@@ -605,10 +656,13 @@ export async function audioBufferToMp3(buffer: AudioBuffer): Promise<Blob> {
     source.start(0);
 
     // Stop recording after buffer duration + small padding
-    setTimeout(() => {
-      source.stop();
-      mediaRecorder.stop();
-    }, (buffer.duration + 0.1) * 1000);
+    setTimeout(
+      () => {
+        source.stop();
+        mediaRecorder.stop();
+      },
+      (buffer.duration + 0.1) * 1000
+    );
   });
 }
 
@@ -642,7 +696,11 @@ export async function exportDrum(
   if (format === 'mp3') {
     blob = await audioBufferToMp3(buffer);
     // Check actual mime type for extension
-    extension = blob.type.includes('webm') ? 'webm' : blob.type.includes('ogg') ? 'ogg' : 'mp3';
+    extension = blob.type.includes('webm')
+      ? 'webm'
+      : blob.type.includes('ogg')
+        ? 'ogg'
+        : 'mp3';
   } else {
     blob = audioBufferToWav(buffer);
     extension = 'wav';
@@ -659,7 +717,14 @@ export async function exportAllDrums(
   params: AllDrumParams,
   format: ExportFormat = 'wav'
 ): Promise<void> {
-  const drumTypes: DrumType[] = ['kick', 'snare', 'hihat', 'clap', 'tom', 'rim'];
+  const drumTypes: DrumType[] = [
+    'kick',
+    'snare',
+    'hihat',
+    'clap',
+    'tom',
+    'rim',
+  ];
 
   for (const drumType of drumTypes) {
     await exportDrum(drumType, params, format);

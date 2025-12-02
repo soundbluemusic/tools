@@ -28,7 +28,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
     libraries: [
       {
         name: 'React',
-        version: '18.3.1',
+        version: '19.2.0',
         license: 'MIT',
         url: 'https://react.dev',
         description: {
@@ -38,7 +38,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
       },
       {
         name: 'React DOM',
-        version: '18.3.1',
+        version: '19.2.0',
         license: 'MIT',
         url: 'https://react.dev',
         description: {
@@ -153,7 +153,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
       },
       {
         name: 'Testing Library React',
-        version: '16.1.0',
+        version: '16.3.0',
         license: 'MIT',
         url: 'https://testing-library.com/react',
         description: {
@@ -241,16 +241,23 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
 const OpenSource = memo(function OpenSource() {
   const { language } = useLanguage();
 
-  const title = language === 'ko' ? '오픈소스 라이브러리' : 'Open Source Libraries';
+  const title =
+    language === 'ko' ? '오픈소스 라이브러리' : 'Open Source Libraries';
   const description =
     language === 'ko'
       ? '이 프로젝트에 사용된 오픈소스 라이브러리 목록입니다'
       : 'List of open source libraries used in this project';
 
-  const noteText =
-    language === 'ko'
-      ? '※ 드럼 머신과 메트로놈은 외부 사운드 파일 없이 Web Audio API를 사용하여 실시간으로 오디오를 합성합니다.'
-      : '※ The Drum Machine and Metronome synthesize audio in real-time using Web Audio API without external sound files.';
+  const noteTexts = [
+    {
+      ko: '※ 드럼 머신과 메트로놈은 외부 사운드 파일 없이 Web Audio API를 사용하여 실시간으로 오디오를 합성합니다.',
+      en: '※ The Drum Machine and Metronome synthesize audio in real-time using Web Audio API without external sound files.',
+    },
+    {
+      ko: '※ QR 코드 생성기는 QRious 라이브러리를 사용하여 Canvas 기반으로 QR 코드를 생성하며, 서버 통신 없이 브라우저에서 직접 처리됩니다.',
+      en: '※ The QR Code Generator uses the QRious library to generate QR codes via Canvas, processed directly in the browser without server communication.',
+    },
+  ];
 
   // SEO for OpenSource page (noindex as it's supplementary content)
   useSEO({
@@ -265,10 +272,18 @@ const OpenSource = memo(function OpenSource() {
 
   return (
     <PageLayout title={title} description={description}>
-      <p className="opensource-note">{noteText}</p>
+      <div className="opensource-notes">
+        {noteTexts.map((note, index) => (
+          <p key={index} className="opensource-note">
+            {note[language]}
+          </p>
+        ))}
+      </div>
       {LIBRARY_CATEGORIES.map((category) => (
         <section key={category.title.en} className="opensource-category">
-          <h2 className="opensource-category-title">{category.title[language]}</h2>
+          <h2 className="opensource-category-title">
+            {category.title[language]}
+          </h2>
           <ul className="opensource-list">
             {category.libraries.map((lib) => (
               <li key={lib.name} className="opensource-item">
@@ -282,7 +297,9 @@ const OpenSource = memo(function OpenSource() {
                     {lib.name}
                   </a>
                   <span className="opensource-version">
-                    {lib.version.startsWith('Browser') ? lib.version : `v${lib.version}`}
+                    {lib.version.startsWith('Browser')
+                      ? lib.version
+                      : `v${lib.version}`}
                   </span>
                   <span className="opensource-license">{lib.license}</span>
                 </div>

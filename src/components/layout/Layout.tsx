@@ -18,9 +18,7 @@ export const Layout = memo<LayoutProps>(function Layout({
 }) {
   return (
     <ErrorBoundary>
-      <div className={cn('layout', className)}>
-        {children}
-      </div>
+      <div className={cn('layout', className)}>{children}</div>
     </ErrorBoundary>
   );
 });

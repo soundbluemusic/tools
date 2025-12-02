@@ -43,6 +43,9 @@ describe('AppItem', () => {
   it('should have accessible label in English', () => {
     render(<AppItem app={mockApp} language="en" />);
     const link = screen.getByRole('listitem');
-    expect(link).toHaveAttribute('aria-label', 'Test App - Test App Description');
+    expect(link).toHaveAttribute(
+      'aria-label',
+      'Test App - Test App Description'
+    );
   });
 });

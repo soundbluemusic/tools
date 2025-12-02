@@ -46,16 +46,9 @@ export const AppsProvider = memo(function AppsProvider({
     };
   }, []);
 
-  const value = useMemo(
-    () => ({ apps, isLoading }),
-    [apps, isLoading]
-  );
+  const value = useMemo(() => ({ apps, isLoading }), [apps, isLoading]);
 
-  return (
-    <AppsContext.Provider value={value}>
-      {children}
-    </AppsContext.Provider>
-  );
+  return <AppsContext.Provider value={value}>{children}</AppsContext.Provider>;
 });
 
 AppsProvider.displayName = 'AppsProvider';

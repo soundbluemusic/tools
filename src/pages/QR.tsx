@@ -37,7 +37,11 @@ const QR = memo(function QR() {
       breadcrumb={breadcrumb}
       actions={
         <>
-          <EmbedButton title={qr.title} defaultWidth={400} defaultHeight={600} />
+          <EmbedButton
+            title={qr.title}
+            defaultWidth={400}
+            defaultHeight={600}
+          />
           <ShareButton title={qr.title} description={qr.subtitle} />
         </>
       }

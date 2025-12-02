@@ -64,7 +64,12 @@ body {
 }
 
 /* Headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
 }
@@ -109,12 +114,12 @@ select {
 }
 
 /* Touch-friendly input/select sizing */
-input[type="text"],
-input[type="search"],
-input[type="email"],
-input[type="url"],
-input[type="number"],
-input[type="tel"],
+input[type='text'],
+input[type='search'],
+input[type='email'],
+input[type='url'],
+input[type='number'],
+input[type='tel'],
 select {
   min-height: var(--touch-target-min, 44px);
 }

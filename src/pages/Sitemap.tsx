@@ -205,7 +205,10 @@ const Sitemap = memo(function Sitemap() {
                   <p className="sitemap-item-desc">
                     {item.description[language]}
                   </p>
-                  <span className="sitemap-item-url">{BASE_URL}{item.url}</span>
+                  <span className="sitemap-item-url">
+                    {BASE_URL}
+                    {item.url}
+                  </span>
                 </li>
               ))}
             </ul>

@@ -35,21 +35,28 @@ const Privacy = memo(function Privacy() {
               생각합니다. 본 개인정보 처리방침은 서비스가 어떤 정보를 수집하고
               어떻게 사용하는지 설명합니다.
             </p>
-            <p className="legal-updated">
-              최종 업데이트: 2025년 1월
-            </p>
+            <p className="legal-updated">최종 업데이트: 2025년 1월</p>
           </section>
 
           <section className="legal-section">
             <h2>2. 수집하는 정보</h2>
             <h3>2.1 자동으로 수집되는 정보</h3>
-            <p>본 서비스는 다음 정보를 브라우저의 로컬 저장소(localStorage)에 저장합니다:</p>
+            <p>
+              본 서비스는 다음 정보를 브라우저의 로컬 저장소(localStorage)에
+              저장합니다:
+            </p>
             <ul>
-              <li><strong>언어 설정:</strong> 사용자가 선택한 언어(한국어/영어)</li>
-              <li><strong>테마 설정:</strong> 사용자가 선택한 화면 테마(라이트/다크)</li>
+              <li>
+                <strong>언어 설정:</strong> 사용자가 선택한 언어(한국어/영어)
+              </li>
+              <li>
+                <strong>테마 설정:</strong> 사용자가 선택한 화면
+                테마(라이트/다크)
+              </li>
             </ul>
             <p>
-              이 정보는 사용자의 기기에만 저장되며, 외부 서버로 전송되지 않습니다.
+              이 정보는 사용자의 기기에만 저장되며, 외부 서버로 전송되지
+              않습니다.
             </p>
 
             <h3>2.2 수집하지 않는 정보</h3>
@@ -81,9 +88,9 @@ const Privacy = memo(function Privacy() {
 
             <h3>3.2 Google Fonts</h3>
             <p>
-              본 서비스는 웹 폰트를 제공하기 위해 Google Fonts를 사용합니다. 폰트
-              로딩 시 Google 서버에 연결되며, 이 과정에서 IP 주소 등의 정보가
-              Google에 전송될 수 있습니다.{' '}
+              본 서비스는 웹 폰트를 제공하기 위해 Google Fonts를 사용합니다.
+              폰트 로딩 시 Google 서버에 연결되며, 이 과정에서 IP 주소 등의
+              정보가 Google에 전송될 수 있습니다.{' '}
               <a
                 href="https://policies.google.com/privacy"
                 target="_blank"
@@ -106,8 +113,13 @@ const Privacy = memo(function Privacy() {
             <h2>5. 사용자 권리</h2>
             <p>사용자는 다음과 같은 권리를 가집니다:</p>
             <ul>
-              <li>브라우저 설정에서 localStorage 데이터를 삭제할 수 있습니다</li>
-              <li>브라우저의 개인정보 보호 모드를 사용하여 데이터 저장을 방지할 수 있습니다</li>
+              <li>
+                브라우저 설정에서 localStorage 데이터를 삭제할 수 있습니다
+              </li>
+              <li>
+                브라우저의 개인정보 보호 모드를 사용하여 데이터 저장을 방지할 수
+                있습니다
+              </li>
             </ul>
           </section>
 
@@ -137,9 +149,8 @@ const Privacy = memo(function Privacy() {
         <section className="legal-section">
           <h2>1. Overview</h2>
           <p>
-            Productivity Tools (the "Service") values your privacy. This
-            Privacy Policy explains what information we collect and how we use
-            it.
+            Productivity Tools (the "Service") values your privacy. This Privacy
+            Policy explains what information we collect and how we use it.
           </p>
           <p className="legal-updated">Last updated: January 2025</p>
         </section>
@@ -169,7 +180,9 @@ const Privacy = memo(function Privacy() {
           <h3>2.2 Information We Do Not Collect</h3>
           <p>This Service does not collect:</p>
           <ul>
-            <li>Personal identification information (name, email, phone, etc.)</li>
+            <li>
+              Personal identification information (name, email, phone, etc.)
+            </li>
             <li>Location data</li>
             <li>Payment information</li>
             <li>Usage analytics data</li>

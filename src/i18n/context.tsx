@@ -1,11 +1,23 @@
-import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  type ReactNode,
+} from 'react';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
 import { metronomeKo, metronomeEn } from './translations/metronome';
 import { drumKo, drumEn } from './translations/drum';
 import { drumSynthKo, drumSynthEn } from './translations/drum-synth';
-import { getStorageItem, setStorageItem, createEnumValidator } from '../utils/storage';
+import {
+  getStorageItem,
+  setStorageItem,
+  createEnumValidator,
+} from '../utils/storage';
 
 /**
  * All translations organized by language
@@ -40,7 +52,9 @@ interface LanguageContextValue {
 /**
  * Language context with default values
  */
-const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
+const LanguageContext = createContext<LanguageContextValue | undefined>(
+  undefined
+);
 
 /**
  * Local storage key for language preference
@@ -64,9 +78,13 @@ const getInitialLanguage = (): Language => {
   if (typeof window === 'undefined') return 'ko';
 
   // Try to get from storage with validation
-  const stored = getStorageItem<Language>(LANGUAGE_STORAGE_KEY, null as unknown as Language, {
-    validator: isLanguage,
-  });
+  const stored = getStorageItem<Language>(
+    LANGUAGE_STORAGE_KEY,
+    null as unknown as Language,
+    {
+      validator: isLanguage,
+    }
+  );
 
   if (stored) {
     return stored;
@@ -105,9 +123,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   // Sync with localStorage on mount (with validation)
   useEffect(() => {
-    const stored = getStorageItem<Language>(LANGUAGE_STORAGE_KEY, null as unknown as Language, {
-      validator: isLanguage,
-    });
+    const stored = getStorageItem<Language>(
+      LANGUAGE_STORAGE_KEY,
+      null as unknown as Language,
+      {
+        validator: isLanguage,
+      }
+    );
     if (stored) {
       setLanguageState(stored);
     }

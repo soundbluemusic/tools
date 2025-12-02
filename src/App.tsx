@@ -23,6 +23,7 @@ const QR = lazy(() => import('./pages/QR'));
 const Sitemap = lazy(() => import('./pages/Sitemap'));
 const OpenSource = lazy(() => import('./pages/OpenSource'));
 const ToolsUsed = lazy(() => import('./pages/ToolsUsed'));
+const Downloads = lazy(() => import('./pages/Downloads'));
 
 // Legal pages - lazy loaded
 const Privacy = lazy(() => import('./pages/Privacy'));
@@ -51,6 +52,7 @@ const ROUTES = [
   { path: '/sitemap', element: <Sitemap />, lazy: true },
   { path: '/opensource', element: <OpenSource />, lazy: true },
   { path: '/tools-used', element: <ToolsUsed />, lazy: true },
+  { path: '/downloads', element: <Downloads />, lazy: true },
   { path: '/privacy', element: <Privacy />, lazy: true },
   { path: '/terms', element: <Terms />, lazy: true },
   { path: '*', element: <NotFound />, lazy: false },
@@ -85,7 +87,11 @@ function AppContent() {
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {ROUTES.map((route) => (
-              <Route key={route.path} path={route.path} element={route.element} />
+              <Route
+                key={route.path}
+                path={route.path}
+                element={route.element}
+              />
             ))}
           </Routes>
         </Suspense>

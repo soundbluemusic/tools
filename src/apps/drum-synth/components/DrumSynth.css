@@ -49,7 +49,10 @@
   border: 1px solid var(--border-color, #ddd);
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.1s, border-color 0.1s, transform 0.08s;
+  transition:
+    background-color 0.1s,
+    border-color 0.1s,
+    transform 0.08s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   user-select: none;
@@ -101,7 +104,9 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   white-space: nowrap;
@@ -169,7 +174,9 @@
   border: 1px solid var(--border-color, #ddd);
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -292,7 +299,9 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.15s, transform 0.1s;
+  transition:
+    background-color 0.15s,
+    transform 0.1s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -366,7 +375,9 @@
   border: 1px solid var(--border-color, #ddd);
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -422,7 +433,10 @@
   border: 1px solid var(--border-color, #ddd);
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    opacity 0.15s;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }

@@ -19,7 +19,9 @@ function DefaultErrorFallback({ error, onReset }: ErrorFallbackProps) {
     <div className="error-boundary" role="alert">
       <div className="error-boundary-content">
         <h2 className="error-boundary-title">{t.common.errorBoundary.title}</h2>
-        <p className="error-boundary-message">{t.common.errorBoundary.message}</p>
+        <p className="error-boundary-message">
+          {t.common.errorBoundary.message}
+        </p>
         {import.meta.env.DEV && error && (
           <pre className="error-boundary-details">{error.message}</pre>
         )}
@@ -83,10 +85,7 @@ export class ErrorBoundary extends Component<
 
   componentDidUpdate(prevProps: ErrorBoundaryProps): void {
     // Reset error state when resetKey changes
-    if (
-      this.state.hasError &&
-      prevProps.resetKey !== this.props.resetKey
-    ) {
+    if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
       this.setState({ hasError: false, error: null });
     }
   }
