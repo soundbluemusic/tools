@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && npm run build:standalone:metronome:prod",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
@@ -30,6 +30,7 @@
     "prepare": "husky",
     "build:standalone": "vite build --config vite.standalone.config.ts && tsx scripts/rename-standalone.ts",
     "build:standalone:metronome": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
+    "build:standalone:metronome:prod": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts --outDir dist/standalone --emptyOutDir && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
     "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
   },
   "dependencies": {
