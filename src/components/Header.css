@@ -162,6 +162,7 @@
 /* Sidebar Toggle - Hidden on mobile */
 .header-sidebar-toggle {
   display: none;
+  flex-shrink: 0;
 }
 
 /* Desktop: Sidebar offset */
@@ -178,6 +179,11 @@
   /* Adjust header offset when sidebar collapsed */
   .sidebar-collapsed .header-inner {
     padding-left: 16px;
+  }
+
+  /* Add gap between toggle and logo */
+  .sidebar-collapsed .header-sidebar-toggle {
+    margin-right: 8px;
   }
 }
 
