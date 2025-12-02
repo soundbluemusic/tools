@@ -11,7 +11,7 @@ _향후 변경사항이 여기에 기록됩니다._
 
 ---
 
-## [0.1.4-베타] - 2025-12-02
+## [0.1.5-베타] - 2025-12-02
 
 ### Added
 
@@ -118,8 +118,8 @@ _향후 변경사항이 여기에 기록됩니다._
 
 ---
 
-[Unreleased]: https://github.com/soundbluemusic/tools/compare/v0.1.4-베타...HEAD
-[0.1.4-베타]: https://github.com/soundbluemusic/tools/compare/v0.1.3-베타...v0.1.4-베타
+[Unreleased]: https://github.com/soundbluemusic/tools/compare/v0.1.5-베타...HEAD
+[0.1.5-베타]: https://github.com/soundbluemusic/tools/compare/v0.1.3-베타...v0.1.5-베타
 [0.1.3-베타]: https://github.com/soundbluemusic/tools/compare/v0.1.2-베타...v0.1.3-베타
 [0.1.2-베타]: https://github.com/soundbluemusic/tools/compare/v0.1.1-베타...v0.1.2-베타
 [0.1.1-베타]: https://github.com/soundbluemusic/tools/compare/v0.1.0-베타...v0.1.1-베타
