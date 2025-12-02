@@ -45,9 +45,6 @@
   text-decoration: none;
   font-size: 14px;
   font-weight: 400;
-  transition:
-    background-color 100ms ease-out,
-    color 100ms ease-out;
 }
 
 .sidebar-item:hover {

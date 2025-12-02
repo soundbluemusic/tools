@@ -129,9 +129,6 @@
   border-radius: 8px;
   cursor: pointer;
   color: var(--color-text-secondary, #666);
-  transition:
-    background-color 0.15s ease-out,
-    color 0.15s ease-out;
 }
 
 .header-control-btn:hover {

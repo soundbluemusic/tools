@@ -182,7 +182,6 @@
   text-decoration: none;
   color: var(--color-text-primary);
   border-bottom: 1px solid var(--color-border-primary);
-  transition: background-color var(--transition-fast) var(--ease-default);
   contain: layout style;
 }
 
@@ -218,9 +217,6 @@
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--color-text-primary);
-  transition:
-    background-color var(--transition-fast) var(--ease-default),
-    border-color var(--transition-fast) var(--ease-default);
 }
 
 .app-card:hover {
