@@ -3,7 +3,7 @@ import { useLanguage } from '../i18n';
 import { useSEO, useApps } from '../hooks';
 import { Breadcrumb } from '../components/Breadcrumb';
 import AppList from '../components/AppList';
-import { MUSIC_APP_PATHS } from '../constants/apps';
+import { MUSIC_APP_PATHS, COMBINED_APP_PATHS } from '../constants/apps';
 
 const otherToolsSEO = {
   ko: {
@@ -36,11 +36,16 @@ const OtherTools = memo(function OtherTools() {
     canonicalPath: '/other-tools',
   });
 
-  // Filter non-music apps
+  // Filter non-music and non-combined apps
   const otherApps = useMemo(() => {
     return apps.filter(
       (app) =>
-        !MUSIC_APP_PATHS.includes(app.url as (typeof MUSIC_APP_PATHS)[number])
+        !MUSIC_APP_PATHS.includes(
+          app.url as (typeof MUSIC_APP_PATHS)[number]
+        ) &&
+        !COMBINED_APP_PATHS.includes(
+          app.url as (typeof COMBINED_APP_PATHS)[number]
+        )
     );
   }, [apps]);
 

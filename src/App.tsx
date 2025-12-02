@@ -22,6 +22,10 @@ const QR = lazy(() => import('./pages/QR'));
 // Category pages - lazy loaded
 const MusicTools = lazy(() => import('./pages/MusicTools'));
 const OtherTools = lazy(() => import('./pages/OtherTools'));
+const CombinedTools = lazy(() => import('./pages/CombinedTools'));
+
+// Combined tool pages - lazy loaded
+const DrumTool = lazy(() => import('./pages/DrumTool'));
 
 // Info pages - lazy loaded (rarely visited)
 const Sitemap = lazy(() => import('./pages/Sitemap'));
@@ -51,9 +55,11 @@ const ROUTES = [
   { path: '/', element: <Home />, lazy: false },
   { path: '/music-tools', element: <MusicTools />, lazy: true },
   { path: '/other-tools', element: <OtherTools />, lazy: true },
+  { path: '/combined-tools', element: <CombinedTools />, lazy: true },
   { path: '/metronome', element: <Metronome />, lazy: true },
   { path: '/drum', element: <Drum />, lazy: true },
   { path: '/drum-synth', element: <DrumSynth />, lazy: true },
+  { path: '/drum-tool', element: <DrumTool />, lazy: true },
   { path: '/qr', element: <QR />, lazy: true },
   { path: '/sitemap', element: <Sitemap />, lazy: true },
   { path: '/opensource', element: <OpenSource />, lazy: true },
