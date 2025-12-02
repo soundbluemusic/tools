@@ -40,30 +40,34 @@ jobs:
       - name: Bump version with 베타 suffix
         id: bump_version
         run: |
-          # Get current version (e.g., "0.1.0-베타")
-          CURRENT=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT"
+          # Use Node.js to handle version bumping (avoids shell compatibility issues)
+          NEW_VERSION=$(node -e "
+            const fs = require('fs');
+            const pkg = require('./package.json');
+            const current = pkg.version;
+            console.error('Current version:', current);
 
-          # Extract numeric part (0.1.0) and suffix (-베타)
-          NUMERIC=$(echo "$CURRENT" | sed 's/-베타$//')
+            // Extract numeric part and suffix
+            const match = current.match(/^(\d+)\.(\d+)\.(\d+)(-.*)?$/);
+            if (!match) {
+              console.error('Invalid version format:', current);
+              process.exit(1);
+            }
 
-          # Split into major.minor.patch
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$NUMERIC"
+            const [, major, minor, patch, suffix = '-베타'] = match;
+            const newPatch = parseInt(patch, 10) + 1;
+            const newVersion = major + '.' + minor + '.' + newPatch + suffix;
 
-          # Increment patch
-          NEW_PATCH=$((PATCH + 1))
-          NEW_VERSION="${MAJOR}.${MINOR}.${NEW_PATCH}-베타"
+            // Update package.json
+            pkg.version = newVersion;
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+
+            // Output new version to stdout
+            console.log(newVersion);
+          ")
 
           echo "New version: $NEW_VERSION"
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-          # Update package.json
-          node -e "
-            const fs = require('fs');
-            const pkg = require('./package.json');
-            pkg.version = '$NEW_VERSION';
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
-          "
 
       - name: Update package-lock.json
         run: npm install --package-lock-only
