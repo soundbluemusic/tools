@@ -6,6 +6,25 @@
   "description": "A collection of utility tools built with React",
   "author": "Tools Team",
   "license": "MIT",
+    "homepage": "https://tools.soundbluemusic.com",
+    "repository": {
+          "type": "git",
+          "url": "https://github.com/soundbluemusic/tools.git"
+    },
+    "bugs": {
+          "url": "https://github.com/soundbluemusic/tools/issues"
+    },
+    "keywords": [
+          "react",
+          "typescript",
+          "vite",
+          "metronome",
+          "drum-machine",
+          "qr-code",
+          "web-audio",
+          "pwa",
+          "music-tools"
+    ],
   "scripts": {
     "dev": "vite",
     "prebuild": "npm run generate-sitemap",
