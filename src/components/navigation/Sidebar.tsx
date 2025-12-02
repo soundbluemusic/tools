@@ -83,6 +83,14 @@ export const Sidebar = memo(function Sidebar({ apps }: SidebarProps) {
 
         <div className="sidebar-divider" />
 
+        {/* Downloads */}
+        <NavLink to="/downloads" className={`sidebar-item ${isActive('/downloads') ? 'active' : ''}`}>
+          <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M5 20h14v-2H5v2zm7-18v12.17l3.59-3.58L17 12l-5 5-5-5 1.41-1.41L12 14.17V2z" />
+          </svg>
+          <span className="sidebar-label">{language === 'ko' ? '다운로드' : 'Downloads'}</span>
+        </NavLink>
+
         {/* Menu / Settings */}
         <NavLink to="/sitemap" className={`sidebar-item ${isActive('/sitemap') ? 'active' : ''}`}>
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
