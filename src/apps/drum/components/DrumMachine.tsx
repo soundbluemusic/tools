@@ -3,6 +3,12 @@ import { useTranslations } from '../../../i18n';
 import type { DrumTranslation } from '../../../i18n/types';
 import { cn } from '../../../utils';
 
+import type { AllDrumParams } from '../../drum-synth/constants';
+import {
+  playSynthSound,
+  type DrumMachineInstrument,
+} from '../../drum-synth/utils/soundSynth';
+
 /**
  * Props for DrumMachine component
  * When translations are provided, they are used directly (standalone mode)
@@ -11,6 +17,8 @@ import { cn } from '../../../utils';
 export interface DrumMachineProps {
   /** Optional translations for standalone mode */
   translations?: DrumTranslation;
+  /** Optional synth parameters from DrumSynth (for integrated mode in DrumTool) */
+  synthParams?: AllDrumParams;
 }
 import {
   STEPS,
@@ -280,6 +288,7 @@ const ChevronRightIcon = memo(function ChevronRightIcon() {
  */
 export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
   translations,
+  synthParams,
 }) {
   // Use provided translations (standalone) or i18n context (main site)
   const contextTranslations = useTranslations();
@@ -390,8 +399,15 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
     []
   );
 
+  // Keep synthParams ref in sync
+  const synthParamsRef = useRef<AllDrumParams | undefined>(synthParams);
+  useEffect(() => {
+    synthParamsRef.current = synthParams;
+  }, [synthParams]);
+
   /**
    * Play a single instrument sound at a specific time
+   * Uses synth parameters when available (integrated mode), otherwise basic synthesis
    * @param inst - Instrument to play
    * @param time - Audio context time to schedule the sound
    * @param velocity - Note velocity (0-100), affects volume
@@ -402,6 +418,27 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       if (!ctx || velocity <= 0) return;
 
       const startTime = time ?? ctx.currentTime;
+
+      // Use synth parameters when available (integrated mode with DrumSynth)
+      if (synthParamsRef.current) {
+        // Calculate delay for scheduled sounds
+        const delay = Math.max(0, (startTime - ctx.currentTime) * 1000);
+        const adjustedVelocity = (volumesRef.current[inst] / 100) * velocity;
+
+        setTimeout(() => {
+          if (ctx && synthParamsRef.current) {
+            playSynthSound(
+              ctx,
+              inst as DrumMachineInstrument,
+              synthParamsRef.current,
+              adjustedVelocity
+            );
+          }
+        }, delay);
+        return;
+      }
+
+      // Basic synthesis (standalone mode)
       // Combine instrument volume and note velocity
       const volumeMultiplier =
         (volumesRef.current[inst] / 100) * (velocity / 100);

@@ -11,6 +11,10 @@ import { cn } from '../../../utils';
 export interface DrumSynthProps {
   /** Optional translations for standalone mode */
   translations?: DrumSynthTranslation;
+  /** Optional external params (for integrated mode in DrumTool) */
+  params?: AllDrumParams;
+  /** Optional callback when params change (for integrated mode in DrumTool) */
+  onParamsChange?: (params: AllDrumParams) => void;
 }
 import {
   DrumType,
@@ -143,14 +147,34 @@ const DownloadIcon = memo(function DownloadIcon() {
  */
 export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
   translations,
+  params: externalParams,
+  onParamsChange,
 }) {
   // Use provided translations (standalone) or i18n context (main site)
   const contextTranslations = useTranslations();
   const drumSynth = translations ?? contextTranslations.drumSynth;
 
-  // State
+  // State - use external params if provided (controlled mode), otherwise internal state
   const [selectedDrum, setSelectedDrum] = useState<DrumType>('kick');
-  const [params, setParams] = useState<AllDrumParams>(DEFAULT_ALL_PARAMS);
+  const [internalParams, setInternalParams] =
+    useState<AllDrumParams>(DEFAULT_ALL_PARAMS);
+
+  // Use external params if provided, otherwise use internal state
+  const params = externalParams ?? internalParams;
+  const setParams = useCallback(
+    (newParams: AllDrumParams | ((prev: AllDrumParams) => AllDrumParams)) => {
+      if (onParamsChange) {
+        // Controlled mode - call external handler
+        const resolvedParams =
+          typeof newParams === 'function' ? newParams(params) : newParams;
+        onParamsChange(resolvedParams);
+      } else {
+        // Uncontrolled mode - update internal state
+        setInternalParams(newParams);
+      }
+    },
+    [onParamsChange, params]
+  );
   const [isPlaying, setIsPlaying] = useState<DrumType | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{

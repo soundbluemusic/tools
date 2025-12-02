@@ -2,6 +2,10 @@ import { memo, useState, useCallback } from 'react';
 import { useLanguage } from '../../../i18n';
 import { DrumMachine } from '../../drum/components/DrumMachine';
 import { DrumSynth } from '../../drum-synth/components';
+import {
+  DEFAULT_ALL_PARAMS,
+  type AllDrumParams,
+} from '../../drum-synth/constants';
 import { cn } from '../../../utils';
 import './DrumTool.css';
 
@@ -10,13 +14,22 @@ type TabType = 'machine' | 'synth';
 /**
  * DrumTool Component
  * Combines Drum Machine and Drum Synth into a single tool with tabs
+ * Both components share synth parameters - DrumSynth edits them, DrumMachine uses them
  */
 export const DrumTool = memo(function DrumTool() {
   const { language } = useLanguage();
   const [activeTab, setActiveTab] = useState<TabType>('machine');
 
+  // Shared synth parameters - edited in DrumSynth, used in DrumMachine
+  const [synthParams, setSynthParams] =
+    useState<AllDrumParams>(DEFAULT_ALL_PARAMS);
+
   const handleTabChange = useCallback((tab: TabType) => {
     setActiveTab(tab);
+  }, []);
+
+  const handleSynthParamsChange = useCallback((params: AllDrumParams) => {
+    setSynthParams(params);
   }, []);
 
   const tabs = [
@@ -66,7 +79,7 @@ export const DrumTool = memo(function DrumTool() {
           )}
           hidden={activeTab !== 'machine'}
         >
-          {activeTab === 'machine' && <DrumMachine />}
+          {activeTab === 'machine' && <DrumMachine synthParams={synthParams} />}
         </div>
 
         <div
@@ -79,8 +92,20 @@ export const DrumTool = memo(function DrumTool() {
           )}
           hidden={activeTab !== 'synth'}
         >
-          {activeTab === 'synth' && <DrumSynth />}
+          {activeTab === 'synth' && (
+            <DrumSynth
+              params={synthParams}
+              onParamsChange={handleSynthParamsChange}
+            />
+          )}
         </div>
+      </div>
+
+      {/* Integration indicator */}
+      <div className="drum-tool-integration-info">
+        {language === 'ko'
+          ? '사운드 합성기에서 수정한 소리가 드럼 머신에서 사용됩니다.'
+          : 'Sounds edited in Sound Synth are used by Drum Machine.'}
       </div>
     </div>
   );
