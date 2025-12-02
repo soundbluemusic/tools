@@ -1,46 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
 import { MetronomePlayer } from './MetronomePlayer';
-import { detectLanguage, getTranslations, type Language } from './i18n';
+import { getTranslations } from './i18n';
+import { useStandaloneSettings } from '../common/useStandaloneSettings';
 
 /**
  * Standalone Metronome App
  * Self-contained React app for metronome functionality
  */
 export default function App() {
-  const [language, setLanguage] = useState<Language>(detectLanguage);
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const stored = localStorage.getItem('metronome-theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-  });
+  const { theme, language, toggleTheme, toggleLanguage } =
+    useStandaloneSettings('metronome');
 
   const t = getTranslations(language);
-
-  // Theme toggle
-  const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('metronome-theme', next);
-      document.documentElement.setAttribute('data-theme', next);
-      return next;
-    });
-  }, []);
-
-  // Language toggle
-  const toggleLanguage = useCallback(() => {
-    setLanguage((prev) => {
-      const next = prev === 'ko' ? 'en' : 'ko';
-      localStorage.setItem('metronome-lang', next);
-      return next;
-    });
-  }, []);
-
-  // Set initial theme attribute
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
 
   return (
     <div className="standalone-app">
