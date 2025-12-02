@@ -19,6 +19,10 @@ const Drum = lazy(() => import('./pages/Drum'));
 const DrumSynth = lazy(() => import('./pages/DrumSynth'));
 const QR = lazy(() => import('./pages/QR'));
 
+// Category pages - lazy loaded
+const MusicTools = lazy(() => import('./pages/MusicTools'));
+const OtherTools = lazy(() => import('./pages/OtherTools'));
+
 // Info pages - lazy loaded (rarely visited)
 const Sitemap = lazy(() => import('./pages/Sitemap'));
 const OpenSource = lazy(() => import('./pages/OpenSource'));
@@ -45,6 +49,8 @@ function PageLoader() {
  */
 const ROUTES = [
   { path: '/', element: <Home />, lazy: false },
+  { path: '/music-tools', element: <MusicTools />, lazy: true },
+  { path: '/other-tools', element: <OtherTools />, lazy: true },
   { path: '/metronome', element: <Metronome />, lazy: true },
   { path: '/drum', element: <Drum />, lazy: true },
   { path: '/drum-synth', element: <DrumSynth />, lazy: true },
