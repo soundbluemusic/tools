@@ -9,7 +9,12 @@ export type Language = 'ko' | 'en';
 /** Translations for QRGenerator component */
 export interface QRGeneratorTranslations {
   qr: QRTranslation;
-  common: Pick<CommonTranslation, 'copyImage' | 'copied' | 'download'>;
+  common: {
+    common: Pick<
+      CommonTranslation['common'],
+      'copyImage' | 'copied' | 'download'
+    >;
+  };
 }
 
 /** Extended translations for standalone app (includes header controls) */
@@ -70,9 +75,11 @@ export const translations: Record<Language, StandaloneTranslations> = {
       downloadFailed: '다운로드에 실패했습니다.',
     },
     common: {
-      copyImage: '이미지 복사',
-      copied: '복사됨!',
-      download: '다운로드',
+      common: {
+        copyImage: '이미지 복사',
+        copied: '복사됨!',
+        download: '다운로드',
+      },
     },
     lightMode: '라이트 모드',
     darkMode: '다크 모드',
@@ -126,9 +133,11 @@ export const translations: Record<Language, StandaloneTranslations> = {
       downloadFailed: 'Download failed.',
     },
     common: {
-      copyImage: 'Copy Image',
-      copied: 'Copied!',
-      download: 'Download',
+      common: {
+        copyImage: 'Copy Image',
+        copied: 'Copied!',
+        download: 'Download',
+      },
     },
     lightMode: 'Light Mode',
     darkMode: 'Dark Mode',

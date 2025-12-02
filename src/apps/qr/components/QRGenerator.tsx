@@ -23,7 +23,12 @@ export interface QRGeneratorProps {
   /** Optional translations for standalone mode */
   translations?: {
     qr: QRTranslation;
-    common: Pick<CommonTranslation, 'copyImage' | 'copied' | 'download'>;
+    common: {
+      common: Pick<
+        CommonTranslation['common'],
+        'copyImage' | 'copied' | 'download'
+      >;
+    };
   };
 }
 

@@ -856,4 +856,3 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
 MetronomePlayer.displayName = 'MetronomePlayer';
 
 export { MetronomePlayer };
-export type { MetronomePlayerProps };
