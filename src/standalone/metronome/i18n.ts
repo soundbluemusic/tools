@@ -4,7 +4,32 @@
 
 export type Language = 'ko' | 'en';
 
-export const translations = {
+export interface Translations {
+  title: string;
+  bpm: string;
+  volume: string;
+  timeSignature: string;
+  timer: string;
+  measure: string;
+  elapsed: string;
+  countdown: string;
+  slow: string;
+  fast: string;
+  quiet: string;
+  loud: string;
+  minutes: string;
+  seconds: string;
+  start: string;
+  stop: string;
+  perfectSync: string;
+  syncDescription: string;
+  precision: string;
+  lightMode: string;
+  darkMode: string;
+  language: string;
+}
+
+export const translations: Record<Language, Translations> = {
   ko: {
     title: '메트로놈',
     bpm: '속도',
@@ -53,9 +78,7 @@ export const translations = {
     darkMode: 'Dark Mode',
     language: 'Language',
   },
-} as const;
-
-export type Translations = typeof translations.ko;
+};
 
 export function getTranslations(lang: Language): Translations {
   return translations[lang];
