@@ -4,9 +4,9 @@
 
 "SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다.
 
-## 로고 색상 (Logo Color)
+## 아이콘 색상 (Icon Color)
 
-**#9370DB** — 모든 창작자를 응원합니다.
+#9370DB
 
 ## 포크 시 안내
 

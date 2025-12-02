@@ -101,9 +101,9 @@ A collection of utility tools built with React + TypeScript + Vite.
 >
 > Free to use, modify, and distribute. Commercial use is also permitted.
 >
-> ## Logo Color
+> ## Icon Color
 >
-> **#9370DB** — We support all creators.
+> #9370DB
 >
 > ## Trademark Guidelines
 >
