@@ -101,9 +101,9 @@ A collection of utility tools built with React + TypeScript + Vite.
 >
 > Free to use, modify, and distribute. Commercial use is also permitted.
 >
-> ## Logo
+> ## Logo Color
 >
-> Our logo uses **Medium Purple (#9370DB)**, a color that represents **creativity and imagination**. Purple has historically been associated with artistic expression, innovation, and creative thinking. We chose this color to reflect the creative nature of our tools—designed to inspire musicians, developers, and creators.
+> **#9370DB** — We support all creators.
 >
 > ## Trademark Guidelines
 >
