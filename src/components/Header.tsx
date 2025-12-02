@@ -16,7 +16,7 @@ interface HeaderProps {
  */
 export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
   const { language, toggleLanguage } = useLanguage();
-  const { theme, resolvedTheme, cycleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   const handleSearchClick = useCallback(() => {
     onSearchClick?.();
@@ -27,15 +27,15 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
     typeof navigator !== 'undefined' && /Mac/i.test(navigator.userAgent);
   const shortcutKey = isMac ? '\u2318K' : 'Ctrl+K';
 
-  const themeLabels: Record<Theme, { ko: string; en: string }> = {
-    system: { ko: '시스템', en: 'System' },
-    light: { ko: '라이트', en: 'Light' },
-    dark: { ko: '다크', en: 'Dark' },
-  };
-
-  const nextTheme: Theme =
-    theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system';
-  const nextLabel = themeLabels[nextTheme][language];
+  const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
+  const nextLabel =
+    nextTheme === 'light'
+      ? language === 'ko'
+        ? '라이트'
+        : 'Light'
+      : language === 'ko'
+        ? '다크'
+        : 'Dark';
   const themeTitle =
     language === 'ko'
       ? `${nextLabel} 모드로 전환`
@@ -77,12 +77,12 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
         <div className="header-controls">
           {/* Theme Toggle */}
           <button
-            onClick={cycleTheme}
+            onClick={toggleTheme}
             className="header-control-btn"
             title={themeTitle}
             aria-label={themeTitle}
           >
-            <ThemeIcon theme={theme} resolved={resolvedTheme} />
+            <ThemeIcon theme={theme} />
           </button>
 
           {/* Language Toggle */}

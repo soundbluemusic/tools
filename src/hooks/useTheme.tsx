@@ -14,23 +14,18 @@ import {
 } from '../utils/storage';
 
 /** Available theme options */
-export type Theme = 'system' | 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 
-/** Resolved theme (what's actually applied) */
-export type ResolvedTheme = 'light' | 'dark';
-
-const THEMES = ['system', 'light', 'dark'] as const;
+const THEMES = ['light', 'dark'] as const;
 const THEME_STORAGE_KEY = 'theme-preference';
 
 interface ThemeContextValue {
   /** Current theme setting */
   theme: Theme;
-  /** Resolved theme (system preference applied) */
-  resolvedTheme: ResolvedTheme;
   /** Set theme preference */
   setTheme: (theme: Theme) => void;
-  /** Cycle through themes: system -> light -> dark -> system */
-  cycleTheme: () => void;
+  /** Toggle between light and dark */
+  toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -57,57 +52,25 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const isTheme = createEnumValidator(THEMES);
 
-  // Get initial theme from storage or default to 'system'
+  // Get initial theme from storage or detect system preference
   const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = getStorageItem<Theme>(THEME_STORAGE_KEY, 'system', {
-      validator: isTheme,
+    const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
+      validator: (v): v is Theme => isTheme(v),
     });
-    return stored;
-  });
-
-  // Track system preference
-  const [systemPreference, setSystemPreference] = useState<ResolvedTheme>(
-    () => {
-      if (typeof window === 'undefined') return 'light';
+    if (stored) return stored;
+    // Default to system preference on first visit
+    if (typeof window !== 'undefined') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
     }
-  );
-
-  // Listen to system preference changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setSystemPreference(e.matches ? 'dark' : 'light');
-    };
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange);
-    } else {
-      mediaQuery.addListener(handleChange);
-    }
-
-    return () => {
-      if (mediaQuery.removeEventListener) {
-        mediaQuery.removeEventListener('change', handleChange);
-      } else {
-        mediaQuery.removeListener(handleChange);
-      }
-    };
-  }, []);
-
-  // Resolve actual theme
-  const resolvedTheme: ResolvedTheme = useMemo(() => {
-    if (theme === 'system') return systemPreference;
-    return theme;
-  }, [theme, systemPreference]);
+    return 'light';
+  });
 
   // Apply theme to document
   useEffect(() => {
-    document.documentElement.dataset.theme = resolvedTheme;
-  }, [resolvedTheme]);
+    document.documentElement.dataset.theme = theme;
+  }, [theme]);
 
   // Set theme and persist
   const setTheme = useCallback((newTheme: Theme) => {
@@ -115,16 +78,14 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     setStorageItem(THEME_STORAGE_KEY, newTheme);
   }, []);
 
-  // Cycle through themes
-  const cycleTheme = useCallback(() => {
-    setTheme(
-      theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system'
-    );
+  // Toggle between light and dark
+  const toggleTheme = useCallback(() => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
   }, [theme, setTheme]);
 
   const value = useMemo(
-    () => ({ theme, resolvedTheme, setTheme, cycleTheme }),
-    [theme, resolvedTheme, setTheme, cycleTheme]
+    () => ({ theme, setTheme, toggleTheme }),
+    [theme, setTheme, toggleTheme]
   );
 
   return (
