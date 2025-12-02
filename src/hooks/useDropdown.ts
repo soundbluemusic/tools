@@ -47,13 +47,23 @@ export function useDropdown({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen, closeOnClickOutside, containerRef, onClose]);
 
-  // Close dropdown on scroll
+  // Close dropdown on scroll (throttled to prevent cascading re-renders)
   useEffect(() => {
     if (!isOpen || !closeOnScroll) return;
 
-    const handleScroll = () => onClose();
+    let throttleTimer: ReturnType<typeof setTimeout> | null = null;
+    const handleScroll = () => {
+      if (throttleTimer) return;
+      throttleTimer = setTimeout(() => {
+        onClose();
+        throttleTimer = null;
+      }, 50);
+    };
     window.addEventListener('scroll', handleScroll, true);
-    return () => window.removeEventListener('scroll', handleScroll, true);
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+      if (throttleTimer) clearTimeout(throttleTimer);
+    };
   }, [isOpen, closeOnScroll, onClose]);
 
   // Close dropdown on Escape key

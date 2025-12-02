@@ -88,7 +88,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
     libraries: [
       {
         name: 'Vite',
-        version: '6.4.1',
+        version: '7.2.6',
         license: 'MIT',
         url: 'https://vitejs.dev',
         description: {
@@ -133,7 +133,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
     libraries: [
       {
         name: 'Vitest',
-        version: '3.2.4',
+        version: '4.0.14',
         license: 'MIT',
         url: 'https://vitest.dev',
         description: {
@@ -173,7 +173,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
       },
       {
         name: 'jsdom',
-        version: '25.0.1',
+        version: '27.2.0',
         license: 'MIT',
         url: 'https://github.com/jsdom/jsdom',
         description: {

@@ -3,6 +3,7 @@ import { PageLayout } from '../components/layout';
 import { DrumMachine } from '../apps/drum/components/DrumMachine';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
+import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 
@@ -42,6 +43,7 @@ const Drum = memo(function Drum() {
             defaultWidth={500}
             defaultHeight={600}
           />
+          <FullscreenButton />
           <ShareButton title={drum.title} description={drum.description} />
         </>
       }

@@ -1,6 +1,7 @@
 import { memo, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslations } from '../i18n';
+import { useTranslations, useLanguage } from '../i18n';
+import { BRAND } from '../constants';
 
 // Lazy load ShareButton to reduce initial bundle size
 const ShareButton = lazy(() =>
@@ -12,13 +13,19 @@ const ShareButton = lazy(() =>
  */
 export const Footer = memo(function Footer() {
   const t = useTranslations();
+  const { language } = useLanguage();
 
   return (
     <footer className="footer">
-      {/* Share Button - lazy loaded */}
+      {/* Share Button - lazy loaded (always shares homepage) */}
       <div className="footer-share">
         <Suspense fallback={null}>
-          <ShareButton />
+          <ShareButton
+            variant="footer"
+            url={BRAND.siteUrl}
+            title={BRAND.shareTitle[language]}
+            description={BRAND.description[language]}
+          />
         </Suspense>
       </div>
 
@@ -30,14 +37,16 @@ export const Footer = memo(function Footer() {
         <Link to="/terms" className="footer-link">
           {t.common.footer.terms}
         </Link>
-        <a
-          href="https://github.com/soundbluemusic/tools"
-          className="footer-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {t.common.footer.github}
-        </a>
+        {BRAND.githubUrl && (
+          <a
+            href={BRAND.githubUrl}
+            className="footer-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t.common.footer.github}
+          </a>
+        )}
         <Link to="/sitemap" className="footer-link">
           {t.common.footer.sitemap}
         </Link>
@@ -50,7 +59,7 @@ export const Footer = memo(function Footer() {
       </nav>
 
       {/* Copyright */}
-      <p className="footer-copyright">© SoundBlueMusic. MIT License</p>
+      <p className="footer-copyright">© {BRAND.copyrightHolder}. MIT License</p>
     </footer>
   );
 });

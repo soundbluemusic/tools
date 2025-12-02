@@ -11,7 +11,11 @@ export function useIsActive() {
   const isActive = useCallback(
     (path: string) => {
       if (path === '/') return location.pathname === '/';
-      return location.pathname.startsWith(path);
+      // Exact match or match with trailing content that starts with /
+      // This prevents /drum from matching /drum-synth
+      return (
+        location.pathname === path || location.pathname.startsWith(path + '/')
+      );
     },
     [location.pathname]
   );

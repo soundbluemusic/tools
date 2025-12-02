@@ -5,12 +5,14 @@
 **Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
 
 **Current Tools:**
+
 - Metronome (`/metronome`) - Music tempo tool
 - Drum Machine (`/drum`) - Drum pattern practice sequencer with MIDI import/export
 - Drum Sound Synth (`/drum-synth`) - Web Audio drum sound synthesizer with detailed parameter control
 - QR Code Generator (`/qr`) - Generate QR codes with customization
 
 **Additional Pages:**
+
 - Sitemap (`/sitemap`) - Site navigation
 - Open Source (`/opensource`) - Open source information
 - Tools Used (`/tools-used`) - Technologies used
@@ -19,18 +21,18 @@
 
 ## Technology Stack
 
-| Category | Technology | Version |
-|----------|-----------|---------|
-| Framework | React | ^19.2.0 |
-| Routing | React Router DOM | ^7.9.6 |
-| Language | TypeScript | ^5.5.3 |
-| Build Tool | Vite | ^6.4.1 |
-| Unit Testing | Vitest + React Testing Library | ^3.2.4 |
-| E2E Testing | Playwright | ^1.48.0 |
-| Linting | ESLint | ^9.9.0 |
-| Formatting | Prettier | ^3.4.2 |
-| PWA | vite-plugin-pwa | ^1.2.0 |
-| Deployment | Cloudflare Pages | - |
+| Category     | Technology                     | Version |
+| ------------ | ------------------------------ | ------- |
+| Framework    | React                          | ^19.2.0 |
+| Routing      | React Router DOM               | ^7.9.6  |
+| Language     | TypeScript                     | ^5.5.3  |
+| Build Tool   | Vite                           | ^7.2.6  |
+| Unit Testing | Vitest + React Testing Library | ^4.0.14 |
+| E2E Testing  | Playwright                     | ^1.48.0 |
+| Linting      | ESLint                         | ^9.9.0  |
+| Formatting   | Prettier                       | ^3.4.2  |
+| PWA          | vite-plugin-pwa                | ^1.2.0  |
+| Deployment   | Cloudflare Pages               | -       |
 
 **Node.js Requirement:** >=18.0.0
 
@@ -152,32 +154,36 @@ Apps are automatically discovered via Vite's `import.meta.glob()` in `src/consta
 
 1. Create folder: `src/apps/[app-name]/`
 2. Add `config.ts` with bilingual metadata:
+
 ```typescript
 import type { AppConfig } from '../../types';
 
 const config: AppConfig = {
   name: {
-    ko: '앱 이름',           // Korean name
-    en: 'App Name',         // English name
+    ko: '앱 이름', // Korean name
+    en: 'App Name', // English name
   },
   desc: {
-    ko: '설명',              // Korean description
-    en: 'Description',       // English description
+    ko: '설명', // Korean description
+    en: 'Description', // English description
   },
-  icon: '🔧',                // Emoji icon
-  size: 1024,                // Size in bytes (for sorting)
-  order: 1,                  // Display order (lower = first, optional)
+  icon: '🔧', // Emoji icon
+  size: 1024, // Size in bytes (for sorting)
+  order: 1, // Display order (lower = first, optional)
 };
 
 export default config;
 ```
+
 3. Create page component in `src/pages/[AppName].tsx`
 4. Add lazy import and route in `src/App.tsx`:
+
 ```tsx
 const MyApp = lazy(() => import('./pages/MyApp'));
 // In ROUTES array:
 { path: '/my-app', element: <MyApp />, lazy: true },
 ```
+
 5. Add translations in `src/i18n/translations/my-app.ts`
 
 ### 2. Navigation System
@@ -203,6 +209,7 @@ The app uses a responsive navigation system:
 - Language toggle button in header
 
 **Adding translations:**
+
 ```typescript
 // src/i18n/translations/[module].ts
 export const translations = {
@@ -212,6 +219,7 @@ export const translations = {
 ```
 
 **Usage:**
+
 ```tsx
 import { useLanguage } from '../i18n';
 
@@ -328,12 +336,14 @@ npm run convert-webp     # Convert images to WebP format
 ## Code Conventions
 
 ### TypeScript
+
 - Strict mode enabled (strict null checks, no unused variables)
 - Use interfaces for object shapes, types for unions/primitives
 - Export types from `src/types/index.ts`
 - Use `type` imports: `import type { App } from '../types'`
 
 ### React
+
 - Functional components only (no class components)
 - Automatic JSX runtime (no `import React` needed)
 - Prefer `memo()` for components receiving stable props
@@ -341,6 +351,7 @@ npm run convert-webp     # Convert images to WebP format
 - Wrap pages in `Suspense` for lazy loading
 
 ### File Naming
+
 - Components: `PascalCase.tsx`
 - Hooks: `useCamelCase.ts`
 - Utilities: `camelCase.ts`
@@ -348,10 +359,12 @@ npm run convert-webp     # Convert images to WebP format
 - CSS: `ComponentName.css` (co-located with component)
 
 ### Imports
+
 - Use relative imports within modules
 - Group imports: React > Third-party > Local components > Local utils/hooks > Types > CSS
 
 ### Formatting (Prettier)
+
 - 80 character line width
 - 2 space indentation
 - Single quotes for JS, double quotes for JSX
@@ -361,6 +374,7 @@ npm run convert-webp     # Convert images to WebP format
 ## Testing Guidelines
 
 ### Unit Tests (Vitest)
+
 - **Framework**: Vitest + React Testing Library
 - **Test location**: Co-locate with source files (`*.test.ts`)
 - **Setup file**: `src/test/setup.ts` (mocks matchMedia, ResizeObserver, IntersectionObserver)
@@ -379,6 +393,7 @@ describe('MyComponent', () => {
 ```
 
 ### E2E Tests (Playwright)
+
 - Located in project root
 - Tests user flows across pages
 - Supports visual regression testing
@@ -396,6 +411,7 @@ describe('MyComponent', () => {
 ## Build Configuration
 
 **Vite settings** (`vite.config.ts`):
+
 - Target: ESNext (modern browsers)
 - Minification: esbuild with identifier minification
 - Chunk size warning: 250KB
@@ -404,6 +420,7 @@ describe('MyComponent', () => {
 - Service Worker with caching strategies
 
 **TypeScript settings** (`tsconfig.app.json`):
+
 - Target: ES2020
 - Module: ESNext
 - Strict: true

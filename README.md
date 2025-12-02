@@ -6,11 +6,11 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
 
 ## 앱 목록
 
-| 앱 | 설명 | 경로 |
-|:---|:-----|:-----|
-| 🎵 메트로놈 | 음악가를 위한 정밀 메트로놈 | `/metronome` |
-| 🥁 드럼머신 | 드럼 패턴 연습용 시퀀서 | `/drum` |
-| 📱 QR 코드 생성기 | 투명 배경의 고해상도 QR 코드 생성 | `/qr` |
+| 앱                    | 설명                                             | 경로          |
+| :-------------------- | :----------------------------------------------- | :------------ |
+| 🎵 메트로놈           | 음악가를 위한 정밀 메트로놈                      | `/metronome`  |
+| 🥁 드럼머신           | 드럼 패턴 연습용 시퀀서                          | `/drum`       |
+| 📱 QR 코드 생성기     | 투명 배경의 고해상도 QR 코드 생성                | `/qr`         |
 | 🎛️ 드럼 사운드 합성기 | 세밀한 파라미터 조절이 가능한 드럼 사운드 합성기 | `/drum-synth` |
 
 > 📖 자세한 문서는 [/docs](./docs/README.md)를 참조하세요.
@@ -33,14 +33,14 @@ npm run validate
 
 ## 기술 스택
 
-| 분류 | 기술 |
-|:-----|:-----|
-| 프레임워크 | React 19 |
-| 라우팅 | React Router 7 |
-| 언어 | TypeScript 5 |
-| 빌드 | Vite 6 |
-| 테스트 | Vitest + React Testing Library |
-| 배포 | Cloudflare Pages |
+| 분류       | 기술                           |
+| :--------- | :----------------------------- |
+| 프레임워크 | React 19                       |
+| 라우팅     | React Router 7                 |
+| 언어       | TypeScript 5                   |
+| 빌드       | Vite 7                         |
+| 테스트     | Vitest + React Testing Library |
+| 배포       | Cloudflare Pages               |
 
 ## UI 최적화
 
@@ -49,29 +49,41 @@ npm run validate
 
 ## 라이선스
 
-### 소스코드 (MIT License)
+이 프로젝트는 [MIT License](./LICENSE)로 공개됩니다.
 
-이 프로젝트의 **소스코드**는 MIT 라이선스로 공개됩니다. 저작권 고지를 포함하여 자유롭게 사용, 수정, 배포할 수 있습니다.
+자유롭게 사용, 수정, 배포할 수 있습니다. 상업적 이용도 가능합니다.
 
-자세한 내용은 [LICENSE](./LICENSE) 파일을 참조하세요.
+### 상표 가이드라인
 
-### 지적재산권 및 상표 (Intellectual Property & Trademarks)
+"SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다. 이 프로젝트를 포크하여 사용할 경우, `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요.
 
-**다음 항목들은 MIT 라이선스의 적용을 받지 않으며, 무단 사용이 금지됩니다:**
+## 포크 & 배포 가이드
 
-| 항목 | 설명 |
-|:-----|:-----|
-| 브랜드명 | "SoundBlueMusic", "Sound Blue" 및 모든 변형 |
-| 로고 | 모든 로고, 아이콘 및 브랜드 이미지 |
-| 이미지 | 프로젝트에 포함된 모든 이미지 및 그래픽 |
-| 음악/오디오 | 프로젝트에 포함된 모든 음악, 음향 효과 및 오디오 파일 |
-| 브랜드 자산 | 기타 모든 브랜드 관련 자료 |
+이 프로젝트는 **포크 친화적**으로 설계되었습니다.
 
-**주의사항:**
-- 위 항목들의 무단 사용, 복제, 수정, 배포는 금지됩니다
-- 이 프로젝트를 포크하거나 소스코드를 사용할 경우, 보호되는 모든 자료(로고, 이미지, 오디오, 브랜드명)를 제거하고 본인의 것으로 교체해야 합니다
+### 1단계: 브랜드 변경
 
-**© 2025 SoundBlueMusic. All Rights Reserved for Intellectual Property & Trademarks.**
+`src/constants/brand.ts` 파일 하나만 수정하면 됩니다:
+
+```typescript
+export const BRAND = {
+  name: 'Your App Name',
+  copyrightHolder: 'Your Name',
+  siteUrl: 'https://your-domain.com',
+  githubUrl: 'https://github.com/you/repo',
+  // ...
+};
+```
+
+### 2단계: 정적 파일 (선택)
+
+| 파일                  | 수정 내용                            |
+| :-------------------- | :----------------------------------- |
+| `index.html`          | 메타 태그, 구조화된 데이터 (JSON-LD) |
+| `public/sitemap.xml`  | 사이트맵 URL                         |
+| `public/robots.txt`   | 사이트맵 URL                         |
+| `public/icons/`       | 파비콘 및 PWA 아이콘                 |
+| `public/og-image.png` | 소셜 미디어 공유 이미지              |
 
 ---
 

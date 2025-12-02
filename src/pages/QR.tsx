@@ -3,6 +3,7 @@ import { PageLayout } from '../components/layout';
 import { QRGenerator } from '../apps/qr/components/QRGenerator';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
+import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n';
 import { useSEO } from '../hooks';
 
@@ -42,6 +43,7 @@ const QR = memo(function QR() {
             defaultWidth={400}
             defaultHeight={600}
           />
+          <FullscreenButton />
           <ShareButton title={qr.title} description={qr.subtitle} />
         </>
       }

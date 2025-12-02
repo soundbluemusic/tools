@@ -317,6 +317,8 @@ export const DrumMachine = memo(function DrumMachine() {
     startVelocity: number;
     hasMoved: boolean; // Track if user actually dragged
   } | null>(null);
+  // Ref to store the mousemove handler for dynamic add/remove during velocity drag
+  const mouseMoveHandlerRef = useRef<((e: MouseEvent) => void) | null>(null);
 
   // Keep refs in sync with state
   useEffect(() => {
@@ -640,48 +642,8 @@ export const DrumMachine = memo(function DrumMachine() {
   );
 
   /**
-   * Handle drag start on a step
-   */
-  const handleStepMouseDown = useCallback(
-    (inst: Instrument, step: number, clientY: number) => {
-      const currentValue = pattern[inst][step];
-
-      if (currentValue > 0) {
-        // Active note: start velocity drag mode (or remove on click without drag)
-        velocityDragRef.current = {
-          inst,
-          step,
-          startY: clientY,
-          startVelocity: currentValue,
-          hasMoved: false,
-        };
-        isDraggingRef.current = false;
-        paintModeRef.current = null;
-      } else {
-        // Inactive note: start paint mode with full velocity
-        isDraggingRef.current = true;
-        paintModeRef.current = true;
-        velocityDragRef.current = null;
-        setStepVelocity(inst, step, VELOCITY.DEFAULT);
-      }
-    },
-    [pattern, setStepVelocity]
-  );
-
-  /**
-   * Handle mouse enter while dragging (paint mode only)
-   */
-  const handleStepMouseEnter = useCallback(
-    (inst: Instrument, step: number) => {
-      if (isDraggingRef.current && paintModeRef.current) {
-        setStepVelocity(inst, step, VELOCITY.DEFAULT);
-      }
-    },
-    [setStepVelocity]
-  );
-
-  /**
    * Handle mouse move for velocity adjustment
+   * NOTE: Defined before handleStepMouseDown because it's referenced there
    */
   const handleMouseMove = useCallback(
     (e: React.MouseEvent | MouseEvent) => {
@@ -701,6 +663,50 @@ export const DrumMachine = memo(function DrumMachine() {
           Math.min(VELOCITY.MAX, startVelocity + velocityChange)
         );
         setStepVelocity(inst, step, newVelocity);
+      }
+    },
+    [setStepVelocity]
+  );
+
+  /**
+   * Handle drag start on a step
+   */
+  const handleStepMouseDown = useCallback(
+    (inst: Instrument, step: number, clientY: number) => {
+      const currentValue = pattern[inst][step];
+
+      if (currentValue > 0) {
+        // Active note: start velocity drag mode (or remove on click without drag)
+        velocityDragRef.current = {
+          inst,
+          step,
+          startY: clientY,
+          startVelocity: currentValue,
+          hasMoved: false,
+        };
+        isDraggingRef.current = false;
+        paintModeRef.current = null;
+        // Dynamically add mousemove listener only during velocity drag
+        mouseMoveHandlerRef.current = handleMouseMove;
+        window.addEventListener('mousemove', handleMouseMove);
+      } else {
+        // Inactive note: start paint mode with full velocity
+        isDraggingRef.current = true;
+        paintModeRef.current = true;
+        velocityDragRef.current = null;
+        setStepVelocity(inst, step, VELOCITY.DEFAULT);
+      }
+    },
+    [pattern, setStepVelocity, handleMouseMove]
+  );
+
+  /**
+   * Handle mouse enter while dragging (paint mode only)
+   */
+  const handleStepMouseEnter = useCallback(
+    (inst: Instrument, step: number) => {
+      if (isDraggingRef.current && paintModeRef.current) {
+        setStepVelocity(inst, step, VELOCITY.DEFAULT);
       }
     },
     [setStepVelocity]
@@ -765,9 +771,15 @@ export const DrumMachine = memo(function DrumMachine() {
 
   /**
    * Add global mouse listeners for drag handling
+   * Note: mousemove is added/removed dynamically only during velocity drag
    */
   useEffect(() => {
     const handleGlobalMouseUp = () => {
+      // Remove mousemove listener if it was attached
+      if (mouseMoveHandlerRef.current) {
+        window.removeEventListener('mousemove', mouseMoveHandlerRef.current);
+        mouseMoveHandlerRef.current = null;
+      }
       // If velocity drag mode was active and user didn't move, remove the note
       if (velocityDragRef.current && !velocityDragRef.current.hasMoved) {
         const { inst, step } = velocityDragRef.current;
@@ -778,22 +790,19 @@ export const DrumMachine = memo(function DrumMachine() {
       velocityDragRef.current = null;
     };
 
-    const handleGlobalMouseMove = (e: MouseEvent) => {
-      if (velocityDragRef.current) {
-        handleMouseMove(e);
-      }
-    };
-
     window.addEventListener('mouseup', handleGlobalMouseUp);
     window.addEventListener('touchend', handleGlobalMouseUp);
-    window.addEventListener('mousemove', handleGlobalMouseMove);
 
     return () => {
       window.removeEventListener('mouseup', handleGlobalMouseUp);
       window.removeEventListener('touchend', handleGlobalMouseUp);
-      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      // Clean up mousemove if still attached
+      if (mouseMoveHandlerRef.current) {
+        window.removeEventListener('mousemove', mouseMoveHandlerRef.current);
+        mouseMoveHandlerRef.current = null;
+      }
     };
-  }, [handleMouseMove, setStepVelocity]);
+  }, [setStepVelocity]);
 
   /**
    * Load a preset into current loop

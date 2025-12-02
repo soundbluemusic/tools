@@ -55,6 +55,10 @@ export const commonKo: CommonTranslation = {
     copyCode: '코드 복사',
     copied: '복사 완료!',
   },
+  fullscreen: {
+    enter: '전체 화면',
+    exit: '전체 화면 종료',
+  },
   errorBoundary: {
     title: '문제가 발생했습니다',
     message: '예상치 못한 오류가 발생했습니다.',
@@ -128,6 +132,10 @@ export const commonEn: CommonTranslation = {
     height: 'Height',
     copyCode: 'Copy Code',
     copied: 'Copied!',
+  },
+  fullscreen: {
+    enter: 'Fullscreen',
+    exit: 'Exit Fullscreen',
   },
   errorBoundary: {
     title: 'Something went wrong',

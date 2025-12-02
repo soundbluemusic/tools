@@ -198,13 +198,13 @@ export const CommandPalette = memo(function CommandPalette({
     }
   }, [isOpen]);
 
-  // Scroll selected item into view
+  // Scroll selected item into view (instant to avoid jank during rapid keyboard navigation)
   useEffect(() => {
     if (!listRef.current) return;
     const items = listRef.current.querySelectorAll('[data-command-item]');
     const selectedItem = items[selectedIndex] as HTMLElement;
     if (selectedItem) {
-      selectedItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      selectedItem.scrollIntoView({ block: 'nearest', behavior: 'auto' });
     }
   }, [selectedIndex]);
 

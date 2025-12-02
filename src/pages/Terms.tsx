@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
+import { BRAND } from '../constants';
 import './Legal.css';
 
 /**
@@ -60,8 +61,8 @@ const Terms = memo(function Terms() {
             </p>
             <ul>
               <li>
-                <strong>브랜드:</strong> "SoundBlueMusic", "Sound Blue" 등의
-                상표 및 브랜드 명칭
+                <strong>브랜드:</strong> "{BRAND.copyrightHolder}" 및 관련
+                상표와 브랜드 명칭
               </li>
               <li>
                 <strong>로고 및 아이콘:</strong> 모든 로고와 브랜드 이미지
@@ -177,8 +178,8 @@ const Terms = memo(function Terms() {
           </p>
           <ul>
             <li>
-              <strong>Brand Names:</strong> "SoundBlueMusic", "Sound Blue" and
-              other trademarks
+              <strong>Brand Names:</strong> "{BRAND.copyrightHolder}" and
+              related trademarks
             </li>
             <li>
               <strong>Logos and Icons:</strong> All logos and brand imagery

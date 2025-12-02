@@ -1,35 +1,27 @@
-# Intellectual Property & Trademark Notice
+# 상표 가이드라인 (Trademark Guidelines)
 
-The following elements are the exclusive intellectual property and/or trademarks
-of SoundBlueMusic and are **NOT covered by the MIT License**:
+## 상표
 
-- **Brand Names**: "SoundBlueMusic", "Sound Blue", and any variations thereof
-- **Logos**: All logos, icons, and brand imagery associated with SoundBlueMusic
-- **Images**: All images, graphics, and visual assets included in this project
-- **Audio**: All music, sound effects, and audio files included in this project
-- **Brand Identity**: Any other brand-related materials and assets
+"SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다.
 
-## Restrictions
+## 포크 시 안내
 
-1. **No Unauthorized Use**: You may NOT use, copy, modify, distribute, or display
-   any of the above intellectual property or trademarks without explicit written
-   permission from SoundBlueMusic.
+이 프로젝트를 포크하여 본인의 서비스로 배포할 경우:
 
-2. **No Derivative Works**: Creating derivative works based on the protected
-   materials is strictly prohibited.
+1. `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요
+2. 로고와 아이콘을 본인의 것으로 교체해 주세요
 
-3. **No Commercial Use**: Commercial use of the protected materials in any form
-   is prohibited without prior authorization.
+자세한 내용은 [README.md](./README.md)의 "포크 & 배포 가이드"를 참조하세요.
 
-4. **Fork Requirements**: If you fork or use the source code from this project,
-   you MUST remove all protected materials (logos, images, audio, brand names)
-   and replace them with your own.
+## 허용되는 사용
 
-## Contact
+- 이 프로젝트가 SoundBlueMusic에서 만들어졌음을 언급하는 것
+- 원본 저장소로의 링크
 
-For licensing inquiries regarding intellectual property and trademarks,
-please contact SoundBlueMusic.
+## 문의
+
+상표 사용에 관한 문의는 GitHub Issues를 통해 연락해 주세요.
 
 ---
 
-**© 2025 SoundBlueMusic. All Rights Reserved for Intellectual Property & Trademarks.**
+**소스코드는 MIT License입니다. 자유롭게 포크하고 수정하세요!**

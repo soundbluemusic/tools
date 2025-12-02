@@ -3,6 +3,7 @@ import { PageLayout } from '../components/layout';
 import { DrumSynth as DrumSynthComponent } from '../apps/drum-synth/components';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
+import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 
@@ -43,6 +44,7 @@ const DrumSynth = memo(function DrumSynth() {
             defaultWidth={500}
             defaultHeight={700}
           />
+          <FullscreenButton />
           <ShareButton
             title={drumSynth.title}
             description={drumSynth.description}

@@ -10,8 +10,8 @@
 ## 설치
 
 ```bash
-# 저장소 클론
-git clone https://github.com/soundbluemusic/tools.git
+# 저장소 클론 (본인의 저장소 URL로 변경)
+git clone https://github.com/YOUR_USERNAME/tools.git
 cd tools
 
 # 의존성 설치
@@ -125,6 +125,7 @@ git commit -m "feat: Add my feature"
 ```
 
 커밋 메시지 컨벤션:
+
 - `feat:` 새 기능
 - `fix:` 버그 수정
 - `docs:` 문서 변경
