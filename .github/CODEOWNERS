@@ -1,0 +1,26 @@
+# CODEOWNERS - Define code owners for automatic review requests
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything
+* @soundbluemusic
+
+# Documentation
+/docs/ @soundbluemusic
+*.md @soundbluemusic
+
+# CI/CD and GitHub configuration
+/.github/ @soundbluemusic
+
+# Core application code
+/src/ @soundbluemusic
+
+# Individual apps
+/src/apps/metronome/ @soundbluemusic
+/src/apps/drum/ @soundbluemusic
+/src/apps/drum-synth/ @soundbluemusic
+/src/apps/qr/ @soundbluemusic
+
+# Build configuration
+/scripts/ @soundbluemusic
+vite.config.ts @soundbluemusic
+tsconfig*.json @soundbluemusic

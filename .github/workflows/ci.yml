@@ -28,11 +28,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check formatting
+        run: npm run format:check
+
       - name: Type check
         run: npm run typecheck
 
       - name: Lint
         run: npm run lint
+
+      - name: Check docs sync
+        run: npm run sync-docs -- --check
 
       - name: Test
         run: npm run test:run

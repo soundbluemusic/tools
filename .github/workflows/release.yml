@@ -65,9 +65,12 @@ jobs:
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
           "
 
+      - name: Update package-lock.json
+        run: npm install --package-lock-only
+
       - name: Commit version bump
         run: |
-          git add package.json
+          git add package.json package-lock.json
           git commit -m "chore: bump version to v${{ steps.bump_version.outputs.new_version }}"
           git push
 

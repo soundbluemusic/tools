@@ -10,8 +10,8 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드 공식 문서�
 |:---|:-----|
 | [🎵 메트로놈](./apps/metronome.md) | 음악가를 위한 정밀 메트로놈 |
 | [🥁 드럼머신](./apps/drum.md) | 드럼 패턴 연습용 시퀀서 |
-| [🎛️ 드럼 사운드 합성기](./apps/drum-synth.md) | Web Audio 기반 드럼 사운드 합성기 |
-| [📱 QR 코드 생성기](./apps/qr.md) | 고해상도 QR 코드 생성 |
+| [📱 QR 코드 생성기](./apps/qr.md) | 투명 배경의 고해상도 QR 코드 생성 |
+| [🎛️ 드럼 사운드 합성기](./apps/drum-synth.md) | 세밀한 파라미터 조절이 가능한 드럼 사운드 합성기 |
 
 ### 개발 문서
 
@@ -19,7 +19,7 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드 공식 문서�
 |:-----|:-----|
 | [개발 가이드](./development.md) | 로컬 개발 환경 설정 및 명령어 |
 | [아키텍처](./architecture.md) | 프로젝트 구조 및 설계 원칙 |
-| [기여 가이드](./contributing.md) | 프로젝트 기여 방법 |
+| [기여 가이드](../CONTRIBUTING.md) | 프로젝트 기여 방법 |
 
 ## 빠른 시작
 
