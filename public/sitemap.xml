@@ -4,71 +4,80 @@
   <!-- Homepage -->
   <url>
     <loc>https://tools.soundbluemusic.com/</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
-  <!-- QR Code Generator -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/qr</loc>
-    <lastmod>2025-11-30</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Metronome -->
+  <!-- Tools -->
   <url>
     <loc>https://tools.soundbluemusic.com/metronome</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Drum Machine -->
   <url>
     <loc>https://tools.soundbluemusic.com/drum</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Sitemap Page -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/drum-synth</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/qr</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Info Pages -->
   <url>
     <loc>https://tools.soundbluemusic.com/sitemap</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  <!-- Open Source -->
   <url>
     <loc>https://tools.soundbluemusic.com/opensource</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  <!-- Tools Used -->
   <url>
     <loc>https://tools.soundbluemusic.com/tools-used</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
-  <!-- Privacy Policy -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/downloads</loc>
+    <lastmod>2025-12-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Legal Pages -->
   <url>
     <loc>https://tools.soundbluemusic.com/privacy</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
 
-  <!-- Terms of Service -->
   <url>
     <loc>https://tools.soundbluemusic.com/terms</loc>
-    <lastmod>2025-11-30</lastmod>
+    <lastmod>2025-12-02</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
