@@ -142,7 +142,7 @@ export const DrumSynth = memo(function DrumSynth() {
   const audioContextRef = useRef<AudioContext | null>(null);
   // Cached buffers for performance
   const noiseBufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
-  const distortionCurveCache = useRef<Map<number, Float32Array>>(new Map());
+  const distortionCurveCache = useRef<Map<number, Float32Array<ArrayBuffer>>>(new Map());
 
   /**
    * Get or create audio context
@@ -177,7 +177,7 @@ export const DrumSynth = memo(function DrumSynth() {
   /**
    * Create distortion curve for drive effect (cached by amount)
    */
-  const makeDistortionCurve = useCallback((amount: number): Float32Array => {
+  const makeDistortionCurve = useCallback((amount: number): Float32Array<ArrayBuffer> => {
     // Round to avoid too many cache entries
     const roundedAmount = Math.round(amount);
     const cached = distortionCurveCache.current.get(roundedAmount);
@@ -185,7 +185,7 @@ export const DrumSynth = memo(function DrumSynth() {
       return cached;
     }
     const samples = 44100;
-    const curve = new Float32Array(samples);
+    const curve = new Float32Array(samples) as Float32Array<ArrayBuffer>;
     const k = (roundedAmount / 100) * 50;
     for (let i = 0; i < samples; i++) {
       const x = (i * 2) / samples - 1;
