@@ -8,8 +8,10 @@ export interface SelectOption<T extends string = string> {
   disabled?: boolean;
 }
 
-export interface SelectProps<T extends string = string>
-  extends Omit<SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
+export interface SelectProps<T extends string = string> extends Omit<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  'size'
+> {
   /** Select options */
   options: readonly SelectOption<T>[];
   /** Placeholder text */
@@ -72,7 +74,9 @@ function SelectInner<T extends string = string>(
   );
 }
 
-export const Select = memo(forwardRef(SelectInner)) as <T extends string = string>(
+export const Select = memo(forwardRef(SelectInner)) as <
+  T extends string = string,
+>(
   props: SelectProps<T> & { ref?: React.Ref<HTMLSelectElement> }
 ) => React.ReactElement;
 

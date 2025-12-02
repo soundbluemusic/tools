@@ -41,7 +41,10 @@ const MIDI = {
 /**
  * Read a variable-length quantity from data
  */
-function readVLQ(data: Uint8Array, offset: number): { value: number; length: number } {
+function readVLQ(
+  data: Uint8Array,
+  offset: number
+): { value: number; length: number } {
   let value = 0;
   let length = 0;
 
@@ -79,7 +82,11 @@ function read32(data: Uint8Array, offset: number): number {
 /**
  * Check if data starts with expected bytes
  */
-function startsWith(data: Uint8Array, offset: number, expected: number[]): boolean {
+function startsWith(
+  data: Uint8Array,
+  offset: number,
+  expected: number[]
+): boolean {
   for (let i = 0; i < expected.length; i++) {
     if (data[offset + i] !== expected[i]) return false;
   }
@@ -188,7 +195,11 @@ export function parseMidiData(data: Uint8Array): MidiImportResult | null {
         const metaLength = readVLQ(data, trackOffset);
         trackOffset += metaLength.length;
 
-        if (metaType === 0x51 && metaLength.value === 3 && trackOffset + 2 < trackEnd) {
+        if (
+          metaType === 0x51 &&
+          metaLength.value === 3 &&
+          trackOffset + 2 < trackEnd
+        ) {
           // Tempo meta event
           const microsecondsPerBeat =
             (data[trackOffset] << 16) |
@@ -243,7 +254,9 @@ export function parseMidiData(data: Uint8Array): MidiImportResult | null {
 /**
  * Import MIDI from File object
  */
-export async function importMidiFile(file: File): Promise<MidiImportResult | null> {
+export async function importMidiFile(
+  file: File
+): Promise<MidiImportResult | null> {
   return new Promise((resolve) => {
     const reader = new FileReader();
 

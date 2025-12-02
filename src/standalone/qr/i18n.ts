@@ -67,7 +67,8 @@ export const translations: Record<Language, Translations> = {
     paperLabel: '종이/라벨',
     outdoorLarge: '야외/대형',
     highDamageRisk: '손상 위험 높음',
-    errorLevelInfo: '높은 복구율 = 더 큰 QR 코드, 낮은 복구율 = 더 작은 QR 코드',
+    errorLevelInfo:
+      '높은 복구율 = 더 큰 QR 코드, 낮은 복구율 = 더 작은 QR 코드',
     qrCodeColor: 'QR 코드 색상',
     black: '검정',
     white: '흰색',
@@ -82,10 +83,12 @@ export const translations: Record<Language, Translations> = {
     download: '다운로드',
     popupBlocked: '팝업이 차단되었습니다. 팝업 허용 후 다시 시도하세요.',
     downloadFailed: '다운로드에 실패했습니다.',
-    imageCopyNotSupported: '이 브라우저에서는 이미지 복사가 지원되지 않습니다. 대신 다운로드합니다.',
+    imageCopyNotSupported:
+      '이 브라우저에서는 이미지 복사가 지원되지 않습니다. 대신 다운로드합니다.',
     imageOpenedInNewTab: '새 탭에서 이미지가 열렸습니다. 길게 눌러 저장하세요.',
     imageDownloaded: '이미지가 다운로드되었습니다.',
-    imageCopyConfirm: '클립보드 복사가 지원되지 않습니다. 대신 다운로드하시겠습니까?',
+    imageCopyConfirm:
+      '클립보드 복사가 지원되지 않습니다. 대신 다운로드하시겠습니까?',
     lightMode: '라이트 모드',
     darkMode: '다크 모드',
     language: '언어',
@@ -109,7 +112,8 @@ export const translations: Record<Language, Translations> = {
     paperLabel: 'Paper/Label',
     outdoorLarge: 'Outdoor/Large',
     highDamageRisk: 'High damage risk',
-    errorLevelInfo: 'Higher recovery = larger QR code, Lower recovery = smaller QR code',
+    errorLevelInfo:
+      'Higher recovery = larger QR code, Lower recovery = smaller QR code',
     qrCodeColor: 'QR Code Color',
     black: 'Black',
     white: 'White',
@@ -124,10 +128,12 @@ export const translations: Record<Language, Translations> = {
     download: 'Download',
     popupBlocked: 'Popup blocked. Please allow popups and try again.',
     downloadFailed: 'Download failed.',
-    imageCopyNotSupported: 'Image copy not supported in this browser. Downloading instead.',
+    imageCopyNotSupported:
+      'Image copy not supported in this browser. Downloading instead.',
     imageOpenedInNewTab: 'Image opened in new tab. Long press to save.',
     imageDownloaded: 'Image downloaded.',
-    imageCopyConfirm: 'Clipboard copy not supported. Would you like to download instead?',
+    imageCopyConfirm:
+      'Clipboard copy not supported. Would you like to download instead?',
     lightMode: 'Light Mode',
     darkMode: 'Dark Mode',
     language: 'Language',

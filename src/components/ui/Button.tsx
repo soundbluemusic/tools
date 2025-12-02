@@ -1,4 +1,9 @@
-import { memo, forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import {
+  memo,
+  forwardRef,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from 'react';
 import { cn } from '../../utils';
 import { SIZE_CLASSES } from '../../utils/sizeClass';
 

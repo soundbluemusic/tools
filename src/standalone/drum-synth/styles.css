@@ -2,11 +2,32 @@
  * Standalone Drum Synth Styles
  */
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; -webkit-font-smoothing: antialiased; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.5; min-height: 100vh; }
-button { font: inherit; cursor: pointer; border: none; background: none; }
-input { font: inherit; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+input {
+  font: inherit;
+}
 
 :root {
   --color-bg-primary: #faf9f7;
@@ -39,7 +60,7 @@ input { font: inherit; }
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root:not([data-theme='light']) {
     --color-bg-primary: #1a1918;
     --color-bg-secondary: #212120;
     --color-bg-tertiary: #292827;
@@ -55,7 +76,7 @@ input { font: inherit; }
   }
 }
 
-:root[data-theme="dark"] {
+:root[data-theme='dark'] {
   --color-bg-primary: #1a1918;
   --color-bg-secondary: #212120;
   --color-bg-tertiary: #292827;
@@ -70,8 +91,15 @@ input { font: inherit; }
   --color-accent-hover: #ffffff;
 }
 
-body { background: var(--color-bg-primary); color: var(--color-text-primary); }
-#root { min-height: 100vh; display: flex; flex-direction: column; }
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 .standalone-app {
   flex: 1;
@@ -92,8 +120,14 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   border-bottom: 1px solid var(--color-border-secondary);
 }
 
-.standalone-title { font-size: 1.25rem; font-weight: var(--font-weight-semibold); }
-.standalone-controls { display: flex; gap: var(--spacing-2); }
+.standalone-title {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-semibold);
+}
+.standalone-controls {
+  display: flex;
+  gap: var(--spacing-2);
+}
 
 .standalone-btn {
   display: flex;
@@ -110,11 +144,19 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   transition: background-color var(--transition-fast) var(--ease-default);
 }
 
-.standalone-btn:hover { background: var(--color-interactive-hover); }
-.standalone-main { flex: 1; }
+.standalone-btn:hover {
+  background: var(--color-interactive-hover);
+}
+.standalone-main {
+  flex: 1;
+}
 
 /* Drum Synth */
-.drum-synth { display: flex; flex-direction: column; gap: var(--spacing-4); }
+.drum-synth {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}
 
 /* Quick Play Pads */
 .synth-pads {
@@ -142,8 +184,13 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   transition: all var(--transition-fast);
 }
 
-.synth-pad:hover { background: var(--color-interactive-hover); }
-.synth-pad.playing { background: var(--color-playing); color: white; }
+.synth-pad:hover {
+  background: var(--color-interactive-hover);
+}
+.synth-pad.playing {
+  background: var(--color-playing);
+  color: white;
+}
 
 /* Drum Selector */
 .synth-selector {
@@ -160,9 +207,16 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   transition: all var(--transition-fast);
 }
 
-.synth-drum-btn:hover { background: var(--color-interactive-hover); }
-.synth-drum-btn.selected { background: var(--color-accent-primary); color: var(--color-text-inverse); }
-.synth-drum-btn.playing { box-shadow: 0 0 0 2px var(--color-playing); }
+.synth-drum-btn:hover {
+  background: var(--color-interactive-hover);
+}
+.synth-drum-btn.selected {
+  background: var(--color-accent-primary);
+  color: var(--color-text-inverse);
+}
+.synth-drum-btn.playing {
+  box-shadow: 0 0 0 2px var(--color-playing);
+}
 
 /* Parameters */
 .synth-params {
@@ -196,7 +250,9 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   transition: all var(--transition-fast);
 }
 
-.synth-reset-btn:hover { background: var(--color-interactive-hover); }
+.synth-reset-btn:hover {
+  background: var(--color-interactive-hover);
+}
 
 .synth-params-grid {
   display: flex;
@@ -271,8 +327,12 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   transition: all var(--transition-fast);
 }
 
-.synth-play-btn:hover { background: var(--color-accent-hover); }
-.synth-play-btn.playing { background: var(--color-playing); }
+.synth-play-btn:hover {
+  background: var(--color-accent-hover);
+}
+.synth-play-btn.playing {
+  background: var(--color-playing);
+}
 
 /* Master */
 .synth-master {
@@ -316,12 +376,22 @@ body { background: var(--color-bg-primary); color: var(--color-text-primary); }
   transition: all var(--transition-fast);
 }
 
-.synth-preset-btn:hover { background: var(--color-interactive-hover); }
+.synth-preset-btn:hover {
+  background: var(--color-interactive-hover);
+}
 
 /* Responsive */
 @media (max-width: 480px) {
-  .standalone-app { padding: var(--spacing-3); }
-  .synth-pads-grid { grid-template-columns: repeat(2, 1fr); }
-  .synth-selector { justify-content: center; }
-  .synth-presets-buttons { justify-content: center; }
+  .standalone-app {
+    padding: var(--spacing-3);
+  }
+  .synth-pads-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .synth-selector {
+    justify-content: center;
+  }
+  .synth-presets-buttons {
+    justify-content: center;
+  }
 }

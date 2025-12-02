@@ -116,8 +116,9 @@
   box-sizing: border-box;
   /* GPU acceleration for focus animation */
   transform: var(--gpu-transform);
-  transition: border-color var(--transition-fast) ease-out,
-              box-shadow var(--transition-fast) ease-out;
+  transition:
+    border-color var(--transition-fast) ease-out,
+    box-shadow var(--transition-fast) ease-out;
 }
 
 .search-input:focus {
@@ -169,8 +170,9 @@
   outline: none;
   min-width: 150px;
   transform: var(--gpu-transform);
-  transition: border-color var(--transition-fast) ease-out,
-              box-shadow var(--transition-fast) ease-out;
+  transition:
+    border-color var(--transition-fast) ease-out,
+    box-shadow var(--transition-fast) ease-out;
 }
 
 .sort-dropdown:focus {
@@ -220,8 +222,9 @@
   transform: var(--gpu-transform);
   position: relative;
   z-index: 0;
-  transition: border-color var(--transition-fast) ease-out,
-              box-shadow var(--transition-fast) ease-out;
+  transition:
+    border-color var(--transition-fast) ease-out,
+    box-shadow var(--transition-fast) ease-out;
 }
 
 .app-item:hover {
@@ -300,7 +303,8 @@
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

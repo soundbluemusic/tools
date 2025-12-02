@@ -5,7 +5,11 @@ import type { Translations } from './i18n';
 const QR_SIZE = 1024;
 const URL_DEBOUNCE_MS = 300;
 const COLOR_THRESHOLD = { BLACK: 50, WHITE: 200 };
-const TIMEOUTS = { DOWNLOAD_CLEANUP: 100, COPY_SUCCESS: 2000, BLOB_REVOKE: 10000 };
+const TIMEOUTS = {
+  DOWNLOAD_CLEANUP: 100,
+  COPY_SUCCESS: 2000,
+  BLOB_REVOKE: 10000,
+};
 
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type ColorMode = 'black' | 'white';
@@ -31,7 +35,9 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGeneratorProps) {
+export const QRGenerator = memo(function QRGenerator({
+  translations: t,
+}: QRGeneratorProps) {
   const [url, setUrl] = useState('');
   const [errorLevel, setErrorLevel] = useState<ErrorLevel>('H');
   const [colorMode, setColorMode] = useState<ColorMode>('black');
@@ -43,50 +49,81 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
 
   const errorLevels = useMemo(
     () => [
-      { level: 'L' as const, recovery: '7%', use: t.onlineOnly, desc: t.noDamageRisk },
-      { level: 'M' as const, recovery: '15%', use: t.smallPrint, desc: t.coatedSurface },
-      { level: 'Q' as const, recovery: '25%', use: t.generalPrint, desc: t.paperLabel },
-      { level: 'H' as const, recovery: '30%', use: t.outdoorLarge, desc: t.highDamageRisk },
+      {
+        level: 'L' as const,
+        recovery: '7%',
+        use: t.onlineOnly,
+        desc: t.noDamageRisk,
+      },
+      {
+        level: 'M' as const,
+        recovery: '15%',
+        use: t.smallPrint,
+        desc: t.coatedSurface,
+      },
+      {
+        level: 'Q' as const,
+        recovery: '25%',
+        use: t.generalPrint,
+        desc: t.paperLabel,
+      },
+      {
+        level: 'H' as const,
+        recovery: '30%',
+        use: t.outdoorLarge,
+        desc: t.highDamageRisk,
+      },
     ],
     [t]
   );
 
-  const makeTransparent = useCallback((canvas: HTMLCanvasElement, isWhite: boolean): string => {
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return '';
+  const makeTransparent = useCallback(
+    (canvas: HTMLCanvasElement, isWhite: boolean): string => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return '';
 
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
 
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
 
-      if (isWhite) {
-        if (r <= COLOR_THRESHOLD.BLACK && g <= COLOR_THRESHOLD.BLACK && b <= COLOR_THRESHOLD.BLACK) {
-          data[i + 3] = 0;
+        if (isWhite) {
+          if (
+            r <= COLOR_THRESHOLD.BLACK &&
+            g <= COLOR_THRESHOLD.BLACK &&
+            b <= COLOR_THRESHOLD.BLACK
+          ) {
+            data[i + 3] = 0;
+          } else {
+            data[i] = 255;
+            data[i + 1] = 255;
+            data[i + 2] = 255;
+            data[i + 3] = 255;
+          }
         } else {
-          data[i] = 255;
-          data[i + 1] = 255;
-          data[i + 2] = 255;
-          data[i + 3] = 255;
-        }
-      } else {
-        if (r >= COLOR_THRESHOLD.WHITE && g >= COLOR_THRESHOLD.WHITE && b >= COLOR_THRESHOLD.WHITE) {
-          data[i + 3] = 0;
-        } else {
-          data[i] = 0;
-          data[i + 1] = 0;
-          data[i + 2] = 0;
-          data[i + 3] = 255;
+          if (
+            r >= COLOR_THRESHOLD.WHITE &&
+            g >= COLOR_THRESHOLD.WHITE &&
+            b >= COLOR_THRESHOLD.WHITE
+          ) {
+            data[i + 3] = 0;
+          } else {
+            data[i] = 0;
+            data[i + 1] = 0;
+            data[i + 2] = 0;
+            data[i + 3] = 255;
+          }
         }
       }
-    }
 
-    ctx.putImageData(imageData, 0, 0);
-    return canvas.toDataURL('image/png');
-  }, []);
+      ctx.putImageData(imageData, 0, 0);
+      return canvas.toDataURL('image/png');
+    },
+    []
+  );
 
   const createQR = useCallback(
     (text: string, level: ErrorLevel) => {
@@ -131,35 +168,38 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
     createQR(debouncedUrl, errorLevel);
   }, [debouncedUrl, errorLevel, createQR]);
 
-  const downloadQR = useCallback((dataUrl: string, filename: string) => {
-    try {
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = filename;
-
-      if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-      }
-
-      document.body.appendChild(link);
-      link.click();
-
-      setTimeout(() => {
-        document.body.removeChild(link);
-      }, TIMEOUTS.DOWNLOAD_CLEANUP);
-    } catch (error) {
-      console.error('Download error:', error);
+  const downloadQR = useCallback(
+    (dataUrl: string, filename: string) => {
       try {
-        const newWindow = window.open(dataUrl, '_blank');
-        if (!newWindow) {
-          alert(t.popupBlocked);
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = filename;
+
+        if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
         }
-      } catch {
-        alert(t.downloadFailed);
+
+        document.body.appendChild(link);
+        link.click();
+
+        setTimeout(() => {
+          document.body.removeChild(link);
+        }, TIMEOUTS.DOWNLOAD_CLEANUP);
+      } catch (error) {
+        console.error('Download error:', error);
+        try {
+          const newWindow = window.open(dataUrl, '_blank');
+          if (!newWindow) {
+            alert(t.popupBlocked);
+          }
+        } catch {
+          alert(t.downloadFailed);
+        }
       }
-    }
-  }, [t]);
+    },
+    [t]
+  );
 
   const fallbackDownload = useCallback(
     (dataUrl: string) => {
@@ -193,7 +233,10 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
                   throw new Error('Blob creation failed');
                 }
 
-                if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+                if (
+                  navigator.clipboard &&
+                  typeof ClipboardItem !== 'undefined'
+                ) {
                   try {
                     const item = new ClipboardItem({ 'image/png': blob });
                     await navigator.clipboard.write([item]);
@@ -203,7 +246,10 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
                     }, TIMEOUTS.COPY_SUCCESS);
                     return;
                   } catch (clipErr) {
-                    console.log('Clipboard API failed, trying fallback:', clipErr);
+                    console.log(
+                      'Clipboard API failed, trying fallback:',
+                      clipErr
+                    );
                   }
                 }
 
@@ -226,7 +272,10 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
                   }
                 }
 
-                setTimeout(() => URL.revokeObjectURL(blobUrl), TIMEOUTS.BLOB_REVOKE);
+                setTimeout(
+                  () => URL.revokeObjectURL(blobUrl),
+                  TIMEOUTS.BLOB_REVOKE
+                );
               },
               'image/png',
               1.0
@@ -314,7 +363,9 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
       {/* QR Preview */}
       <div className="qr-section">
         <h3 className="qr-section-title">{t.generatedQrCode}</h3>
-        <div className={`qr-preview ${colorMode === 'black' ? 'light-bg' : 'dark-bg'}`}>
+        <div
+          className={`qr-preview ${colorMode === 'black' ? 'light-bg' : 'dark-bg'}`}
+        >
           {currentQR ? (
             <img
               src={currentQR}
@@ -322,7 +373,9 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
               className="qr-image"
             />
           ) : (
-            <div className={`qr-placeholder ${colorMode === 'black' ? 'light' : 'dark'}`}>
+            <div
+              className={`qr-placeholder ${colorMode === 'black' ? 'light' : 'dark'}`}
+            >
               <svg
                 className="qr-placeholder-icon"
                 fill="none"
@@ -342,10 +395,29 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
         </div>
         {currentQR && (
           <div className="qr-actions">
-            <button onClick={() => copyImage(currentQR)} className="qr-btn qr-btn--secondary">
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <rect x="9" y="9" width="13" height="13" rx="2" strokeWidth="2" />
-                <path strokeWidth="2" d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            <button
+              onClick={() => copyImage(currentQR)}
+              className="qr-btn qr-btn--secondary"
+            >
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <rect
+                  x="9"
+                  y="9"
+                  width="13"
+                  height="13"
+                  rx="2"
+                  strokeWidth="2"
+                />
+                <path
+                  strokeWidth="2"
+                  d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"
+                />
               </svg>
               {copySuccess ? t.copied : t.copyImage}
             </button>
@@ -353,7 +425,13 @@ export const QRGenerator = memo(function QRGenerator({ translations: t }: QRGene
               onClick={() => downloadQR(currentQR, currentFilename)}
               className="qr-btn qr-btn--primary"
             >
-              <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                width="16"
+                height="16"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

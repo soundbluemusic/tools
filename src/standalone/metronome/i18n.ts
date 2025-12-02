@@ -48,7 +48,8 @@ export const translations: Record<Language, Translations> = {
     start: '시작',
     stop: '일시정지',
     perfectSync: '완벽 동기화',
-    syncDescription: '완벽한 BPM-시간 동기화 | 60 BPM = 정확히 1초 | 120 BPM = 정확히 0.5초',
+    syncDescription:
+      '완벽한 BPM-시간 동기화 | 60 BPM = 정확히 1초 | 120 BPM = 정확히 0.5초',
     precision: '±0.01s',
     lightMode: '라이트 모드',
     darkMode: '다크 모드',
@@ -72,7 +73,8 @@ export const translations: Record<Language, Translations> = {
     start: 'Start',
     stop: 'Pause',
     perfectSync: 'Perfect Sync',
-    syncDescription: 'Perfect BPM-Time Sync | 60 BPM = exactly 1s | 120 BPM = exactly 0.5s',
+    syncDescription:
+      'Perfect BPM-Time Sync | 60 BPM = exactly 1s | 120 BPM = exactly 0.5s',
     precision: '±0.01s',
     lightMode: 'Light Mode',
     darkMode: 'Dark Mode',

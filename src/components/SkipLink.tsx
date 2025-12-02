@@ -9,7 +9,8 @@ import './SkipLink.css';
 export const SkipLink = memo(function SkipLink() {
   const { language } = useLanguage();
 
-  const label = language === 'ko' ? '본문으로 건너뛰기' : 'Skip to main content';
+  const label =
+    language === 'ko' ? '본문으로 건너뛰기' : 'Skip to main content';
 
   return (
     <a href="#main-content" className="skip-link">

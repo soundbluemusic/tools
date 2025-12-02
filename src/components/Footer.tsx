@@ -50,9 +50,7 @@ export const Footer = memo(function Footer() {
       </nav>
 
       {/* Copyright */}
-      <p className="footer-copyright">
-        © SoundBlueMusic. MIT License
-      </p>
+      <p className="footer-copyright">© SoundBlueMusic. MIT License</p>
     </footer>
   );
 });

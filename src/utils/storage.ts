@@ -188,9 +188,9 @@ export const isBoolean: Validator<boolean> = (
  *   volume: isNumber,
  * });
  */
-export function createObjectValidator<T extends Record<string, unknown>>(
-  shape: { [K in keyof T]: Validator<T[K]> }
-): Validator<T> {
+export function createObjectValidator<
+  T extends Record<string, unknown>,
+>(shape: { [K in keyof T]: Validator<T[K]> }): Validator<T> {
   return (value: unknown): value is T => {
     if (typeof value !== 'object' || value === null) return false;
     const obj = value as Record<string, unknown>;

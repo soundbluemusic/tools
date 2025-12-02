@@ -78,8 +78,10 @@ export function useArrowNavigation<T extends HTMLElement>(
 
       let nextIndex = currentIndex;
 
-      const canNavigateVertical = orientation === 'vertical' || orientation === 'both';
-      const canNavigateHorizontal = orientation === 'horizontal' || orientation === 'both';
+      const canNavigateVertical =
+        orientation === 'vertical' || orientation === 'both';
+      const canNavigateHorizontal =
+        orientation === 'horizontal' || orientation === 'both';
 
       switch (e.key) {
         case 'ArrowUp':
@@ -137,21 +139,24 @@ export function useArrowNavigation<T extends HTMLElement>(
  * Hook for announcing messages to screen readers
  */
 export function useAnnounce() {
-  const announce = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', priority);
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
+  const announce = useCallback(
+    (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+      const announcement = document.createElement('div');
+      announcement.setAttribute('role', 'status');
+      announcement.setAttribute('aria-live', priority);
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      announcement.textContent = message;
 
-    document.body.appendChild(announcement);
+      document.body.appendChild(announcement);
 
-    // Remove after announcement
-    setTimeout(() => {
-      document.body.removeChild(announcement);
-    }, 1000);
-  }, []);
+      // Remove after announcement
+      setTimeout(() => {
+        document.body.removeChild(announcement);
+      }, 1000);
+    },
+    []
+  );
 
   return announce;
 }

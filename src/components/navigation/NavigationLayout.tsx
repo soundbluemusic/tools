@@ -51,7 +51,9 @@ export const NavigationLayout = memo(function NavigationLayout({
       // Also support "/" for quick search when not in an input
       if (
         e.key === '/' &&
-        !['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement).tagName)
+        !['INPUT', 'TEXTAREA', 'SELECT'].includes(
+          (e.target as HTMLElement).tagName
+        )
       ) {
         e.preventDefault();
         setIsCommandPaletteOpen(true);
@@ -72,9 +74,7 @@ export const NavigationLayout = memo(function NavigationLayout({
 
       {/* Main Content Wrapper */}
       <div className="navigation-content">
-        <div className="content-wrapper">
-          {children}
-        </div>
+        <div className="content-wrapper">{children}</div>
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}

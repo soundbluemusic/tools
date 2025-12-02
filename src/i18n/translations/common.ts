@@ -62,7 +62,8 @@ export const commonKo: CommonTranslation = {
   },
   pwa: {
     installTitle: '앱 설치',
-    installMessage: 'Productivity Tools (Beta)를 앱으로 설치하면 더 빠르고 편리하게 사용할 수 있습니다.',
+    installMessage:
+      'Productivity Tools (Beta)를 앱으로 설치하면 더 빠르고 편리하게 사용할 수 있습니다.',
     installButton: '설치',
     dismissButton: '나중에',
     updateTitle: '업데이트 가능',

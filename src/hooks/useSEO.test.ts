@@ -10,7 +10,9 @@ describe('useSEO', () => {
 
   beforeEach(() => {
     // Clear all meta tags before each test
-    document.querySelectorAll('meta[name], meta[property]').forEach((el) => el.remove());
+    document
+      .querySelectorAll('meta[name], meta[property]')
+      .forEach((el) => el.remove());
     document.querySelector('link[rel="canonical"]')?.remove();
   });
 
@@ -63,7 +65,9 @@ describe('useSEO', () => {
     );
 
     const link = document.querySelector('link[rel="canonical"]');
-    expect(link?.getAttribute('href')).toBe('https://tools.soundbluemusic.com/test-page');
+    expect(link?.getAttribute('href')).toBe(
+      'https://tools.soundbluemusic.com/test-page'
+    );
   });
 
   it('sets Open Graph tags', () => {
@@ -75,13 +79,21 @@ describe('useSEO', () => {
       })
     );
 
-    expect(document.querySelector('meta[property="og:title"]')?.getAttribute('content')).toBe(
-      'OG Test | Productivity Tools'
-    );
-    expect(document.querySelector('meta[property="og:description"]')?.getAttribute('content')).toBe(
-      'OG description'
-    );
-    expect(document.querySelector('meta[property="og:type"]')?.getAttribute('content')).toBe('article');
+    expect(
+      document
+        .querySelector('meta[property="og:title"]')
+        ?.getAttribute('content')
+    ).toBe('OG Test | Productivity Tools');
+    expect(
+      document
+        .querySelector('meta[property="og:description"]')
+        ?.getAttribute('content')
+    ).toBe('OG description');
+    expect(
+      document
+        .querySelector('meta[property="og:type"]')
+        ?.getAttribute('content')
+    ).toBe('article');
   });
 
   it('sets robots meta for noindex pages', () => {
@@ -110,14 +122,11 @@ describe('useSEO', () => {
   });
 
   it('updates meta tags when config changes', () => {
-    const { rerender } = renderHook(
-      ({ config }) => useSEO(config),
-      {
-        initialProps: {
-          config: { title: 'Initial', description: 'Initial desc' },
-        },
-      }
-    );
+    const { rerender } = renderHook(({ config }) => useSEO(config), {
+      initialProps: {
+        config: { title: 'Initial', description: 'Initial desc' },
+      },
+    });
 
     expect(document.title).toBe('Initial | Productivity Tools');
 

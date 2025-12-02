@@ -241,7 +241,8 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
 const OpenSource = memo(function OpenSource() {
   const { language } = useLanguage();
 
-  const title = language === 'ko' ? '오픈소스 라이브러리' : 'Open Source Libraries';
+  const title =
+    language === 'ko' ? '오픈소스 라이브러리' : 'Open Source Libraries';
   const description =
     language === 'ko'
       ? '이 프로젝트에 사용된 오픈소스 라이브러리 목록입니다'
@@ -280,7 +281,9 @@ const OpenSource = memo(function OpenSource() {
       </div>
       {LIBRARY_CATEGORIES.map((category) => (
         <section key={category.title.en} className="opensource-category">
-          <h2 className="opensource-category-title">{category.title[language]}</h2>
+          <h2 className="opensource-category-title">
+            {category.title[language]}
+          </h2>
           <ul className="opensource-list">
             {category.libraries.map((lib) => (
               <li key={lib.name} className="opensource-item">
@@ -294,7 +297,9 @@ const OpenSource = memo(function OpenSource() {
                     {lib.name}
                   </a>
                   <span className="opensource-version">
-                    {lib.version.startsWith('Browser') ? lib.version : `v${lib.version}`}
+                    {lib.version.startsWith('Browser')
+                      ? lib.version
+                      : `v${lib.version}`}
                   </span>
                   <span className="opensource-license">{lib.license}</span>
                 </div>

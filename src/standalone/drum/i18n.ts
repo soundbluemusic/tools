@@ -93,7 +93,8 @@ export const translations: Record<Language, Translations> = {
     maxLoopsReached: 'Maximum loops reached',
     clearAllLoops: 'All loops will be cleared',
     loadedPreset: 'Loaded {preset} preset',
-    synthesisInfo: 'All drum sounds are synthesized in real-time using Web Audio API',
+    synthesisInfo:
+      'All drum sounds are synthesized in real-time using Web Audio API',
     lightMode: 'Light Mode',
     darkMode: 'Dark Mode',
     language: 'Language',

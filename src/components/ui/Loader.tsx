@@ -44,11 +44,7 @@ export const PageLoader = memo<PageLoaderProps>(function PageLoader({
   minHeight = '200px',
 }) {
   return (
-    <div
-      className="page-loader"
-      aria-busy="true"
-      style={{ minHeight }}
-    >
+    <div className="page-loader" aria-busy="true" style={{ minHeight }}>
       <Loader size="lg" label="페이지 로딩 중..." />
     </div>
   );

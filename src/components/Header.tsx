@@ -23,7 +23,8 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
   }, [onSearchClick]);
 
   // Detect OS for keyboard shortcut hint
-  const isMac = typeof navigator !== 'undefined' && /Mac/i.test(navigator.userAgent);
+  const isMac =
+    typeof navigator !== 'undefined' && /Mac/i.test(navigator.userAgent);
   const shortcutKey = isMac ? '\u2318K' : 'Ctrl+K';
 
   const themeLabels: Record<Theme, { ko: string; en: string }> = {
@@ -89,7 +90,9 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
             onClick={toggleLanguage}
             className="header-control-btn header-lang-btn"
             title={language === 'ko' ? 'Switch to English' : '한국어로 전환'}
-            aria-label={language === 'ko' ? 'Switch to English' : '한국어로 전환'}
+            aria-label={
+              language === 'ko' ? 'Switch to English' : '한국어로 전환'
+            }
           >
             <svg
               className="header-icon header-icon-lang"
@@ -105,7 +108,9 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
                 d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"
               />
             </svg>
-            <span className="header-lang-text">{language === 'ko' ? 'EN' : 'KO'}</span>
+            <span className="header-lang-text">
+              {language === 'ko' ? 'EN' : 'KO'}
+            </span>
           </button>
         </div>
       </div>

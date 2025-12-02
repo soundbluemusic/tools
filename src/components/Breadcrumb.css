@@ -77,14 +77,14 @@
   }
 }
 
-[data-theme="dark"] .breadcrumb-link {
+[data-theme='dark'] .breadcrumb-link {
   color: var(--color-text-secondary, #aaa);
 }
 
-[data-theme="dark"] .breadcrumb-link:hover {
+[data-theme='dark'] .breadcrumb-link:hover {
   color: var(--color-text-primary, #f1f1f1);
 }
 
-[data-theme="dark"] .breadcrumb-current {
+[data-theme='dark'] .breadcrumb-current {
   color: var(--color-text-primary, #f1f1f1);
 }

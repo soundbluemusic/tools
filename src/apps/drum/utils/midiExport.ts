@@ -171,7 +171,10 @@ export function generateMidiData(options: MidiExportOptions): Uint8Array {
         if (velocity > 0) {
           const note = DRUM_NOTES[instrument];
           // Scale velocity from 0-100 to 0-127
-          const midiVelocity = Math.min(127, Math.round((velocity / 100) * 127));
+          const midiVelocity = Math.min(
+            127,
+            Math.round((velocity / 100) * 127)
+          );
 
           events.push({
             tick: stepTick,

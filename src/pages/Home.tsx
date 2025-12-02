@@ -1,10 +1,4 @@
-import {
-  memo,
-  useState,
-  useMemo,
-  useCallback,
-  useTransition,
-} from 'react';
+import { memo, useState, useMemo, useCallback, useTransition } from 'react';
 import { useLanguage } from '../i18n';
 import { useSEO, useApps } from '../hooks';
 import AppList from '../components/AppList';
@@ -48,9 +42,13 @@ function sortApps(
         b.name[language].localeCompare(a.name[language], locale)
       );
     case 'name-long':
-      return sorted.sort((a, b) => b.name[language].length - a.name[language].length);
+      return sorted.sort(
+        (a, b) => b.name[language].length - a.name[language].length
+      );
     case 'name-short':
-      return sorted.sort((a, b) => a.name[language].length - b.name[language].length);
+      return sorted.sort(
+        (a, b) => a.name[language].length - b.name[language].length
+      );
     case 'size-large':
       return sorted.sort((a, b) => b.size - a.size);
     case 'size-small':
@@ -113,7 +111,8 @@ const Home = memo(function Home() {
   );
 
   // Aria label for app list
-  const appListAriaLabel = language === 'ko' ? '사용 가능한 도구' : 'Available tools';
+  const appListAriaLabel =
+    language === 'ko' ? '사용 가능한 도구' : 'Available tools';
 
   return (
     <div className="home-page">
@@ -150,9 +149,7 @@ const Home = memo(function Home() {
       {/* No Results Message */}
       {sortedApps.length === 0 && !isLoading && (
         <p className="no-results">
-          {language === 'ko'
-            ? '도구가 없습니다.'
-            : 'No tools found.'}
+          {language === 'ko' ? '도구가 없습니다.' : 'No tools found.'}
         </p>
       )}
     </div>

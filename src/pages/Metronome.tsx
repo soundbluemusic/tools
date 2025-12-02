@@ -37,8 +37,15 @@ const Metronome = memo(function Metronome() {
       breadcrumb={breadcrumb}
       actions={
         <>
-          <EmbedButton title={metronome.title} defaultWidth={400} defaultHeight={500} />
-          <ShareButton title={metronome.title} description={metronome.description} />
+          <EmbedButton
+            title={metronome.title}
+            defaultWidth={400}
+            defaultHeight={500}
+          />
+          <ShareButton
+            title={metronome.title}
+            description={metronome.description}
+          />
         </>
       }
     >

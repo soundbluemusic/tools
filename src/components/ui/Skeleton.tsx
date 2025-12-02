@@ -70,11 +70,7 @@ export const SkeletonList = memo<SkeletonListProps>(function SkeletonList({
       aria-label="Loading applications"
     >
       {Array.from({ length: count }, (_, i) => (
-        <div
-          key={i}
-          className="skeleton-item"
-          style={{ height: itemHeight }}
-        >
+        <div key={i} className="skeleton-item" style={{ height: itemHeight }}>
           <Skeleton width="60%" height="1.2rem" />
         </div>
       ))}

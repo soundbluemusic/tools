@@ -45,7 +45,9 @@
   text-decoration: none;
   font-size: 14px;
   font-weight: 400;
-  transition: background-color 100ms ease-out, color 100ms ease-out;
+  transition:
+    background-color 100ms ease-out,
+    color 100ms ease-out;
 }
 
 .sidebar-item:hover {
@@ -160,29 +162,29 @@
   }
 }
 
-[data-theme="dark"] .sidebar {
+[data-theme='dark'] .sidebar {
   background: var(--color-bg-primary, #0f0f0f);
   border-right-color: var(--color-border-primary, #272727);
 }
 
-[data-theme="dark"] .sidebar-item {
+[data-theme='dark'] .sidebar-item {
   color: var(--color-text-secondary, #aaa);
 }
 
-[data-theme="dark"] .sidebar-item:hover {
+[data-theme='dark'] .sidebar-item:hover {
   background: var(--color-interactive-hover, rgba(255, 255, 255, 0.08));
   color: var(--color-text-primary, #f1f1f1);
 }
 
-[data-theme="dark"] .sidebar-item.active {
+[data-theme='dark'] .sidebar-item.active {
   background: var(--color-interactive-active, rgba(255, 255, 255, 0.12));
   color: var(--color-text-primary, #f1f1f1);
 }
 
-[data-theme="dark"] .sidebar-divider {
+[data-theme='dark'] .sidebar-divider {
   background: var(--color-border-primary, #272727);
 }
 
-[data-theme="dark"] .sidebar-section-title {
+[data-theme='dark'] .sidebar-section-title {
   color: var(--color-text-tertiary, #717171);
 }

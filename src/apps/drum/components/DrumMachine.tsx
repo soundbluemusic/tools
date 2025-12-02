@@ -275,7 +275,9 @@ export const DrumMachine = memo(function DrumMachine() {
   const [nextLoopId, setNextLoopId] = useState(2); // Next available loop ID
   const [currentLoopIndex, setCurrentLoopIndex] = useState(0);
   const [tempo, setTempo] = useState<number>(TEMPO_RANGE.DEFAULT);
-  const [volumes, setVolumes] = useState<InstrumentVolumes>({ ...DEFAULT_VOLUMES });
+  const [volumes, setVolumes] = useState<InstrumentVolumes>({
+    ...DEFAULT_VOLUMES,
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [playingLoopIndex, setPlayingLoopIndex] = useState(0);
@@ -284,7 +286,9 @@ export const DrumMachine = memo(function DrumMachine() {
     type: 'success' | 'error' | 'info';
   } | null>(null);
   const [dragLoopIndex, setDragLoopIndex] = useState<number | null>(null);
-  const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(null);
+  const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(
+    null
+  );
 
   // Derived state: which loop to display (playing loop during playback, editing loop otherwise)
   const displayLoopIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
@@ -332,9 +336,11 @@ export const DrumMachine = memo(function DrumMachine() {
    */
   const getAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
+      audioContextRef.current = new (
+        window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext)();
+          .webkitAudioContext
+      )();
     }
     return audioContextRef.current;
   }, []);
@@ -343,21 +349,28 @@ export const DrumMachine = memo(function DrumMachine() {
    * Get or create cached noise buffer
    * Caches noise buffers by duration to avoid expensive regeneration on every hit
    */
-  const getNoiseBuffer = useCallback((ctx: AudioContext, duration: number): AudioBuffer => {
-    const key = `noise-${duration}`;
-    const cached = noiseBufferCacheRef.current.get(key);
-    if (cached && cached.sampleRate === ctx.sampleRate) {
-      return cached;
-    }
-    // Create new noise buffer
-    const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < buffer.length; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-    noiseBufferCacheRef.current.set(key, buffer);
-    return buffer;
-  }, []);
+  const getNoiseBuffer = useCallback(
+    (ctx: AudioContext, duration: number): AudioBuffer => {
+      const key = `noise-${duration}`;
+      const cached = noiseBufferCacheRef.current.get(key);
+      if (cached && cached.sampleRate === ctx.sampleRate) {
+        return cached;
+      }
+      // Create new noise buffer
+      const buffer = ctx.createBuffer(
+        1,
+        ctx.sampleRate * duration,
+        ctx.sampleRate
+      );
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < buffer.length; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      noiseBufferCacheRef.current.set(key, buffer);
+      return buffer;
+    },
+    []
+  );
 
   /**
    * Play a single instrument sound at a specific time
@@ -372,7 +385,8 @@ export const DrumMachine = memo(function DrumMachine() {
 
       const startTime = time ?? ctx.currentTime;
       // Combine instrument volume and note velocity
-      const volumeMultiplier = (volumesRef.current[inst] / 100) * (velocity / 100);
+      const volumeMultiplier =
+        (volumesRef.current[inst] / 100) * (velocity / 100);
 
       switch (inst) {
         case 'kick': {
@@ -385,7 +399,10 @@ export const DrumMachine = memo(function DrumMachine() {
             AUDIO.KICK.FREQUENCY_END,
             startTime + AUDIO.KICK.DURATION
           );
-          gain.gain.setValueAtTime(AUDIO.KICK.GAIN * volumeMultiplier, startTime);
+          gain.gain.setValueAtTime(
+            AUDIO.KICK.GAIN * volumeMultiplier,
+            startTime
+          );
           gain.gain.exponentialRampToValueAtTime(
             0.01,
             startTime + AUDIO.KICK.DURATION
@@ -402,7 +419,10 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           source.connect(gain);
           gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(AUDIO.SNARE.GAIN * volumeMultiplier, startTime);
+          gain.gain.setValueAtTime(
+            AUDIO.SNARE.GAIN * volumeMultiplier,
+            startTime
+          );
           gain.gain.exponentialRampToValueAtTime(
             0.01,
             startTime + AUDIO.SNARE.DURATION
@@ -445,7 +465,10 @@ export const DrumMachine = memo(function DrumMachine() {
           const gain = ctx.createGain();
           source.connect(gain);
           gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(AUDIO.CLAP.GAIN * volumeMultiplier, startTime);
+          gain.gain.setValueAtTime(
+            AUDIO.CLAP.GAIN * volumeMultiplier,
+            startTime
+          );
           gain.gain.exponentialRampToValueAtTime(
             0.01,
             startTime + AUDIO.CLAP.DURATION
@@ -488,16 +511,23 @@ export const DrumMachine = memo(function DrumMachine() {
 
     // Schedule all notes that fall within the look-ahead window
     while (nextStepTimeRef.current < ctx.currentTime + scheduleAheadTime) {
-      scheduleStep(currentStepRef.current, currentPlayingLoopRef.current, nextStepTimeRef.current);
+      scheduleStep(
+        currentStepRef.current,
+        currentPlayingLoopRef.current,
+        nextStepTimeRef.current
+      );
 
       // Update visual step and loop (use setTimeout for UI sync)
       const stepToShow = currentStepRef.current;
       const loopToShow = currentPlayingLoopRef.current;
       const timeUntilStep = (nextStepTimeRef.current - ctx.currentTime) * 1000;
-      setTimeout(() => {
-        setCurrentStep(stepToShow);
-        setPlayingLoopIndex(loopToShow);
-      }, Math.max(0, timeUntilStep));
+      setTimeout(
+        () => {
+          setCurrentStep(stepToShow);
+          setPlayingLoopIndex(loopToShow);
+        },
+        Math.max(0, timeUntilStep)
+      );
 
       // Advance to next step
       currentStepRef.current = currentStepRef.current + 1;
@@ -593,16 +623,21 @@ export const DrumMachine = memo(function DrumMachine() {
   /**
    * Set a step velocity value in displayed loop (follows playback during play)
    */
-  const setStepVelocity = useCallback((inst: Instrument, step: number, velocity: number) => {
-    setLoops((prev) => {
-      const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
-      const newLoops = [...prev];
-      const newPattern = { ...newLoops[targetIndex] };
-      newPattern[inst] = newPattern[inst].map((val, i) => (i === step ? velocity : val));
-      newLoops[targetIndex] = newPattern;
-      return newLoops;
-    });
-  }, [currentLoopIndex, isPlaying, playingLoopIndex]);
+  const setStepVelocity = useCallback(
+    (inst: Instrument, step: number, velocity: number) => {
+      setLoops((prev) => {
+        const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
+        const newLoops = [...prev];
+        const newPattern = { ...newLoops[targetIndex] };
+        newPattern[inst] = newPattern[inst].map((val, i) =>
+          i === step ? velocity : val
+        );
+        newLoops[targetIndex] = newPattern;
+        return newLoops;
+      });
+    },
+    [currentLoopIndex, isPlaying, playingLoopIndex]
+  );
 
   /**
    * Handle drag start on a step
@@ -772,7 +807,10 @@ export const DrumMachine = memo(function DrumMachine() {
           newLoops[currentLoopIndex] = copyPattern(preset);
           return newLoops;
         });
-        showStatus(drum.loadedPreset.replace('{preset}', presetName), 'success');
+        showStatus(
+          drum.loadedPreset.replace('{preset}', presetName),
+          'success'
+        );
       }
     },
     [currentLoopIndex, drum.loadedPreset, showStatus]
@@ -852,7 +890,13 @@ export const DrumMachine = memo(function DrumMachine() {
     setLoopIds((prev) => [...prev, nextLoopId]);
     setNextLoopId((prev) => prev + 1);
     setCurrentLoopIndex(loops.length);
-  }, [loops.length, currentLoopIndex, nextLoopId, drum.maxLoopsReached, showStatus]);
+  }, [
+    loops.length,
+    currentLoopIndex,
+    nextLoopId,
+    drum.maxLoopsReached,
+    showStatus,
+  ]);
 
   /**
    * Remove current loop
@@ -871,14 +915,18 @@ export const DrumMachine = memo(function DrumMachine() {
     if (currentLoopIndex <= 0) return;
     setLoops((prev) => {
       const newLoops = [...prev];
-      [newLoops[currentLoopIndex - 1], newLoops[currentLoopIndex]] =
-        [newLoops[currentLoopIndex], newLoops[currentLoopIndex - 1]];
+      [newLoops[currentLoopIndex - 1], newLoops[currentLoopIndex]] = [
+        newLoops[currentLoopIndex],
+        newLoops[currentLoopIndex - 1],
+      ];
       return newLoops;
     });
     setLoopIds((prev) => {
       const newIds = [...prev];
-      [newIds[currentLoopIndex - 1], newIds[currentLoopIndex]] =
-        [newIds[currentLoopIndex], newIds[currentLoopIndex - 1]];
+      [newIds[currentLoopIndex - 1], newIds[currentLoopIndex]] = [
+        newIds[currentLoopIndex],
+        newIds[currentLoopIndex - 1],
+      ];
       return newIds;
     });
     setCurrentLoopIndex((prev) => prev - 1);
@@ -891,14 +939,18 @@ export const DrumMachine = memo(function DrumMachine() {
     if (currentLoopIndex >= loops.length - 1) return;
     setLoops((prev) => {
       const newLoops = [...prev];
-      [newLoops[currentLoopIndex], newLoops[currentLoopIndex + 1]] =
-        [newLoops[currentLoopIndex + 1], newLoops[currentLoopIndex]];
+      [newLoops[currentLoopIndex], newLoops[currentLoopIndex + 1]] = [
+        newLoops[currentLoopIndex + 1],
+        newLoops[currentLoopIndex],
+      ];
       return newLoops;
     });
     setLoopIds((prev) => {
       const newIds = [...prev];
-      [newIds[currentLoopIndex], newIds[currentLoopIndex + 1]] =
-        [newIds[currentLoopIndex + 1], newIds[currentLoopIndex]];
+      [newIds[currentLoopIndex], newIds[currentLoopIndex + 1]] = [
+        newIds[currentLoopIndex + 1],
+        newIds[currentLoopIndex],
+      ];
       return newIds;
     });
     setCurrentLoopIndex((prev) => prev + 1);
@@ -914,17 +966,24 @@ export const DrumMachine = memo(function DrumMachine() {
   /**
    * Handle loop drag over
    */
-  const handleLoopDragOver = useCallback((index: number) => {
-    if (dragLoopIndex !== null && dragLoopIndex !== index) {
-      setDragOverLoopIndex(index);
-    }
-  }, [dragLoopIndex]);
+  const handleLoopDragOver = useCallback(
+    (index: number) => {
+      if (dragLoopIndex !== null && dragLoopIndex !== index) {
+        setDragOverLoopIndex(index);
+      }
+    },
+    [dragLoopIndex]
+  );
 
   /**
    * Handle loop drag end - reorder loops
    */
   const handleLoopDragEnd = useCallback(() => {
-    if (dragLoopIndex !== null && dragOverLoopIndex !== null && dragLoopIndex !== dragOverLoopIndex) {
+    if (
+      dragLoopIndex !== null &&
+      dragOverLoopIndex !== null &&
+      dragLoopIndex !== dragOverLoopIndex
+    ) {
       setLoops((prev) => {
         const newLoops = [...prev];
         const [draggedLoop] = newLoops.splice(dragLoopIndex, 1);
@@ -942,11 +1001,13 @@ export const DrumMachine = memo(function DrumMachine() {
       if (currentLoopIndex === dragLoopIndex) {
         setCurrentLoopIndex(dragOverLoopIndex);
       } else if (
-        dragLoopIndex < currentLoopIndex && dragOverLoopIndex >= currentLoopIndex
+        dragLoopIndex < currentLoopIndex &&
+        dragOverLoopIndex >= currentLoopIndex
       ) {
         setCurrentLoopIndex((prev) => prev - 1);
       } else if (
-        dragLoopIndex > currentLoopIndex && dragOverLoopIndex <= currentLoopIndex
+        dragLoopIndex > currentLoopIndex &&
+        dragOverLoopIndex <= currentLoopIndex
       ) {
         setCurrentLoopIndex((prev) => prev + 1);
       }
@@ -977,12 +1038,9 @@ export const DrumMachine = memo(function DrumMachine() {
   /**
    * Handle instrument volume change
    */
-  const handleVolumeChange = useCallback(
-    (inst: Instrument, value: number) => {
-      setVolumes((prev) => ({ ...prev, [inst]: value }));
-    },
-    []
-  );
+  const handleVolumeChange = useCallback((inst: Instrument, value: number) => {
+    setVolumes((prev) => ({ ...prev, [inst]: value }));
+  }, []);
 
   /**
    * Cleanup on unmount
@@ -1045,19 +1103,11 @@ export const DrumMachine = memo(function DrumMachine() {
             {isPlaying ? <PauseIcon /> : <PlayIcon />}
             <span>{isPlaying ? drum.pause : drum.play}</span>
           </button>
-          <button
-            className="drum-btn"
-            onClick={stop}
-            aria-label={drum.stop}
-          >
+          <button className="drum-btn" onClick={stop} aria-label={drum.stop}>
             <StopIcon />
             <span>{drum.stop}</span>
           </button>
-          <button
-            className="drum-btn"
-            onClick={clear}
-            aria-label={drum.clear}
-          >
+          <button className="drum-btn" onClick={clear} aria-label={drum.clear}>
             <ClearIcon />
             <span>{drum.clear}</span>
           </button>
@@ -1101,8 +1151,8 @@ export const DrumMachine = memo(function DrumMachine() {
           <span className="drum-tempo-value">
             {tempo} BPM
             <span className="drum-tempo-duration">
-              {loops.length > 1 && `x${loops.length} `}
-              ({((240 / tempo) * loops.length).toFixed(1)}s)
+              {loops.length > 1 && `x${loops.length} `}(
+              {((240 / tempo) * loops.length).toFixed(1)}s)
             </span>
           </span>
         </div>
@@ -1119,7 +1169,9 @@ export const DrumMachine = memo(function DrumMachine() {
                 className={cn(
                   'drum-loop-block',
                   index === currentLoopIndex && 'drum-loop-block--selected',
-                  isPlaying && index === playingLoopIndex && 'drum-loop-block--playing',
+                  isPlaying &&
+                    index === playingLoopIndex &&
+                    'drum-loop-block--playing',
                   dragLoopIndex === index && 'drum-loop-block--dragging',
                   dragOverLoopIndex === index && 'drum-loop-block--drag-over'
                 )}
@@ -1209,7 +1261,9 @@ export const DrumMachine = memo(function DrumMachine() {
                   min={VOLUME_RANGE.MIN}
                   max={VOLUME_RANGE.MAX}
                   value={volumes[inst]}
-                  onChange={(e) => handleVolumeChange(inst, parseInt(e.target.value, 10))}
+                  onChange={(e) =>
+                    handleVolumeChange(inst, parseInt(e.target.value, 10))
+                  }
                   aria-label={`${getInstrumentLabel(inst)} ${drum.volume}`}
                 />
                 <span className="drum-volume-value">{volumes[inst]}</span>
@@ -1220,7 +1274,9 @@ export const DrumMachine = memo(function DrumMachine() {
                 const velocity = pattern[inst][step];
                 const isActive = velocity > 0;
                 // Opacity: min 0.3 at velocity 10, max 1 at velocity 100
-                const opacity = isActive ? 0.3 + (velocity / VELOCITY.MAX) * 0.7 : 1;
+                const opacity = isActive
+                  ? 0.3 + (velocity / VELOCITY.MAX) * 0.7
+                  : 1;
                 return (
                   <button
                     key={step}
@@ -1269,13 +1325,13 @@ export const DrumMachine = memo(function DrumMachine() {
       </div>
 
       {/* Synthesis Info */}
-      <div className="drum-synthesis-info">
-        {drum.synthesisInfo}
-      </div>
+      <div className="drum-synthesis-info">{drum.synthesisInfo}</div>
 
       {/* Status Message */}
       {statusMessage && (
-        <div className={cn('drum-status', `drum-status--${statusMessage.type}`)}>
+        <div
+          className={cn('drum-status', `drum-status--${statusMessage.type}`)}
+        >
           {statusMessage.text}
         </div>
       )}

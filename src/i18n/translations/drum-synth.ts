@@ -5,12 +5,14 @@ import { DrumSynthTranslation } from '../types';
  */
 export const drumSynthKo: DrumSynthTranslation = {
   title: '드럼 사운드 합성기',
-  description: 'Web Audio API를 사용한 세밀한 드럼 사운드 합성 및 파라미터 조절',
+  description:
+    'Web Audio API를 사용한 세밀한 드럼 사운드 합성 및 파라미터 조절',
   seo: {
     title: '드럼 사운드 합성기 - 세밀한 파라미터 조절',
     description:
       'Web Audio API를 사용하여 킥, 스네어, 하이햇, 클랩, 탐, 림샷 등 다양한 드럼 사운드를 세밀하게 조절하고 합성할 수 있는 도구입니다.',
-    keywords: '드럼 합성, 드럼 사운드, Web Audio, 킥, 스네어, 하이햇, 808, 사운드 디자인',
+    keywords:
+      '드럼 합성, 드럼 사운드, Web Audio, 킥, 스네어, 하이햇, 808, 사운드 디자인',
   },
   // Drum types
   kick: '킥',
@@ -80,12 +82,14 @@ export const drumSynthKo: DrumSynthTranslation = {
  */
 export const drumSynthEn: DrumSynthTranslation = {
   title: 'Drum Sound Synthesizer',
-  description: 'Detailed drum sound synthesis and parameter control using Web Audio API',
+  description:
+    'Detailed drum sound synthesis and parameter control using Web Audio API',
   seo: {
     title: 'Drum Sound Synthesizer - Fine Parameter Control',
     description:
       'Synthesize and fine-tune various drum sounds including kick, snare, hi-hat, clap, tom, and rim shot using Web Audio API.',
-    keywords: 'drum synthesis, drum sound, Web Audio, kick, snare, hi-hat, 808, sound design',
+    keywords:
+      'drum synthesis, drum sound, Web Audio, kick, snare, hi-hat, 808, sound design',
   },
   // Drum types
   kick: 'Kick',

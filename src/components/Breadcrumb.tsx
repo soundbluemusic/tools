@@ -52,7 +52,11 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
                     width="14"
                     height="14"
                   >
-                    <path strokeWidth="2" strokeLinecap="round" d="M9 5l7 7-7 7" />
+                    <path
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </>
               ) : (

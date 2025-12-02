@@ -66,8 +66,9 @@
   background: var(--color-bg-primary);
   color: var(--color-text-primary);
   outline: none;
-  transition: border-color var(--transition-fast) var(--ease-default),
-              box-shadow var(--transition-fast) var(--ease-default);
+  transition:
+    border-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default);
   box-sizing: border-box;
 }
 

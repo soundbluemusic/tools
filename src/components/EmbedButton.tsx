@@ -38,8 +38,10 @@ export const EmbedButton = memo<EmbedButtonProps>(function EmbedButton({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const embedUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
-  const embedTitle = title || (typeof document !== 'undefined' ? document.title : '');
+  const embedUrl =
+    url || (typeof window !== 'undefined' ? window.location.href : '');
+  const embedTitle =
+    title || (typeof document !== 'undefined' ? document.title : '');
 
   // Generate iframe code
   const iframeCode = `<iframe src="${embedUrl}" width="${width}" height="${height}" frameborder="0" title="${embedTitle}" allow="autoplay"></iframe>`;
@@ -55,19 +57,25 @@ export const EmbedButton = memo<EmbedButtonProps>(function EmbedButton({
     setTimeout(() => setCopied(false), 2000);
   }, [iframeCode]);
 
-  const handleWidthChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value > 0) {
-      setWidth(value);
-    }
-  }, []);
+  const handleWidthChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(e.target.value, 10);
+      if (!isNaN(value) && value > 0) {
+        setWidth(value);
+      }
+    },
+    []
+  );
 
-  const handleHeightChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value, 10);
-    if (!isNaN(value) && value > 0) {
-      setHeight(value);
-    }
-  }, []);
+  const handleHeightChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(e.target.value, 10);
+      if (!isNaN(value) && value > 0) {
+        setHeight(value);
+      }
+    },
+    []
+  );
 
   return (
     <div ref={containerRef} className={cn('embed-button-container', className)}>
@@ -83,11 +91,17 @@ export const EmbedButton = memo<EmbedButtonProps>(function EmbedButton({
         <span className="embed-button-icon" aria-hidden="true">
           {'</>'}
         </span>
-        {!compact && <span className="embed-button-text">{t.common.embed.button}</span>}
+        {!compact && (
+          <span className="embed-button-text">{t.common.embed.button}</span>
+        )}
       </button>
 
       {isOpen && (
-        <div className="embed-dropdown" role="dialog" aria-label={t.common.embed.button}>
+        <div
+          className="embed-dropdown"
+          role="dialog"
+          aria-label={t.common.embed.button}
+        >
           <div className="embed-dropdown-header">
             <span className="embed-dropdown-title">{t.common.embed.title}</span>
           </div>
@@ -136,7 +150,9 @@ export const EmbedButton = memo<EmbedButtonProps>(function EmbedButton({
             <span className="embed-copy-icon" aria-hidden="true">
               {copied ? '✓' : '📋'}
             </span>
-            <span>{copied ? t.common.embed.copied : t.common.embed.copyCode}</span>
+            <span>
+              {copied ? t.common.embed.copied : t.common.embed.copyCode}
+            </span>
           </button>
         </div>
       )}

@@ -108,7 +108,16 @@ export function useSEO(config: SEOConfig): void {
     updateMetaTag('name', 'twitter:description', description);
     updateMetaTag('name', 'twitter:url', canonicalUrl);
     updateMetaTag('name', 'twitter:image', ogImage);
-  }, [title, description, keywords, canonicalPath, ogImage, ogType, noindex, isHomePage]);
+  }, [
+    title,
+    description,
+    keywords,
+    canonicalPath,
+    ogImage,
+    ogType,
+    noindex,
+    isHomePage,
+  ]);
 }
 
 export default useSEO;

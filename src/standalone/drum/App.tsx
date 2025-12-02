@@ -7,7 +7,9 @@ export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const stored = localStorage.getItem('drum-theme');
     if (stored === 'dark' || stored === 'light') return stored;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
   });
 
   const t = getTranslations(language);
@@ -38,16 +40,38 @@ export default function App() {
       <header className="standalone-header">
         <h1 className="standalone-title">{t.title}</h1>
         <div className="standalone-controls">
-          <button onClick={toggleLanguage} className="standalone-btn" title={t.language}>
+          <button
+            onClick={toggleLanguage}
+            className="standalone-btn"
+            title={t.language}
+          >
             {language === 'ko' ? 'EN' : '한국어'}
           </button>
-          <button onClick={toggleTheme} className="standalone-btn" title={theme === 'light' ? t.darkMode : t.lightMode}>
+          <button
+            onClick={toggleTheme}
+            className="standalone-btn"
+            title={theme === 'light' ? t.darkMode : t.lightMode}
+          >
             {theme === 'light' ? (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
               </svg>
             ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <circle cx="12" cy="12" r="5" />
                 <line x1="12" y1="1" x2="12" y2="3" />
                 <line x1="12" y1="21" x2="12" y2="23" />

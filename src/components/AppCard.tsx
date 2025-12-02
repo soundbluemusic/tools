@@ -14,11 +14,7 @@ const AppCard = memo<AppCardProps>(
     const desc = app.desc[language];
 
     return (
-      <Link
-        to={app.url}
-        className="app-card"
-        aria-label={`${name} - ${desc}`}
-      >
+      <Link to={app.url} className="app-card" aria-label={`${name} - ${desc}`}>
         <span className="icon" role="img" aria-hidden="true">
           {app.icon}
         </span>
@@ -30,7 +26,8 @@ const AppCard = memo<AppCardProps>(
     );
   },
   (prevProps, nextProps) =>
-    prevProps.app.id === nextProps.app.id && prevProps.language === nextProps.language
+    prevProps.app.id === nextProps.app.id &&
+    prevProps.language === nextProps.language
 );
 
 AppCard.displayName = 'AppCard';

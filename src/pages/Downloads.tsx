@@ -131,7 +131,9 @@ const DOWNLOADS: DownloadItem[] = [
  */
 const Downloads = memo(function Downloads() {
   const { language } = useLanguage();
-  const [downloadStatus, setDownloadStatus] = useState<Record<string, string>>({});
+  const [downloadStatus, setDownloadStatus] = useState<Record<string, string>>(
+    {}
+  );
 
   const title = language === 'ko' ? '도구 다운로드' : 'Download Tools';
   const description =
@@ -225,7 +227,9 @@ const Downloads = memo(function Downloads() {
                 <span className="download-card-icon">{item.icon}</span>
                 <div className="download-card-info">
                   <h3 className="download-card-name">{item.name[language]}</h3>
-                  <p className="download-card-desc">{item.description[language]}</p>
+                  <p className="download-card-desc">
+                    {item.description[language]}
+                  </p>
                 </div>
               </div>
 
@@ -239,7 +243,9 @@ const Downloads = memo(function Downloads() {
 
               <div className="download-card-footer">
                 <div className="download-card-meta">
-                  <span className="download-card-filename">{item.fileName}</span>
+                  <span className="download-card-filename">
+                    {item.fileName}
+                  </span>
                   <span className="download-card-size">{item.fileSize}</span>
                 </div>
                 <button
@@ -248,24 +254,54 @@ const Downloads = memo(function Downloads() {
                   disabled={status === 'downloading'}
                 >
                   {status === 'downloading' && (
-                    <svg className="download-btn-spinner" viewBox="0 0 24 24" width="18" height="18">
-                      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="31.4" strokeDashoffset="10" />
+                    <svg
+                      className="download-btn-spinner"
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeDasharray="31.4"
+                        strokeDashoffset="10"
+                      />
                     </svg>
                   )}
                   {status === 'success' && (
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   )}
                   {!status && (
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg
+                      viewBox="0 0 24 24"
+                      width="18"
+                      height="18"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                       <polyline points="7 10 12 15 17 10" />
                       <line x1="12" y1="15" x2="12" y2="3" />
                     </svg>
                   )}
                   <span>
-                    {status ? buttonText[status as keyof typeof buttonText] : buttonText.default}
+                    {status
+                      ? buttonText[status as keyof typeof buttonText]
+                      : buttonText.default}
                   </span>
                 </button>
               </div>

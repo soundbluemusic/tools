@@ -7,7 +7,11 @@ import {
   useMemo,
 } from 'react';
 import type { ReactNode } from 'react';
-import { getStorageItem, setStorageItem, createEnumValidator } from '../utils/storage';
+import {
+  getStorageItem,
+  setStorageItem,
+  createEnumValidator,
+} from '../utils/storage';
 
 /** Available theme options */
 export type Theme = 'system' | 'light' | 'dark';
@@ -62,12 +66,14 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   });
 
   // Track system preference
-  const [systemPreference, setSystemPreference] = useState<ResolvedTheme>(() => {
-    if (typeof window === 'undefined') return 'light';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-  });
+  const [systemPreference, setSystemPreference] = useState<ResolvedTheme>(
+    () => {
+      if (typeof window === 'undefined') return 'light';
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+  );
 
   // Listen to system preference changes
   useEffect(() => {

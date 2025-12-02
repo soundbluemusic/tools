@@ -1,5 +1,12 @@
 export type DrumType = 'kick' | 'snare' | 'hihat' | 'clap' | 'tom' | 'rim';
-export const DRUM_TYPES: DrumType[] = ['kick', 'snare', 'hihat', 'clap', 'tom', 'rim'];
+export const DRUM_TYPES: DrumType[] = [
+  'kick',
+  'snare',
+  'hihat',
+  'clap',
+  'tom',
+  'rim',
+];
 
 export interface KickParams {
   pitchStart: number;
@@ -182,7 +189,12 @@ export const SYNTH_PRESETS: Record<string, AllDrumParams> = {
   classic808: { ...DEFAULT_ALL_PARAMS },
   hardTechno: {
     ...DEFAULT_ALL_PARAMS,
-    kick: { ...DEFAULT_ALL_PARAMS.kick, pitchStart: 200, ampDecay: 0.3, drive: 50 },
+    kick: {
+      ...DEFAULT_ALL_PARAMS.kick,
+      pitchStart: 200,
+      ampDecay: 0.3,
+      drive: 50,
+    },
     snare: { ...DEFAULT_ALL_PARAMS.snare, snappy: 80 },
     hihat: { ...DEFAULT_ALL_PARAMS.hihat, filterFreq: 10000 },
   },

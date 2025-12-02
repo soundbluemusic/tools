@@ -21,7 +21,11 @@ import {
   DEFAULT_ALL_PARAMS,
   SYNTH_PRESETS,
 } from '../constants';
-import { exportDrum, exportAllDrums, type ExportFormat } from '../utils/audioExport';
+import {
+  exportDrum,
+  exportAllDrums,
+  type ExportFormat,
+} from '../utils/audioExport';
 import './DrumSynth.css';
 
 /**
@@ -142,16 +146,20 @@ export const DrumSynth = memo(function DrumSynth() {
   const audioContextRef = useRef<AudioContext | null>(null);
   // Cached buffers for performance
   const noiseBufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
-  const distortionCurveCache = useRef<Map<number, Float32Array<ArrayBuffer>>>(new Map());
+  const distortionCurveCache = useRef<Map<number, Float32Array<ArrayBuffer>>>(
+    new Map()
+  );
 
   /**
    * Get or create audio context
    */
   const getAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
+      audioContextRef.current = new (
+        window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext })
-          .webkitAudioContext)();
+          .webkitAudioContext
+      )();
     }
     return audioContextRef.current;
   }, []);
@@ -159,41 +167,52 @@ export const DrumSynth = memo(function DrumSynth() {
   /**
    * Get or create cached noise buffer
    */
-  const getNoiseBuffer = useCallback((ctx: AudioContext, duration: number): AudioBuffer => {
-    const key = `noise-${Math.round(duration * 1000)}`;
-    const cached = noiseBufferCacheRef.current.get(key);
-    if (cached && cached.sampleRate === ctx.sampleRate) {
-      return cached;
-    }
-    const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < buffer.length; i++) {
-      data[i] = Math.random() * 2 - 1;
-    }
-    noiseBufferCacheRef.current.set(key, buffer);
-    return buffer;
-  }, []);
+  const getNoiseBuffer = useCallback(
+    (ctx: AudioContext, duration: number): AudioBuffer => {
+      const key = `noise-${Math.round(duration * 1000)}`;
+      const cached = noiseBufferCacheRef.current.get(key);
+      if (cached && cached.sampleRate === ctx.sampleRate) {
+        return cached;
+      }
+      const buffer = ctx.createBuffer(
+        1,
+        ctx.sampleRate * duration,
+        ctx.sampleRate
+      );
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < buffer.length; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      noiseBufferCacheRef.current.set(key, buffer);
+      return buffer;
+    },
+    []
+  );
 
   /**
    * Create distortion curve for drive effect (cached by amount)
    */
-  const makeDistortionCurve = useCallback((amount: number): Float32Array<ArrayBuffer> => {
-    // Round to avoid too many cache entries
-    const roundedAmount = Math.round(amount);
-    const cached = distortionCurveCache.current.get(roundedAmount);
-    if (cached) {
-      return cached;
-    }
-    const samples = 44100;
-    const curve = new Float32Array(samples) as Float32Array<ArrayBuffer>;
-    const k = (roundedAmount / 100) * 50;
-    for (let i = 0; i < samples; i++) {
-      const x = (i * 2) / samples - 1;
-      curve[i] = ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
-    }
-    distortionCurveCache.current.set(roundedAmount, curve);
-    return curve;
-  }, []);
+  const makeDistortionCurve = useCallback(
+    (amount: number): Float32Array<ArrayBuffer> => {
+      // Round to avoid too many cache entries
+      const roundedAmount = Math.round(amount);
+      const cached = distortionCurveCache.current.get(roundedAmount);
+      if (cached) {
+        return cached;
+      }
+      const samples = 44100;
+      const curve = new Float32Array(samples) as Float32Array<ArrayBuffer>;
+      const k = (roundedAmount / 100) * 50;
+      for (let i = 0; i < samples; i++) {
+        const x = (i * 2) / samples - 1;
+        curve[i] =
+          ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
+      }
+      distortionCurveCache.current.set(roundedAmount, curve);
+      return curve;
+    },
+    []
+  );
 
   /**
    * Play Kick sound
@@ -218,14 +237,20 @@ export const DrumSynth = memo(function DrumSynth() {
       );
 
       gainNode.gain.setValueAtTime(volume, now);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, now + kickParams.ampDecay);
+      gainNode.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + kickParams.ampDecay
+      );
 
       if (kickParams.click > 0) {
         const clickOsc = ctx.createOscillator();
         const clickGain = ctx.createGain();
         clickOsc.type = 'square';
         clickOsc.frequency.setValueAtTime(kickParams.pitchStart * 4, now);
-        clickGain.gain.setValueAtTime((kickParams.click / 100) * volume * 0.3, now);
+        clickGain.gain.setValueAtTime(
+          (kickParams.click / 100) * volume * 0.3,
+          now
+        );
         clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.01);
         clickOsc.connect(clickGain);
         clickGain.connect(ctx.destination);
@@ -271,7 +296,10 @@ export const DrumSynth = memo(function DrumSynth() {
         now + snareParams.toneDecay
       );
       toneGain.gain.setValueAtTime(volume * toneMix * 0.5, now);
-      toneGain.gain.exponentialRampToValueAtTime(0.001, now + snareParams.toneDecay);
+      toneGain.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + snareParams.toneDecay
+      );
       toneOsc.connect(toneGain);
       toneGain.connect(ctx.destination);
       toneOsc.start(now);
@@ -289,7 +317,10 @@ export const DrumSynth = memo(function DrumSynth() {
 
       const noiseGain = ctx.createGain();
       noiseGain.gain.setValueAtTime(volume * (1 - toneMix) * 0.4, now);
-      noiseGain.gain.exponentialRampToValueAtTime(0.001, now + snareParams.noiseDecay);
+      noiseGain.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + snareParams.noiseDecay
+      );
 
       noiseSource.connect(noiseFilter);
       noiseFilter.connect(noiseGain);
@@ -309,7 +340,8 @@ export const DrumSynth = memo(function DrumSynth() {
 
       const now = ctx.currentTime;
       const volume = masterVolume / 100;
-      const actualDecay = hihatParams.decay + (hihatParams.openness / 100) * 0.3;
+      const actualDecay =
+        hihatParams.decay + (hihatParams.openness / 100) * 0.3;
 
       const numOscs = 6;
       const baseFreq = 4000 + (hihatParams.pitch / 100) * 4000;
@@ -345,7 +377,10 @@ export const DrumSynth = memo(function DrumSynth() {
       const noiseFilter = ctx.createBiquadFilter();
       noiseFilter.type = 'highpass';
       noiseFilter.frequency.setValueAtTime(hihatParams.filterFreq, now);
-      noiseFilter.Q.setValueAtTime(hihatParams.filterQ + (hihatParams.ring / 50), now);
+      noiseFilter.Q.setValueAtTime(
+        hihatParams.filterQ + hihatParams.ring / 50,
+        now
+      );
 
       const noiseGain = ctx.createGain();
       noiseGain.gain.setValueAtTime(volume * 0.15, now);
@@ -383,11 +418,15 @@ export const DrumSynth = memo(function DrumSynth() {
       for (let c = 0; c < numClaps; c++) {
         // Randomize timing slightly for organic feel
         const randomOffset = (Math.random() - 0.5) * 0.006;
-        const clapTime = now + c * baseSpacing * (1 + clapParams.spread / 200) + randomOffset;
+        const clapTime =
+          now + c * baseSpacing * (1 + clapParams.spread / 200) + randomOffset;
 
         // Each clap hit duration
         const hitDuration = clapParams.decay * (0.7 + Math.random() * 0.3);
-        const bufferLength = Math.max(ctx.sampleRate * hitDuration, ctx.sampleRate * 0.1);
+        const bufferLength = Math.max(
+          ctx.sampleRate * hitDuration,
+          ctx.sampleRate * 0.1
+        );
 
         const noiseBuffer = ctx.createBuffer(1, bufferLength, ctx.sampleRate);
         const noiseData = noiseBuffer.getChannelData(0);
@@ -416,11 +455,18 @@ export const DrumSynth = memo(function DrumSynth() {
         const highShelf = ctx.createBiquadFilter();
         highShelf.type = 'highshelf';
         highShelf.frequency.setValueAtTime(3000, clapTime);
-        highShelf.gain.setValueAtTime(3 + (clapParams.tone / 100) * 4, clapTime);
+        highShelf.gain.setValueAtTime(
+          3 + (clapParams.tone / 100) * 4,
+          clapTime
+        );
 
         const gain = ctx.createGain();
         // First hit loudest, subsequent hits softer with variation
-        const hitVolume = volume * 0.35 * (c === 0 ? 1 : 0.6 + Math.random() * 0.3) * Math.pow(0.85, c);
+        const hitVolume =
+          volume *
+          0.35 *
+          (c === 0 ? 1 : 0.6 + Math.random() * 0.3) *
+          Math.pow(0.85, c);
         gain.gain.setValueAtTime(hitVolume, clapTime);
 
         noiseSource.connect(bpFilter);
@@ -432,7 +478,11 @@ export const DrumSynth = memo(function DrumSynth() {
 
       // Initial transient "crack" - very short, high frequency burst
       const crackDuration = 0.015;
-      const crackBuffer = ctx.createBuffer(1, ctx.sampleRate * crackDuration, ctx.sampleRate);
+      const crackBuffer = ctx.createBuffer(
+        1,
+        ctx.sampleRate * crackDuration,
+        ctx.sampleRate
+      );
       const crackData = crackBuffer.getChannelData(0);
       for (let i = 0; i < crackBuffer.length; i++) {
         const t = i / ctx.sampleRate;
@@ -446,7 +496,10 @@ export const DrumSynth = memo(function DrumSynth() {
 
       const crackFilter = ctx.createBiquadFilter();
       crackFilter.type = 'highpass';
-      crackFilter.frequency.setValueAtTime(2500 + (clapParams.tone / 100) * 2000, now);
+      crackFilter.frequency.setValueAtTime(
+        2500 + (clapParams.tone / 100) * 2000,
+        now
+      );
       crackFilter.Q.setValueAtTime(0.7, now);
 
       const crackGain = ctx.createGain();
@@ -460,11 +513,16 @@ export const DrumSynth = memo(function DrumSynth() {
       // Room/reverb tail
       if (clapParams.reverb > 0) {
         const reverbLength = 0.15 + (clapParams.reverb / 100) * 0.35;
-        const reverbBuffer = ctx.createBuffer(1, ctx.sampleRate * reverbLength, ctx.sampleRate);
+        const reverbBuffer = ctx.createBuffer(
+          1,
+          ctx.sampleRate * reverbLength,
+          ctx.sampleRate
+        );
         const reverbData = reverbBuffer.getChannelData(0);
         for (let i = 0; i < reverbBuffer.length; i++) {
           const t = i / ctx.sampleRate;
-          reverbData[i] = (Math.random() * 2 - 1) * Math.exp(-t / (reverbLength * 0.4));
+          reverbData[i] =
+            (Math.random() * 2 - 1) * Math.exp(-t / (reverbLength * 0.4));
         }
 
         const reverbSource = ctx.createBufferSource();
@@ -481,8 +539,14 @@ export const DrumSynth = memo(function DrumSynth() {
         const reverbGain = ctx.createGain();
         const reverbStart = now + clapParams.decay * 0.3;
         reverbGain.gain.setValueAtTime(0, reverbStart);
-        reverbGain.gain.linearRampToValueAtTime(volume * (clapParams.reverb / 100) * 0.2, reverbStart + 0.01);
-        reverbGain.gain.exponentialRampToValueAtTime(0.001, reverbStart + reverbLength);
+        reverbGain.gain.linearRampToValueAtTime(
+          volume * (clapParams.reverb / 100) * 0.2,
+          reverbStart + 0.01
+        );
+        reverbGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          reverbStart + reverbLength
+        );
 
         reverbSource.connect(reverbHighpass);
         reverbHighpass.connect(reverbLowpass);
@@ -527,7 +591,10 @@ export const DrumSynth = memo(function DrumSynth() {
       bodyOsc.type = 'sine';
       bodyOsc.frequency.setValueAtTime(tomParams.pitch * 1.5, now);
       bodyGain.gain.setValueAtTime(volume * (tomParams.body / 100) * 0.3, now);
-      bodyGain.gain.exponentialRampToValueAtTime(0.001, now + tomParams.decay * 0.6);
+      bodyGain.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + tomParams.decay * 0.6
+      );
 
       osc.connect(gainNode);
       gainNode.connect(ctx.destination);
@@ -558,7 +625,10 @@ export const DrumSynth = memo(function DrumSynth() {
         const clickGain = ctx.createGain();
         clickOsc.type = 'square';
         clickOsc.frequency.setValueAtTime(rimParams.pitch * 2, now);
-        clickGain.gain.setValueAtTime((rimParams.click / 100) * volume * 0.4, now);
+        clickGain.gain.setValueAtTime(
+          (rimParams.click / 100) * volume * 0.4,
+          now
+        );
         clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.005);
         clickOsc.connect(clickGain);
         clickGain.connect(ctx.destination);
@@ -570,7 +640,10 @@ export const DrumSynth = memo(function DrumSynth() {
       const metalGain = ctx.createGain();
       metalOsc.type = 'triangle';
       metalOsc.frequency.setValueAtTime(rimParams.pitch, now);
-      metalGain.gain.setValueAtTime((rimParams.metallic / 100) * volume * 0.5, now);
+      metalGain.gain.setValueAtTime(
+        (rimParams.metallic / 100) * volume * 0.5,
+        now
+      );
       metalGain.gain.exponentialRampToValueAtTime(0.001, now + rimParams.decay);
 
       const metalFilter = ctx.createBiquadFilter();
@@ -589,8 +662,14 @@ export const DrumSynth = memo(function DrumSynth() {
         const bodyGain = ctx.createGain();
         bodyOsc.type = 'sine';
         bodyOsc.frequency.setValueAtTime(rimParams.pitch * 0.5, now);
-        bodyGain.gain.setValueAtTime((rimParams.body / 100) * volume * 0.3, now);
-        bodyGain.gain.exponentialRampToValueAtTime(0.001, now + rimParams.decay * 1.5);
+        bodyGain.gain.setValueAtTime(
+          (rimParams.body / 100) * volume * 0.3,
+          now
+        );
+        bodyGain.gain.exponentialRampToValueAtTime(
+          0.001,
+          now + rimParams.decay * 1.5
+        );
         bodyOsc.connect(bodyGain);
         bodyGain.connect(ctx.destination);
         bodyOsc.start(now);
@@ -636,7 +715,16 @@ export const DrumSynth = memo(function DrumSynth() {
           break;
       }
     },
-    [getAudioContext, params, playKick, playSnare, playHihat, playClap, playTom, playRim]
+    [
+      getAudioContext,
+      params,
+      playKick,
+      playSnare,
+      playHihat,
+      playClap,
+      playTom,
+      playRim,
+    ]
   );
 
   /**
@@ -1225,7 +1313,10 @@ export const DrumSynth = memo(function DrumSynth() {
         <span className="synth-export-label">{drumSynth.export}</span>
         <div className="synth-export-buttons">
           <button
-            className={cn('synth-export-btn', isExporting && 'synth-export-btn--disabled')}
+            className={cn(
+              'synth-export-btn',
+              isExporting && 'synth-export-btn--disabled'
+            )}
             onClick={() => handleExport('wav')}
             disabled={isExporting}
             title={`${getDrumLabel(selectedDrum)} - ${drumSynth.exportWav}`}
@@ -1234,7 +1325,10 @@ export const DrumSynth = memo(function DrumSynth() {
             <span>{drumSynth.exportWav}</span>
           </button>
           <button
-            className={cn('synth-export-btn', isExporting && 'synth-export-btn--disabled')}
+            className={cn(
+              'synth-export-btn',
+              isExporting && 'synth-export-btn--disabled'
+            )}
             onClick={() => handleExport('mp3')}
             disabled={isExporting}
             title={`${getDrumLabel(selectedDrum)} - ${drumSynth.exportCompressed}`}
@@ -1263,7 +1357,9 @@ export const DrumSynth = memo(function DrumSynth() {
 
       {/* Status Message */}
       {statusMessage && (
-        <div className={cn('synth-status', `synth-status--${statusMessage.type}`)}>
+        <div
+          className={cn('synth-status', `synth-status--${statusMessage.type}`)}
+        >
           {statusMessage.text}
         </div>
       )}

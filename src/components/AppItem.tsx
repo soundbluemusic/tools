@@ -42,7 +42,8 @@ const AppItem = memo<AppItemProps>(
   },
   // Re-render if app.id or language changes
   (prevProps, nextProps) =>
-    prevProps.app.id === nextProps.app.id && prevProps.language === nextProps.language
+    prevProps.app.id === nextProps.app.id &&
+    prevProps.language === nextProps.language
 );
 
 AppItem.displayName = 'AppItem';

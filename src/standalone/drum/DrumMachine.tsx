@@ -1,21 +1,35 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import type { Translations } from './i18n';
 import {
-  STEPS, INSTRUMENTS, TEMPO_RANGE, VOLUME_RANGE, VELOCITY, AUDIO,
-  PRESETS, DEFAULT_VOLUMES, MAX_LOOPS,
-  createEmptyPattern, copyPattern,
-  type Instrument, type InstrumentVolumes, type Pattern,
+  STEPS,
+  INSTRUMENTS,
+  TEMPO_RANGE,
+  VOLUME_RANGE,
+  VELOCITY,
+  AUDIO,
+  PRESETS,
+  DEFAULT_VOLUMES,
+  MAX_LOOPS,
+  createEmptyPattern,
+  copyPattern,
+  type Instrument,
+  type InstrumentVolumes,
+  type Pattern,
 } from './constants';
 
 interface DrumMachineProps {
   translations: Translations;
 }
 
-export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMachineProps) {
+export const DrumMachine = memo(function DrumMachine({
+  translations: t,
+}: DrumMachineProps) {
   const [loops, setLoops] = useState<Pattern[]>([createEmptyPattern()]);
   const [currentLoopIndex, setCurrentLoopIndex] = useState(0);
   const [tempo, setTempo] = useState<number>(TEMPO_RANGE.DEFAULT);
-  const [volumes, setVolumes] = useState<InstrumentVolumes>({ ...DEFAULT_VOLUMES });
+  const [volumes, setVolumes] = useState<InstrumentVolumes>({
+    ...DEFAULT_VOLUMES,
+  });
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [playingLoopIndex, setPlayingLoopIndex] = useState(0);
@@ -34,103 +48,154 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
   const displayLoopIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
   const pattern = loops[displayLoopIndex];
 
-  useEffect(() => { loopsRef.current = loops; }, [loops]);
-  useEffect(() => { tempoRef.current = tempo; }, [tempo]);
-  useEffect(() => { volumesRef.current = volumes; }, [volumes]);
+  useEffect(() => {
+    loopsRef.current = loops;
+  }, [loops]);
+  useEffect(() => {
+    tempoRef.current = tempo;
+  }, [tempo]);
+  useEffect(() => {
+    volumesRef.current = volumes;
+  }, [volumes]);
 
   const getAudioContext = useCallback(() => {
     if (!audioContextRef.current) {
-      audioContextRef.current = new (window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+      audioContextRef.current = new (
+        window.AudioContext ||
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext
+      )();
     }
     return audioContextRef.current;
   }, []);
 
-  const getNoiseBuffer = useCallback((ctx: AudioContext, duration: number): AudioBuffer => {
-    const key = `noise-${duration}`;
-    const cached = noiseBufferCacheRef.current.get(key);
-    if (cached && cached.sampleRate === ctx.sampleRate) return cached;
-    const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
-    noiseBufferCacheRef.current.set(key, buffer);
-    return buffer;
-  }, []);
+  const getNoiseBuffer = useCallback(
+    (ctx: AudioContext, duration: number): AudioBuffer => {
+      const key = `noise-${duration}`;
+      const cached = noiseBufferCacheRef.current.get(key);
+      if (cached && cached.sampleRate === ctx.sampleRate) return cached;
+      const buffer = ctx.createBuffer(
+        1,
+        ctx.sampleRate * duration,
+        ctx.sampleRate
+      );
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < buffer.length; i++) data[i] = Math.random() * 2 - 1;
+      noiseBufferCacheRef.current.set(key, buffer);
+      return buffer;
+    },
+    []
+  );
 
-  const playSound = useCallback((inst: Instrument, time?: number, velocity: number = VELOCITY.DEFAULT) => {
-    const ctx = audioContextRef.current;
-    if (!ctx || velocity <= 0) return;
-    const startTime = time ?? ctx.currentTime;
-    const volumeMultiplier = (volumesRef.current[inst] / 100) * (velocity / 100);
+  const playSound = useCallback(
+    (inst: Instrument, time?: number, velocity: number = VELOCITY.DEFAULT) => {
+      const ctx = audioContextRef.current;
+      if (!ctx || velocity <= 0) return;
+      const startTime = time ?? ctx.currentTime;
+      const volumeMultiplier =
+        (volumesRef.current[inst] / 100) * (velocity / 100);
 
-    switch (inst) {
-      case 'kick': {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.setValueAtTime(AUDIO.KICK.FREQUENCY_START, startTime);
-        osc.frequency.exponentialRampToValueAtTime(AUDIO.KICK.FREQUENCY_END, startTime + AUDIO.KICK.DURATION);
-        gain.gain.setValueAtTime(AUDIO.KICK.GAIN * volumeMultiplier, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + AUDIO.KICK.DURATION);
-        osc.start(startTime);
-        osc.stop(startTime + AUDIO.KICK.DURATION);
-        break;
+      switch (inst) {
+        case 'kick': {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.setValueAtTime(AUDIO.KICK.FREQUENCY_START, startTime);
+          osc.frequency.exponentialRampToValueAtTime(
+            AUDIO.KICK.FREQUENCY_END,
+            startTime + AUDIO.KICK.DURATION
+          );
+          gain.gain.setValueAtTime(
+            AUDIO.KICK.GAIN * volumeMultiplier,
+            startTime
+          );
+          gain.gain.exponentialRampToValueAtTime(
+            0.01,
+            startTime + AUDIO.KICK.DURATION
+          );
+          osc.start(startTime);
+          osc.stop(startTime + AUDIO.KICK.DURATION);
+          break;
+        }
+        case 'snare': {
+          const buffer = getNoiseBuffer(ctx, AUDIO.SNARE.DURATION);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          const gain = ctx.createGain();
+          source.connect(gain);
+          gain.connect(ctx.destination);
+          gain.gain.setValueAtTime(
+            AUDIO.SNARE.GAIN * volumeMultiplier,
+            startTime
+          );
+          gain.gain.exponentialRampToValueAtTime(
+            0.01,
+            startTime + AUDIO.SNARE.DURATION
+          );
+          source.start(startTime);
+          break;
+        }
+        case 'hihat':
+        case 'openhat': {
+          const isOpen = inst === 'openhat';
+          const duration = isOpen
+            ? AUDIO.OPENHAT.DURATION
+            : AUDIO.HIHAT.DURATION;
+          const buffer = getNoiseBuffer(ctx, duration);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          const gain = ctx.createGain();
+          const filter = ctx.createBiquadFilter();
+          filter.type = 'highpass';
+          filter.frequency.value = isOpen
+            ? AUDIO.OPENHAT.FILTER_FREQUENCY
+            : AUDIO.HIHAT.FILTER_FREQUENCY;
+          source.connect(filter);
+          filter.connect(gain);
+          gain.connect(ctx.destination);
+          gain.gain.setValueAtTime(
+            (isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN) * volumeMultiplier,
+            startTime
+          );
+          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+          source.start(startTime);
+          break;
+        }
+        case 'clap': {
+          const buffer = getNoiseBuffer(ctx, AUDIO.CLAP.DURATION);
+          const source = ctx.createBufferSource();
+          source.buffer = buffer;
+          const gain = ctx.createGain();
+          source.connect(gain);
+          gain.connect(ctx.destination);
+          gain.gain.setValueAtTime(
+            AUDIO.CLAP.GAIN * volumeMultiplier,
+            startTime
+          );
+          gain.gain.exponentialRampToValueAtTime(
+            0.01,
+            startTime + AUDIO.CLAP.DURATION
+          );
+          source.start(startTime);
+          break;
+        }
       }
-      case 'snare': {
-        const buffer = getNoiseBuffer(ctx, AUDIO.SNARE.DURATION);
-        const source = ctx.createBufferSource();
-        source.buffer = buffer;
-        const gain = ctx.createGain();
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        gain.gain.setValueAtTime(AUDIO.SNARE.GAIN * volumeMultiplier, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + AUDIO.SNARE.DURATION);
-        source.start(startTime);
-        break;
-      }
-      case 'hihat':
-      case 'openhat': {
-        const isOpen = inst === 'openhat';
-        const duration = isOpen ? AUDIO.OPENHAT.DURATION : AUDIO.HIHAT.DURATION;
-        const buffer = getNoiseBuffer(ctx, duration);
-        const source = ctx.createBufferSource();
-        source.buffer = buffer;
-        const gain = ctx.createGain();
-        const filter = ctx.createBiquadFilter();
-        filter.type = 'highpass';
-        filter.frequency.value = isOpen ? AUDIO.OPENHAT.FILTER_FREQUENCY : AUDIO.HIHAT.FILTER_FREQUENCY;
-        source.connect(filter);
-        filter.connect(gain);
-        gain.connect(ctx.destination);
-        gain.gain.setValueAtTime((isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN) * volumeMultiplier, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-        source.start(startTime);
-        break;
-      }
-      case 'clap': {
-        const buffer = getNoiseBuffer(ctx, AUDIO.CLAP.DURATION);
-        const source = ctx.createBufferSource();
-        source.buffer = buffer;
-        const gain = ctx.createGain();
-        source.connect(gain);
-        gain.connect(ctx.destination);
-        gain.gain.setValueAtTime(AUDIO.CLAP.GAIN * volumeMultiplier, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, startTime + AUDIO.CLAP.DURATION);
-        source.start(startTime);
-        break;
-      }
-    }
-  }, [getNoiseBuffer]);
+    },
+    [getNoiseBuffer]
+  );
 
-  const scheduleStep = useCallback((stepIndex: number, loopIndex: number, time: number) => {
-    const currentPattern = loopsRef.current[loopIndex];
-    if (!currentPattern) return;
-    INSTRUMENTS.forEach((inst) => {
-      const velocity = currentPattern[inst][stepIndex];
-      if (velocity > 0) playSound(inst, time, velocity);
-    });
-  }, [playSound]);
+  const scheduleStep = useCallback(
+    (stepIndex: number, loopIndex: number, time: number) => {
+      const currentPattern = loopsRef.current[loopIndex];
+      if (!currentPattern) return;
+      INSTRUMENTS.forEach((inst) => {
+        const velocity = currentPattern[inst][stepIndex];
+        if (velocity > 0) playSound(inst, time, velocity);
+      });
+    },
+    [playSound]
+  );
 
   const scheduler = useCallback(() => {
     const ctx = audioContextRef.current;
@@ -139,19 +204,27 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
     const stepDuration = 60 / tempoRef.current / 4;
 
     while (nextStepTimeRef.current < ctx.currentTime + scheduleAheadTime) {
-      scheduleStep(currentStepRef.current, currentPlayingLoopRef.current, nextStepTimeRef.current);
+      scheduleStep(
+        currentStepRef.current,
+        currentPlayingLoopRef.current,
+        nextStepTimeRef.current
+      );
       const stepToShow = currentStepRef.current;
       const loopToShow = currentPlayingLoopRef.current;
       const timeUntilStep = (nextStepTimeRef.current - ctx.currentTime) * 1000;
-      setTimeout(() => {
-        setCurrentStep(stepToShow);
-        setPlayingLoopIndex(loopToShow);
-      }, Math.max(0, timeUntilStep));
+      setTimeout(
+        () => {
+          setCurrentStep(stepToShow);
+          setPlayingLoopIndex(loopToShow);
+        },
+        Math.max(0, timeUntilStep)
+      );
 
       currentStepRef.current = currentStepRef.current + 1;
       if (currentStepRef.current >= STEPS) {
         currentStepRef.current = 0;
-        currentPlayingLoopRef.current = (currentPlayingLoopRef.current + 1) % loopsRef.current.length;
+        currentPlayingLoopRef.current =
+          (currentPlayingLoopRef.current + 1) % loopsRef.current.length;
       }
       nextStepTimeRef.current += stepDuration;
     }
@@ -198,32 +271,47 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
     currentPlayingLoopRef.current = 0;
   }, []);
 
-  const setStepVelocity = useCallback((inst: Instrument, step: number, velocity: number) => {
-    setLoops((prev) => {
-      const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
-      const newLoops = [...prev];
-      const newPattern = { ...newLoops[targetIndex] };
-      newPattern[inst] = newPattern[inst].map((val, i) => (i === step ? velocity : val));
-      newLoops[targetIndex] = newPattern;
-      return newLoops;
-    });
-  }, [currentLoopIndex, isPlaying, playingLoopIndex]);
-
-  const toggleStep = useCallback((inst: Instrument, step: number) => {
-    const current = pattern[inst][step];
-    setStepVelocity(inst, step, current > 0 ? VELOCITY.OFF : VELOCITY.DEFAULT);
-  }, [pattern, setStepVelocity]);
-
-  const loadPreset = useCallback((presetName: string) => {
-    const preset = PRESETS[presetName];
-    if (preset) {
+  const setStepVelocity = useCallback(
+    (inst: Instrument, step: number, velocity: number) => {
       setLoops((prev) => {
+        const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
         const newLoops = [...prev];
-        newLoops[currentLoopIndex] = copyPattern(preset);
+        const newPattern = { ...newLoops[targetIndex] };
+        newPattern[inst] = newPattern[inst].map((val, i) =>
+          i === step ? velocity : val
+        );
+        newLoops[targetIndex] = newPattern;
         return newLoops;
       });
-    }
-  }, [currentLoopIndex]);
+    },
+    [currentLoopIndex, isPlaying, playingLoopIndex]
+  );
+
+  const toggleStep = useCallback(
+    (inst: Instrument, step: number) => {
+      const current = pattern[inst][step];
+      setStepVelocity(
+        inst,
+        step,
+        current > 0 ? VELOCITY.OFF : VELOCITY.DEFAULT
+      );
+    },
+    [pattern, setStepVelocity]
+  );
+
+  const loadPreset = useCallback(
+    (presetName: string) => {
+      const preset = PRESETS[presetName];
+      if (preset) {
+        setLoops((prev) => {
+          const newLoops = [...prev];
+          newLoops[currentLoopIndex] = copyPattern(preset);
+          return newLoops;
+        });
+      }
+    },
+    [currentLoopIndex]
+  );
 
   const addLoop = useCallback(() => {
     if (loops.length >= MAX_LOOPS) return;
@@ -252,15 +340,22 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
 
   const getInstrumentLabel = (inst: Instrument): string => {
     const labels: Record<Instrument, string> = {
-      kick: t.kick, snare: t.snare, hihat: t.hihat, openhat: t.openhat, clap: t.clap,
+      kick: t.kick,
+      snare: t.snare,
+      hihat: t.hihat,
+      openhat: t.openhat,
+      clap: t.clap,
     };
     return labels[inst];
   };
 
   const getPresetLabel = (preset: string): string => {
     const labels: Record<string, string> = {
-      techno: t.presetTechno, house: t.presetHouse, trap: t.presetTrap,
-      breakbeat: t.presetBreakbeat, minimal: t.presetMinimal,
+      techno: t.presetTechno,
+      house: t.presetHouse,
+      trap: t.presetTrap,
+      breakbeat: t.presetBreakbeat,
+      minimal: t.presetMinimal,
     };
     return labels[preset] || preset;
   };
@@ -270,11 +365,18 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
       {/* Transport */}
       <div className="drum-transport">
         <div className="drum-transport-buttons">
-          <button className={`drum-btn ${isPlaying ? 'active' : ''}`} onClick={play}>
+          <button
+            className={`drum-btn ${isPlaying ? 'active' : ''}`}
+            onClick={play}
+          >
             {isPlaying ? t.pause : t.play}
           </button>
-          <button className="drum-btn" onClick={stop}>{t.stop}</button>
-          <button className="drum-btn" onClick={clear}>{t.clear}</button>
+          <button className="drum-btn" onClick={stop}>
+            {t.stop}
+          </button>
+          <button className="drum-btn" onClick={clear}>
+            {t.clear}
+          </button>
         </div>
         <div className="drum-tempo">
           <span className="drum-tempo-label">{t.tempo}</span>
@@ -305,9 +407,27 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
           ))}
         </div>
         <div className="drum-loop-actions">
-          <button className="drum-action-btn" onClick={addLoop} disabled={loops.length >= MAX_LOOPS}>+</button>
-          <button className="drum-action-btn" onClick={copyLoop} disabled={loops.length >= MAX_LOOPS}>⎘</button>
-          <button className="drum-action-btn" onClick={removeLoop} disabled={loops.length <= 1}>−</button>
+          <button
+            className="drum-action-btn"
+            onClick={addLoop}
+            disabled={loops.length >= MAX_LOOPS}
+          >
+            +
+          </button>
+          <button
+            className="drum-action-btn"
+            onClick={copyLoop}
+            disabled={loops.length >= MAX_LOOPS}
+          >
+            ⎘
+          </button>
+          <button
+            className="drum-action-btn"
+            onClick={removeLoop}
+            disabled={loops.length <= 1}
+          >
+            −
+          </button>
         </div>
       </div>
 
@@ -324,7 +444,12 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
                   min={VOLUME_RANGE.MIN}
                   max={VOLUME_RANGE.MAX}
                   value={volumes[inst]}
-                  onChange={(e) => setVolumes(prev => ({ ...prev, [inst]: parseInt(e.target.value, 10) }))}
+                  onChange={(e) =>
+                    setVolumes((prev) => ({
+                      ...prev,
+                      [inst]: parseInt(e.target.value, 10),
+                    }))
+                  }
                 />
               </div>
             </div>
@@ -350,7 +475,11 @@ export const DrumMachine = memo(function DrumMachine({ translations: t }: DrumMa
         <span className="drum-presets-label">{t.presets}</span>
         <div className="drum-presets-buttons">
           {Object.keys(PRESETS).map((preset) => (
-            <button key={preset} className="drum-preset-btn" onClick={() => loadPreset(preset)}>
+            <button
+              key={preset}
+              className="drum-preset-btn"
+              onClick={() => loadPreset(preset)}
+            >
               {getPresetLabel(preset)}
             </button>
           ))}

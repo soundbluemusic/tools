@@ -1,7 +1,13 @@
 export const STEPS = 16;
 export const MAX_LOOPS = 4;
 
-export const INSTRUMENTS = ['kick', 'snare', 'hihat', 'openhat', 'clap'] as const;
+export const INSTRUMENTS = [
+  'kick',
+  'snare',
+  'hihat',
+  'openhat',
+  'clap',
+] as const;
 export type Instrument = (typeof INSTRUMENTS)[number];
 
 export const TEMPO_RANGE = { MIN: 60, MAX: 180, DEFAULT: 120 };
@@ -10,7 +16,11 @@ export const VELOCITY = { OFF: 0, MIN: 10, MAX: 100, DEFAULT: 100 };
 
 export type InstrumentVolumes = Record<Instrument, number>;
 export const DEFAULT_VOLUMES: InstrumentVolumes = {
-  kick: 80, snare: 80, hihat: 80, openhat: 80, clap: 80,
+  kick: 80,
+  snare: 80,
+  hihat: 80,
+  openhat: 80,
+  clap: 80,
 };
 
 export const AUDIO = {
