@@ -13,7 +13,7 @@ const ShareButton = lazy(() =>
  */
 export const Footer = memo(function Footer() {
   const t = useTranslations();
-  const { language } = useLanguage();
+  const { language, localizedPath } = useLanguage();
 
   return (
     <footer className="footer">
@@ -31,10 +31,10 @@ export const Footer = memo(function Footer() {
 
       {/* Footer Menu */}
       <nav className="footer-menu" aria-label="Footer navigation">
-        <Link to="/privacy" className="footer-link">
+        <Link to={localizedPath('/privacy')} className="footer-link">
           {t.common.footer.privacy}
         </Link>
-        <Link to="/terms" className="footer-link">
+        <Link to={localizedPath('/terms')} className="footer-link">
           {t.common.footer.terms}
         </Link>
         {BRAND.githubUrl && (
@@ -47,13 +47,13 @@ export const Footer = memo(function Footer() {
             {t.common.footer.github}
           </a>
         )}
-        <Link to="/sitemap" className="footer-link">
+        <Link to={localizedPath('/sitemap')} className="footer-link">
           {t.common.footer.sitemap}
         </Link>
-        <Link to="/opensource" className="footer-link">
+        <Link to={localizedPath('/opensource')} className="footer-link">
           {t.common.footer.opensource}
         </Link>
-        <Link to="/tools-used" className="footer-link">
+        <Link to={localizedPath('/tools-used')} className="footer-link">
           {t.common.footer.toolsUsed}
         </Link>
       </nav>

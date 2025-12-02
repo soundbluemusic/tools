@@ -7,17 +7,19 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
 import { metronomeKo, metronomeEn } from './translations/metronome';
 import { drumKo, drumEn } from './translations/drum';
 import { drumSynthKo, drumSynthEn } from './translations/drum-synth';
-import {
-  getStorageItem,
-  setStorageItem,
-  createEnumValidator,
-} from '../utils/storage';
+
+/**
+ * Korean language prefix for URLs
+ * English is the default language and has no prefix
+ */
+const KO_PREFIX = '/ko';
 
 /**
  * All translations organized by language
@@ -47,6 +49,10 @@ interface LanguageContextValue {
   setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
   t: Translations;
+  /** Get localized path for current language */
+  localizedPath: (path: string) => string;
+  /** Get base path without language prefix */
+  basePath: string;
 }
 
 /**
@@ -57,91 +63,125 @@ const LanguageContext = createContext<LanguageContextValue | undefined>(
 );
 
 /**
- * Local storage key for language preference
+ * Extract language from URL path
+ * - /ko/* -> 'ko'
+ * - /* -> 'en' (default)
  */
-const LANGUAGE_STORAGE_KEY = 'preferred-language';
+function getLanguageFromPath(pathname: string): Language {
+  return pathname.startsWith(KO_PREFIX + '/') || pathname === KO_PREFIX
+    ? 'ko'
+    : 'en';
+}
 
 /**
- * Supported languages for validation
+ * Get the base path without language prefix
+ * - /ko/metronome -> /metronome
+ * - /metronome -> /metronome
  */
-const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
-
-/**
- * Type-safe validator for language values
- */
-const isLanguage = createEnumValidator(SUPPORTED_LANGUAGES);
-
-/**
- * Get initial language from localStorage or detect from browser
- */
-const getInitialLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'ko';
-
-  // Try to get from storage with validation
-  const stored = getStorageItem<Language>(
-    LANGUAGE_STORAGE_KEY,
-    null as unknown as Language,
-    {
-      validator: isLanguage,
-    }
-  );
-
-  if (stored) {
-    return stored;
+function getBasePath(pathname: string): string {
+  if (pathname.startsWith(KO_PREFIX + '/')) {
+    return pathname.slice(KO_PREFIX.length);
   }
-
-  // Detect browser language
-  const browserLang = navigator.language.toLowerCase();
-  if (browserLang.startsWith('en')) {
-    return 'en';
+  if (pathname === KO_PREFIX) {
+    return '/';
   }
+  return pathname;
+}
 
-  return 'ko';
-};
+/**
+ * Build localized path for given language
+ * - ('/', 'ko') -> '/ko'
+ * - ('/metronome', 'ko') -> '/ko/metronome'
+ * - ('/', 'en') -> '/'
+ * - ('/metronome', 'en') -> '/metronome'
+ */
+function buildLocalizedPath(basePath: string, language: Language): string {
+  if (language === 'en') {
+    return basePath;
+  }
+  // Korean: add /ko prefix
+  if (basePath === '/') {
+    return KO_PREFIX;
+  }
+  return KO_PREFIX + basePath;
+}
 
 /**
  * Language Provider Component
- * Wraps the app to provide language context to all components
+ * Derives language from URL path:
+ * - /ko/* -> Korean
+ * - /* -> English (default)
  */
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Save language preference to localStorage with type safety
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
-    setStorageItem(LANGUAGE_STORAGE_KEY, lang);
-  }, []);
+  // Derive language from URL
+  const language = useMemo(
+    () => getLanguageFromPath(location.pathname),
+    [location.pathname]
+  );
 
-  // Toggle between languages - use state updater to avoid language dependency
-  const toggleLanguage = useCallback(() => {
-    setLanguageState((prev) => {
-      const next = prev === 'ko' ? 'en' : 'ko';
-      setStorageItem(LANGUAGE_STORAGE_KEY, next);
-      return next;
-    });
-  }, []);
+  // Get base path without language prefix
+  const basePath = useMemo(
+    () => getBasePath(location.pathname),
+    [location.pathname]
+  );
 
-  // Sync with localStorage on mount (with validation)
-  useEffect(() => {
-    const stored = getStorageItem<Language>(
-      LANGUAGE_STORAGE_KEY,
-      null as unknown as Language,
-      {
-        validator: isLanguage,
+  // For standalone pages that don't use router
+  const [standaloneLanguage, setStandaloneLanguage] = useState<Language>('en');
+  const isStandalone = typeof window !== 'undefined' && !location.pathname;
+
+  // Set language by navigating to new URL
+  const setLanguage = useCallback(
+    (lang: Language) => {
+      if (isStandalone) {
+        setStandaloneLanguage(lang);
+        return;
       }
-    );
-    if (stored) {
-      setLanguageState(stored);
-    }
-  }, []);
+      const newPath = buildLocalizedPath(basePath, lang);
+      navigate(newPath + location.search + location.hash, { replace: true });
+    },
+    [basePath, location.search, location.hash, navigate, isStandalone]
+  );
+
+  // Toggle between languages
+  const toggleLanguage = useCallback(() => {
+    const currentLang = isStandalone ? standaloneLanguage : language;
+    const newLang = currentLang === 'ko' ? 'en' : 'ko';
+    setLanguage(newLang);
+  }, [language, standaloneLanguage, isStandalone, setLanguage]);
+
+  // Build path for current language
+  const localizedPath = useCallback(
+    (path: string): string => {
+      const currentLang = isStandalone ? standaloneLanguage : language;
+      return buildLocalizedPath(path, currentLang);
+    },
+    [language, standaloneLanguage, isStandalone]
+  );
+
+  // Update HTML lang attribute when language changes
+  useEffect(() => {
+    const currentLang = isStandalone ? standaloneLanguage : language;
+    document.documentElement.lang = currentLang;
+  }, [language, standaloneLanguage, isStandalone]);
 
   // Current translations based on language
-  const t = allTranslations[language];
+  const currentLang = isStandalone ? standaloneLanguage : language;
+  const t = allTranslations[currentLang];
 
   // Memoize context value to prevent unnecessary re-renders of consumers
   const contextValue = useMemo<LanguageContextValue>(
-    () => ({ language, setLanguage, toggleLanguage, t }),
-    [language, setLanguage, toggleLanguage, t]
+    () => ({
+      language: currentLang,
+      setLanguage,
+      toggleLanguage,
+      t,
+      localizedPath,
+      basePath,
+    }),
+    [currentLang, setLanguage, toggleLanguage, t, localizedPath, basePath]
   );
 
   return (

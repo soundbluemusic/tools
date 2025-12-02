@@ -77,7 +77,7 @@ export const CommandPalette = memo(function CommandPalette({
   onClose,
   apps,
 }: CommandPaletteProps) {
-  const { language } = useLanguage();
+  const { language, localizedPath } = useLanguage();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -104,7 +104,7 @@ export const CommandPalette = memo(function CommandPalette({
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
         ),
-        action: () => navigate('/'),
+        action: () => navigate(localizedPath('/')),
         keywords: ['home', 'main', '홈', '메인'],
       },
       {
@@ -126,11 +126,11 @@ export const CommandPalette = memo(function CommandPalette({
             <rect x="14" y="14" width="7" height="7" rx="1" />
           </svg>
         ),
-        action: () => navigate('/sitemap'),
+        action: () => navigate(localizedPath('/sitemap')),
         keywords: ['sitemap', 'all', '사이트맵', '전체'],
       },
     ],
-    [navigate]
+    [navigate, localizedPath]
   );
 
   // Filter results based on query
@@ -224,7 +224,7 @@ export const CommandPalette = memo(function CommandPalette({
           e.preventDefault();
           // Execute selected action
           if (selectedIndex < filteredResults.apps.length) {
-            navigate(filteredResults.apps[selectedIndex].url);
+            navigate(localizedPath(filteredResults.apps[selectedIndex].url));
             onClose();
           } else {
             const actionIndex = selectedIndex - filteredResults.apps.length;
@@ -238,7 +238,14 @@ export const CommandPalette = memo(function CommandPalette({
           break;
       }
     },
-    [selectedIndex, totalResults, filteredResults, navigate, onClose]
+    [
+      selectedIndex,
+      totalResults,
+      filteredResults,
+      navigate,
+      localizedPath,
+      onClose,
+    ]
   );
 
   // Handle item click - uses data-index attribute to avoid inline functions
@@ -246,14 +253,14 @@ export const CommandPalette = memo(function CommandPalette({
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const index = parseInt(e.currentTarget.dataset.index || '0', 10);
       if (index < filteredResults.apps.length) {
-        navigate(filteredResults.apps[index].url);
+        navigate(localizedPath(filteredResults.apps[index].url));
       } else {
         const actionIndex = index - filteredResults.apps.length;
         filteredResults.actions[actionIndex]?.action();
       }
       onClose();
     },
-    [filteredResults, navigate, onClose]
+    [filteredResults, navigate, localizedPath, onClose]
   );
 
   // Handle mouse enter - uses data-index attribute to avoid inline functions

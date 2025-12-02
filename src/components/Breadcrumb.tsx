@@ -17,7 +17,7 @@ interface BreadcrumbProps {
  * Shows hierarchical navigation path (e.g., Home > Music Tools > Metronome)
  */
 export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
-  const { language } = useLanguage();
+  const { language, localizedPath } = useLanguage();
 
   return (
     <nav className="breadcrumb" aria-label="Breadcrumb">
@@ -30,7 +30,10 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
             <li key={index} className="breadcrumb-item">
               {!isLast && item.href ? (
                 <>
-                  <Link to={item.href} className="breadcrumb-link">
+                  <Link
+                    to={localizedPath(item.href)}
+                    className="breadcrumb-link"
+                  >
                     {index === 0 && (
                       <svg
                         className="breadcrumb-home-icon"

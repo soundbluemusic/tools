@@ -21,7 +21,7 @@ const Terms = memo(function Terms() {
   useSEO({
     title,
     description,
-    canonicalPath: '/terms',
+    basePath: '/terms',
     noindex: true,
   });
 

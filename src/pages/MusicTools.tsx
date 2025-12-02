@@ -35,7 +35,7 @@ const MusicTools = memo(function MusicTools() {
     title: musicToolsSEO[language].title,
     description: musicToolsSEO[language].description,
     keywords: musicToolsSEO[language].keywords,
-    canonicalPath: '/music-tools',
+    basePath: '/music-tools',
   });
 
   // Filter music apps
