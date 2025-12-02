@@ -37,6 +37,11 @@
   .navigation-content {
     padding-left: 240px; /* Sidebar width */
   }
+
+  /* Sidebar collapsed - no offset */
+  .sidebar-collapsed .navigation-content {
+    padding-left: 0;
+  }
 }
 
 /* Small mobile header */

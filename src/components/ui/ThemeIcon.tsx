@@ -4,8 +4,6 @@ import type { Theme } from '../../hooks/useTheme';
 interface ThemeIconProps {
   /** Current theme setting */
   theme: Theme;
-  /** Resolved theme (actual applied theme) */
-  resolved: 'light' | 'dark';
   /** CSS class name for the icon */
   className?: string;
   /** Icon size (default: 18) */
@@ -13,33 +11,14 @@ interface ThemeIconProps {
 }
 
 /**
- * Theme icon component - shows sun, moon, or monitor based on theme
- * Extracted from Header and ThemeToggle to eliminate duplication
+ * Theme icon component - shows sun or moon based on theme
  */
 export const ThemeIcon = memo<ThemeIconProps>(function ThemeIcon({
   theme,
-  resolved,
   className = 'theme-icon',
   size = 18,
 }) {
-  if (theme === 'system') {
-    // Monitor icon for system mode
-    return (
-      <svg
-        className={className}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        width={size}
-        height={size}
-      >
-        <rect x="2" y="3" width="20" height="14" rx="2" strokeWidth="2" />
-        <path strokeWidth="2" d="M8 21h8M12 17v4" />
-      </svg>
-    );
-  }
-
-  if (resolved === 'dark') {
+  if (theme === 'dark') {
     // Moon icon
     return (
       <svg

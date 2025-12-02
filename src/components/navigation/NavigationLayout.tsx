@@ -28,6 +28,18 @@ export const NavigationLayout = memo(function NavigationLayout({
   children,
 }: NavigationLayoutProps) {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isBottomNavOpen, setIsBottomNavOpen] = useState(true);
+
+  // Toggle sidebar
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarOpen((prev) => !prev);
+  }, []);
+
+  // Toggle bottom nav
+  const toggleBottomNav = useCallback(() => {
+    setIsBottomNavOpen((prev) => !prev);
+  }, []);
 
   // Open command palette
   const openCommandPalette = useCallback(() => {
@@ -65,12 +77,18 @@ export const NavigationLayout = memo(function NavigationLayout({
   }, []);
 
   return (
-    <div className="navigation-layout">
+    <div
+      className={`navigation-layout${isSidebarOpen ? '' : ' sidebar-collapsed'}`}
+    >
       {/* Fixed Header */}
-      <Header onSearchClick={openCommandPalette} />
+      <Header
+        onSearchClick={openCommandPalette}
+        onSidebarToggle={toggleSidebar}
+        isSidebarOpen={isSidebarOpen}
+      />
 
       {/* Desktop Sidebar - CSS controls visibility */}
-      <Sidebar apps={apps} />
+      <Sidebar apps={apps} isOpen={isSidebarOpen} />
 
       {/* Main Content Wrapper */}
       <div className="navigation-content">
@@ -78,7 +96,7 @@ export const NavigationLayout = memo(function NavigationLayout({
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}
-      <BottomNav />
+      <BottomNav onToggle={toggleBottomNav} isOpen={isBottomNavOpen} />
 
       {/* Command Palette (Universal) */}
       <CommandPalette

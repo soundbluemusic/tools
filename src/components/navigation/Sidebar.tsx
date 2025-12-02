@@ -8,6 +8,7 @@ import './Sidebar.css';
 
 interface SidebarProps {
   apps: App[];
+  isOpen?: boolean;
 }
 
 /**
@@ -15,8 +16,12 @@ interface SidebarProps {
  * - Fixed on left
  * - Icon + label for each item
  * - Active state highlight
+ * - Collapsible via toggle button
  */
-export const Sidebar = memo(function Sidebar({ apps }: SidebarProps) {
+export const Sidebar = memo(function Sidebar({
+  apps,
+  isOpen = true,
+}: SidebarProps) {
   const { language } = useLanguage();
   const { isActive } = useIsActive();
 
@@ -34,7 +39,7 @@ export const Sidebar = memo(function Sidebar({ apps }: SidebarProps) {
   );
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar${isOpen ? '' : ' collapsed'}`}>
       <nav className="sidebar-nav">
         {/* Home */}
         <NavLink

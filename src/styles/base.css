@@ -33,30 +33,6 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ============================================
- * Theme Transition
- * Smooth color transition when switching themes
- * Only applied to key elements for performance
- * ============================================ */
-body,
-.app-card,
-.app-item,
-.sidebar,
-.bottom-nav,
-.command-palette,
-.tool-header,
-.tool-content,
-.home-page,
-button,
-input,
-select,
-a {
-  transition:
-    background-color 150ms ease-out,
-    border-color 150ms ease-out,
-    color 150ms ease-out;
-}
-
 /* Body */
 body {
   min-width: 320px;

@@ -8,15 +8,21 @@ import './Header.css';
 
 interface HeaderProps {
   onSearchClick?: () => void;
+  onSidebarToggle?: () => void;
+  isSidebarOpen?: boolean;
 }
 
 /**
  * Fixed Header Component
  * YouTube/Docusaurus style header with logo, search, and controls
  */
-export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
+export const Header = memo(function Header({
+  onSearchClick,
+  onSidebarToggle,
+  isSidebarOpen = true,
+}: HeaderProps) {
   const { language, toggleLanguage } = useLanguage();
-  const { theme, resolvedTheme, cycleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
 
   const handleSearchClick = useCallback(() => {
     onSearchClick?.();
@@ -27,15 +33,15 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
     typeof navigator !== 'undefined' && /Mac/i.test(navigator.userAgent);
   const shortcutKey = isMac ? '\u2318K' : 'Ctrl+K';
 
-  const themeLabels: Record<Theme, { ko: string; en: string }> = {
-    system: { ko: '시스템', en: 'System' },
-    light: { ko: '라이트', en: 'Light' },
-    dark: { ko: '다크', en: 'Dark' },
-  };
-
-  const nextTheme: Theme =
-    theme === 'system' ? 'light' : theme === 'light' ? 'dark' : 'system';
-  const nextLabel = themeLabels[nextTheme][language];
+  const nextTheme: Theme = theme === 'light' ? 'dark' : 'light';
+  const nextLabel =
+    nextTheme === 'light'
+      ? language === 'ko'
+        ? '라이트'
+        : 'Light'
+      : language === 'ko'
+        ? '다크'
+        : 'Dark';
   const themeTitle =
     language === 'ko'
       ? `${nextLabel} 모드로 전환`
@@ -43,6 +49,69 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
 
   return (
     <header className="site-header">
+      {/* Sidebar Toggle - Desktop only, positioned at far left */}
+      {onSidebarToggle && (
+        <button
+          onClick={onSidebarToggle}
+          className="header-control-btn header-sidebar-toggle"
+          title={
+            language === 'ko'
+              ? isSidebarOpen
+                ? '사이드바 닫기'
+                : '사이드바 열기'
+              : isSidebarOpen
+                ? 'Close sidebar'
+                : 'Open sidebar'
+          }
+          aria-label={
+            language === 'ko'
+              ? isSidebarOpen
+                ? '사이드바 닫기'
+                : '사이드바 열기'
+              : isSidebarOpen
+                ? 'Close sidebar'
+                : 'Open sidebar'
+          }
+          aria-expanded={isSidebarOpen}
+        >
+          <svg
+            className="header-icon"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            width="20"
+            height="20"
+          >
+            {isSidebarOpen ? (
+              <>
+                <rect
+                  x="3"
+                  y="3"
+                  width="18"
+                  height="18"
+                  rx="2"
+                  strokeWidth="2"
+                />
+                <path strokeWidth="2" d="M9 3v18" />
+              </>
+            ) : (
+              <>
+                <rect
+                  x="3"
+                  y="3"
+                  width="18"
+                  height="18"
+                  rx="2"
+                  strokeWidth="2"
+                />
+                <path strokeWidth="2" d="M9 3v18" />
+                <path strokeWidth="2" strokeLinecap="round" d="M14 9l3 3-3 3" />
+              </>
+            )}
+          </svg>
+        </button>
+      )}
+
       <div className="header-inner">
         {/* Logo */}
         <Link to="/" className="header-logo">
@@ -77,12 +146,12 @@ export const Header = memo(function Header({ onSearchClick }: HeaderProps) {
         <div className="header-controls">
           {/* Theme Toggle */}
           <button
-            onClick={cycleTheme}
+            onClick={toggleTheme}
             className="header-control-btn"
             title={themeTitle}
             aria-label={themeTitle}
           >
-            <ThemeIcon theme={theme} resolved={resolvedTheme} />
+            <ThemeIcon theme={theme} />
           </button>
 
           {/* Language Toggle */}
