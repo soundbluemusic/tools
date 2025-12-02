@@ -1,6 +1,17 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslations } from '../../../i18n';
+import type { DrumSynthTranslation } from '../../../i18n/types';
 import { cn } from '../../../utils';
+
+/**
+ * Props for DrumSynth component
+ * When translations are provided, they are used directly (standalone mode)
+ * When not provided, useTranslations hook is used (main site mode)
+ */
+export interface DrumSynthProps {
+  /** Optional translations for standalone mode */
+  translations?: DrumSynthTranslation;
+}
 import {
   DrumType,
   DRUM_TYPES,
@@ -128,9 +139,14 @@ const DownloadIcon = memo(function DownloadIcon() {
 /**
  * DrumSynth Component
  * Detailed drum sound synthesis with parameter control
+ * Supports both main site mode (using i18n context) and standalone mode (using props)
  */
-export const DrumSynth = memo(function DrumSynth() {
-  const { drumSynth } = useTranslations();
+export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
+  translations,
+}) {
+  // Use provided translations (standalone) or i18n context (main site)
+  const contextTranslations = useTranslations();
+  const drumSynth = translations ?? contextTranslations.drumSynth;
 
   // State
   const [selectedDrum, setSelectedDrum] = useState<DrumType>('kick');

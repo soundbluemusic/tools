@@ -1,57 +1,27 @@
+/**
+ * Standalone drum-synth i18n
+ * Compatible with DrumSynthTranslation type from main app
+ */
+import type { DrumSynthTranslation } from '../../i18n/types';
+
 export type Language = 'ko' | 'en';
 
-export interface Translations {
-  title: string;
-  quickPlay: string;
-  play: string;
-  reset: string;
-  parameters: string;
-  master: string;
-  volume: string;
-  presets: string;
-  kick: string;
-  snare: string;
-  hihat: string;
-  clap: string;
-  tom: string;
-  rim: string;
-  pitchStart: string;
-  pitchEnd: string;
-  pitchDecay: string;
-  ampDecay: string;
-  click: string;
-  drive: string;
-  tone: string;
-  toneFreq: string;
-  toneDecay: string;
-  noiseDecay: string;
-  noiseFilter: string;
-  toneMix: string;
-  snappy: string;
-  filterFreq: string;
-  filterQ: string;
-  decay: string;
-  openness: string;
-  pitch: string;
-  ring: string;
-  spread: string;
-  reverb: string;
-  body: string;
-  attack: string;
-  metallic: string;
-  presetClassic808: string;
-  presetHardTechno: string;
-  presetLofi: string;
-  presetMinimal: string;
-  presetAcoustic: string;
+/** Extended translations for standalone app (includes header controls) */
+export interface StandaloneTranslations extends DrumSynthTranslation {
   lightMode: string;
   darkMode: string;
   language: string;
 }
 
-export const translations: Record<Language, Translations> = {
+export const translations: Record<Language, StandaloneTranslations> = {
   ko: {
     title: '드럼 사운드 신스',
+    description: '웹 오디오 드럼 사운드 합성기',
+    seo: {
+      title: '드럼 사운드 신스',
+      description: '웹 오디오 드럼 사운드 합성기',
+      keywords: '드럼 신스',
+    },
     quickPlay: '퀵 플레이',
     play: '재생',
     reset: '초기화',
@@ -94,12 +64,25 @@ export const translations: Record<Language, Translations> = {
     presetLofi: '로파이',
     presetMinimal: '미니멀',
     presetAcoustic: '어쿠스틱',
+    export: '내보내기',
+    exportWav: 'WAV 내보내기',
+    exportCompressed: '압축 내보내기',
+    exportAll: '전체 내보내기',
+    exporting: '내보내는 중...',
+    exportSuccess: '내보내기 성공',
+    exportError: '내보내기 실패',
     lightMode: '라이트 모드',
     darkMode: '다크 모드',
     language: '언어',
   },
   en: {
     title: 'Drum Sound Synth',
+    description: 'Web Audio drum sound synthesizer',
+    seo: {
+      title: 'Drum Sound Synth',
+      description: 'Web Audio drum sound synthesizer',
+      keywords: 'drum synth',
+    },
     quickPlay: 'Quick Play',
     play: 'Play',
     reset: 'Reset',
@@ -142,13 +125,20 @@ export const translations: Record<Language, Translations> = {
     presetLofi: 'Lo-Fi',
     presetMinimal: 'Minimal',
     presetAcoustic: 'Acoustic',
+    export: 'Export',
+    exportWav: 'Export WAV',
+    exportCompressed: 'Export Compressed',
+    exportAll: 'Export All',
+    exporting: 'Exporting...',
+    exportSuccess: 'Export successful',
+    exportError: 'Export failed',
     lightMode: 'Light Mode',
     darkMode: 'Dark Mode',
     language: 'Language',
   },
 };
 
-export function getTranslations(lang: Language): Translations {
+export function getTranslations(lang: Language): StandaloneTranslations {
   return translations[lang];
 }
 

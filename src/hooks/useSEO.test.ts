@@ -29,7 +29,7 @@ describe('useSEO', () => {
       })
     );
 
-    expect(document.title).toBe('Test Page | Productivity Tools');
+    expect(document.title).toBe('Test Page | Tools');
   });
 
   it('sets home page title without suffix', () => {
@@ -41,7 +41,7 @@ describe('useSEO', () => {
       })
     );
 
-    expect(document.title).toBe('Productivity Tools');
+    expect(document.title).toBe('Tools');
   });
 
   it('sets meta description', () => {
@@ -82,7 +82,7 @@ describe('useSEO', () => {
       document
         .querySelector('meta[property="og:title"]')
         ?.getAttribute('content')
-    ).toBe('OG Test | Productivity Tools');
+    ).toBe('OG Test | Tools');
     expect(
       document
         .querySelector('meta[property="og:description"]')
@@ -127,12 +127,12 @@ describe('useSEO', () => {
       },
     });
 
-    expect(document.title).toBe('Initial | Productivity Tools');
+    expect(document.title).toBe('Initial | Tools');
 
     rerender({
       config: { title: 'Updated', description: 'Updated desc' },
     });
 
-    expect(document.title).toBe('Updated | Productivity Tools');
+    expect(document.title).toBe('Updated | Tools');
   });
 });

@@ -1,6 +1,17 @@
 import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslations } from '../../../i18n';
+import type { DrumTranslation } from '../../../i18n/types';
 import { cn } from '../../../utils';
+
+/**
+ * Props for DrumMachine component
+ * When translations are provided, they are used directly (standalone mode)
+ * When not provided, useTranslations hook is used (main site mode)
+ */
+export interface DrumMachineProps {
+  /** Optional translations for standalone mode */
+  translations?: DrumTranslation;
+}
 import {
   STEPS,
   INSTRUMENTS,
@@ -265,9 +276,14 @@ const ChevronRightIcon = memo(function ChevronRightIcon() {
 /**
  * DrumMachine Component
  * A 16-step drum sequencer with Web Audio synthesis
+ * Supports both main site mode (using i18n context) and standalone mode (using props)
  */
-export const DrumMachine = memo(function DrumMachine() {
-  const { drum } = useTranslations();
+export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
+  translations,
+}) {
+  // Use provided translations (standalone) or i18n context (main site)
+  const contextTranslations = useTranslations();
+  const drum = translations ?? contextTranslations.drum;
 
   // State
   const [loops, setLoops] = useState<MultiLoopPattern>(createInitialLoops);

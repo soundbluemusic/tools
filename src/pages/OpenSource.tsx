@@ -264,8 +264,8 @@ const OpenSource = memo(function OpenSource() {
     title: language === 'ko' ? '오픈소스 라이브러리' : 'Open Source Libraries',
     description:
       language === 'ko'
-        ? 'Productivity Tools에 사용된 오픈소스 라이브러리 목록'
-        : 'List of open source libraries used in Productivity Tools',
+        ? 'Tools에 사용된 오픈소스 라이브러리 목록'
+        : 'List of open source libraries used in Tools',
     canonicalPath: '/opensource',
     noindex: true,
   });

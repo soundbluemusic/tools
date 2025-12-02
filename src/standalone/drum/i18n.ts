@@ -1,41 +1,27 @@
+/**
+ * Standalone drum i18n
+ * Compatible with DrumTranslation type from main app
+ */
+import type { DrumTranslation } from '../../i18n/types';
+
 export type Language = 'ko' | 'en';
 
-export interface Translations {
-  title: string;
-  play: string;
-  pause: string;
-  stop: string;
-  clear: string;
-  tempo: string;
-  kick: string;
-  snare: string;
-  hihat: string;
-  openhat: string;
-  clap: string;
-  step: string;
-  volume: string;
-  presets: string;
-  presetTechno: string;
-  presetHouse: string;
-  presetTrap: string;
-  presetBreakbeat: string;
-  presetMinimal: string;
-  loop: string;
-  addLoop: string;
-  removeLoop: string;
-  copyLoop: string;
-  maxLoopsReached: string;
-  clearAllLoops: string;
-  loadedPreset: string;
-  synthesisInfo: string;
+/** Extended translations for standalone app (includes header controls) */
+export interface StandaloneTranslations extends DrumTranslation {
   lightMode: string;
   darkMode: string;
   language: string;
 }
 
-export const translations: Record<Language, Translations> = {
+export const translations: Record<Language, StandaloneTranslations> = {
   ko: {
     title: '드럼머신',
+    description: '16스텝 드럼 시퀀서',
+    seo: {
+      title: '드럼머신',
+      description: '16스텝 드럼 시퀀서',
+      keywords: '드럼머신',
+    },
     play: '재생',
     pause: '일시정지',
     stop: '정지',
@@ -54,10 +40,18 @@ export const translations: Record<Language, Translations> = {
     presetTrap: '트랩',
     presetBreakbeat: '브레이크비트',
     presetMinimal: '미니멀',
+    exportMidi: 'MIDI 내보내기',
+    exportSuccess: 'MIDI 파일이 다운로드되었습니다',
+    importMidi: 'MIDI 가져오기',
+    importSuccess: 'MIDI 파일을 가져왔습니다',
+    importError: 'MIDI 파일을 가져오는 데 실패했습니다',
     loop: '루프',
+    loopOf: '/',
     addLoop: '루프 추가',
     removeLoop: '루프 삭제',
     copyLoop: '루프 복사',
+    moveLoopLeft: '왼쪽으로 이동',
+    moveLoopRight: '오른쪽으로 이동',
     maxLoopsReached: '최대 루프 수에 도달했습니다',
     clearAllLoops: '모든 루프가 초기화됩니다',
     loadedPreset: '{preset} 프리셋을 불러왔습니다',
@@ -68,6 +62,12 @@ export const translations: Record<Language, Translations> = {
   },
   en: {
     title: 'Drum Machine',
+    description: '16-step drum sequencer',
+    seo: {
+      title: 'Drum Machine',
+      description: '16-step drum sequencer',
+      keywords: 'drum machine',
+    },
     play: 'Play',
     pause: 'Pause',
     stop: 'Stop',
@@ -86,10 +86,18 @@ export const translations: Record<Language, Translations> = {
     presetTrap: 'Trap',
     presetBreakbeat: 'Breakbeat',
     presetMinimal: 'Minimal',
+    exportMidi: 'Export MIDI',
+    exportSuccess: 'MIDI file downloaded',
+    importMidi: 'Import MIDI',
+    importSuccess: 'MIDI file imported',
+    importError: 'Failed to import MIDI file',
     loop: 'Loop',
+    loopOf: '/',
     addLoop: 'Add Loop',
     removeLoop: 'Remove Loop',
     copyLoop: 'Copy Loop',
+    moveLoopLeft: 'Move Left',
+    moveLoopRight: 'Move Right',
     maxLoopsReached: 'Maximum loops reached',
     clearAllLoops: 'All loops will be cleared',
     loadedPreset: 'Loaded {preset} preset',
@@ -101,7 +109,7 @@ export const translations: Record<Language, Translations> = {
   },
 };
 
-export function getTranslations(lang: Language): Translations {
+export function getTranslations(lang: Language): StandaloneTranslations {
   return translations[lang];
 }
 

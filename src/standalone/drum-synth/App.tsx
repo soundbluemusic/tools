@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { DrumSynth } from './DrumSynth';
+import { DrumSynth } from '../../apps/drum-synth/components/DrumSynth';
 import { detectLanguage, getTranslations, type Language } from './i18n';
 
 export default function App() {

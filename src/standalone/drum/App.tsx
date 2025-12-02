@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { DrumMachine } from './DrumMachine';
+import { DrumMachine } from '../../apps/drum/components/DrumMachine';
 import { detectLanguage, getTranslations, type Language } from './i18n';
 
 export default function App() {

@@ -157,7 +157,48 @@ const Downloads = memo(function Downloads() {
       const response = await fetch(`/standalone/${item.fileName}`);
       if (!response.ok) throw new Error('Download failed');
 
-      const blob = await response.blob();
+      // Fetch HTML as text to inject attribution
+      let html = await response.text();
+
+      // MIT License attribution comment to inject in <head>
+      const licenseComment = `<!--
+  MIT License
+
+  Copyright (c) SoundBlueMusic
+
+  Source Code: https://github.com/soundbluemusic/tools
+  Website: https://tools.soundbluemusic.com/
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+-->
+`;
+
+      // Visible attribution footer to inject before </body>
+      const attributionFooter = `
+<footer style="margin-top:auto;padding:16px;text-align:center;font-size:12px;color:#737373;border-top:1px solid var(--color-border-secondary,#e7e5e4);">
+  <p style="margin:0;">
+    MIT License © <a href="https://tools.soundbluemusic.com/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">SoundBlueMusic</a>
+    · <a href="https://github.com/soundbluemusic/tools" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">GitHub</a>
+  </p>
+</footer>
+`;
+
+      // Inject license comment after <head>
+      html = html.replace(/<head>/i, `<head>\n${licenseComment}`);
+
+      // Inject attribution footer before </body>
+      html = html.replace(/<\/body>/i, `${attributionFooter}</body>`);
+
+      // Create blob and download
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

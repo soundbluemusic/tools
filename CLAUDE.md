@@ -1,8 +1,8 @@
-# CLAUDE.md - AI Assistant Guide for Productivity Tools
+# CLAUDE.md - AI Assistant Guide for Tools
 
 ## Project Overview
 
-**Productivity Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
+**Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
 
 **Current Tools:**
 

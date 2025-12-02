@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { QRGenerator } from './QRGenerator';
+import { QRGenerator } from '../../apps/qr/components/QRGenerator';
 import { detectLanguage, getTranslations, type Language } from './i18n';
 
 /**

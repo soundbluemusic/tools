@@ -13,7 +13,7 @@ export const BRAND = {
    * 사이트 이름 (Site name)
    * 헤더, 푸터, SEO 등에 사용됩니다
    */
-  name: 'Productivity Tools',
+  name: 'Tools',
 
   /**
    * 저작권 표시 이름 (Copyright holder name)
@@ -51,8 +51,8 @@ export const BRAND = {
    * 소셜 미디어 공유 시 표시되는 제목
    */
   shareTitle: {
-    ko: 'Productivity Tools - 무료 온라인 도구 모음',
-    en: 'Productivity Tools - Free Online Tools',
+    ko: 'Tools - 무료 온라인 도구 모음',
+    en: 'Tools - Free Online Tools',
   },
 } as const;
 
