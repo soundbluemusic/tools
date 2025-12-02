@@ -67,6 +67,11 @@ export interface CommonTranslation {
     copyCode: string;
     copied: string;
   };
+  // Fullscreen functionality
+  fullscreen: {
+    enter: string;
+    exit: string;
+  };
   // Error boundary
   errorBoundary: {
     title: string;

@@ -3,6 +3,7 @@ import { PageLayout } from '../components/layout';
 import { MetronomePlayer } from '../apps/metronome/components/MetronomePlayer';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
+import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 
@@ -42,6 +43,7 @@ const Metronome = memo(function Metronome() {
             defaultWidth={400}
             defaultHeight={500}
           />
+          <FullscreenButton />
           <ShareButton
             title={metronome.title}
             description={metronome.description}
