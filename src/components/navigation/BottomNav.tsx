@@ -61,17 +61,9 @@ export const BottomNav = memo(function BottomNav({
             height="16"
           >
             {isOpen ? (
-              <path
-                strokeWidth="2"
-                strokeLinecap="round"
-                d="M19 9l-7 7-7-7"
-              />
+              <path strokeWidth="2" strokeLinecap="round" d="M19 9l-7 7-7-7" />
             ) : (
-              <path
-                strokeWidth="2"
-                strokeLinecap="round"
-                d="M5 15l7-7 7 7"
-              />
+              <path strokeWidth="2" strokeLinecap="round" d="M5 15l7-7 7 7" />
             )}
           </svg>
         </button>
