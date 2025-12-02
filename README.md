@@ -49,34 +49,33 @@ npm run validate
 
 ## 라이선스
 
-### 소스코드 (MIT License)
+이 프로젝트는 [MIT License](./LICENSE)로 공개됩니다.
 
-이 프로젝트의 **소스코드**는 MIT 라이선스로 공개됩니다. 저작권 고지를 포함하여 자유롭게 사용, 수정, 배포할 수 있습니다.
+자유롭게 사용, 수정, 배포할 수 있습니다. 상업적 이용도 가능합니다.
 
-자세한 내용은 [LICENSE](./LICENSE) 파일을 참조하세요.
+### 상표 가이드라인
+
+"SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다. 이 프로젝트를 포크하여 사용할 경우, `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요.
 
 ## 포크 & 배포 가이드
 
-이 프로젝트는 **포크 친화적**으로 설계되었습니다. 브랜드 설정을 한 곳에서 관리할 수 있습니다.
+이 프로젝트는 **포크 친화적**으로 설계되었습니다.
 
-### 브랜드 커스터마이징
+### 1단계: 브랜드 변경
 
-`src/constants/brand.ts` 파일을 수정하여 브랜드를 변경하세요:
+`src/constants/brand.ts` 파일 하나만 수정하면 됩니다:
 
 ```typescript
 export const BRAND = {
-  name: 'Your App Name', // 사이트 이름
-  copyrightHolder: 'Your Name', // 저작권 표시 이름
-  siteUrl: 'https://your-domain.com', // 사이트 URL
-  githubUrl: 'https://github.com/you/repo', // GitHub URL (빈 문자열로 숨김)
-  description: { ko: '...', en: '...' },
-  shareTitle: { ko: '...', en: '...' },
+  name: 'Your App Name',
+  copyrightHolder: 'Your Name',
+  siteUrl: 'https://your-domain.com',
+  githubUrl: 'https://github.com/you/repo',
+  // ...
 };
 ```
 
-### 정적 파일 수정 (선택)
-
-완전한 브랜딩을 위해 다음 파일들도 수정하세요:
+### 2단계: 정적 파일 (선택)
 
 | 파일                  | 수정 내용                            |
 | :-------------------- | :----------------------------------- |

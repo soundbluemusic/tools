@@ -1,37 +1,27 @@
-# Intellectual Property & Trademark Notice
+# 상표 가이드라인 (Trademark Guidelines)
 
-The following elements are intellectual property and **NOT covered by the MIT License**:
+## 상표
 
-- **Brand Names**: The brand name configured in `src/constants/brand.ts`
-- **Logos**: All logos, icons, and brand imagery
-- **Images**: All images, graphics, and visual assets included in this project
-- **Audio**: All music, sound effects, and audio files included in this project
-- **Brand Identity**: Any other brand-related materials and assets
+"SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다.
 
-## Fork-Friendly Design
+## 포크 시 안내
 
-This project is designed to be **fork-friendly**. When forking:
+이 프로젝트를 포크하여 본인의 서비스로 배포할 경우:
 
-1. **Update Brand Config**: Modify `src/constants/brand.ts` with your own branding
-2. **Replace Assets**: Replace logos, icons, and images with your own
-3. **Update Static Files**: Update `index.html`, `sitemap.xml`, `robots.txt` with your domain
+1. `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요
+2. 로고와 아이콘을 본인의 것으로 교체해 주세요
 
-See [README.md](./README.md) for detailed fork instructions.
+자세한 내용은 [README.md](./README.md)의 "포크 & 배포 가이드"를 참조하세요.
 
-## Restrictions for Original Branding
+## 허용되는 사용
 
-If the original project has specific branding (e.g., from the upstream repository):
+- 이 프로젝트가 SoundBlueMusic에서 만들어졌음을 언급하는 것
+- 원본 저장소로의 링크
 
-1. **No Unauthorized Use**: You may NOT use the original brand names, logos, or trademarks
-2. **No Derivative Works**: Creating derivative works using original protected materials is prohibited
-3. **Fork Requirements**: You MUST remove or replace all protected materials with your own
+## 문의
 
-## Note for Forkers
-
-The default configuration in this repository uses generic "Productivity Tools" branding.
-If you forked from an upstream repository with specific branding, ensure you have replaced
-all brand-specific content with your own.
+상표 사용에 관한 문의는 GitHub Issues를 통해 연락해 주세요.
 
 ---
 
-**The MIT License applies to the source code only. Brand assets require separate authorization from their owners.**
+**소스코드는 MIT License입니다. 자유롭게 포크하고 수정하세요!**
