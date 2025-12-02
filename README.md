@@ -8,8 +8,12 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
 
 | 앱 | 설명 | 경로 |
 |:---|:-----|:-----|
-| 🎵 메트로놈 | Metronome | `/metronome` |
-| 📱 QR 코드 생성기 | QR Code Generator | `/qr` |
+| 🎵 메트로놈 | 음악가를 위한 정밀 메트로놈 | `/metronome` |
+| 🥁 드럼머신 | 드럼 패턴 연습용 시퀀서 | `/drum` |
+| 📱 QR 코드 생성기 | 투명 배경의 고해상도 QR 코드 생성 | `/qr` |
+| 🎛️ 드럼 사운드 합성기 | 세밀한 파라미터 조절이 가능한 드럼 사운드 합성기 | `/drum-synth` |
+
+> 📖 자세한 문서는 [/docs](./docs/README.md)를 참조하세요.
 
 ## 시작하기
 
