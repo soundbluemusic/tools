@@ -25,7 +25,7 @@ const Metronome = memo(function Metronome() {
   const breadcrumb = useMemo(
     () => [
       { label: { ko: '홈', en: 'Home' }, href: '/' },
-      { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/' },
+      { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/music-tools' },
       { label: { ko: metronome.title, en: metronome.title } },
     ],
     [metronome.title]

@@ -383,6 +383,24 @@
   color: var(--text-color);
 }
 
+.category-header {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.category-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.category-description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-text-secondary, #666);
+  font-weight: 400;
+}
+
 .home-controls {
   display: flex;
   align-items: center;

@@ -25,7 +25,7 @@ const QR = memo(function QR() {
   const breadcrumb = useMemo(
     () => [
       { label: { ko: '홈', en: 'Home' }, href: '/' },
-      { label: { ko: '기타 도구', en: 'Other Tools' }, href: '/' },
+      { label: { ko: '기타 도구', en: 'Other Tools' }, href: '/other-tools' },
       { label: { ko: qr.title, en: qr.title } },
     ],
     [qr.title]
