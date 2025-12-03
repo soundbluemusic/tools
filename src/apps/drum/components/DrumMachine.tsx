@@ -1,7 +1,8 @@
-import { memo, useState, useCallback, useRef, useEffect } from 'react';
+import { memo, useCallback, useRef, useEffect } from 'react';
 import { useTranslations } from '../../../i18n';
 import type { DrumTranslation } from '../../../i18n/types';
 import { cn } from '../../../utils';
+import { useDrumStore } from '../../../stores';
 
 import type { AllDrumParams } from '../../drum-synth/constants';
 import {
@@ -28,11 +29,7 @@ import {
   VELOCITY,
   AUDIO,
   PRESETS,
-  DEFAULT_VOLUMES,
   MAX_LOOPS,
-  createEmptyPattern,
-  createInitialLoops,
-  copyPattern,
   type Instrument,
   type InstrumentVolumes,
   type MultiLoopPattern,
@@ -294,26 +291,37 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
   const contextTranslations = useTranslations();
   const drum = translations ?? contextTranslations.drum;
 
-  // State
-  const [loops, setLoops] = useState<MultiLoopPattern>(createInitialLoops);
-  const [loopIds, setLoopIds] = useState<number[]>([1]); // Track original loop numbers
-  const [nextLoopId, setNextLoopId] = useState(2); // Next available loop ID
-  const [currentLoopIndex, setCurrentLoopIndex] = useState(0);
-  const [tempo, setTempo] = useState<number>(TEMPO_RANGE.DEFAULT);
-  const [volumes, setVolumes] = useState<InstrumentVolumes>({
-    ...DEFAULT_VOLUMES,
-  });
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [playingLoopIndex, setPlayingLoopIndex] = useState(0);
-  const [statusMessage, setStatusMessage] = useState<{
-    text: string;
-    type: 'success' | 'error' | 'info';
-  } | null>(null);
-  const [dragLoopIndex, setDragLoopIndex] = useState<number | null>(null);
-  const [dragOverLoopIndex, setDragOverLoopIndex] = useState<number | null>(
-    null
-  );
+  // Zustand store state
+  const {
+    loops,
+    loopIds,
+    currentLoopIndex,
+    setCurrentLoopIndex,
+    tempo,
+    setTempo,
+    volumes,
+    setVolume,
+    isPlaying,
+    setIsPlaying,
+    currentStep,
+    setCurrentStep,
+    playingLoopIndex,
+    setPlayingLoopIndex,
+    statusMessage,
+    showStatus,
+    dragLoopIndex,
+    setDragLoopIndex,
+    dragOverLoopIndex,
+    setDragOverLoopIndex,
+    addLoop: storeAddLoop,
+    removeLoop: storeRemoveLoop,
+    copyLoop: storeCopyLoop,
+    loadPreset: storeLoadPreset,
+    reorderLoops,
+    setStepVelocity: storeSetStepVelocity,
+    stop: storeStop,
+    reset: storeReset,
+  } = useDrumStore();
 
   // Derived state: which loop to display (playing loop during playback, editing loop otherwise)
   const displayLoopIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
@@ -599,7 +607,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
 
     // Continue scheduling if still playing
     schedulerRef.current = requestAnimationFrame(scheduler);
-  }, [scheduleStep]);
+  }, [scheduleStep, setCurrentStep, setPlayingLoopIndex]);
 
   /**
    * Start playback
@@ -629,34 +637,22 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
         schedulerRef.current = null;
       }
     }
-  }, [isPlaying, currentStep, getAudioContext, scheduler]);
+  }, [isPlaying, currentStep, getAudioContext, scheduler, setIsPlaying]);
 
   /**
    * Stop playback
    */
   const stop = useCallback(() => {
-    setIsPlaying(false);
+    storeStop();
     isPlayingRef.current = false;
-    setCurrentStep(0);
     currentStepRef.current = 0;
-    setPlayingLoopIndex(0);
     currentPlayingLoopRef.current = 0;
     if (schedulerRef.current) {
       cancelAnimationFrame(schedulerRef.current);
       schedulerRef.current = null;
     }
-  }, []);
+  }, [storeStop]);
 
-  /**
-   * Show status message
-   */
-  const showStatus = useCallback(
-    (text: string, type: 'success' | 'error' | 'info') => {
-      setStatusMessage({ text, type });
-      setTimeout(() => setStatusMessage(null), 3000);
-    },
-    []
-  );
 
   /**
    * Clear all loops and reset to initial state
@@ -666,32 +662,20 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
     if (loops.length > 1) {
       showStatus(drum.clearAllLoops, 'info');
     }
-    // Reset to single empty loop
-    setLoops(createInitialLoops());
-    setLoopIds([1]);
-    setNextLoopId(2);
-    setCurrentLoopIndex(0);
-    setPlayingLoopIndex(0);
+    // Reset to initial state via store
+    storeReset();
     currentPlayingLoopRef.current = 0;
-  }, [loops.length, drum.clearAllLoops, showStatus]);
+  }, [loops.length, drum.clearAllLoops, showStatus, storeReset]);
 
   /**
    * Set a step velocity value in displayed loop (follows playback during play)
    */
   const setStepVelocity = useCallback(
     (inst: Instrument, step: number, velocity: number) => {
-      setLoops((prev) => {
-        const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
-        const newLoops = [...prev];
-        const newPattern = { ...newLoops[targetIndex] };
-        newPattern[inst] = newPattern[inst].map((val, i) =>
-          i === step ? velocity : val
-        );
-        newLoops[targetIndex] = newPattern;
-        return newLoops;
-      });
+      const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
+      storeSetStepVelocity(targetIndex, inst, step, velocity);
     },
-    [currentLoopIndex, isPlaying, playingLoopIndex]
+    [currentLoopIndex, isPlaying, playingLoopIndex, storeSetStepVelocity]
   );
 
   /**
@@ -864,18 +848,14 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
     (presetName: string) => {
       const preset = PRESETS[presetName];
       if (preset) {
-        setLoops((prev) => {
-          const newLoops = [...prev];
-          newLoops[currentLoopIndex] = copyPattern(preset);
-          return newLoops;
-        });
+        storeLoadPreset(currentLoopIndex, preset);
         showStatus(
           drum.loadedPreset.replace('{preset}', presetName),
           'success'
         );
       }
     },
-    [currentLoopIndex, drum.loadedPreset, showStatus]
+    [currentLoopIndex, drum.loadedPreset, showStatus, storeLoadPreset]
   );
 
   /**
@@ -909,11 +889,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
 
       if (result) {
         // Import into current loop
-        setLoops((prev) => {
-          const newLoops = [...prev];
-          newLoops[currentLoopIndex] = result.pattern;
-          return newLoops;
-        });
+        storeLoadPreset(currentLoopIndex, result.pattern);
         setTempo(result.tempo);
         showStatus(drum.importSuccess, 'success');
       } else {
@@ -923,7 +899,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       // Reset input so same file can be selected again
       e.target.value = '';
     },
-    [currentLoopIndex, drum.importSuccess, drum.importError, showStatus]
+    [currentLoopIndex, drum.importSuccess, drum.importError, showStatus, storeLoadPreset, setTempo]
   );
 
   /**
@@ -934,11 +910,9 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       showStatus(drum.maxLoopsReached, 'error');
       return;
     }
-    setLoops((prev) => [...prev, createEmptyPattern()]);
-    setLoopIds((prev) => [...prev, nextLoopId]);
-    setNextLoopId((prev) => prev + 1);
+    storeAddLoop();
     setCurrentLoopIndex(loops.length);
-  }, [loops.length, nextLoopId, drum.maxLoopsReached, showStatus]);
+  }, [loops.length, drum.maxLoopsReached, showStatus, storeAddLoop, setCurrentLoopIndex]);
 
   /**
    * Copy current loop and add as new loop
@@ -948,16 +922,15 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       showStatus(drum.maxLoopsReached, 'error');
       return;
     }
-    setLoops((prev) => [...prev, copyPattern(prev[currentLoopIndex])]);
-    setLoopIds((prev) => [...prev, nextLoopId]);
-    setNextLoopId((prev) => prev + 1);
+    storeCopyLoop(currentLoopIndex);
     setCurrentLoopIndex(loops.length);
   }, [
     loops.length,
     currentLoopIndex,
-    nextLoopId,
     drum.maxLoopsReached,
     showStatus,
+    storeCopyLoop,
+    setCurrentLoopIndex,
   ]);
 
   /**
@@ -965,65 +938,31 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
    */
   const removeCurrentLoop = useCallback(() => {
     if (loops.length <= 1) return; // Keep at least one loop
-    setLoops((prev) => prev.filter((_, i) => i !== currentLoopIndex));
-    setLoopIds((prev) => prev.filter((_, i) => i !== currentLoopIndex));
-    setCurrentLoopIndex((prev) => (prev > 0 ? prev - 1 : 0));
-  }, [loops.length, currentLoopIndex]);
+    storeRemoveLoop(currentLoopIndex);
+  }, [loops.length, currentLoopIndex, storeRemoveLoop]);
 
   /**
    * Move current loop left (swap with previous)
    */
   const moveLoopLeft = useCallback(() => {
     if (currentLoopIndex <= 0) return;
-    setLoops((prev) => {
-      const newLoops = [...prev];
-      [newLoops[currentLoopIndex - 1], newLoops[currentLoopIndex]] = [
-        newLoops[currentLoopIndex],
-        newLoops[currentLoopIndex - 1],
-      ];
-      return newLoops;
-    });
-    setLoopIds((prev) => {
-      const newIds = [...prev];
-      [newIds[currentLoopIndex - 1], newIds[currentLoopIndex]] = [
-        newIds[currentLoopIndex],
-        newIds[currentLoopIndex - 1],
-      ];
-      return newIds;
-    });
-    setCurrentLoopIndex((prev) => prev - 1);
-  }, [currentLoopIndex]);
+    reorderLoops(currentLoopIndex, currentLoopIndex - 1);
+  }, [currentLoopIndex, reorderLoops]);
 
   /**
    * Move current loop right (swap with next)
    */
   const moveLoopRight = useCallback(() => {
     if (currentLoopIndex >= loops.length - 1) return;
-    setLoops((prev) => {
-      const newLoops = [...prev];
-      [newLoops[currentLoopIndex], newLoops[currentLoopIndex + 1]] = [
-        newLoops[currentLoopIndex + 1],
-        newLoops[currentLoopIndex],
-      ];
-      return newLoops;
-    });
-    setLoopIds((prev) => {
-      const newIds = [...prev];
-      [newIds[currentLoopIndex], newIds[currentLoopIndex + 1]] = [
-        newIds[currentLoopIndex + 1],
-        newIds[currentLoopIndex],
-      ];
-      return newIds;
-    });
-    setCurrentLoopIndex((prev) => prev + 1);
-  }, [currentLoopIndex, loops.length]);
+    reorderLoops(currentLoopIndex, currentLoopIndex + 1);
+  }, [currentLoopIndex, loops.length, reorderLoops]);
 
   /**
    * Handle loop drag start
    */
   const handleLoopDragStart = useCallback((index: number) => {
     setDragLoopIndex(index);
-  }, []);
+  }, [setDragLoopIndex]);
 
   /**
    * Handle loop drag over
@@ -1034,7 +973,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
         setDragOverLoopIndex(index);
       }
     },
-    [dragLoopIndex]
+    [dragLoopIndex, setDragOverLoopIndex]
   );
 
   /**
@@ -1046,44 +985,18 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       dragOverLoopIndex !== null &&
       dragLoopIndex !== dragOverLoopIndex
     ) {
-      setLoops((prev) => {
-        const newLoops = [...prev];
-        const [draggedLoop] = newLoops.splice(dragLoopIndex, 1);
-        newLoops.splice(dragOverLoopIndex, 0, draggedLoop);
-        return newLoops;
-      });
-      // Reorder loop IDs to match
-      setLoopIds((prev) => {
-        const newIds = [...prev];
-        const [draggedId] = newIds.splice(dragLoopIndex, 1);
-        newIds.splice(dragOverLoopIndex, 0, draggedId);
-        return newIds;
-      });
-      // Update current loop index if needed
-      if (currentLoopIndex === dragLoopIndex) {
-        setCurrentLoopIndex(dragOverLoopIndex);
-      } else if (
-        dragLoopIndex < currentLoopIndex &&
-        dragOverLoopIndex >= currentLoopIndex
-      ) {
-        setCurrentLoopIndex((prev) => prev - 1);
-      } else if (
-        dragLoopIndex > currentLoopIndex &&
-        dragOverLoopIndex <= currentLoopIndex
-      ) {
-        setCurrentLoopIndex((prev) => prev + 1);
-      }
+      reorderLoops(dragLoopIndex, dragOverLoopIndex);
     }
     setDragLoopIndex(null);
     setDragOverLoopIndex(null);
-  }, [dragLoopIndex, dragOverLoopIndex, currentLoopIndex]);
+  }, [dragLoopIndex, dragOverLoopIndex, reorderLoops, setDragLoopIndex, setDragOverLoopIndex]);
 
   /**
    * Handle loop drag leave
    */
   const handleLoopDragLeave = useCallback(() => {
     setDragOverLoopIndex(null);
-  }, []);
+  }, [setDragOverLoopIndex]);
 
   /**
    * Handle tempo change
@@ -1094,15 +1007,15 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       setTempo(newTempo);
       // Scheduler will pick up new tempo automatically on next iteration
     },
-    []
+    [setTempo]
   );
 
   /**
    * Handle instrument volume change
    */
   const handleVolumeChange = useCallback((inst: Instrument, value: number) => {
-    setVolumes((prev) => ({ ...prev, [inst]: value }));
-  }, []);
+    setVolume(inst, value);
+  }, [setVolume]);
 
   /**
    * Cleanup on unmount
