@@ -1,4 +1,15 @@
 import { useEffect, useCallback, type RefObject } from 'react';
+import { onClickOutside, onEscapeKey, onScroll } from '../utils/dom';
+
+// Re-export DOM utilities for convenience
+export {
+  isClickOutside,
+  onClickOutside,
+  onEscapeKey,
+  onScroll,
+  focusElement,
+  containsNode,
+} from '../utils/dom';
 
 interface UseDropdownOptions {
   /** Ref to the container element */
@@ -33,52 +44,19 @@ export function useDropdown({
   // Close dropdown on click outside
   useEffect(() => {
     if (!isOpen || !closeOnClickOutside) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return onClickOutside(containerRef.current, onClose);
   }, [isOpen, closeOnClickOutside, containerRef, onClose]);
 
-  // Close dropdown on scroll (throttled to prevent cascading re-renders)
+  // Close dropdown on scroll (throttled)
   useEffect(() => {
     if (!isOpen || !closeOnScroll) return;
-
-    let throttleTimer: ReturnType<typeof setTimeout> | null = null;
-    const handleScroll = () => {
-      if (throttleTimer) return;
-      throttleTimer = setTimeout(() => {
-        onClose();
-        throttleTimer = null;
-      }, 50);
-    };
-    window.addEventListener('scroll', handleScroll, true);
-    return () => {
-      window.removeEventListener('scroll', handleScroll, true);
-      if (throttleTimer) clearTimeout(throttleTimer);
-    };
+    return onScroll(onClose, 50);
   }, [isOpen, closeOnScroll, onClose]);
 
   // Close dropdown on Escape key
   useEffect(() => {
     if (!isOpen || !closeOnEscape) return;
-
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-        buttonRef?.current?.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    return onEscapeKey(onClose, buttonRef?.current);
   }, [isOpen, closeOnEscape, buttonRef, onClose]);
 }
 
