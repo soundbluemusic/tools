@@ -13,3 +13,15 @@ export {
 export { getSizeClass, SIZE_CLASSES, type Size } from './sizeClass';
 export { copyToClipboard } from './clipboard';
 export { debounce, type DebouncedFunction } from './debounce';
+export {
+  type Theme,
+  THEMES,
+  THEME_STORAGE_KEY,
+  isTheme,
+  getSystemTheme,
+  getStoredTheme,
+  getInitialTheme,
+  saveTheme,
+  applyTheme,
+  getOppositeTheme,
+} from './theme';
