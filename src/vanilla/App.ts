@@ -6,7 +6,7 @@ import { router } from '../core/Router';
 import type { RouteConfig } from '../core/Router';
 import { themeStore, languageStore } from '../core/Store';
 import { NavigationLayout } from './layouts/NavigationLayout';
-import type { SidebarApp } from './components';
+import { APPS } from './config';
 import {
   NotFoundPage,
   HomePage,
@@ -16,32 +16,6 @@ import {
   OpenSourcePage,
   ToolsUsedPage,
 } from './pages';
-
-/**
- * App list for navigation sidebar
- */
-const APPS: SidebarApp[] = [
-  {
-    url: '/metronome',
-    name: { ko: '메트로놈', en: 'Metronome' },
-    icon: '🎵',
-  },
-  {
-    url: '/drum',
-    name: { ko: '드럼머신', en: 'Drum Machine' },
-    icon: '🥁',
-  },
-  {
-    url: '/drum-synth',
-    name: { ko: '드럼 신스', en: 'Drum Synth' },
-    icon: '🎛️',
-  },
-  {
-    url: '/qr',
-    name: { ko: 'QR 코드', en: 'QR Code' },
-    icon: '📱',
-  },
-];
 
 /**
  * Route configuration

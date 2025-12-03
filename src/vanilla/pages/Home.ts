@@ -1,15 +1,19 @@
 /**
  * Home Page - Vanilla TypeScript
- * Placeholder for main dashboard
+ * Main dashboard with dynamic app grid
  */
 import { Component, html } from '../../core';
+import { router } from '../../core/Router';
 import { languageStore } from '../../core/Store';
+import { getAppsSorted } from '../config';
+import type { AppConfig } from '../config';
 
 export class HomePage extends Component {
   protected render(): string {
     const language = languageStore.getState().language;
+    const apps = getAppsSorted();
 
-    const title = language === 'ko' ? 'Tools' : 'Tools';
+    const title = 'Tools';
     const description =
       language === 'ko'
         ? '무료 온라인 도구 모음'
@@ -22,72 +26,10 @@ export class HomePage extends Component {
           <p class="text-text-secondary text-lg">${description}</p>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <!-- Metronome -->
-          <a
-            href="/metronome"
-            class="block p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-border-primary transition-colors"
-            data-link
-          >
-            <span class="text-3xl mb-2 block">🎵</span>
-            <h2 class="text-lg font-semibold text-text-primary mb-1">
-              ${language === 'ko' ? '메트로놈' : 'Metronome'}
-            </h2>
-            <p class="text-sm text-text-secondary">
-              ${language === 'ko'
-                ? '정밀한 박자 연습 도구'
-                : 'Precision tempo practice tool'}
-            </p>
-          </a>
-
-          <!-- Drum Machine -->
-          <a
-            href="/drum"
-            class="block p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-border-primary transition-colors"
-            data-link
-          >
-            <span class="text-3xl mb-2 block">🥁</span>
-            <h2 class="text-lg font-semibold text-text-primary mb-1">
-              ${language === 'ko' ? '드럼머신' : 'Drum Machine'}
-            </h2>
-            <p class="text-sm text-text-secondary">
-              ${language === 'ko'
-                ? '16스텝 드럼 시퀀서'
-                : '16-step drum sequencer'}
-            </p>
-          </a>
-
-          <!-- Drum Synth -->
-          <a
-            href="/drum-synth"
-            class="block p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-border-primary transition-colors"
-            data-link
-          >
-            <span class="text-3xl mb-2 block">🎛️</span>
-            <h2 class="text-lg font-semibold text-text-primary mb-1">
-              ${language === 'ko' ? '드럼 신스' : 'Drum Synth'}
-            </h2>
-            <p class="text-sm text-text-secondary">
-              ${language === 'ko'
-                ? '드럼 사운드 신디사이저'
-                : 'Drum sound synthesizer'}
-            </p>
-          </a>
-
-          <!-- QR Code -->
-          <a
-            href="/qr"
-            class="block p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-border-primary transition-colors"
-            data-link
-          >
-            <span class="text-3xl mb-2 block">📱</span>
-            <h2 class="text-lg font-semibold text-text-primary mb-1">
-              ${language === 'ko' ? 'QR 코드' : 'QR Code'}
-            </h2>
-            <p class="text-sm text-text-secondary">
-              ${language === 'ko' ? 'QR 코드 생성기' : 'QR code generator'}
-            </p>
-          </a>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        >
+          ${apps.map((app) => this.renderAppCard(app, language)).join('')}
         </div>
 
         <p class="mt-8 text-center text-sm text-text-tertiary">
@@ -97,5 +39,37 @@ export class HomePage extends Component {
         </p>
       </div>
     `;
+  }
+
+  private renderAppCard(app: AppConfig, language: 'ko' | 'en'): string {
+    return html`
+      <a
+        href="${app.url}"
+        class="group block p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-accent-primary hover:shadow-lg transition-all duration-200"
+        data-link
+      >
+        <span class="text-3xl mb-3 block">${app.icon}</span>
+        <h2
+          class="text-lg font-semibold text-text-primary mb-1 group-hover:text-accent-primary transition-colors"
+        >
+          ${language === 'ko' ? app.name.ko : app.name.en}
+        </h2>
+        <p class="text-sm text-text-secondary">
+          ${language === 'ko' ? app.desc.ko : app.desc.en}
+        </p>
+      </a>
+    `;
+  }
+
+  protected onMount(): void {
+    // SPA navigation for app cards
+    this.addEventListener(this.element!, 'click', (e: Event) => {
+      const target = e.target as HTMLElement;
+      const link = target.closest('a[data-link]') as HTMLAnchorElement;
+      if (link) {
+        e.preventDefault();
+        router.navigate(link.pathname);
+      }
+    });
   }
 }
