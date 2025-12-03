@@ -185,7 +185,7 @@ export class Sidebar extends Component<SidebarProps> {
     `;
   }
 
-  protected onMount(): void {
+  protected bindEvents(): void {
     // SPA navigation for all links
     this.addEventListener(this.element!, 'click', (e: Event) => {
       const target = e.target as HTMLElement;
@@ -195,7 +195,9 @@ export class Sidebar extends Component<SidebarProps> {
         router.navigate(link.pathname);
       }
     });
+  }
 
+  protected onMount(): void {
     // Subscribe to route changes to update active state
     router.subscribe(() => {
       this.update();

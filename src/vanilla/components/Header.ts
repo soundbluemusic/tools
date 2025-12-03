@@ -183,44 +183,36 @@ export class Header extends Component<HeaderProps> {
     `;
   }
 
-  protected onMount(): void {
+  protected bindEvents(): void {
     // Theme toggle
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn) {
-      this.addEventListener(themeBtn, 'click', () => {
-        const current = themeStore.getState().theme;
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-        themeStore.setState({ theme: newTheme });
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.setAttribute('data-theme', newTheme);
-        this.update();
-      });
-    }
+    this.addEventListenerById('theme-toggle', 'click', () => {
+      const current = themeStore.getState().theme;
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      themeStore.setState({ theme: newTheme });
+      localStorage.setItem('theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
+      this.update();
+    });
 
     // Language toggle
-    const langBtn = document.getElementById('lang-toggle');
-    if (langBtn) {
-      this.addEventListener(langBtn, 'click', () => {
-        const current = languageStore.getState().language;
-        const newLang = current === 'ko' ? 'en' : 'ko';
-        languageStore.setState({ language: newLang });
-        localStorage.setItem('language', newLang);
-        this.update();
-      });
-    }
+    this.addEventListenerById('lang-toggle', 'click', () => {
+      const current = languageStore.getState().language;
+      const newLang = current === 'ko' ? 'en' : 'ko';
+      languageStore.setState({ language: newLang });
+      localStorage.setItem('language', newLang);
+      this.update();
+    });
 
     // Search button
-    const searchBtn = document.getElementById('search-btn');
-    if (searchBtn && this.props.onSearchClick) {
-      this.addEventListener(searchBtn, 'click', () => {
+    if (this.props.onSearchClick) {
+      this.addEventListenerById('search-btn', 'click', () => {
         (this.props.onSearchClick as () => void)();
       });
     }
 
     // Sidebar toggle
-    const sidebarBtn = document.getElementById('sidebar-toggle');
-    if (sidebarBtn && this.props.onSidebarToggle) {
-      this.addEventListener(sidebarBtn, 'click', () => {
+    if (this.props.onSidebarToggle) {
+      this.addEventListenerById('sidebar-toggle', 'click', () => {
         (this.props.onSidebarToggle as () => void)();
       });
     }
