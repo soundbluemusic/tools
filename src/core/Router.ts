@@ -180,22 +180,22 @@ class RouterClass {
     }
 
     try {
-      // Load component (supports lazy loading)
+      // Load component (supports lazy loading and direct instances)
       const result = route.component();
-      let ComponentClass: new () => Component;
+      let component: Component;
 
       if (result instanceof Promise) {
+        // Lazy loading: returns Promise<{ default: ComponentClass }>
         const module = await result;
-        ComponentClass = module.default;
+        const ComponentClass = module.default;
+        component = new ComponentClass();
       } else {
-        ComponentClass = (
-          result as unknown as { constructor: new () => Component }
-        ).constructor as new () => Component;
+        // Direct instance: component() returns new SomePage()
+        component = result as Component;
       }
 
       // Mount new component
       if (this.container) {
-        const component = new ComponentClass();
         component.mount(this.container);
         this.currentComponent = component;
       }
