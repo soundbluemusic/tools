@@ -113,7 +113,11 @@ function AppContent() {
   return (
     <NavigationLayout apps={apps}>
       <SkipLink />
-      <main id="main-content" className="main-content" role="main">
+      <main
+        id="main-content"
+        role="main"
+        style={{ viewTransitionName: 'main-content' }}
+      >
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {ROUTES.map((route) => (
