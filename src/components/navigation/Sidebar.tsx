@@ -4,7 +4,6 @@ import { useLanguage } from '../../i18n';
 import { useIsActive } from '../../hooks';
 import { MUSIC_APP_PATHS, COMBINED_APP_PATHS } from '../../constants/apps';
 import type { App } from '../../types';
-import './Sidebar.css';
 
 interface SidebarProps {
   apps: App[];
@@ -44,29 +43,41 @@ export const Sidebar = memo(function Sidebar({
   );
 
   return (
-    <aside className={`sidebar${isOpen ? '' : ' collapsed'}`}>
-      <nav className="sidebar-nav">
+    <aside
+      className={`hidden lg:flex lg:fixed lg:top-14 lg:left-0 lg:bottom-0 lg:flex-col bg-bg-primary overflow-y-auto overflow-x-hidden z-50 ${
+        isOpen
+          ? 'lg:w-sidebar lg:border-r lg:border-border-primary'
+          : 'lg:w-0 lg:border-r-0 lg:overflow-hidden'
+      }`}
+    >
+      <nav className="flex flex-col py-3 px-2">
         {/* Home */}
         <NavLink
           to={localizedPath('/')}
-          className={`sidebar-item ${isActive('/') ? 'active' : ''}`}
+          className={`flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${
+            isActive('/')
+              ? 'bg-interactive-active text-text-primary font-medium'
+              : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'
+          }`}
         >
-          <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
+          <svg
+            className="w-6 h-6 flex-shrink-0"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
             {isActive('/') ? (
               <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z" />
             ) : (
               <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4zm2-2h2v-6h8v6h2V11l-6-5.25L6 11v8z" />
             )}
           </svg>
-          <span className="sidebar-label">
-            {language === 'ko' ? '홈' : 'Home'}
-          </span>
+          <span className="truncate">{language === 'ko' ? '홈' : 'Home'}</span>
         </NavLink>
 
-        <div className="sidebar-divider" />
+        <div className="h-px mx-3 my-2 bg-border-primary" />
 
         {/* Music Section */}
-        <div className="sidebar-section-title">
+        <div className="pt-4 pb-2 px-3 text-text-tertiary text-[11px] font-semibold uppercase tracking-wide">
           {language === 'ko' ? '음악 도구' : 'Music Tools'}
         </div>
 
@@ -74,19 +85,25 @@ export const Sidebar = memo(function Sidebar({
           <NavLink
             key={app.url}
             to={localizedPath(app.url)}
-            className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
+            className={`flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${
+              isActive(app.url)
+                ? 'bg-interactive-active text-text-primary font-medium'
+                : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'
+            }`}
           >
-            <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
-            <span className="sidebar-label">
+            <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center text-lg">
+              {app.icon}
+            </span>
+            <span className="truncate">
               {language === 'ko' ? app.name.ko : app.name.en}
             </span>
           </NavLink>
         ))}
 
-        <div className="sidebar-divider" />
+        <div className="h-px mx-3 my-2 bg-border-primary" />
 
         {/* Combined Tools */}
-        <div className="sidebar-section-title">
+        <div className="pt-4 pb-2 px-3 text-text-tertiary text-[11px] font-semibold uppercase tracking-wide">
           {language === 'ko' ? '결합 도구' : 'Combined Tools'}
         </div>
 
@@ -94,19 +111,25 @@ export const Sidebar = memo(function Sidebar({
           <NavLink
             key={app.url}
             to={localizedPath(app.url)}
-            className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
+            className={`flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${
+              isActive(app.url)
+                ? 'bg-interactive-active text-text-primary font-medium'
+                : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'
+            }`}
           >
-            <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
-            <span className="sidebar-label">
+            <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center text-lg">
+              {app.icon}
+            </span>
+            <span className="truncate">
               {language === 'ko' ? app.name.ko : app.name.en}
             </span>
           </NavLink>
         ))}
 
-        <div className="sidebar-divider" />
+        <div className="h-px mx-3 my-2 bg-border-primary" />
 
         {/* Other Tools */}
-        <div className="sidebar-section-title">
+        <div className="pt-4 pb-2 px-3 text-text-tertiary text-[11px] font-semibold uppercase tracking-wide">
           {language === 'ko' ? '기타 도구' : 'Other Tools'}
         </div>
 
@@ -114,26 +137,40 @@ export const Sidebar = memo(function Sidebar({
           <NavLink
             key={app.url}
             to={localizedPath(app.url)}
-            className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
+            className={`flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${
+              isActive(app.url)
+                ? 'bg-interactive-active text-text-primary font-medium'
+                : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'
+            }`}
           >
-            <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
-            <span className="sidebar-label">
+            <span className="w-6 h-6 flex-shrink-0 flex items-center justify-center text-lg">
+              {app.icon}
+            </span>
+            <span className="truncate">
               {language === 'ko' ? app.name.ko : app.name.en}
             </span>
           </NavLink>
         ))}
 
-        <div className="sidebar-divider" />
+        <div className="h-px mx-3 my-2 bg-border-primary" />
 
         {/* Downloads */}
         <NavLink
           to={localizedPath('/downloads')}
-          className={`sidebar-item ${isActive('/downloads') ? 'active' : ''}`}
+          className={`flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${
+            isActive('/downloads')
+              ? 'bg-interactive-active text-text-primary font-medium'
+              : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'
+          }`}
         >
-          <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
+          <svg
+            className="w-6 h-6 flex-shrink-0"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
             <path d="M5 20h14v-2H5v2zm7-18v12.17l3.59-3.58L17 12l-5 5-5-5 1.41-1.41L12 14.17V2z" />
           </svg>
-          <span className="sidebar-label">
+          <span className="truncate">
             {language === 'ko' ? '다운로드' : 'Downloads'}
           </span>
         </NavLink>
@@ -141,12 +178,20 @@ export const Sidebar = memo(function Sidebar({
         {/* Menu / Settings */}
         <NavLink
           to={localizedPath('/sitemap')}
-          className={`sidebar-item ${isActive('/sitemap') ? 'active' : ''}`}
+          className={`flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${
+            isActive('/sitemap')
+              ? 'bg-interactive-active text-text-primary font-medium'
+              : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'
+          }`}
         >
-          <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
+          <svg
+            className="w-6 h-6 flex-shrink-0"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
           </svg>
-          <span className="sidebar-label">
+          <span className="truncate">
             {language === 'ko' ? '메뉴' : 'Menu'}
           </span>
         </NavLink>

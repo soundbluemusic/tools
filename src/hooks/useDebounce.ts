@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+// Re-export pure debounce utility for non-React usage
+export { debounce, type DebouncedFunction } from '../utils/debounce';
+
 /**
  * Custom hook that debounces a value
  * @param value - Value to debounce

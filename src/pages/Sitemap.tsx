@@ -4,7 +4,6 @@ import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
 import { useSEO } from '../hooks';
 import { APPS, BRAND } from '../constants';
-import './Sitemap.css';
 
 interface SitemapSection {
   title: { ko: string; en: string };
@@ -170,40 +169,53 @@ const Sitemap = memo(function Sitemap() {
       title={pageContent.title[language]}
       description={pageContent.description[language]}
     >
-      <div className="sitemap-container">
+      <div className="mx-auto flex max-w-3xl flex-col gap-10">
         {/* Sitemap Sections */}
         {sections.map((section, sectionIndex) => (
-          <section key={sectionIndex} className="sitemap-section">
-            <h2 className="sitemap-section-title">{section.title[language]}</h2>
-            <p className="sitemap-section-desc">
+          <section
+            key={sectionIndex}
+            className="rounded-xl border border-border-primary bg-item-hover p-6 sm:p-4"
+          >
+            <h2 className="m-0 mb-2 border-b border-border-primary pb-3 text-xl font-semibold text-text-primary">
+              {section.title[language]}
+            </h2>
+            <p className="m-0 mb-5 text-sm opacity-80 text-text-secondary">
               {section.description[language]}
             </p>
-            <ul className="sitemap-list">
+            <ul className="m-0 flex list-none flex-col gap-4 p-0">
               {section.items.map((item, itemIndex) => (
-                <li key={itemIndex} className="sitemap-item">
+                <li
+                  key={itemIndex}
+                  className="rounded-lg border border-border-primary bg-bg-primary p-4 transition-all duration-fast hover:border-text-secondary hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
+                >
                   {item.isExternal ? (
                     <a
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="sitemap-link sitemap-link-external"
+                      className="inline-flex items-center gap-2 text-base font-medium text-text-primary no-underline transition-colors duration-fast hover:text-accent-primary"
                     >
-                      <span className="sitemap-link-name">
+                      <span className="border-b border-transparent transition-colors duration-fast hover:border-current">
                         {item.name[language]}
                       </span>
-                      <span className="sitemap-link-external-icon">↗</span>
+                      <span className="inline-flex items-center gap-1 text-xs opacity-60 transition-opacity duration-fast hover:opacity-100">
+                        ↗
+                      </span>
                     </a>
                   ) : (
-                    <Link to={item.url} className="sitemap-link">
-                      <span className="sitemap-link-name">
+                    <Link
+                      to={item.url}
+                      className="inline-flex items-center gap-2 text-base font-medium text-text-primary no-underline transition-colors duration-fast hover:text-accent-primary"
+                    >
+                      <span className="border-b border-transparent transition-colors duration-fast hover:border-current">
                         {item.name[language]}
                       </span>
                     </Link>
                   )}
-                  <p className="sitemap-item-desc">
+                  <p className="m-0 mt-2 mb-3 text-sm leading-6 text-text-secondary">
                     {item.description[language]}
                   </p>
-                  <span className="sitemap-item-url">
+                  <span className="block break-all font-mono text-xs text-text-secondary opacity-60">
                     {BRAND.siteUrl}
                     {item.url}
                   </span>
@@ -214,15 +226,17 @@ const Sitemap = memo(function Sitemap() {
         ))}
 
         {/* XML Sitemap Link */}
-        <div className="sitemap-xml-section">
+        <div className="flex justify-center border-t border-border-primary pt-4">
           <a
             href="/sitemap.xml"
             target="_blank"
             rel="noopener noreferrer"
-            className="sitemap-xml-link"
+            className="inline-flex items-center gap-2 rounded-lg border border-border-primary bg-item-hover px-6 py-3 text-sm font-medium text-text-secondary no-underline transition-all duration-fast hover:border-text-secondary hover:bg-bg-primary hover:text-text-primary"
           >
             {pageContent.xmlSitemap[language]}
-            <span className="sitemap-xml-icon">↗</span>
+            <span className="text-xs opacity-60 transition-opacity duration-fast hover:opacity-100">
+              ↗
+            </span>
           </a>
         </div>
       </div>
