@@ -1,0 +1,17 @@
+/**
+ * Standalone Drum Synth - Vanilla TypeScript Entry Point
+ */
+import { initTheme } from '../common/standaloneSettings';
+import { StandaloneDrumSynthApp } from './App';
+
+// Initialize theme before rendering
+initTheme('drum-synth');
+
+// Mount the app when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  const root = document.getElementById('root');
+  if (root) {
+    const app = new StandaloneDrumSynthApp();
+    app.mount(root);
+  }
+});

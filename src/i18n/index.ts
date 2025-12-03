@@ -1,5 +1,7 @@
-// Context and hooks
-export { LanguageProvider, useLanguage, useTranslations } from './context';
+/**
+ * i18n module - Vanilla TypeScript
+ * Types and translations for internationalization
+ */
 
 // Types
 export type {
@@ -7,5 +9,15 @@ export type {
   Translations,
   CommonTranslation,
   QRTranslation,
+  DrumTranslation,
+  DrumSynthTranslation,
+  MetronomeTranslation,
   AllTranslations,
 } from './types';
+
+// Translations
+export * from './translations/common';
+export * from './translations/metronome';
+export * from './translations/drum';
+export * from './translations/drum-synth';
+export * from './translations/qr';

@@ -1,8 +1,7 @@
 /**
- * Test Setup File
+ * Test Setup File - Vanilla TypeScript
  * Runs before all tests
  */
-import { beforeAll, afterAll } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Mock window.matchMedia
@@ -45,23 +44,39 @@ class IntersectionObserverMock {
 
 window.IntersectionObserver = IntersectionObserverMock;
 
-// Suppress console errors during tests
-const originalError = console.error;
-beforeAll(() => {
-  console.error = (...args: unknown[]) => {
-    // Filter out known React warnings in tests
-    if (
-      typeof args[0] === 'string' &&
-      (args[0].includes('Warning: ReactDOM.render') ||
-        args[0].includes('Warning: An update to') ||
-        args[0].includes('act(...)'))
-    ) {
-      return;
-    }
-    originalError(...args);
-  };
-});
+// Mock AudioContext for Web Audio API tests
+class AudioContextMock {
+  state = 'running';
+  currentTime = 0;
+  destination = {};
 
-afterAll(() => {
-  console.error = originalError;
-});
+  createOscillator() {
+    return {
+      connect: () => {},
+      start: () => {},
+      stop: () => {},
+      frequency: { value: 440 },
+    };
+  }
+
+  createGain() {
+    return {
+      connect: () => {},
+      gain: {
+        value: 1,
+        setValueAtTime: () => {},
+        exponentialRampToValueAtTime: () => {},
+      },
+    };
+  }
+
+  resume() {
+    return Promise.resolve();
+  }
+
+  close() {
+    return Promise.resolve();
+  }
+}
+
+window.AudioContext = AudioContextMock as unknown as typeof AudioContext;

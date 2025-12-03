@@ -1,9 +1,9 @@
 {
   "name": "tools",
   "private": true,
-  "version": "0.1.11-베타",
+  "version": "0.1.12-베타",
   "type": "module",
-  "description": "A collection of utility tools built with React",
+  "description": "A collection of utility tools built with vanilla TypeScript",
   "author": "Tools Team",
   "license": "MIT",
   "homepage": "https://tools.soundbluemusic.com",
@@ -15,7 +15,6 @@
     "url": "https://github.com/soundbluemusic/tools/issues"
   },
   "keywords": [
-    "react",
     "typescript",
     "vite",
     "metronome",
@@ -23,17 +22,18 @@
     "qr-code",
     "web-audio",
     "pwa",
-    "music-tools"
+    "music-tools",
+    "tailwindcss"
   ],
   "scripts": {
     "dev": "vite",
     "prebuild": "npm run generate-sitemap",
     "build": "tsc -b && vite build && npm run build:standalone:all",
     "preview": "vite preview",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.{ts,css,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,css,json}\"",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
@@ -59,29 +59,18 @@
     "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
   },
   "dependencies": {
-    "qrious": "^4.0.2",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "react-router-dom": "^7.9.6"
+    "qrious": "^4.0.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
     "@playwright/test": "^1.48.0",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.5.2",
     "@types/node": "^24.10.1",
-    "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
     "autoprefixer": "^10.4.22",
-    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.9.0",
-    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
     "jiti": "^2.6.1",
@@ -103,7 +92,7 @@
     "node": ">=18.0.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "*.ts": [
       "eslint --fix",
       "prettier --write"
     ],

@@ -1,5 +1,5 @@
 /**
- * Core Application Type Definitions
+ * Core Application Type Definitions - Vanilla TypeScript
  * Using readonly for immutability optimization
  */
 
@@ -77,9 +77,6 @@ export type DeepReadonly<T> = T extends object
   ? { readonly [P in keyof T]: DeepReadonly<T[P]> }
   : T;
 
-/** Extract props type from a component */
-export type PropsOf<C> = C extends React.ComponentType<infer P> ? P : never;
-
 /** Make all properties nullable */
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
 
@@ -95,14 +92,14 @@ export interface BaseComponentProps {
   'data-testid'?: string;
 }
 
-/** Props with children */
+/** Props with children (vanilla - using string) */
 export interface WithChildren {
-  children: React.ReactNode;
+  children: string;
 }
 
 /** Props with optional children */
 export interface WithOptionalChildren {
-  children?: React.ReactNode;
+  children?: string;
 }
 
 // ============================================
@@ -161,22 +158,29 @@ export function createAsyncState<T>(): AsyncState<T> {
 }
 
 // ============================================
-// Event Types
+// Event Types (Vanilla TypeScript)
 // ============================================
 
 /** Mouse event handler */
-export type MouseEventHandler<T = HTMLElement> = React.MouseEventHandler<T>;
+export type MouseEventHandler<T extends HTMLElement = HTMLElement> = (
+  event: MouseEvent & { currentTarget: T }
+) => void;
 
 /** Keyboard event handler */
-export type KeyboardEventHandler<T = HTMLElement> =
-  React.KeyboardEventHandler<T>;
+export type KeyboardEventHandler<T extends HTMLElement = HTMLElement> = (
+  event: KeyboardEvent & { currentTarget: T }
+) => void;
 
 /** Change event handler */
-export type ChangeEventHandler<T = HTMLInputElement> =
-  React.ChangeEventHandler<T>;
+export type ChangeEventHandler<T extends HTMLInputElement = HTMLInputElement> =
+  (event: Event & { currentTarget: T }) => void;
 
 /** Focus event handler */
-export type FocusEventHandler<T = HTMLElement> = React.FocusEventHandler<T>;
+export type FocusEventHandler<T extends HTMLElement = HTMLElement> = (
+  event: FocusEvent & { currentTarget: T }
+) => void;
 
 /** Form event handler */
-export type FormEventHandler<T = HTMLFormElement> = React.FormEventHandler<T>;
+export type FormEventHandler<T extends HTMLFormElement = HTMLFormElement> = (
+  event: Event & { currentTarget: T }
+) => void;

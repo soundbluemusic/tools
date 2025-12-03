@@ -59,12 +59,7 @@ export abstract class Component<
   /**
    * Override to run after each update
    */
-  protected onUpdate(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _prevState: TState,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _prevProps: TProps
-  ): void {}
+  protected onUpdate(_prevState: TState, _prevProps: TProps): void {}
 
   /**
    * Mount the component to a target element

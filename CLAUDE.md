@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
+**Tools** is a vanilla TypeScript + Vite + Tailwind CSS single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
 
 **Current Tools:**
 
@@ -21,20 +21,29 @@
 
 ## Technology Stack
 
-| Category     | Technology                     | Version |
-| ------------ | ------------------------------ | ------- |
-| Framework    | React                          | ^19.2.0 |
-| Routing      | React Router DOM               | ^7.9.6  |
-| Language     | TypeScript                     | ^5.5.3  |
-| Build Tool   | Vite                           | ^7.2.6  |
-| Unit Testing | Vitest + React Testing Library | ^4.0.14 |
-| E2E Testing  | Playwright                     | ^1.48.0 |
-| Linting      | ESLint                         | ^9.9.0  |
-| Formatting   | Prettier                       | ^3.4.2  |
-| PWA          | vite-plugin-pwa                | ^1.2.0  |
-| Deployment   | Cloudflare Pages               | -       |
+| Category     | Technology       | Version |
+| ------------ | ---------------- | ------- |
+| Language     | TypeScript       | ^5.5.3  |
+| Build Tool   | Vite             | ^7.2.6  |
+| CSS          | Tailwind CSS     | ^3.4.18 |
+| PostCSS      | PostCSS          | ^8.5.6  |
+| Unit Testing | Vitest           | ^4.0.14 |
+| E2E Testing  | Playwright       | ^1.48.0 |
+| Linting      | ESLint           | ^9.9.0  |
+| Formatting   | Prettier         | ^3.4.2  |
+| PWA          | vite-plugin-pwa  | ^1.2.0  |
+| Deployment   | Cloudflare Pages | -       |
 
 **Node.js Requirement:** >=18.0.0
+
+**Core Technologies (6 only):**
+
+1. Node.js (npm included)
+2. Vite
+3. TypeScript
+4. Tailwind CSS
+5. PostCSS (Tailwind dependency)
+6. Browser API (Web Standard)
 
 ## Directory Structure
 
@@ -42,69 +51,42 @@
 src/
 ├── apps/                    # Feature modules (auto-loaded via glob)
 │   └── [app-name]/
-│       ├── config.ts        # App metadata (bilingual name/desc, icon, size, order)
-│       ├── constants.ts     # App-specific constants
-│       ├── components/      # App-specific components
-│       └── utils/           # App-specific utilities
+│       └── config.ts        # App metadata (bilingual name/desc, icon, size, order)
 │
-├── components/              # Shared React components
-│   ├── layout/              # Layout components (Container, Layout, PageLayout)
-│   ├── navigation/          # Navigation system
-│   │   ├── Sidebar.tsx      # Desktop sidebar navigation
-│   │   ├── BottomNav.tsx    # Mobile bottom navigation
-│   │   ├── CommandPalette.tsx # Cmd+K quick navigation
-│   │   └── NavigationLayout.tsx # Main navigation wrapper
-│   ├── ui/                  # Primitive UI components
-│   │   ├── Button.tsx       # Button with variants
-│   │   ├── Input.tsx        # Input field
-│   │   ├── Select.tsx       # Select dropdown
-│   │   ├── Loader.tsx       # Loading spinner
-│   │   └── Skeleton.tsx     # Skeleton loading states
-│   ├── AppCard.tsx          # App card with hover prefetch
-│   ├── AppGrid.tsx          # Memoized grid container
-│   ├── AppList.tsx          # List view for apps
-│   ├── AppItem.tsx          # Individual app item
-│   ├── Breadcrumb.tsx       # Page breadcrumb navigation
-│   ├── Header.tsx           # Page header component
-│   ├── Footer.tsx           # Site footer
-│   ├── ErrorBoundary.tsx    # Error catching with HOC wrapper
-│   ├── LanguageToggle.tsx   # Language switch button
-│   ├── ThemeToggle.tsx      # Dark/Light mode toggle
-│   ├── SkipLink.tsx         # Accessibility skip navigation
-│   ├── ShareButton.tsx      # Social sharing button
-│   └── EmbedButton.tsx      # Embed code generator
+├── core/                    # Vanilla TypeScript core framework
+│   ├── Component.ts         # Base Component class
+│   ├── Router.ts            # Client-side routing
+│   ├── Store.ts             # State management
+│   └── index.ts             # Barrel export
 │
-├── pages/                   # Route page components
-│   ├── Home.tsx             # Main dashboard with search/sort
-│   ├── Metronome.tsx
-│   ├── Drum.tsx
-│   ├── DrumSynth.tsx
-│   ├── QR.tsx
-│   ├── Sitemap.tsx
-│   ├── OpenSource.tsx
-│   ├── ToolsUsed.tsx
-│   ├── Privacy.tsx
-│   ├── Terms.tsx
-│   └── NotFound.tsx
+├── vanilla/                 # Vanilla TypeScript app implementation
+│   ├── main.ts              # App entry point
+│   ├── App.ts               # Root component
+│   ├── apps/                # Tool implementations
+│   │   ├── metronome/       # Metronome player
+│   │   ├── drum/            # Drum machine
+│   │   ├── drum-synth/      # Drum synthesizer
+│   │   └── qr/              # QR code generator
+│   ├── components/          # Shared UI components
+│   │   ├── navigation/      # Sidebar, BottomNav, CommandPalette
+│   │   ├── layout/          # PageLayout, Container
+│   │   └── ui/              # Button, Input, Select, etc.
+│   └── pages/               # Route page components
 │
-├── hooks/                   # Custom React hooks
-│   ├── useSearch.ts         # Searchable lists with deferred value
-│   ├── useSort.ts           # Sorting logic
-│   ├── useDebounce.ts       # Debounce utility
-│   ├── useLocalStorage.ts   # localStorage persistence + cross-tab sync
-│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useIsMobile, useReducedMotion)
-│   ├── useTheme.tsx         # Theme context (ThemeProvider)
-│   ├── useApps.tsx          # Apps context (AppsProvider) for lazy-loaded apps
-│   ├── useSEO.ts            # SEO meta tags management
-│   ├── useViewTransition.ts # View Transitions API support
-│   └── useA11y.ts           # Accessibility hooks (useFocusTrap, useArrowNavigation, useAnnounce)
+├── standalone/              # Standalone single-file app builds
+│   ├── common/              # Shared standalone utilities
+│   │   ├── base.css         # Base styles
+│   │   └── standaloneSettings.ts # Theme/language settings
+│   ├── metronome/           # Standalone metronome
+│   ├── drum/                # Standalone drum machine
+│   ├── drum-synth/          # Standalone drum synth
+│   └── qr/                  # Standalone QR generator
 │
 ├── i18n/                    # Internationalization
-│   ├── context.tsx          # Language context provider
 │   ├── types.ts             # Translation type definitions
 │   ├── index.ts             # Barrel export
 │   └── translations/        # Translation files
-│       ├── common.ts        # Shared translations
+│       ├── common.ts
 │       ├── metronome.ts
 │       ├── drum.ts
 │       ├── drum-synth.ts
@@ -112,14 +94,14 @@ src/
 │
 ├── constants/               # App metadata and constants
 │   ├── apps.ts              # Auto-loaded app list (uses import.meta.glob)
-│   ├── sortOptions.ts       # Sort options for app list
 │   └── index.ts             # Barrel export
 │
 ├── utils/                   # Utility functions
 │   ├── cn.ts                # ClassNames utility
 │   ├── format.ts            # Formatting utilities
 │   ├── storage.ts           # localStorage helpers
-│   └── sizeClass.ts         # Size class utilities
+│   ├── debounce.ts          # Debounce utility
+│   └── dom.ts               # DOM manipulation helpers
 │
 ├── types/                   # TypeScript type definitions
 │   ├── index.ts             # Core interfaces (App, AppConfig, etc.)
@@ -132,83 +114,89 @@ src/
 │   ├── base.css             # Base/reset styles
 │   └── components.css       # Component styles
 │
-├── test/                    # Testing utilities
-│   ├── setup.ts             # Vitest setup (mocks browser APIs)
-│   └── test-utils.tsx       # Custom render functions
-│
-├── App.tsx                  # Root component with routing
-├── App.css                  # App-level styles
-└── main.tsx                 # React app entry point
+└── test/                    # Testing utilities
+    └── setup.ts             # Vitest setup (mocks browser APIs)
 
 scripts/                     # Build utilities
-├── generate-icons.mjs       # Generate PWA icons
-├── generate-og-image.mjs    # Generate OpenGraph images
-└── convert-to-webp.mjs      # Convert images to WebP format
+├── generate-icons.ts        # Generate PWA icons
+├── generate-og-image.ts     # Generate OpenGraph images
+├── generate-sitemap.ts      # Generate sitemap.xml
+└── convert-to-webp.ts       # Convert images to WebP format
 ```
 
 ## Key Architecture Patterns
 
-### 1. App Auto-Loading System
+### 1. Vanilla Component System
 
-Apps are automatically discovered via Vite's `import.meta.glob()` in `src/constants/apps.ts`. To add a new app:
-
-1. Create folder: `src/apps/[app-name]/`
-2. Add `config.ts` with bilingual metadata:
+The app uses a custom vanilla TypeScript component system located in `src/core/`:
 
 ```typescript
-import type { AppConfig } from '../../types';
+import { Component, html } from '../core';
 
-const config: AppConfig = {
-  name: {
-    ko: '앱 이름', // Korean name
-    en: 'App Name', // English name
-  },
-  desc: {
-    ko: '설명', // Korean description
-    en: 'Description', // English description
-  },
-  icon: '🔧', // Emoji icon
-  size: 1024, // Size in bytes (for sorting)
-  order: 1, // Display order (lower = first, optional)
-};
+interface MyComponentState {
+  count: number;
+}
 
-export default config;
+class MyComponent extends Component<{}, MyComponentState> {
+  protected getInitialState() {
+    return { count: 0 };
+  }
+
+  protected render(): string {
+    return html`
+      <div class="my-component">
+        <p>Count: ${this.state.count}</p>
+        <button id="increment">Increment</button>
+      </div>
+    `;
+  }
+
+  protected bindEvents(): void {
+    this.addEventListenerById('increment', 'click', () => {
+      this.setState({ count: this.state.count + 1 });
+    });
+  }
+}
 ```
 
-3. Create page component in `src/pages/[AppName].tsx`
-4. Add lazy import and route in `src/App.tsx`:
+### 2. Client-Side Routing
 
-```tsx
-const MyApp = lazy(() => import('./pages/MyApp'));
-// In ROUTES array:
-{ path: '/my-app', element: <MyApp />, lazy: true },
+The app uses a custom vanilla router in `src/core/Router.ts`:
+
+```typescript
+import { Router } from './core';
+
+const router = new Router({
+  '/': () => new HomePage(),
+  '/metronome': () => new MetronomePage(),
+  '/drum': () => new DrumPage(),
+  // ...
+});
+
+router.start();
 ```
 
-5. Add translations in `src/i18n/translations/my-app.ts`
+### 3. State Management
 
-### 2. Navigation System
+Global state is managed via `src/core/Store.ts`:
 
-The app uses a responsive navigation system:
+```typescript
+import { languageStore, themeStore } from './core/Store';
 
-- **Desktop (≥768px)**: Sidebar navigation with collapsible menu
-- **Mobile (<768px)**: Bottom navigation bar
-- **Command Palette**: Cmd/Ctrl+K for quick navigation
+// Subscribe to changes
+languageStore.subscribe((lang) => {
+  console.log('Language changed:', lang);
+});
 
-```tsx
-// NavigationLayout wraps all content
-<NavigationLayout apps={apps}>
-  <main>{/* content */}</main>
-</NavigationLayout>
+// Update state
+languageStore.set('en');
 ```
 
-### 3. Internationalization (i18n)
+### 4. Internationalization (i18n)
 
-- Context-based system with localStorage persistence
+- Store-based system with localStorage persistence
 - Supports Korean (ko) and English (en)
 - Auto-detects browser language on first visit
-- Language toggle button in header
-
-**Adding translations:**
 
 ```typescript
 // src/i18n/translations/[module].ts
@@ -218,44 +206,16 @@ export const translations = {
 };
 ```
 
-**Usage:**
+### 5. Theme System
 
-```tsx
-import { useLanguage } from '../i18n';
-
-function MyComponent() {
-  const { language, t } = useLanguage();
-  return <span>{t.common.myKey}</span>;
-}
-```
-
-### 4. Theme System
-
-- Three theme modes: `system`, `light`, `dark`
+- Two theme modes: `light`, `dark`
 - Uses `data-theme` attribute on `<html>` element
 - System preference detection with manual override
 - Persisted in localStorage
 
-```tsx
-import { useTheme } from '../hooks';
-
-function ThemeExample() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  // theme: 'system' | 'light' | 'dark'
-  // resolvedTheme: 'light' | 'dark' (actual applied theme)
-}
-```
-
-### 5. Component Patterns
-
-- **Memoization**: Use `memo()`, `useMemo()`, `useCallback()` for performance
-- **Error Boundaries**: Wrap feature components with `withErrorBoundary` HOC
-- **UI Components**: Use primitives from `src/components/ui/`
-- **Lazy Loading**: Tool pages are lazy-loaded for code splitting
-
 ### 6. Styling
 
-- CSS Modules + CSS Custom Properties (Design Tokens)
+- Tailwind CSS + CSS Custom Properties (Design Tokens)
 - Dark/Light mode via `prefers-color-scheme` and `data-theme` attribute
 - GPU-optimized animations (transform/opacity only)
 - Respects `prefers-reduced-motion`
@@ -284,16 +244,6 @@ function ThemeExample() {
 /* Transitions */
 --transition-fast: 150ms
 --transition-normal: 250ms
-
-/* Z-Index */
---z-dropdown to --z-tooltip (100-700)
-
-/* Responsive Breakpoints */
---breakpoint-xs: 320px
---breakpoint-sm: 480px
---breakpoint-md: 768px
---breakpoint-lg: 1024px
---breakpoint-xl: 1280px
 ```
 
 ## Development Commands
@@ -305,6 +255,9 @@ npm run dev              # Start dev server (port 5173)
 # Building
 npm run build            # Production build with type checking
 npm run preview          # Preview production build
+
+# Standalone Builds
+npm run build:standalone:all  # Build all standalone single-file apps
 
 # Code Quality
 npm run lint             # Check code quality
@@ -326,11 +279,6 @@ npm run test:e2e:headed  # Run with visible browser
 
 # Full Validation
 npm run validate         # typecheck + lint + test:run
-
-# Asset Generation
-npm run generate-icons   # Generate PWA icons from source
-npm run generate-og-image # Generate OpenGraph images
-npm run convert-webp     # Convert images to WebP format
 ```
 
 ## Code Conventions
@@ -342,32 +290,25 @@ npm run convert-webp     # Convert images to WebP format
 - Export types from `src/types/index.ts`
 - Use `type` imports: `import type { App } from '../types'`
 
-### React
+### Component Development
 
-- Functional components only (no class components)
-- Automatic JSX runtime (no `import React` needed)
-- Prefer `memo()` for components receiving stable props
-- Use custom hooks for reusable logic
-- Wrap pages in `Suspense` for lazy loading
+- Extend `Component` base class from `src/core/`
+- Override `render()` to return HTML string
+- Override `bindEvents()` to attach event listeners
+- Use `setState()` for reactive updates
 
 ### File Naming
 
-- Components: `PascalCase.tsx`
-- Hooks: `useCamelCase.ts`
+- Components: `PascalCase.ts`
 - Utilities: `camelCase.ts`
-- Tests: `*.test.ts` or `*.test.tsx`
+- Tests: `*.test.ts`
 - CSS: `ComponentName.css` (co-located with component)
-
-### Imports
-
-- Use relative imports within modules
-- Group imports: React > Third-party > Local components > Local utils/hooks > Types > CSS
 
 ### Formatting (Prettier)
 
 - 80 character line width
 - 2 space indentation
-- Single quotes for JS, double quotes for JSX
+- Single quotes for JS
 - Trailing commas (ES5)
 - Semicolons required
 
@@ -375,19 +316,20 @@ npm run convert-webp     # Convert images to WebP format
 
 ### Unit Tests (Vitest)
 
-- **Framework**: Vitest + React Testing Library
+- **Framework**: Vitest + jsdom
 - **Test location**: Co-locate with source files (`*.test.ts`)
-- **Setup file**: `src/test/setup.ts` (mocks matchMedia, ResizeObserver, IntersectionObserver)
+- **Setup file**: `src/test/setup.ts` (mocks matchMedia, ResizeObserver, AudioContext)
 
 ```typescript
-import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { MyComponent } from './MyComponent';
 
 describe('MyComponent', () => {
   it('renders correctly', () => {
-    render(<MyComponent />);
-    expect(screen.getByText('Expected text')).toBeInTheDocument();
+    const container = document.createElement('div');
+    const component = new MyComponent();
+    component.mount(container);
+    expect(container.textContent).toContain('Expected text');
   });
 });
 ```
@@ -398,16 +340,6 @@ describe('MyComponent', () => {
 - Tests user flows across pages
 - Supports visual regression testing
 
-## Performance Considerations
-
-1. **Code Splitting**: Tool pages are lazy-loaded with `React.lazy()`
-2. **Vendor Chunks**: React, React Router, and QRious separated
-3. **Prefetching**: App cards prefetch on hover
-4. **CSS Containment**: Use `contain: layout style` for isolation
-5. **Memoization**: Prevent unnecessary re-renders with `memo()`, `useMemo()`, `useCallback()`
-6. **Deferred Values**: Use `useDeferredValue` for search inputs
-7. **PWA Caching**: Service Worker caches assets for offline use
-
 ## Build Configuration
 
 **Vite settings** (`vite.config.ts`):
@@ -417,63 +349,40 @@ describe('MyComponent', () => {
 - Chunk size warning: 250KB
 - Console/debugger dropped in production
 - PWA manifest with icons and screenshots
-- Service Worker with caching strategies
 
-**TypeScript settings** (`tsconfig.app.json`):
+**Standalone builds** (`vite.standalone.config.ts`):
 
-- Target: ES2020
-- Module: ESNext
-- Strict: true
-
-## Deployment
-
-- **Platform**: Cloudflare Pages
-- **Config**: `wrangler.jsonc`
-- **Build output**: `dist/` directory
-- **PWA**: Auto-updating Service Worker
+- Single-file HTML output
+- All assets inlined
+- No React dependency
 
 ## Common Tasks
 
 ### Adding a New Tool/App
 
 1. Create app folder: `src/apps/my-tool/`
-2. Add `config.ts` with bilingual metadata (including `order` for positioning)
-3. Create components in `src/apps/my-tool/components/`
-4. Create page: `src/pages/MyTool.tsx`
-5. Add lazy import and route in `src/App.tsx`
+2. Add `config.ts` with bilingual metadata
+3. Create component in `src/vanilla/apps/my-tool/`
+4. Create page in `src/vanilla/pages/`
+5. Add route in `src/vanilla/App.ts`
 6. Add translations in `src/i18n/translations/my-tool.ts`
 
-### Adding a New UI Component
+### Adding a Standalone Build
 
-1. Create in `src/components/ui/ComponentName.tsx`
-2. Create co-located styles: `src/components/ui/ComponentName.css`
-3. Export from `src/components/ui/index.ts`
-4. Add tests in `src/components/ui/ComponentName.test.tsx`
-
-### Adding Translations
-
-1. Create/update file in `src/i18n/translations/`
-2. Define both `ko` and `en` keys
-3. Import and merge in `src/i18n/context.tsx` if new file
-4. Use via `useLanguage()` hook
-
-### Updating Theme Colors
-
-1. Edit `src/styles/variables.css`
-2. Update both light mode (`:root`) and dark mode sections
-3. Use semantic color names (e.g., `--color-text-primary`)
+1. Create folder in `src/standalone/my-tool/`
+2. Add `main.ts`, `App.ts`, `index.html`, `i18n.ts`
+3. Update `vite.standalone.config.ts`
+4. Add build script to `package.json`
 
 ## Important Notes for AI Assistants
 
-1. **No React import needed**: JSX runtime is automatic
-2. **Use existing UI components**: Check `src/components/ui/` before creating new ones
-3. **Memoize appropriately**: Performance is prioritized
-4. **Maintain i18n**: Add translations for both KO and EN with bilingual config
-5. **Follow existing patterns**: Check similar files for conventions
-6. **Run validation before commits**: `npm run validate`
-7. **Keep chunks small**: Monitor bundle size (250KB warning threshold)
-8. **Test browser APIs**: Mock in `src/test/setup.ts` if needed
-9. **Use lazy loading**: New tool pages should be lazy-loaded
-10. **Respect theme system**: Use CSS variables, not hard-coded colors
-11. **PWA awareness**: App works offline; test Service Worker behavior
-12. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
+1. **No React**: This project uses vanilla TypeScript, not React
+2. **Use Component class**: Extend from `src/core/Component.ts`
+3. **Maintain i18n**: Add translations for both KO and EN
+4. **Follow existing patterns**: Check similar files for conventions
+5. **Run validation before commits**: `npm run validate`
+6. **Respect theme system**: Use CSS variables, not hard-coded colors
+7. **PWA awareness**: App works offline; test Service Worker behavior
+8. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
+9. **Web Audio**: Audio features use Browser's Web Audio API
+10. **Standalone builds**: Each tool can be built as a single HTML file
