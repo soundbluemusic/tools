@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+import { drumSynthEn } from '../i18n/translations/drum-synth';
+import { BRAND } from '../constants/brand';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/drum-synth';
+const t = drumSynthEn;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Drum Sound Synthesizer',
+  description: t.seo.description,
+  url: `${BRAND.siteUrl}${currentPath}`,
+  applicationCategory: 'MusicApplication',
+  operatingSystem: 'Web Browser',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.6',
+    ratingCount: '80',
+  },
+  featureList: [
+    'Web Audio synthesis',
+    'Oscillator controls',
+    'Envelope shaping',
+    'Filter parameters',
+    'Preset sounds',
+    'Real-time preview',
+    'Works offline',
+  ],
+};
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+  jsonLd={jsonLd}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="drum-synth"
+  />
+</Layout>

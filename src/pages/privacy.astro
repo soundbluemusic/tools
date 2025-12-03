@@ -1,0 +1,25 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/privacy';
+---
+
+<Layout
+  title="Privacy Policy"
+  description="Our privacy policy regarding data collection and usage"
+  canonicalPath={currentPath}
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="privacy"
+  />
+</Layout>

@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/sitemap';
+
+const seo = {
+  title: 'Sitemap',
+  description:
+    'Tools Sitemap - Browse all free online tools including QR code generator, metronome, and more.',
+  keywords:
+    'sitemap, Tools, free tools, QR code, metronome, online tools directory',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="sitemap"
+  />
+</Layout>

@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/opensource';
+
+const seo = {
+  title: '오픈소스 라이브러리',
+  description: 'Tools에 사용된 오픈소스 라이브러리 목록',
+  keywords: '오픈소스, 라이브러리, MIT 라이선스, React, TypeScript',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/opensource"
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="opensource"
+  />
+</Layout>

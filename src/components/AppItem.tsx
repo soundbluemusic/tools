@@ -1,6 +1,4 @@
-import { memo, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { useViewTransition, useLocalizedPath } from '../hooks';
+import { memo } from 'react';
 import type { App } from '../types';
 import type { Language } from '../i18n/types';
 
@@ -10,41 +8,28 @@ interface AppItemProps {
 }
 
 /**
- * AppItem Component - Single app list item
+ * AppItem Component - Single app list item (Astro-compatible)
+ * - Uses native anchor tags instead of React Router
  * - GPU accelerated hover via CSS
- * - View Transitions API support for smooth navigation
  */
 const AppItem = memo<AppItemProps>(
   function AppItem({ app, language }) {
-    const { createClickHandler } = useViewTransition();
-    const { toLocalizedPath } = useLocalizedPath();
-
     // Get localized name and description
     const name = app.name[language];
     const desc = app.desc[language];
 
     // Get localized URL
-    const localizedUrl = useMemo(
-      () => toLocalizedPath(app.url),
-      [toLocalizedPath, app.url]
-    );
-
-    // Memoized click handler using shared View Transition hook
-    const handleClick = useMemo(
-      () => createClickHandler(localizedUrl),
-      [createClickHandler, localizedUrl]
-    );
+    const localizedUrl = language === 'ko' ? `/ko${app.url}` : app.url;
 
     return (
-      <Link
-        to={localizedUrl}
+      <a
+        href={localizedUrl}
         className="app-item"
         aria-label={`${name} - ${desc}`}
         role="listitem"
-        onClick={handleClick}
       >
         <span className="app-item-text">{name}</span>
-      </Link>
+      </a>
     );
   },
   // Re-render if app.id or language changes

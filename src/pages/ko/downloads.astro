@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/downloads';
+
+const seo = {
+  title: '도구 다운로드',
+  description:
+    '메트로놈, 드럼머신 등 도구를 독립 실행형 파일로 다운로드. 오프라인에서도 사용 가능.',
+  keywords:
+    '다운로드, 독립 실행형, 오프라인 도구, 메트로놈 다운로드, 드럼머신 다운로드',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/downloads"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="downloads"
+  />
+</Layout>

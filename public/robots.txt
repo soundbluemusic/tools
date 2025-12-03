@@ -8,7 +8,9 @@ Allow: /
 # Sitemap location
 Sitemap: https://tools.soundbluemusic.com/sitemap.xml
 
-# Allow specific bots
+# ============================================
+# Traditional Search Engine Bots
+# ============================================
 User-agent: Googlebot
 Allow: /
 
@@ -33,10 +35,71 @@ Allow: /
 User-agent: Yeti
 Allow: /
 
-# Disallow internal/admin paths (if any in future)
-# Disallow: /api/
-# Disallow: /admin/
+# ============================================
+# AI/LLM Bots - Full Access for AI Search
+# ============================================
+# OpenAI - ChatGPT
+User-agent: GPTBot
+Allow: /
 
-# Crawl-delay for polite crawling
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic - Claude
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google - Gemini/Bard
+User-agent: Google-Extended
+Allow: /
+
+# Apple - Siri/Spotlight
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# xAI - Grok
+User-agent: Grok
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Common Crawl (used for training data)
+User-agent: CCBot
+Allow: /
+
+# AI2 (Allen Institute for AI)
+User-agent: AI2Bot
+Allow: /
+
+# ============================================
+# Crawl Settings
+# ============================================
+# Polite crawl delay for all bots
 User-agent: *
 Crawl-delay: 1
+
+# LLMs.txt location for AI-specific content
+# See: https://llmstxt.org/
+# /llms.txt

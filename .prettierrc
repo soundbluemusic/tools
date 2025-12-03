@@ -11,5 +11,14 @@
   "jsxSingleQuote": false,
   "proseWrap": "preserve",
   "htmlWhitespaceSensitivity": "css",
-  "embeddedLanguageFormatting": "auto"
+  "embeddedLanguageFormatting": "auto",
+  "plugins": ["prettier-plugin-astro"],
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": {
+        "parser": "astro"
+      }
+    }
+  ]
 }

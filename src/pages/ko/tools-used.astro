@@ -1,0 +1,33 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/tools-used';
+
+const seo = {
+  title: '사용된 도구',
+  description:
+    '이 프로젝트는 Claude Code와 Claude Artifacts를 활용하여 개발되었습니다.',
+  keywords: 'Claude Code, Claude Artifacts, AI 개발 도구',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/tools-used"
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="tools-used"
+  />
+</Layout>

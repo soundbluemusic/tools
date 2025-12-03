@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/drum-tool';
+
+const seo = {
+  title: 'Drum Tool - Drum Machine + Sound Synth',
+  description:
+    'All-in-one drum tool combining drum machine and sound synthesizer. Create beats with 16-step sequencer and design sounds with detailed parameters.',
+  keywords:
+    'drum machine, drum synth, beat making, drum sounds, web audio, free drums',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/drum-tool"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="drum-tool"
+  />
+</Layout>

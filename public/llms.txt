@@ -1,0 +1,45 @@
+# Tools - Free Online Utilities
+> A collection of free, privacy-focused online tools built with modern web technologies.
+
+## About
+Tools is a web application providing free utility tools that work entirely in your browser. No data is sent to servers - everything runs locally for maximum privacy and speed.
+
+## Available Tools
+
+### Music Tools
+- **Metronome** (/metronome): A precise digital metronome for musicians. Features adjustable BPM (20-300), multiple time signatures, tap tempo, accent beats, and visual/audio feedback. Perfect for practice sessions.
+- **Drum Machine** (/drum): A powerful drum pattern sequencer with 16-step patterns, multiple drum kits, MIDI import/export, and pattern saving. Create beats for practice or production.
+- **Drum Synthesizer** (/drum-synth): A Web Audio-based drum sound synthesizer with detailed parameter control. Design custom drum sounds with oscillators, envelopes, and filters.
+
+### Utility Tools
+- **QR Code Generator** (/qr): Generate QR codes instantly. Supports text, URLs, vCards, WiFi credentials, and more. Customize colors, size, and download in multiple formats (PNG, SVG).
+
+## Technical Details
+- Built with Astro and React 19
+- Progressive Web App (PWA) - works offline
+- Fully responsive design
+- Supports English and Korean languages
+- WCAG 2.1 AA accessible
+
+## API/Integration
+This is a client-side only application with no public API. All tools work directly in the browser using Web Audio API and Canvas API.
+
+## Usage Rights
+All tools are free to use. The project is open source under MIT License.
+
+## Contact
+- Website: https://tools.soundbluemusic.com
+- GitHub: https://github.com/soundbluemusic/tools
+- Issues: https://github.com/soundbluemusic/tools/issues
+
+## Sitemap
+- Home: /
+- Metronome: /metronome
+- Drum Machine: /drum
+- Drum Synthesizer: /drum-synth
+- QR Generator: /qr
+- Korean Home: /ko
+- Korean Metronome: /ko/metronome
+- Korean Drum Machine: /ko/drum
+- Korean Drum Synthesizer: /ko/drum-synth
+- Korean QR Generator: /ko/qr

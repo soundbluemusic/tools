@@ -1,5 +1,4 @@
-import { useCallback, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { getBasePath } from './useLocalizedPath';
 
 /**
@@ -11,27 +10,33 @@ const KOREAN_PREFIX = '/ko';
  * Hook for checking if a path is active in navigation
  * Handles both base paths and Korean prefixed paths (/ko/*)
  * Consolidates duplicate isActive logic from Sidebar and BottomNav
+ * Updated for Astro compatibility - uses window.location instead of react-router-dom
  */
 export function useIsActive() {
-  const location = useLocation();
+  const [pathname, setPathname] = useState(
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
+
+  // Sync pathname with window.location
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname);
+    }
+  }, []);
 
   // Get base path without language prefix
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
-    [location.pathname]
-  );
+  const basePath = useMemo(() => getBasePath(pathname), [pathname]);
 
   const isActive = useCallback(
     (path: string) => {
       // Compare against base path (without language prefix)
-      if (path === '/')
-        return basePath === '/' || location.pathname === KOREAN_PREFIX;
+      if (path === '/') return basePath === '/' || pathname === KOREAN_PREFIX;
       // Exact match or match with trailing content that starts with /
       // This prevents /drum from matching /drum-synth
       return basePath === path || basePath.startsWith(path + '/');
     },
-    [basePath, location.pathname]
+    [basePath, pathname]
   );
 
-  return { isActive, pathname: location.pathname, basePath };
+  return { isActive, pathname, basePath };
 }

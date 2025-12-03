@@ -1,8 +1,9 @@
 /**
  * Main stylesheet entry point
- * Import order matters - variables must come first
+ * Tailwind CSS with custom design tokens
  */
 
+@import 'tailwindcss';
 @import './variables.css';
 @import './base.css';
 @import './components.css';

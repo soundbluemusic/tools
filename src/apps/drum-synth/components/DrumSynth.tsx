@@ -16,9 +16,8 @@ export interface DrumSynthProps {
   /** Optional callback when params change (for integrated mode in DrumTool) */
   onParamsChange?: (params: AllDrumParams) => void;
 }
-import {
+import type {
   DrumType,
-  DRUM_TYPES,
   AllDrumParams,
   KickParams,
   SnareParams,
@@ -26,6 +25,9 @@ import {
   ClapParams,
   TomParams,
   RimParams,
+} from '../constants';
+import {
+  DRUM_TYPES,
   KICK_RANGES,
   SNARE_RANGES,
   HIHAT_RANGES,

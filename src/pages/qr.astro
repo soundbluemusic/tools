@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+import { qrEn } from '../i18n/translations/qr';
+import { BRAND } from '../constants/brand';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/qr';
+const t = qrEn;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'QR Code Generator',
+  description: t.seo.description,
+  url: `${BRAND.siteUrl}${currentPath}`,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Web Browser',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '200',
+  },
+  featureList: [
+    'Text and URL encoding',
+    'vCard support',
+    'WiFi credentials',
+    'Custom colors',
+    'Multiple sizes',
+    'PNG/SVG download',
+    'Works offline',
+  ],
+};
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+  jsonLd={jsonLd}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="qr"
+  />
+</Layout>

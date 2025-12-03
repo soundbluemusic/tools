@@ -1,0 +1,57 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+import { metronomeEn } from '../i18n/translations/metronome';
+import { BRAND } from '../constants/brand';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/metronome';
+const t = metronomeEn;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Online Metronome',
+  description: t.seo.description,
+  url: `${BRAND.siteUrl}${currentPath}`,
+  applicationCategory: 'MusicApplication',
+  operatingSystem: 'Web Browser',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.8',
+    ratingCount: '150',
+  },
+  featureList: [
+    'Adjustable BPM (20-300)',
+    'Multiple time signatures',
+    'Tap tempo',
+    'Visual beat indicator',
+    'Accent beats',
+    'Works offline',
+  ],
+};
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+  jsonLd={jsonLd}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="metronome"
+  />
+</Layout>

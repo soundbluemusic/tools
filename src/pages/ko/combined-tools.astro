@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/combined-tools';
+
+const seo = {
+  title: '결합 도구',
+  description:
+    '여러 기능을 하나로 결합한 올인원 도구 모음. 복합 기능 도구로 더 효율적으로 작업하세요.',
+  keywords: '결합 도구, 올인원 도구, 복합 도구, 통합 도구',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/combined-tools"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="combined-tools"
+  />
+</Layout>

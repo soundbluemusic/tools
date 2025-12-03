@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/tools-used';
+
+const seo = {
+  title: 'Tools Used',
+  description: 'This project was built with Claude Code and Claude Artifacts.',
+  keywords: 'Claude Code, Claude Artifacts, AI development tools',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/tools-used"
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="tools-used"
+  />
+</Layout>

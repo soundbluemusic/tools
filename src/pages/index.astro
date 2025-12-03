@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/';
+
+const seo = {
+  description:
+    'Free online tools. Create high-resolution QR codes and practice music with precision metronome. All tools 100% free, no signup required!',
+  keywords:
+    'QR code generator, free QR code, online metronome, free metronome, online tools, free tools',
+};
+---
+
+<Layout
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="home"
+  />
+</Layout>

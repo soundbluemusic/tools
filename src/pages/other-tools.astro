@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/other-tools';
+
+const seo = {
+  title: 'Other Tools',
+  description:
+    'Free online utility tools. QR code generator and various utility tools.',
+  keywords: 'QR code generator, free QR code, online tools, utility tools',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/other-tools"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="other-tools"
+  />
+</Layout>

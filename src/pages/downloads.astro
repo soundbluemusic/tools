@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/downloads';
+
+const seo = {
+  title: 'Download Tools',
+  description:
+    'Download metronome, drum machine and other tools as standalone files that work offline.',
+  keywords:
+    'download, standalone, offline tools, metronome download, drum machine download',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/downloads"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="downloads"
+  />
+</Layout>

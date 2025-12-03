@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/opensource';
+
+const seo = {
+  title: 'Open Source Libraries',
+  description: 'List of open source libraries used in Tools',
+  keywords: 'open source, libraries, MIT license, React, TypeScript',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/opensource"
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+    page="opensource"
+  />
+</Layout>
