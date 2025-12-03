@@ -9,3 +9,4 @@ export { SitemapPage } from './Sitemap';
 export { OpenSourcePage } from './OpenSource';
 export { ToolsUsedPage } from './ToolsUsed';
 export { QRPage } from './QR';
+export { MetronomePage } from './Metronome';

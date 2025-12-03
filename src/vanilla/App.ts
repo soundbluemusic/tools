@@ -16,6 +16,7 @@ import {
   OpenSourcePage,
   ToolsUsedPage,
   QRPage,
+  MetronomePage,
 } from './pages';
 
 /**
@@ -50,6 +51,10 @@ const routes: RouteConfig[] = [
   {
     path: '/qr',
     component: () => new QRPage(),
+  },
+  {
+    path: '/metronome',
+    component: () => new MetronomePage(),
   },
 ];
 
