@@ -65,3 +65,4 @@ export {
   detectBrowserLanguage,
   isValidLanguage,
 } from './i18n';
+export { sortApps, sortBy, byProperty, descending } from './sort';

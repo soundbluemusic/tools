@@ -2,8 +2,8 @@ import { memo, useState, useMemo, useCallback, useTransition } from 'react';
 import { useLanguage } from '../i18n';
 import { useSEO, useApps } from '../hooks';
 import AppList from '../components/AppList';
-import type { App, SortOption } from '../types';
-import type { Language } from '../i18n/types';
+import { sortApps } from '../utils/sort';
+import type { SortOption } from '../types';
 
 const homeSEO = {
   ko: {
@@ -19,44 +19,6 @@ const homeSEO = {
       'QR code generator, free QR code, online metronome, free metronome, online tools, free tools',
   },
 };
-
-/**
- * Sort apps based on selected option
- * Uses stable sort for consistent ordering
- */
-function sortApps(
-  apps: readonly App[],
-  sortBy: SortOption,
-  language: Language
-): readonly App[] {
-  const sorted = [...apps];
-  const locale = language === 'ko' ? 'ko' : 'en';
-
-  switch (sortBy) {
-    case 'name-asc':
-      return sorted.sort((a, b) =>
-        a.name[language].localeCompare(b.name[language], locale)
-      );
-    case 'name-desc':
-      return sorted.sort((a, b) =>
-        b.name[language].localeCompare(a.name[language], locale)
-      );
-    case 'name-long':
-      return sorted.sort(
-        (a, b) => b.name[language].length - a.name[language].length
-      );
-    case 'name-short':
-      return sorted.sort(
-        (a, b) => a.name[language].length - b.name[language].length
-      );
-    case 'size-large':
-      return sorted.sort((a, b) => b.size - a.size);
-    case 'size-small':
-      return sorted.sort((a, b) => a.size - b.size);
-    default:
-      return apps;
-  }
-}
 
 /**
  * Home Page Component
