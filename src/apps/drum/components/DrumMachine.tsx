@@ -1369,8 +1369,10 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
                   <button
                     key={step}
                     className={cn(
-                      'flex-1 min-w-0 aspect-square max-w-[32px] md:max-w-[28px] sm:max-w-[24px] xs:max-w-[18px] bg-bg-secondary border-[1.5px] border-border-primary rounded-md cursor-pointer transition-all duration-150 hover:border-accent-primary hover:scale-105 sm:rounded-sm',
-                      isActive && 'bg-accent-primary border-accent-primary',
+                      'flex-1 min-w-0 aspect-square max-w-[32px] md:max-w-[28px] sm:max-w-[24px] xs:max-w-[18px] border-[1.5px] rounded-md cursor-pointer transition-all duration-150 hover:border-accent-primary hover:scale-105 sm:rounded-sm',
+                      isActive
+                        ? 'bg-accent-primary border-accent-primary'
+                        : 'bg-bg-secondary border-border-primary',
                       isPlaying &&
                         currentStep === step &&
                         'shadow-[0_0_0_2px_var(--color-bg-tertiary),0_0_0_4px_var(--color-accent-primary)] scale-[1.08]',
