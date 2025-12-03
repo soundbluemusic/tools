@@ -1158,9 +1158,9 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
         <div className="flex gap-2 md:justify-center sm:flex-wrap">
           <button
             className={cn(
-              'inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-primary bg-secondary border border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-tertiary hover:border-hover sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]',
+              'inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-text-primary bg-bg-secondary border border-border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-bg-tertiary hover:border-border-hover sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]',
               isPlaying &&
-                'bg-accent-primary border-accent-primary text-inverse hover:bg-accent-hover hover:border-accent-hover'
+                'bg-accent-primary border-accent-primary text-text-inverse hover:bg-accent-hover hover:border-accent-hover'
             )}
             onClick={play}
             aria-label={isPlaying ? drum.pause : drum.play}
@@ -1169,7 +1169,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <span>{isPlaying ? drum.pause : drum.play}</span>
           </button>
           <button
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-primary bg-secondary border border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-tertiary hover:border-hover sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-text-primary bg-bg-secondary border border-border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-bg-tertiary hover:border-border-hover sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
             onClick={stop}
             aria-label={drum.stop}
           >
@@ -1177,7 +1177,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <span>{drum.stop}</span>
           </button>
           <button
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-primary bg-secondary border border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-tertiary hover:border-hover sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-text-primary bg-bg-secondary border border-border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-bg-tertiary hover:border-border-hover sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
             onClick={clear}
             aria-label={drum.clear}
           >
@@ -1185,7 +1185,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <span>{drum.clear}</span>
           </button>
           <button
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-primary bg-tertiary border border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-accent-primary hover:border-accent-primary hover:text-inverse sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-text-primary bg-bg-tertiary border border-border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-accent-primary hover:border-accent-primary hover:text-text-inverse sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
             onClick={handleExportMidi}
             aria-label={drum.exportMidi}
           >
@@ -1193,7 +1193,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <span>{drum.exportMidi}</span>
           </button>
           <button
-            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-primary bg-tertiary border border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-accent-primary hover:border-accent-primary hover:text-inverse sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
+            className="inline-flex items-center justify-center gap-2 px-5 py-3 min-h-[44px] text-sm font-medium text-text-primary bg-bg-tertiary border border-border-primary rounded-md cursor-pointer transition-colors duration-150 whitespace-nowrap hover:bg-accent-primary hover:border-accent-primary hover:text-text-inverse sm:px-3 sm:py-2 sm:text-xs sm:min-h-[40px] sm:flex-1 sm:min-w-[60px]"
             onClick={handleImportClick}
             aria-label={drum.importMidi}
           >
@@ -1211,7 +1211,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
         </div>
 
         <div className="flex items-center gap-3 md:justify-center sm:flex-wrap sm:gap-2">
-          <span className="text-tertiary text-xs uppercase tracking-wide whitespace-nowrap">
+          <span className="text-text-tertiary text-xs uppercase tracking-wide whitespace-nowrap">
             {drum.tempo}
           </span>
           <input
@@ -1223,9 +1223,9 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             onChange={handleTempoChange}
             aria-label={drum.tempo}
           />
-          <span className="font-mono text-sm text-primary min-w-[70px] text-right">
+          <span className="font-mono text-sm text-text-primary min-w-[70px] text-right">
             {tempo} BPM
-            <span className="ml-2 text-tertiary text-xs">
+            <span className="ml-2 text-text-tertiary text-xs">
               {loops.length > 1 && `x${loops.length} `}(
               {((240 / tempo) * loops.length).toFixed(1)}s)
             </span>
@@ -1234,9 +1234,9 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       </div>
 
       {/* Loop Controls */}
-      <div className="flex items-center gap-4 px-4 py-3 bg-tertiary border border-primary rounded-md flex-wrap md:justify-center sm:flex-col sm:items-stretch sm:gap-3 sm:p-3">
+      <div className="flex items-center gap-4 px-4 py-3 bg-bg-tertiary border border-border-primary rounded-md flex-wrap md:justify-center sm:flex-col sm:items-stretch sm:gap-3 sm:p-3">
         <div className="flex items-center gap-3 flex-1 min-w-0 sm:w-full sm:justify-start">
-          <span className="text-tertiary text-xs uppercase tracking-wide whitespace-nowrap">
+          <span className="text-text-tertiary text-xs uppercase tracking-wide whitespace-nowrap">
             {drum.loop}
           </span>
           <div className="flex items-center gap-2 flex-1 min-w-0 flex-wrap sm:gap-1 sm:justify-start">
@@ -1244,12 +1244,12 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
               <button
                 key={loopIds[index]}
                 className={cn(
-                  'inline-flex items-center justify-center w-8 h-8 font-mono text-sm font-medium text-secondary bg-secondary border-2 border-primary rounded-md cursor-grab transition-all duration-150 select-none touch-none hover:border-hover hover:scale-105 active:cursor-grabbing md:w-7 md:h-7 md:text-xs sm:text-[0.7rem]',
+                  'inline-flex items-center justify-center w-8 h-8 font-mono text-sm font-medium text-text-secondary bg-bg-secondary border-2 border-border-primary rounded-md cursor-grab transition-all duration-150 select-none touch-none hover:border-border-hover hover:scale-105 active:cursor-grabbing md:w-7 md:h-7 md:text-xs sm:text-[0.7rem]',
                   index === currentLoopIndex &&
-                    'text-primary border-accent-primary bg-tertiary',
+                    'text-text-primary border-accent-primary bg-bg-tertiary',
                   isPlaying &&
                     index === playingLoopIndex &&
-                    'bg-accent-primary border-accent-primary text-inverse animate-drum-loop-pulse',
+                    'bg-accent-primary border-accent-primary text-text-inverse animate-drum-loop-pulse',
                   dragLoopIndex === index && 'opacity-50 scale-110 z-10',
                   dragOverLoopIndex === index &&
                     'scale-[1.15] border-accent-primary',
@@ -1278,7 +1278,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
         </div>
         <div className="flex gap-2 sm:w-full sm:justify-center">
           <button
-            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-secondary border border-primary rounded-md cursor-pointer text-primary transition-colors duration-150 hover:bg-tertiary hover:border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
+            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-bg-secondary border border-border-primary rounded-md cursor-pointer text-text-primary transition-colors duration-150 hover:bg-bg-tertiary hover:border-border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
             onClick={moveLoopLeft}
             disabled={currentLoopIndex <= 0}
             aria-label={drum.moveLoopLeft}
@@ -1287,7 +1287,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <ChevronLeftIcon />
           </button>
           <button
-            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-secondary border border-primary rounded-md cursor-pointer text-primary transition-colors duration-150 hover:bg-tertiary hover:border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
+            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-bg-secondary border border-border-primary rounded-md cursor-pointer text-text-primary transition-colors duration-150 hover:bg-bg-tertiary hover:border-border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
             onClick={moveLoopRight}
             disabled={currentLoopIndex >= loops.length - 1}
             aria-label={drum.moveLoopRight}
@@ -1296,7 +1296,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <ChevronRightIcon />
           </button>
           <button
-            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-secondary border border-primary rounded-md cursor-pointer text-primary transition-colors duration-150 hover:bg-tertiary hover:border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
+            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-bg-secondary border border-border-primary rounded-md cursor-pointer text-text-primary transition-colors duration-150 hover:bg-bg-tertiary hover:border-border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
             onClick={addLoop}
             disabled={loops.length >= MAX_LOOPS}
             aria-label={drum.addLoop}
@@ -1305,7 +1305,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <PlusIcon />
           </button>
           <button
-            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-secondary border border-primary rounded-md cursor-pointer text-primary transition-colors duration-150 hover:bg-tertiary hover:border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
+            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-bg-secondary border border-border-primary rounded-md cursor-pointer text-text-primary transition-colors duration-150 hover:bg-bg-tertiary hover:border-border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
             onClick={copyCurrentLoop}
             disabled={loops.length >= MAX_LOOPS}
             aria-label={drum.copyLoop}
@@ -1314,7 +1314,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             <CopyIcon />
           </button>
           <button
-            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-secondary border border-primary rounded-md cursor-pointer text-primary transition-colors duration-150 hover:bg-tertiary hover:border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
+            className="inline-flex items-center justify-center w-7 h-7 p-0 bg-bg-secondary border border-border-primary rounded-md cursor-pointer text-text-primary transition-colors duration-150 hover:bg-bg-tertiary hover:border-border-hover disabled:opacity-40 disabled:cursor-not-allowed sm:w-7 sm:h-7"
             onClick={removeCurrentLoop}
             disabled={loops.length <= 1}
             aria-label={drum.removeLoop}
@@ -1327,7 +1327,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
 
       {/* Sequencer Grid */}
       <div
-        className="bg-tertiary border border-primary rounded-lg p-4 touch-none select-none sm:p-3 xs:p-2"
+        className="bg-bg-tertiary border border-border-primary rounded-lg p-4 touch-none select-none sm:p-3 xs:p-2"
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd}
         onTouchMove={handleTouchMove}
@@ -1339,7 +1339,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
             className="grid grid-cols-[90px_1fr] md:grid-cols-[80px_1fr] sm:grid-cols-[60px_1fr] xs:grid-cols-[45px_1fr] gap-3 md:gap-3 sm:gap-2 items-center py-2 sm:py-1 first:pt-0 last:pb-0"
           >
             <div className="flex flex-col gap-1">
-              <div className="text-xs uppercase tracking-wide text-secondary whitespace-nowrap sm:text-[0.625rem]">
+              <div className="text-xs uppercase tracking-wide text-text-secondary whitespace-nowrap sm:text-[0.625rem]">
                 {getInstrumentLabel(inst)}
               </div>
               <div className="flex items-center gap-2">
@@ -1369,7 +1369,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
                   <button
                     key={step}
                     className={cn(
-                      'flex-1 min-w-0 aspect-square max-w-[32px] md:max-w-[28px] sm:max-w-[24px] xs:max-w-[18px] bg-secondary border-[1.5px] border-primary rounded-md cursor-pointer transition-all duration-150 hover:border-accent-primary hover:scale-105 sm:rounded-sm',
+                      'flex-1 min-w-0 aspect-square max-w-[32px] md:max-w-[28px] sm:max-w-[24px] xs:max-w-[18px] bg-bg-secondary border-[1.5px] border-border-primary rounded-md cursor-pointer transition-all duration-150 hover:border-accent-primary hover:scale-105 sm:rounded-sm',
                       isActive && 'bg-accent-primary border-accent-primary',
                       isPlaying &&
                         currentStep === step &&
@@ -1404,14 +1404,14 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
 
       {/* Presets */}
       <div className="flex flex-wrap items-center gap-3 sm:gap-2">
-        <span className="text-tertiary text-xs uppercase tracking-wide">
+        <span className="text-text-tertiary text-xs uppercase tracking-wide">
           {drum.presets}
         </span>
         <div className="flex flex-wrap gap-2">
           {Object.keys(PRESETS).map((preset) => (
             <button
               key={preset}
-              className="px-4 py-2 min-h-[36px] text-xs font-medium uppercase tracking-wide text-primary bg-secondary border border-primary rounded-md cursor-pointer transition-colors duration-150 hover:bg-tertiary hover:border-hover sm:px-3 sm:text-[0.625rem] sm:min-h-[32px]"
+              className="px-4 py-2 min-h-[36px] text-xs font-medium uppercase tracking-wide text-text-primary bg-bg-secondary border border-border-primary rounded-md cursor-pointer transition-colors duration-150 hover:bg-bg-tertiary hover:border-border-hover sm:px-3 sm:text-[0.625rem] sm:min-h-[32px]"
               onClick={() => loadPreset(preset)}
             >
               {getPresetLabel(preset)}
@@ -1421,7 +1421,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       </div>
 
       {/* Synthesis Info */}
-      <div className="px-4 py-3 bg-tertiary border border-primary rounded-md text-xs text-tertiary leading-relaxed">
+      <div className="px-4 py-3 bg-bg-tertiary border border-border-primary rounded-md text-xs text-text-tertiary leading-relaxed">
         {drum.synthesisInfo}
       </div>
 
@@ -1429,7 +1429,7 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
       {statusMessage && (
         <div
           className={cn(
-            'fixed bottom-6 left-1/2 -translate-x-1/2 bg-secondary border border-primary rounded-md px-4 py-2 text-sm text-primary shadow-lg animate-drum-status-slide-up z-[700]',
+            'fixed bottom-6 left-1/2 -translate-x-1/2 bg-bg-secondary border border-border-primary rounded-md px-4 py-2 text-sm text-text-primary shadow-lg animate-drum-status-slide-up z-[700]',
             statusMessage.type === 'success' &&
               'border-success-border text-success',
             statusMessage.type === 'error' && 'border-error-border text-error'
