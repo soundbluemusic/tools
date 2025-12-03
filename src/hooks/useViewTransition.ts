@@ -1,5 +1,15 @@
 import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  startViewTransition,
+  isViewTransitionSupported,
+} from '../utils/viewTransition';
+
+// Re-export utilities for convenience
+export {
+  startViewTransition,
+  isViewTransitionSupported,
+} from '../utils/viewTransition';
 
 /**
  * Custom hook for navigation with View Transitions API support
@@ -15,13 +25,9 @@ export function useViewTransition() {
    */
   const navigateWithTransition = useCallback(
     (to: string) => {
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          navigate(to);
-        });
-      } else {
+      startViewTransition(() => {
         navigate(to);
-      }
+      });
     },
     [navigate]
   );
@@ -33,9 +39,9 @@ export function useViewTransition() {
    */
   const createClickHandler = useCallback(
     (to: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (document.startViewTransition) {
+      if (isViewTransitionSupported()) {
         e.preventDefault();
-        document.startViewTransition(() => {
+        startViewTransition(() => {
           navigate(to);
         });
       }

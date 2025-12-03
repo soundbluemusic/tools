@@ -42,3 +42,16 @@ export {
   buildSEOMetaData,
   applySEOMetaTags,
 } from './seo';
+export {
+  isViewTransitionSupported,
+  startViewTransition,
+  createTransitionNavigate,
+} from './viewTransition';
+export {
+  isClickOutside,
+  onClickOutside,
+  onEscapeKey,
+  onScroll,
+  focusElement,
+  containsNode,
+} from './dom';
