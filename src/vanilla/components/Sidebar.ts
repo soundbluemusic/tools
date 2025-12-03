@@ -202,5 +202,10 @@ export class Sidebar extends Component<SidebarProps> {
     router.subscribe(() => {
       this.update();
     });
+
+    // Subscribe to language changes
+    languageStore.subscribe(() => {
+      this.update();
+    });
   }
 }

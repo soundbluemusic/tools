@@ -72,4 +72,11 @@ export class HomePage extends Component {
       }
     });
   }
+
+  protected onMount(): void {
+    // Subscribe to language changes
+    languageStore.subscribe(() => {
+      this.update();
+    });
+  }
 }

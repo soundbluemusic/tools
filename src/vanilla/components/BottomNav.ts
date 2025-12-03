@@ -194,5 +194,10 @@ export class BottomNav extends Component<BottomNavProps> {
     router.subscribe(() => {
       this.update();
     });
+
+    // Subscribe to language changes
+    languageStore.subscribe(() => {
+      this.update();
+    });
   }
 }
