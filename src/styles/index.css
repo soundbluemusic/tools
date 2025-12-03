@@ -3,12 +3,7 @@
  * Tailwind CSS + Custom CSS Variables
  */
 
-/* Tailwind base, components, and utilities */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* CSS Variables (design tokens) - must come before component styles */
+/* CSS Variables (design tokens) - must come first for @import rules */
 @import './variables.css';
 
 /* Base styles and resets */
@@ -16,3 +11,8 @@
 
 /* Legacy component styles (gradually migrating to Tailwind) */
 @import './components.css';
+
+/* Tailwind layers - after @imports per CSS spec */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

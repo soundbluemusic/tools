@@ -2,6 +2,10 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: ['class', '[data-theme="dark"]'],
+  // Disable Preflight to preserve existing CSS styles
+  corePlugins: {
+    preflight: false,
+  },
   theme: {
     extend: {
       // Colors mapped from CSS variables
