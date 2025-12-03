@@ -55,3 +55,13 @@ export {
   focusElement,
   containsNode,
 } from './dom';
+export {
+  LANGUAGES,
+  DEFAULT_LANGUAGE,
+  allTranslations,
+  getTranslations,
+  getOppositeLanguage,
+  updateHtmlLang,
+  detectBrowserLanguage,
+  isValidLanguage,
+} from './i18n';
