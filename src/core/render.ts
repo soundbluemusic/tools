@@ -4,6 +4,28 @@
  */
 
 /**
+ * Escape HTML special characters to prevent XSS attacks
+ * Use this for any user-provided content that will be rendered
+ */
+export function escapeHtml(text: string): string {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+/**
+ * Escape HTML attributes (for use in attribute values)
+ */
+export function escapeAttr(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/**
  * Create an HTML element from a template string
  */
 export function createElement(html: string): HTMLElement {

@@ -3,6 +3,7 @@
  * Generates transparent background QR codes
  */
 import { Component, html } from '../../../core';
+import { escapeAttr } from '../../../core/render';
 import { languageStore } from '../../../core/Store';
 import {
   QR_SIZE,
@@ -187,7 +188,7 @@ export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
                 <input
                   type="text"
                   id="qr-url-input"
-                  value="${url}"
+                  value="${escapeAttr(url)}"
                   placeholder="${t.urlPlaceholder}"
                   class="w-full px-3 sm:px-4 py-3 border border-border-secondary rounded-md text-base bg-bg-primary text-text-primary outline-none transition-[border-color,box-shadow] duration-fast ease-default box-border focus:border-border-focus focus:shadow-focus placeholder:text-text-tertiary min-h-12 sm:min-h-0"
                 />

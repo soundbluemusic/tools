@@ -3,8 +3,19 @@
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { type ReactNode } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import { useSEO } from './useSEO';
 import { BRAND } from '../constants';
+import { LanguageProvider } from '../i18n';
+
+// Wrapper component for hooks that need LanguageProvider
+// BrowserRouter must wrap LanguageProvider because LanguageProvider uses useLocation
+const wrapper = ({ children }: { children: ReactNode }) => (
+  <BrowserRouter>
+    <LanguageProvider>{children}</LanguageProvider>
+  </BrowserRouter>
+);
 
 describe('useSEO', () => {
   const originalTitle = document.title;
@@ -22,34 +33,40 @@ describe('useSEO', () => {
   });
 
   it('sets document title', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'Test Page',
-        description: 'Test description',
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'Test Page',
+          description: 'Test description',
+        }),
+      { wrapper }
     );
 
     expect(document.title).toBe('Test Page | Tools');
   });
 
   it('sets home page title without suffix', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'Home',
-        description: 'Home description',
-        isHomePage: true,
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'Home',
+          description: 'Home description',
+          isHomePage: true,
+        }),
+      { wrapper }
     );
 
     expect(document.title).toBe('Tools');
   });
 
   it('sets meta description', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'Test',
-        description: 'My test description',
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'Test',
+          description: 'My test description',
+        }),
+      { wrapper }
     );
 
     const meta = document.querySelector('meta[name="description"]');
@@ -57,12 +74,14 @@ describe('useSEO', () => {
   });
 
   it('sets canonical URL', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'Test',
-        description: 'Description',
-        basePath: '/test-page',
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'Test',
+          description: 'Description',
+          basePath: '/test-page',
+        }),
+      { wrapper }
     );
 
     const link = document.querySelector('link[rel="canonical"]');
@@ -70,12 +89,14 @@ describe('useSEO', () => {
   });
 
   it('sets Open Graph tags', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'OG Test',
-        description: 'OG description',
-        ogType: 'article',
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'OG Test',
+          description: 'OG description',
+          ogType: 'article',
+        }),
+      { wrapper }
     );
 
     expect(
@@ -96,12 +117,14 @@ describe('useSEO', () => {
   });
 
   it('sets robots meta for noindex pages', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'Private',
-        description: 'Private page',
-        noindex: true,
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'Private',
+          description: 'Private page',
+          noindex: true,
+        }),
+      { wrapper }
     );
 
     const robots = document.querySelector('meta[name="robots"]');
@@ -109,11 +132,13 @@ describe('useSEO', () => {
   });
 
   it('sets default robots meta for indexed pages', () => {
-    renderHook(() =>
-      useSEO({
-        title: 'Public',
-        description: 'Public page',
-      })
+    renderHook(
+      () =>
+        useSEO({
+          title: 'Public',
+          description: 'Public page',
+        }),
+      { wrapper }
     );
 
     const robots = document.querySelector('meta[name="robots"]');
@@ -125,6 +150,7 @@ describe('useSEO', () => {
       initialProps: {
         config: { title: 'Initial', description: 'Initial desc' },
       },
+      wrapper,
     });
 
     expect(document.title).toBe('Initial | Tools');

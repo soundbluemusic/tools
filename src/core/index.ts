@@ -55,6 +55,8 @@ export {
 
 // Render utilities
 export {
+  escapeHtml as escapeHtmlRender,
+  escapeAttr,
   createElement,
   createElements,
   render,
