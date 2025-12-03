@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useViewTransition } from '../hooks/useViewTransition';
+import { useViewTransition, useLocalizedPath } from '../hooks';
 import type { App } from '../types';
 import type { Language } from '../i18n/types';
 
@@ -17,20 +17,27 @@ interface AppItemProps {
 const AppItem = memo<AppItemProps>(
   function AppItem({ app, language }) {
     const { createClickHandler } = useViewTransition();
+    const { toLocalizedPath } = useLocalizedPath();
 
     // Get localized name and description
     const name = app.name[language];
     const desc = app.desc[language];
 
+    // Get localized URL
+    const localizedUrl = useMemo(
+      () => toLocalizedPath(app.url),
+      [toLocalizedPath, app.url]
+    );
+
     // Memoized click handler using shared View Transition hook
     const handleClick = useMemo(
-      () => createClickHandler(app.url),
-      [createClickHandler, app.url]
+      () => createClickHandler(localizedUrl),
+      [createClickHandler, localizedUrl]
     );
 
     return (
       <Link
-        to={app.url}
+        to={localizedUrl}
         className="app-item"
         aria-label={`${name} - ${desc}`}
         role="listitem"

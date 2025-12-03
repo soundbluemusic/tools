@@ -1,7 +1,7 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
-import { useIsActive } from '../../hooks';
+import { useIsActive, useLocalizedPath } from '../../hooks';
 import { MUSIC_APP_PATHS } from '../../constants/apps';
 import './BottomNav.css';
 
@@ -22,9 +22,16 @@ export const BottomNav = memo(function BottomNav({
   isOpen = true,
 }: BottomNavProps) {
   const { language } = useLanguage();
-  const { isActive, pathname } = useIsActive();
+  const { isActive, basePath } = useIsActive();
+  const { toLocalizedPath } = useLocalizedPath();
 
-  const isMusicActive = MUSIC_APP_PATHS.some((p) => pathname.startsWith(p));
+  // Memoize localized path function
+  const getPath = useCallback(
+    (path: string) => toLocalizedPath(path),
+    [toLocalizedPath]
+  );
+
+  const isMusicActive = MUSIC_APP_PATHS.some((p) => basePath.startsWith(p));
 
   return (
     <nav className={`bottom-nav${isOpen ? '' : ' collapsed'}`}>
@@ -70,7 +77,7 @@ export const BottomNav = memo(function BottomNav({
       )}
       {/* Home */}
       <NavLink
-        to="/"
+        to={getPath('/')}
         className={`bottom-nav-item ${isActive('/') ? 'active' : ''}`}
       >
         <svg
@@ -91,7 +98,7 @@ export const BottomNav = memo(function BottomNav({
 
       {/* Music Tools */}
       <NavLink
-        to="/metronome"
+        to={getPath('/metronome')}
         className={`bottom-nav-item ${isMusicActive ? 'active' : ''}`}
       >
         <svg
@@ -112,7 +119,7 @@ export const BottomNav = memo(function BottomNav({
 
       {/* QR Code */}
       <NavLink
-        to="/qr"
+        to={getPath('/qr')}
         className={`bottom-nav-item ${isActive('/qr') ? 'active' : ''}`}
       >
         <svg
@@ -127,7 +134,7 @@ export const BottomNav = memo(function BottomNav({
 
       {/* More / Menu */}
       <NavLink
-        to="/sitemap"
+        to={getPath('/sitemap')}
         className={`bottom-nav-item ${isActive('/sitemap') ? 'active' : ''}`}
       >
         <svg

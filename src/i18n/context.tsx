@@ -7,6 +7,7 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
@@ -18,6 +19,11 @@ import {
   setStorageItem,
   createEnumValidator,
 } from '../utils/storage';
+
+/**
+ * Korean language URL prefix for SEO
+ */
+const KOREAN_PREFIX = '/ko';
 
 /**
  * All translations organized by language
@@ -72,10 +78,36 @@ const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
 const isLanguage = createEnumValidator(SUPPORTED_LANGUAGES);
 
 /**
- * Get initial language from localStorage or detect from browser
+ * Get language from URL path
+ */
+const getLanguageFromPath = (pathname: string): Language => {
+  return pathname.startsWith(KOREAN_PREFIX) ? 'ko' : 'en';
+};
+
+/**
+ * Get base path without language prefix
+ */
+const getBasePath = (pathname: string): string => {
+  if (pathname.startsWith(KOREAN_PREFIX)) {
+    const basePath = pathname.slice(KOREAN_PREFIX.length);
+    return basePath || '/';
+  }
+  return pathname;
+};
+
+/**
+ * Get initial language from URL, localStorage or detect from browser
  */
 const getInitialLanguage = (): Language => {
   if (typeof window === 'undefined') return 'ko';
+
+  // First priority: URL path
+  const urlLanguage = getLanguageFromPath(window.location.pathname);
+
+  // If URL has /ko prefix, it's Korean
+  if (window.location.pathname.startsWith(KOREAN_PREFIX)) {
+    return 'ko';
+  }
 
   // Try to get from storage with validation
   const stored = getStorageItem<Language>(
@@ -96,44 +128,54 @@ const getInitialLanguage = (): Language => {
     return 'en';
   }
 
-  return 'ko';
+  // Default to URL-based language (en for root paths)
+  return urlLanguage;
 };
 
 /**
  * Language Provider Component
  * Wraps the app to provide language context to all components
+ * Syncs language with URL path for SEO
  */
 export function LanguageProvider({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
-  // Save language preference to localStorage with type safety
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
-    setStorageItem(LANGUAGE_STORAGE_KEY, lang);
-  }, []);
-
-  // Toggle between languages - use state updater to avoid language dependency
-  const toggleLanguage = useCallback(() => {
-    setLanguageState((prev) => {
-      const next = prev === 'ko' ? 'en' : 'ko';
-      setStorageItem(LANGUAGE_STORAGE_KEY, next);
-      return next;
-    });
-  }, []);
-
-  // Sync with localStorage on mount (with validation)
+  // Sync language state with URL on navigation
   useEffect(() => {
-    const stored = getStorageItem<Language>(
-      LANGUAGE_STORAGE_KEY,
-      null as unknown as Language,
-      {
-        validator: isLanguage,
-      }
-    );
-    if (stored) {
-      setLanguageState(stored);
+    const urlLanguage = getLanguageFromPath(location.pathname);
+    if (urlLanguage !== language) {
+      setLanguageState(urlLanguage);
+      setStorageItem(LANGUAGE_STORAGE_KEY, urlLanguage);
     }
-  }, []);
+  }, [location.pathname, language]);
+
+  // Save language preference to localStorage and navigate to new URL
+  const setLanguage = useCallback(
+    (lang: Language) => {
+      if (lang === language) return;
+
+      setLanguageState(lang);
+      setStorageItem(LANGUAGE_STORAGE_KEY, lang);
+
+      // Navigate to the same page with new language prefix
+      const basePath = getBasePath(location.pathname);
+      const newPath =
+        lang === 'ko'
+          ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` ||
+            KOREAN_PREFIX
+          : basePath;
+      navigate(newPath, { replace: true });
+    },
+    [language, location.pathname, navigate]
+  );
+
+  // Toggle between languages with URL update
+  const toggleLanguage = useCallback(() => {
+    const newLang = language === 'ko' ? 'en' : 'ko';
+    setLanguage(newLang);
+  }, [language, setLanguage]);
 
   // Current translations based on language
   const t = allTranslations[language];
