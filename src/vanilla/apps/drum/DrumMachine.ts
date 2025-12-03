@@ -600,7 +600,7 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
             this.setStepVelocity(inst, step, VELOCITY.DEFAULT);
           }
         },
-        true
+        { capture: true }
       );
 
       // Volume sliders
