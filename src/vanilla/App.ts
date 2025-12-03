@@ -15,6 +15,7 @@ import {
   SitemapPage,
   OpenSourcePage,
   ToolsUsedPage,
+  QRPage,
 } from './pages';
 
 /**
@@ -45,6 +46,10 @@ const routes: RouteConfig[] = [
   {
     path: '/tools-used',
     component: () => new ToolsUsedPage(),
+  },
+  {
+    path: '/qr',
+    component: () => new QRPage(),
   },
 ];
 
