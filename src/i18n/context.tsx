@@ -7,7 +7,6 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
@@ -133,23 +132,52 @@ const getInitialLanguage = (): Language => {
 };
 
 /**
+ * Language Provider Props for Astro compatibility
+ */
+interface LanguageProviderProps {
+  children: ReactNode;
+  /** Initial language from Astro route - required for Astro */
+  initialLanguage?: Language;
+  /** Current path from Astro - required for Astro */
+  currentPath?: string;
+}
+
+/**
  * Language Provider Component
  * Wraps the app to provide language context to all components
- * Syncs language with URL path for SEO
+ * Works with both React Router (legacy) and Astro (native navigation)
  */
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+export function LanguageProvider({
+  children,
+  initialLanguage,
+  currentPath,
+}: LanguageProviderProps) {
+  // Use initialLanguage from Astro or detect from browser
+  const [language, setLanguageState] = useState<Language>(
+    initialLanguage ?? getInitialLanguage
+  );
+
+  // Track current pathname - use Astro's currentPath or detect from window
+  const [pathname, setPathname] = useState<string>(
+    currentPath ??
+      (typeof window !== 'undefined' ? window.location.pathname : '/')
+  );
+
+  // Sync pathname with browser URL (for client-side hydration)
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !currentPath) {
+      setPathname(window.location.pathname);
+    }
+  }, [currentPath]);
 
   // Sync language state with URL on navigation
   useEffect(() => {
-    const urlLanguage = getLanguageFromPath(location.pathname);
+    const urlLanguage = getLanguageFromPath(pathname);
     if (urlLanguage !== language) {
       setLanguageState(urlLanguage);
       setStorageItem(LANGUAGE_STORAGE_KEY, urlLanguage);
     }
-  }, [location.pathname, language]);
+  }, [pathname, language]);
 
   // Save language preference to localStorage and navigate to new URL
   const setLanguage = useCallback(
@@ -159,16 +187,21 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       setLanguageState(lang);
       setStorageItem(LANGUAGE_STORAGE_KEY, lang);
 
-      // Navigate to the same page with new language prefix
-      const basePath = getBasePath(location.pathname);
+      // Navigate using native browser navigation (works in both React Router and Astro)
+      const basePath = getBasePath(pathname);
       const newPath =
         lang === 'ko'
           ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` ||
             KOREAN_PREFIX
           : basePath;
-      navigate(newPath, { replace: true });
+
+      // Use native navigation for Astro compatibility
+      if (typeof window !== 'undefined') {
+        // eslint-disable-next-line react-compiler/react-compiler
+        window.location.href = newPath;
+      }
     },
-    [language, location.pathname, navigate]
+    [language, pathname]
   );
 
   // Toggle between languages with URL update
@@ -194,13 +227,26 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 }
 
 /**
+ * Default translations for SSR fallback when LanguageProvider is not available
+ * This allows components to be rendered during Astro's static generation
+ */
+const defaultContextValue: LanguageContextValue = {
+  language: 'en',
+  setLanguage: () => {},
+  toggleLanguage: () => {},
+  t: allTranslations.en,
+};
+
+/**
  * Hook to use language context
- * @throws Error if used outside LanguageProvider
+ * Returns default values when used outside LanguageProvider (for SSR compatibility)
  */
 export function useLanguage(): LanguageContextValue {
   const context = useContext(LanguageContext);
+  // Return default context for SSR when provider is not available
+  // This happens during Astro's static generation
   if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    return defaultContextValue;
   }
   return context;
 }

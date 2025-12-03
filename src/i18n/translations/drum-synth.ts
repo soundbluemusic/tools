@@ -1,4 +1,4 @@
-import { DrumSynthTranslation } from '../types';
+import type { DrumSynthTranslation } from '../types';
 
 /**
  * Drum Synth Korean translations

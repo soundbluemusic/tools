@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import SitemapPage from '../../react-pages/Sitemap';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/sitemap';
+
+const seo = {
+  title: '사이트맵',
+  description:
+    'Tools 사이트맵 - QR 코드 생성기, 메트로놈 등 모든 무료 온라인 도구와 페이지 목록을 확인하세요.',
+  keywords:
+    '사이트맵, sitemap, Tools, 무료 도구, QR코드, 메트로놈, 온라인 도구 목록',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/sitemap"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <SitemapPage language={language} apps={apps} />
+  </ReactApp>
+</Layout>

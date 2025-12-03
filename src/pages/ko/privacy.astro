@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import PrivacyPage from '../../react-pages/Privacy';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/privacy';
+---
+
+<Layout
+  title="개인정보 처리방침"
+  description="본 서비스의 개인정보 처리에 관한 정책입니다"
+  canonicalPath="/privacy"
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <PrivacyPage language={language} />
+  </ReactApp>
+</Layout>

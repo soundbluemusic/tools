@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import MetronomePage from '../react-pages/Metronome';
+import { loadApps } from '../constants/apps';
+import { metronomeEn } from '../i18n/translations/metronome';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/metronome';
+const t = metronomeEn;
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <MetronomePage language={language} />
+  </ReactApp>
+</Layout>

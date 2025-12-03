@@ -1,9 +1,9 @@
 {
   "name": "tools",
   "private": true,
-  "version": "0.1.11-베타",
+  "version": "0.2.0-베타",
   "type": "module",
-  "description": "A collection of utility tools built with React",
+  "description": "A collection of utility tools built with Astro and React",
   "author": "Tools Team",
   "license": "MIT",
   "homepage": "https://tools.soundbluemusic.com",
@@ -15,9 +15,9 @@
     "url": "https://github.com/soundbluemusic/tools/issues"
   },
   "keywords": [
+    "astro",
     "react",
     "typescript",
-    "vite",
     "metronome",
     "drum-machine",
     "qr-code",
@@ -26,19 +26,19 @@
     "music-tools"
   ],
   "scripts": {
-    "dev": "vite",
+    "dev": "astro dev",
     "prebuild": "npm run generate-sitemap",
-    "build": "tsc -b && vite build && npm run build:standalone:all",
-    "preview": "vite preview",
+    "build": "astro check && astro build && npm run build:standalone:all",
+    "preview": "astro preview",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,json,astro}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json,astro}\"",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "astro check && tsc --noEmit",
     "validate": "npm run typecheck && npm run lint && npm run test:run",
     "generate-icons": "tsx scripts/generate-icons.ts",
     "generate-og-image": "tsx scripts/generate-og-image.ts",
@@ -51,7 +51,6 @@
     "prepare": "husky",
     "build:standalone": "vite build --config vite.standalone.config.ts && tsx scripts/rename-standalone.ts",
     "build:standalone:all": "npm run build:standalone:metronome:prod && npm run build:standalone:drum:prod && npm run build:standalone:drum-synth:prod && npm run build:standalone:qr:prod",
-    "build:standalone:metronome": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
     "build:standalone:metronome:prod": "STANDALONE_APP=metronome vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/metronome/index.html dist/standalone/metronome.html && rm -rf dist/standalone/src",
     "build:standalone:drum:prod": "STANDALONE_APP=drum vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/drum/index.html dist/standalone/drum.html && rm -rf dist/standalone/src",
     "build:standalone:drum-synth:prod": "STANDALONE_APP=drum-synth vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/drum-synth/index.html dist/standalone/drum-synth.html && rm -rf dist/standalone/src",
@@ -59,6 +58,9 @@
     "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
   },
   "dependencies": {
+    "astro": "^5.1.0",
+    "@astrojs/react": "^4.2.0",
+    "@astrojs/check": "^0.9.4",
     "qrious": "^4.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -73,6 +75,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.0.0",
+    "@vite-pwa/astro": "^1.2.0",
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
@@ -87,6 +90,7 @@
     "jsdom": "^27.2.0",
     "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1",
     "sharp": "^0.34.5",
     "tsx": "^4.21.0",
     "typescript": "^5.5.3",
@@ -104,7 +108,7 @@
       "eslint --fix",
       "prettier --write"
     ],
-    "*.{css,json,md}": [
+    "*.{css,json,md,astro}": [
       "prettier --write"
     ]
   },

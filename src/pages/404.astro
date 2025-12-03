@@ -1,0 +1,30 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const language = 'en';
+---
+
+<Layout
+  title="Page Not Found"
+  description="The page you're looking for doesn't exist"
+  noindex={true}
+  lang={language}
+>
+  <div
+    style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; text-align: center; padding: 2rem;"
+  >
+    <h1 style="font-size: 6rem; margin: 0; color: var(--color-text-tertiary);">
+      404
+    </h1>
+    <h2 style="margin: 1rem 0;">Page Not Found</h2>
+    <p style="color: var(--color-text-secondary); margin-bottom: 2rem;">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <a
+      href="/"
+      style="padding: 0.75rem 1.5rem; background: var(--color-interactive-hover); color: white; border-radius: 8px; text-decoration: none;"
+    >
+      Go Home
+    </a>
+  </div>
+</Layout>

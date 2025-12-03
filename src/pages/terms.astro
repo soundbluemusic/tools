@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import TermsPage from '../react-pages/Terms';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/terms';
+---
+
+<Layout
+  title="Terms of Service"
+  description="Terms of service for using our platform"
+  canonicalPath={currentPath}
+  lang={language}
+  noindex={true}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <TermsPage language={language} />
+  </ReactApp>
+</Layout>

@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import DrumPage from '../react-pages/Drum';
+import { loadApps } from '../constants/apps';
+import { drumEn } from '../i18n/translations/drum';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/drum';
+const t = drumEn;
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath={currentPath}
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <DrumPage language={language} />
+  </ReactApp>
+</Layout>

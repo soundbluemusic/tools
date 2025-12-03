@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import QRPage from '../../react-pages/QR';
+import { loadApps } from '../../constants/apps';
+import { qrKo } from '../../i18n/translations/qr';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/qr';
+const t = qrKo;
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath="/qr"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <QRPage language={language} />
+  </ReactApp>
+</Layout>

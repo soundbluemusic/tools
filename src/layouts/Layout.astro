@@ -1,0 +1,169 @@
+---
+import '../styles/index.css';
+import { BRAND } from '../constants/brand';
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  canonicalPath?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article' | 'product';
+  noindex?: boolean;
+  lang?: 'ko' | 'en';
+}
+
+const {
+  title,
+  description = BRAND.description.ko,
+  keywords = '',
+  canonicalPath = '/',
+  ogImage = '/og-image.png',
+  ogType = 'website',
+  noindex = false,
+  lang = 'en',
+} = Astro.props;
+
+const siteUrl = BRAND.siteUrl;
+const fullTitle = title
+  ? `${title} | ${BRAND.name}`
+  : `${BRAND.name} - ${BRAND.tagline}`;
+const canonicalUrl = `${siteUrl}${canonicalPath}`;
+const fullOgImage = ogImage.startsWith('http')
+  ? ogImage
+  : `${siteUrl}${ogImage}`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <!-- Primary SEO Meta Tags -->
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="author" content={BRAND.copyrightHolder} />
+    <meta
+      name="robots"
+      content={noindex
+        ? 'noindex, nofollow'
+        : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'}
+    />
+    <meta
+      name="googlebot"
+      content={noindex ? 'noindex, nofollow' : 'index, follow'}
+    />
+    <meta name="language" content={lang === 'ko' ? 'Korean' : 'English'} />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="rating" content="general" />
+    <meta name="distribution" content="global" />
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Alternate Languages -->
+    <link
+      rel="alternate"
+      hreflang="ko"
+      href={`${siteUrl}/ko${canonicalPath === '/' ? '' : canonicalPath}`}
+    />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${canonicalPath}`} />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={`${siteUrl}${canonicalPath}`}
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={BRAND.name} />
+    <meta property="og:locale" content={lang === 'ko' ? 'ko_KR' : 'en_US'} />
+    <meta
+      property="og:locale:alternate"
+      content={lang === 'ko' ? 'en_US' : 'ko_KR'}
+    />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={fullTitle} />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={fullOgImage} />
+    <meta name="twitter:image:alt" content={fullTitle} />
+
+    <!-- Theme & PWA -->
+    <meta
+      name="theme-color"
+      content="#242424"
+      media="(prefers-color-scheme: dark)"
+    />
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content={BRAND.name} />
+    <meta name="application-name" content={BRAND.name} />
+    <meta name="msapplication-TileColor" content="#1a1a2e" />
+
+    <!-- Performance hints -->
+    <meta http-equiv="x-dns-prefetch-control" content="on" />
+
+    <!-- Favicon & Icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/icons/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
+
+    <!-- View Transitions -->
+    <meta name="view-transition" content="same-origin" />
+  </head>
+  <body>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      #root {
+        width: 100%;
+        min-height: 100vh;
+      }
+    </style>
+    <div id="root">
+      <slot />
+    </div>
+  </body>
+</html>

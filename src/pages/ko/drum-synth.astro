@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import DrumSynthPage from '../../react-pages/DrumSynth';
+import { loadApps } from '../../constants/apps';
+import { drumSynthKo } from '../../i18n/translations/drum-synth';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/drum-synth';
+const t = drumSynthKo;
+---
+
+<Layout
+  title={t.seo.title}
+  description={t.seo.description}
+  keywords={t.seo.keywords}
+  canonicalPath="/drum-synth"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <DrumSynthPage language={language} />
+  </ReactApp>
+</Layout>

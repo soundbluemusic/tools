@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import MusicToolsPage from '../react-pages/MusicTools';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/music-tools';
+
+const seo = {
+  title: 'Music Tools',
+  description:
+    'Free online music tools. Metronome, drum machine, drum synth and more tools for music practice and composition.',
+  keywords:
+    'metronome, drum machine, drum synth, music tools, free music tools, online metronome',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/music-tools"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <MusicToolsPage language={language} apps={apps} />
+  </ReactApp>
+</Layout>

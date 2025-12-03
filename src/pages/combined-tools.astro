@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ReactApp } from '../components/ReactApp';
+import CombinedToolsPage from '../react-pages/CombinedTools';
+import { loadApps } from '../constants/apps';
+
+const apps = await loadApps();
+const language = 'en';
+const currentPath = '/combined-tools';
+
+const seo = {
+  title: 'Combined Tools',
+  description:
+    'All-in-one tools combining multiple features. Work more efficiently with integrated tools.',
+  keywords:
+    'combined tools, all-in-one tools, integrated tools, multi-feature tools',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/combined-tools"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <CombinedToolsPage language={language} apps={apps} />
+  </ReactApp>
+</Layout>

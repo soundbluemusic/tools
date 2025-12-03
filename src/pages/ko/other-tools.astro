@@ -1,0 +1,34 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ReactApp } from '../../components/ReactApp';
+import OtherToolsPage from '../../react-pages/OtherTools';
+import { loadApps } from '../../constants/apps';
+
+const apps = await loadApps();
+const language = 'ko';
+const currentPath = '/ko/other-tools';
+
+const seo = {
+  title: '기타 도구',
+  description:
+    '무료 온라인 유틸리티 도구 모음. QR 코드 생성기 등 다양한 유틸리티 도구를 제공합니다.',
+  keywords: 'QR코드 생성기, 무료 QR코드, 온라인 도구, 유틸리티 도구',
+};
+---
+
+<Layout
+  title={seo.title}
+  description={seo.description}
+  keywords={seo.keywords}
+  canonicalPath="/other-tools"
+  lang={language}
+>
+  <ReactApp
+    client:only="react"
+    currentPath={currentPath}
+    language={language}
+    apps={apps}
+  >
+    <OtherToolsPage language={language} apps={apps} />
+  </ReactApp>
+</Layout>
