@@ -16,24 +16,17 @@ function DefaultErrorFallback({ error, onReset }: ErrorFallbackProps) {
   const { t } = useLanguage();
 
   return (
-    <div
-      className="flex items-center justify-center min-h-[200px] p-8"
-      role="alert"
-    >
-      <div className="text-center max-w-[400px]">
-        <h2 className="text-xl font-semibold mb-3 text-error">
-          {t.common.errorBoundary.title}
-        </h2>
-        <p className="text-text-secondary mb-4">
+    <div className="error-boundary" role="alert">
+      <div className="error-boundary-content">
+        <h2 className="error-boundary-title">{t.common.errorBoundary.title}</h2>
+        <p className="error-boundary-message">
           {t.common.errorBoundary.message}
         </p>
         {import.meta.env.DEV && error && (
-          <pre className="bg-bg-secondary p-4 rounded-md font-mono text-sm text-left overflow-x-auto mb-4">
-            {error.message}
-          </pre>
+          <pre className="error-boundary-details">{error.message}</pre>
         )}
         <button
-          className="px-6 py-3 bg-accent-primary text-text-inverse rounded-md font-medium transition-colors duration-fast hover:bg-accent-hover"
+          className="error-boundary-button"
           onClick={onReset}
           type="button"
         >

@@ -19,7 +19,7 @@ const AppList = memo<AppListProps>(
   function AppList({ apps, isPending = false, language, ariaLabel }) {
     return (
       <nav
-        className={`grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 ${isPending ? 'opacity-70 pointer-events-none' : ''}`}
+        className={`app-list${isPending ? ' pending' : ''}`}
         role="list"
         aria-label={ariaLabel}
         aria-busy={isPending}

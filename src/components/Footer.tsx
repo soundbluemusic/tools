@@ -13,12 +13,12 @@ const ShareButton = lazy(() =>
  */
 export const Footer = memo(function Footer() {
   const t = useTranslations();
-  const { language, localizedPath } = useLanguage();
+  const { language } = useLanguage();
 
   return (
-    <footer className="mt-auto py-6 px-0 sm:py-8 sm:px-6 text-center border-t border-border-primary bg-bg-primary">
+    <footer className="footer">
       {/* Share Button - lazy loaded (always shares homepage) */}
-      <div className="mb-4 sm:mb-6">
+      <div className="footer-share">
         <Suspense fallback={null}>
           <ShareButton
             variant="footer"
@@ -30,56 +30,36 @@ export const Footer = memo(function Footer() {
       </div>
 
       {/* Footer Menu */}
-      <nav
-        className="flex justify-center flex-wrap gap-4 sm:gap-6 mb-4"
-        aria-label="Footer navigation"
-      >
-        <Link
-          to={localizedPath('/privacy')}
-          className="text-text-primary text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity duration-fast"
-        >
+      <nav className="footer-menu" aria-label="Footer navigation">
+        <Link to="/privacy" className="footer-link">
           {t.common.footer.privacy}
         </Link>
-        <Link
-          to={localizedPath('/terms')}
-          className="text-text-primary text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity duration-fast"
-        >
+        <Link to="/terms" className="footer-link">
           {t.common.footer.terms}
         </Link>
         {BRAND.githubUrl && (
           <a
             href={BRAND.githubUrl}
-            className="text-text-primary text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity duration-fast"
+            className="footer-link"
             target="_blank"
             rel="noopener noreferrer"
           >
             {t.common.footer.github}
           </a>
         )}
-        <Link
-          to={localizedPath('/sitemap')}
-          className="text-text-primary text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity duration-fast"
-        >
+        <Link to="/sitemap" className="footer-link">
           {t.common.footer.sitemap}
         </Link>
-        <Link
-          to={localizedPath('/opensource')}
-          className="text-text-primary text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity duration-fast"
-        >
+        <Link to="/opensource" className="footer-link">
           {t.common.footer.opensource}
         </Link>
-        <Link
-          to={localizedPath('/tools-used')}
-          className="text-text-primary text-xs sm:text-sm opacity-70 hover:opacity-100 transition-opacity duration-fast"
-        >
+        <Link to="/tools-used" className="footer-link">
           {t.common.footer.toolsUsed}
         </Link>
       </nav>
 
       {/* Copyright */}
-      <p className="m-0 text-xs text-text-primary opacity-50">
-        © {BRAND.copyrightHolder}. MIT License
-      </p>
+      <p className="footer-copyright">© {BRAND.copyrightHolder}. MIT License</p>
     </footer>
   );
 });

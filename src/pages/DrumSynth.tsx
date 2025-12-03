@@ -19,7 +19,7 @@ const DrumSynth = memo(function DrumSynth() {
     title: drumSynth.seo.title,
     description: drumSynth.seo.description,
     keywords: drumSynth.seo.keywords,
-    basePath: '/drum-synth',
+    canonicalPath: '/drum-synth',
   });
 
   // Breadcrumb items

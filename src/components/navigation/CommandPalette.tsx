@@ -2,6 +2,7 @@ import { memo, useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
 import type { App } from '../../types';
+import './CommandPalette.css';
 
 // SVG Icons
 const SearchIcon = () => (
@@ -76,7 +77,7 @@ export const CommandPalette = memo(function CommandPalette({
   onClose,
   apps,
 }: CommandPaletteProps) {
-  const { language, localizedPath } = useLanguage();
+  const { language } = useLanguage();
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -103,7 +104,7 @@ export const CommandPalette = memo(function CommandPalette({
             <polyline points="9 22 9 12 15 12 15 22" />
           </svg>
         ),
-        action: () => navigate(localizedPath('/')),
+        action: () => navigate('/'),
         keywords: ['home', 'main', '홈', '메인'],
       },
       {
@@ -125,11 +126,11 @@ export const CommandPalette = memo(function CommandPalette({
             <rect x="14" y="14" width="7" height="7" rx="1" />
           </svg>
         ),
-        action: () => navigate(localizedPath('/sitemap')),
+        action: () => navigate('/sitemap'),
         keywords: ['sitemap', 'all', '사이트맵', '전체'],
       },
     ],
-    [navigate, localizedPath]
+    [navigate]
   );
 
   // Filter results based on query
@@ -223,7 +224,7 @@ export const CommandPalette = memo(function CommandPalette({
           e.preventDefault();
           // Execute selected action
           if (selectedIndex < filteredResults.apps.length) {
-            navigate(localizedPath(filteredResults.apps[selectedIndex].url));
+            navigate(filteredResults.apps[selectedIndex].url);
             onClose();
           } else {
             const actionIndex = selectedIndex - filteredResults.apps.length;
@@ -237,14 +238,7 @@ export const CommandPalette = memo(function CommandPalette({
           break;
       }
     },
-    [
-      selectedIndex,
-      totalResults,
-      filteredResults,
-      navigate,
-      localizedPath,
-      onClose,
-    ]
+    [selectedIndex, totalResults, filteredResults, navigate, onClose]
   );
 
   // Handle item click - uses data-index attribute to avoid inline functions
@@ -252,14 +246,14 @@ export const CommandPalette = memo(function CommandPalette({
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const index = parseInt(e.currentTarget.dataset.index || '0', 10);
       if (index < filteredResults.apps.length) {
-        navigate(localizedPath(filteredResults.apps[index].url));
+        navigate(filteredResults.apps[index].url);
       } else {
         const actionIndex = index - filteredResults.apps.length;
         filteredResults.actions[actionIndex]?.action();
       }
       onClose();
     },
-    [filteredResults, navigate, localizedPath, onClose]
+    [filteredResults, navigate, onClose]
   );
 
   // Handle mouse enter - uses data-index attribute to avoid inline functions
@@ -302,23 +296,23 @@ export const CommandPalette = memo(function CommandPalette({
 
   return (
     <div
-      className="fixed inset-0 z-modal-backdrop flex items-start justify-center pt-[15vh] bg-bg-overlay backdrop-blur-sm animate-fadeIn max-[575px]:pt-4 motion-reduce:animate-none"
+      className="command-palette-backdrop"
       onClick={handleBackdropClick}
       aria-hidden={!isOpen}
     >
       <div
-        className="w-full max-w-command-palette h-command-palette mx-4 bg-bg-secondary border border-border-primary rounded-lg shadow-2xl flex flex-col overflow-hidden animate-slideDown max-[575px]:max-w-none max-[575px]:mx-3 max-[575px]:max-h-[calc(100vh-2rem-env(safe-area-inset-bottom))] motion-reduce:animate-none"
+        className="command-palette"
         role="dialog"
         aria-modal="true"
         aria-label={language === 'ko' ? '명령 팔레트' : 'Command Palette'}
       >
         {/* Search Input */}
-        <div className="flex items-center gap-3 p-4 border-b border-border-primary text-text-secondary">
+        <div className="command-palette-header">
           <SearchIcon />
           <input
             ref={inputRef}
             type="text"
-            className="flex-1 p-0 m-0 bg-transparent border-none outline-none text-text-primary text-base caret-text-primary placeholder:text-text-tertiary"
+            className="command-palette-input"
             placeholder={t.placeholder}
             value={query}
             onChange={handleQueryChange}
@@ -329,120 +323,81 @@ export const CommandPalette = memo(function CommandPalette({
             autoCapitalize="off"
             spellCheck="false"
           />
-          <kbd className="inline-flex items-center justify-center px-2 py-1 bg-bg-tertiary border border-border-primary rounded-sm text-text-tertiary font-mono text-xs">
-            ESC
-          </kbd>
+          <kbd className="command-palette-esc">ESC</kbd>
         </div>
 
         {/* Results */}
-        <div
-          className="flex-1 overflow-y-auto overscroll-contain p-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border-primary [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-border-hover"
-          ref={listRef}
-        >
+        <div className="command-palette-results" ref={listRef}>
           {totalResults === 0 ? (
-            <div className="flex items-center justify-center p-8 text-text-tertiary text-sm">
+            <div className="command-palette-empty">
               <p>{t.noResults}</p>
             </div>
           ) : (
             <>
               {/* Apps */}
               {filteredResults.apps.length > 0 && (
-                <div className="mb-2">
-                  <div className="px-3 py-2 text-text-tertiary text-xs font-semibold uppercase tracking-wide">
-                    {t.tools}
-                  </div>
-                  {filteredResults.apps.map((app, index) => {
-                    const isSelected = selectedIndex === index;
-                    return (
-                      <button
-                        key={app.id}
-                        data-command-item
-                        data-index={index}
-                        className={`flex items-center gap-3 w-full p-3 border-none rounded-md text-sm text-left cursor-pointer transition-colors duration-fast motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:-outline-offset-2 ${
-                          isSelected
-                            ? 'bg-interactive-active text-text-primary'
-                            : 'bg-transparent text-text-secondary hover:bg-interactive-hover hover:text-text-primary'
-                        }`}
-                        onClick={handleItemClick}
-                        onMouseEnter={handleItemMouseEnter}
+                <div className="command-palette-section">
+                  <div className="command-palette-section-label">{t.tools}</div>
+                  {filteredResults.apps.map((app, index) => (
+                    <button
+                      key={app.id}
+                      data-command-item
+                      data-index={index}
+                      className={`command-palette-item ${selectedIndex === index ? 'selected' : ''}`}
+                      onClick={handleItemClick}
+                      onMouseEnter={handleItemMouseEnter}
+                    >
+                      <span
+                        className="command-palette-item-icon"
+                        aria-hidden="true"
                       >
-                        <span
-                          className={`flex items-center justify-center w-8 h-8 shrink-0 rounded-md text-lg leading-none ${
-                            isSelected
-                              ? 'bg-interactive-muted'
-                              : 'bg-bg-tertiary'
-                          }`}
-                          aria-hidden="true"
-                        >
-                          {app.icon}
+                        {app.icon}
+                      </span>
+                      <div className="command-palette-item-content">
+                        <span className="command-palette-item-title">
+                          {language === 'ko' ? app.name.ko : app.name.en}
                         </span>
-                        <div className="flex-1 min-w-0 flex flex-col gap-1">
-                          <span className="font-medium text-text-primary truncate">
-                            {language === 'ko' ? app.name.ko : app.name.en}
-                          </span>
-                          <span className="text-xs text-text-tertiary truncate">
-                            {language === 'ko' ? app.desc.ko : app.desc.en}
-                          </span>
-                        </div>
-                        <span
-                          className={`shrink-0 text-text-tertiary transition-opacity duration-fast motion-reduce:transition-none ${
-                            isSelected ? 'opacity-100' : 'opacity-0'
-                          }`}
-                        >
-                          <ArrowRightIcon />
+                        <span className="command-palette-item-desc">
+                          {language === 'ko' ? app.desc.ko : app.desc.en}
                         </span>
-                      </button>
-                    );
-                  })}
+                      </div>
+                      <ArrowRightIcon />
+                    </button>
+                  ))}
                 </div>
               )}
 
               {/* Quick Actions */}
               {filteredResults.actions.length > 0 && (
-                <div className="mb-2">
-                  <div className="px-3 py-2 text-text-tertiary text-xs font-semibold uppercase tracking-wide">
+                <div className="command-palette-section">
+                  <div className="command-palette-section-label">
                     {t.actions}
                   </div>
                   {filteredResults.actions.map((action, index) => {
                     const itemIndex = filteredResults.apps.length + index;
-                    const isSelected = selectedIndex === itemIndex;
                     return (
                       <button
                         key={action.id}
                         data-command-item
                         data-index={itemIndex}
-                        className={`flex items-center gap-3 w-full p-3 border-none rounded-md text-sm text-left cursor-pointer transition-colors duration-fast motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:-outline-offset-2 ${
-                          isSelected
-                            ? 'bg-interactive-active text-text-primary'
-                            : 'bg-transparent text-text-secondary hover:bg-interactive-hover hover:text-text-primary'
-                        }`}
+                        className={`command-palette-item ${selectedIndex === itemIndex ? 'selected' : ''}`}
                         onClick={handleItemClick}
                         onMouseEnter={handleItemMouseEnter}
                       >
                         <span
-                          className={`flex items-center justify-center w-8 h-8 shrink-0 rounded-md text-lg leading-none ${
-                            isSelected
-                              ? 'bg-interactive-muted'
-                              : 'bg-bg-tertiary'
-                          }`}
+                          className="command-palette-item-icon"
                           aria-hidden="true"
                         >
                           {action.icon}
                         </span>
-                        <div className="flex-1 min-w-0 flex flex-col gap-1">
-                          <span className="font-medium text-text-primary truncate">
+                        <div className="command-palette-item-content">
+                          <span className="command-palette-item-title">
                             {language === 'ko'
                               ? action.labelKo
                               : action.labelEn}
                           </span>
                         </div>
-                        <span
-                          className={`shrink-0 text-text-tertiary transition-opacity duration-fast motion-reduce:transition-none ${
-                            isSelected ? 'opacity-100' : 'opacity-0'
-                          }`}
-                        >
-                          <ArrowRightIcon />
-                        </span>
+                        <ArrowRightIcon />
                       </button>
                     );
                   })}
@@ -453,20 +408,16 @@ export const CommandPalette = memo(function CommandPalette({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-4 px-4 py-3 border-t border-border-primary bg-bg-tertiary max-[575px]:hidden">
-          <div className="flex items-center gap-2 text-text-tertiary text-xs">
-            <kbd className="inline-flex items-center justify-center min-w-[20px] px-1.5 py-0.5 bg-bg-secondary border border-border-primary rounded-sm font-mono text-[10px] leading-tight">
+        <div className="command-palette-footer">
+          <div className="command-palette-hint">
+            <kbd>
               <EnterIcon />
             </kbd>
             <span>{t.hint}</span>
           </div>
-          <div className="flex items-center gap-2 text-text-tertiary text-xs">
-            <kbd className="inline-flex items-center justify-center min-w-[20px] px-1.5 py-0.5 bg-bg-secondary border border-border-primary rounded-sm font-mono text-[10px] leading-tight">
-              ↑
-            </kbd>
-            <kbd className="inline-flex items-center justify-center min-w-[20px] px-1.5 py-0.5 bg-bg-secondary border border-border-primary rounded-sm font-mono text-[10px] leading-tight">
-              ↓
-            </kbd>
+          <div className="command-palette-hint">
+            <kbd>↑</kbd>
+            <kbd>↓</kbd>
             <span>{language === 'ko' ? '탐색' : 'navigate'}</span>
           </div>
         </div>

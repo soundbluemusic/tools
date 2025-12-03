@@ -10,10 +10,3 @@ export type { Theme } from './useTheme';
 export { useApps, AppsProvider } from './useApps';
 export { useDropdown, useDropdownToggle } from './useDropdown';
 export { useIsActive } from './useIsActive';
-export {
-  useLocalizedPath,
-  getLanguageFromPath,
-  getBasePath,
-  buildLocalizedPath,
-  KO_PREFIX,
-} from './useLocalizedPath';

@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
+import './OpenSource.css';
 
 /**
  * Open source libraries used in this project
@@ -265,54 +266,44 @@ const OpenSource = memo(function OpenSource() {
       language === 'ko'
         ? 'Tools에 사용된 오픈소스 라이브러리 목록'
         : 'List of open source libraries used in Tools',
-    basePath: '/opensource',
+    canonicalPath: '/opensource',
     noindex: true,
   });
 
   return (
     <PageLayout title={title} description={description}>
-      <div className="mb-6 flex flex-col gap-3">
+      <div className="opensource-notes">
         {noteTexts.map((note, index) => (
-          <p
-            key={index}
-            className="m-0 rounded-md border-l-[3px] border-info bg-bg-secondary px-4 py-3 text-sm text-text-secondary"
-          >
+          <p key={index} className="opensource-note">
             {note[language]}
           </p>
         ))}
       </div>
       {LIBRARY_CATEGORIES.map((category) => (
-        <section key={category.title.en} className="mb-8 last:mb-0">
-          <h2 className="mb-4 border-b border-border-secondary pb-2 text-xl font-semibold text-text-primary">
+        <section key={category.title.en} className="opensource-category">
+          <h2 className="opensource-category-title">
             {category.title[language]}
           </h2>
-          <ul className="m-0 flex list-none flex-col gap-4 p-0">
+          <ul className="opensource-list">
             {category.libraries.map((lib) => (
-              <li
-                key={lib.name}
-                className="rounded-md border border-border-secondary bg-bg-tertiary p-4 transition-shadow duration-fast hover:shadow-md"
-              >
-                <div className="mb-2 flex flex-wrap items-center gap-3">
+              <li key={lib.name} className="opensource-item">
+                <div className="opensource-header">
                   <a
                     href={lib.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-lg font-semibold text-info no-underline hover:underline"
+                    className="opensource-name"
                   >
                     {lib.name}
                   </a>
-                  <span className="rounded-sm bg-bg-secondary px-2 py-1 text-sm text-text-secondary">
+                  <span className="opensource-version">
                     {lib.version.startsWith('Browser')
                       ? lib.version
                       : `v${lib.version}`}
                   </span>
-                  <span className="rounded-sm bg-bg-secondary px-2 py-1 text-xs font-medium text-text-tertiary">
-                    {lib.license}
-                  </span>
+                  <span className="opensource-license">{lib.license}</span>
                 </div>
-                <p className="m-0 text-sm leading-relaxed text-text-secondary">
-                  {lib.description[language]}
-                </p>
+                <p className="opensource-desc">{lib.description[language]}</p>
               </li>
             ))}
           </ul>

@@ -1,10 +1,26 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
+// React Compiler configuration
+// https://react.dev/learn/react-compiler
+const ReactCompilerConfig = {
+  target: '19', // React 19
+};
+
 // https://vitejs.dev/config/
-// Cloudflare Pages 최적화 설정 - Vanilla TypeScript (React 제거)
+// Cloudflare Pages 최적화 설정 + React Compiler (자동 메모이제이션)
 export default defineConfig(({ mode }) => ({
   plugins: [
+    react({
+      // Use automatic JSX runtime for smaller bundles
+      jsxRuntime: 'automatic',
+      // Enable React Compiler for automatic memoization
+      // Replaces manual memo(), useMemo(), useCallback()
+      babel: {
+        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
+      },
+    }),
     VitePWA({
       registerType: 'autoUpdate',
       // Defer SW registration to after initial render
@@ -176,7 +192,19 @@ export default defineConfig(({ mode }) => ({
         // Manual chunk splitting for optimal Cloudflare CDN caching
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            // QRious 라이브러리
+            // React core - 가장 안정적인 의존성
+            if (
+              id.includes('react') ||
+              id.includes('react-dom') ||
+              id.includes('scheduler')
+            ) {
+              return 'react-vendor';
+            }
+            // React Router - 별도 청크로 분리 (업데이트 빈도 다름)
+            if (id.includes('react-router')) {
+              return 'router-vendor';
+            }
+            // QRious 등 기타 라이브러리
             if (id.includes('qrious')) {
               return 'qr-vendor';
             }
@@ -222,9 +250,9 @@ export default defineConfig(({ mode }) => ({
       polyfill: false,
     },
   },
-  // Optimize dependencies - Vanilla TypeScript (no React)
+  // Optimize dependencies
   optimizeDeps: {
-    include: ['qrious'],
+    include: ['react', 'react-dom', 'react-router-dom'],
     // Use esbuild for dependency optimization
     esbuildOptions: {
       target: 'es2020',
@@ -234,7 +262,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     // Pre-bundle dependencies for faster startup
     warmup: {
-      clientFiles: ['./src/vanilla/main.ts', './src/vanilla/App.ts'],
+      clientFiles: ['./src/main.tsx', './src/App.tsx'],
     },
   },
   // Preview server config

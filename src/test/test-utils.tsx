@@ -5,18 +5,12 @@
 import { type ReactElement, type ReactNode } from 'react';
 import { render, type RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { LanguageProvider } from '../i18n';
 
 /**
  * All providers wrapper for testing
- * Note: BrowserRouter must wrap LanguageProvider because LanguageProvider uses useLocation
  */
 function AllProviders({ children }: { children: ReactNode }) {
-  return (
-    <BrowserRouter>
-      <LanguageProvider>{children}</LanguageProvider>
-    </BrowserRouter>
-  );
+  return <BrowserRouter>{children}</BrowserRouter>;
 }
 
 /**

@@ -1,0 +1,497 @@
+/**
+ * Metronome Player Styles
+ */
+
+.metronome {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+/* Controls row */
+.metronome-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-4);
+  justify-content: space-between;
+}
+
+.metronome-control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  background: var(--color-bg-tertiary);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-radius: var(--radius-lg);
+}
+
+.metronome-label {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  white-space: nowrap;
+}
+
+.metronome-input {
+  width: 3rem;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  outline: none;
+}
+
+.metronome-input--small {
+  width: 2.5rem;
+}
+
+.metronome-input:disabled {
+  opacity: 0.5;
+}
+
+.metronome-select {
+  width: 2.5rem;
+  padding: var(--spacing-1);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  outline: none;
+}
+
+.metronome-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.metronome-divider {
+  color: var(--color-text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+}
+
+.metronome-unit {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.metronome-separator {
+  width: 1px;
+  height: var(--spacing-6);
+  background: var(--color-border-secondary);
+  margin: 0 var(--spacing-2);
+}
+
+.metronome-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 4.5rem;
+}
+
+.metronome-countdown-label {
+  color: var(--color-text-tertiary);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  white-space: nowrap;
+}
+
+.metronome-countdown-value {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.metronome-countdown-value.active {
+  color: var(--color-text-primary);
+}
+
+/* Main display area */
+.metronome-main {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--spacing-6);
+  align-items: end;
+}
+
+.metronome-display {
+  text-align: center;
+}
+
+.metronome-display:first-child {
+  text-align: left;
+}
+
+.metronome-display:last-child {
+  text-align: right;
+}
+
+.metronome-display-label {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  margin-bottom: var(--spacing-2);
+}
+
+.metronome-display-value {
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 200;
+  color: var(--color-text-primary);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+/* Pendulum */
+.metronome-pendulum {
+  width: 7rem;
+  height: 8rem;
+}
+
+.metronome-pendulum-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.metronome-pendulum-arm {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Sliders */
+.metronome-sliders {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+.metronome-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.metronome-slider {
+  width: 100%;
+  height: 4px;
+  background: var(--color-border-secondary);
+  border-radius: var(--radius-full);
+  appearance: none;
+  cursor: pointer;
+}
+
+.metronome-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--color-text-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: transform var(--transition-fast) var(--ease-default);
+}
+
+.metronome-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.metronome-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--color-text-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.metronome-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.625rem;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Beat visualization */
+.metronome-beats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-4);
+  min-height: 3.5rem;
+  overflow-x: auto;
+  padding: var(--spacing-2) var(--spacing-4);
+}
+
+.metronome-beat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 3.5rem;
+  flex-shrink: 0;
+}
+
+.metronome-note {
+  display: block;
+}
+
+/* Info display */
+.metronome-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-8);
+}
+
+.metronome-info-item {
+  text-align: center;
+  padding: var(--spacing-4);
+  border-top: 1px solid var(--color-border-secondary);
+}
+
+.metronome-info-label {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  margin-bottom: var(--spacing-2);
+}
+
+.metronome-info-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 300;
+  color: var(--color-text-primary);
+}
+
+.metronome-info-value--mono {
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-2xl);
+  font-variant-numeric: tabular-nums;
+}
+
+.metronome-info-precision {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-1);
+}
+
+/* Action buttons */
+.metronome-actions {
+  display: flex;
+  gap: var(--spacing-3);
+}
+
+.metronome-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-lg);
+  transition: background-color var(--transition-fast) var(--ease-default);
+}
+
+.metronome-btn--primary {
+  flex: 1;
+  background: var(--color-accent-primary, var(--color-text-primary));
+  color: var(--color-text-inverse);
+}
+
+.metronome-btn--primary:hover {
+  background: var(--color-accent-hover, var(--color-text-primary));
+}
+
+.metronome-btn--secondary {
+  padding: var(--spacing-4);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.metronome-btn--secondary:hover {
+  background: var(--color-interactive-hover);
+}
+
+/* Sync info */
+.metronome-sync {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.metronome-sync-title {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-1);
+}
+
+/* Tablet responsive */
+@media (max-width: 768px) {
+  .metronome-main {
+    gap: var(--spacing-4);
+  }
+
+  .metronome-pendulum {
+    width: 5.5rem;
+    height: 6.5rem;
+  }
+
+  .metronome-display-value {
+    font-size: clamp(2rem, 7vw, 3.5rem);
+  }
+
+  .metronome-info {
+    gap: var(--spacing-6);
+  }
+
+  .metronome-info-value {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .metronome {
+    gap: var(--spacing-4);
+  }
+
+  .metronome-controls {
+    flex-direction: column;
+    gap: var(--spacing-3);
+  }
+
+  .metronome-control-group {
+    width: 100%;
+    justify-content: space-between;
+    padding: var(--spacing-3);
+  }
+
+  .metronome-main {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--spacing-2);
+    align-items: center;
+  }
+
+  .metronome-display:first-child {
+    text-align: center;
+  }
+
+  .metronome-display:last-child {
+    text-align: center;
+  }
+
+  .metronome-pendulum {
+    width: 3.5rem;
+    height: 4.5rem;
+  }
+
+  .metronome-display-value {
+    font-size: 1.75rem;
+  }
+
+  .metronome-display-label {
+    font-size: 0.625rem;
+  }
+
+  .metronome-beats {
+    gap: var(--spacing-2);
+    min-height: 3rem;
+    padding: var(--spacing-1) var(--spacing-2);
+  }
+
+  .metronome-beat {
+    width: 1.25rem;
+    height: 2rem;
+  }
+
+  /* Make info grid single column on mobile */
+  .metronome-info {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4);
+  }
+
+  .metronome-info-item {
+    padding: var(--spacing-3);
+  }
+
+  .metronome-info-value {
+    font-size: var(--font-size-xl);
+  }
+
+  .metronome-info-value--mono {
+    font-size: var(--font-size-lg);
+  }
+
+  .metronome-sliders {
+    gap: var(--spacing-4);
+  }
+
+  .metronome-btn {
+    padding: var(--spacing-3) var(--spacing-4);
+    font-size: var(--font-size-base);
+    min-height: 48px;
+  }
+
+  .metronome-btn--secondary {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  .metronome-actions {
+    gap: var(--spacing-2);
+  }
+}
+
+/* Small mobile */
+@media (max-width: 360px) {
+  .metronome-control-group {
+    padding: var(--spacing-2);
+  }
+
+  .metronome-label {
+    font-size: 0.625rem;
+  }
+
+  .metronome-input {
+    width: 2.5rem;
+    font-size: var(--font-size-sm);
+  }
+
+  .metronome-pendulum {
+    width: 3rem;
+    height: 4rem;
+  }
+
+  .metronome-display-value {
+    font-size: 1.5rem;
+  }
+
+  .metronome-beat {
+    width: 1rem;
+    height: 1.75rem;
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .metronome-pendulum-arm {
+    transition: none;
+  }
+
+  .metronome-slider::-webkit-slider-thumb {
+    transition: none;
+  }
+}

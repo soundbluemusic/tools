@@ -1,18 +1,8 @@
 /**
  * Main stylesheet entry point
- * Tailwind CSS + Custom CSS Variables
+ * Import order matters - variables must come first
  */
 
-/* CSS Variables (design tokens) - must come first for @import rules */
 @import './variables.css';
-
-/* Base styles and resets */
 @import './base.css';
-
-/* App-level styles (legacy, will be gradually migrated to Tailwind) */
-@import '../App.css';
-
-/* Tailwind layers - after @imports per CSS spec */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import './components.css';

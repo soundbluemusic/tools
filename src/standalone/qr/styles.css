@@ -1,7 +1,8 @@
 /**
  * Standalone QR Generator Styles
  * Base styles and CSS variables for standalone app
- * Component styles now use Tailwind CSS classes
+ * Component styles come from QRGenerator.css via component import
  */
 
 @import '../common/base.css';
+@import '../../apps/qr/components/QRGenerator.css';

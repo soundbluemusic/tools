@@ -7,6 +7,7 @@ import { NavigationLayout } from './components/navigation';
 import { Loader } from './components/ui';
 import { LanguageProvider } from './i18n';
 import { ThemeProvider, AppsProvider, useApps } from './hooks';
+import './App.css';
 
 // Critical pages - direct imports for instant loading
 import Home from './pages/Home';
@@ -41,51 +42,32 @@ const Terms = lazy(() => import('./pages/Terms'));
  */
 function PageLoader() {
   return (
-    <div className="flex items-center justify-center min-h-[200px] [contain:layout_style]">
+    <div className="page-loader">
       <Loader size="lg" />
     </div>
   );
 }
 
 /**
- * Base route configuration (English - default language)
- */
-const BASE_ROUTES = [
-  { path: '/', element: <Home /> },
-  { path: '/music-tools', element: <MusicTools /> },
-  { path: '/other-tools', element: <OtherTools /> },
-  { path: '/combined-tools', element: <CombinedTools /> },
-  { path: '/metronome', element: <Metronome /> },
-  { path: '/drum', element: <Drum /> },
-  { path: '/drum-synth', element: <DrumSynth /> },
-  { path: '/drum-tool', element: <DrumTool /> },
-  { path: '/qr', element: <QR /> },
-  { path: '/sitemap', element: <Sitemap /> },
-  { path: '/opensource', element: <OpenSource /> },
-  { path: '/tools-used', element: <ToolsUsed /> },
-  { path: '/downloads', element: <Downloads /> },
-  { path: '/privacy', element: <Privacy /> },
-  { path: '/terms', element: <Terms /> },
-] as const;
-
-/**
- * Korean language prefix
- */
-const KO_PREFIX = '/ko';
-
-/**
- * Generate routes for both English (default) and Korean (/ko prefix)
+ * Route configuration with lazy loading support
  */
 const ROUTES = [
-  // English routes (default)
-  ...BASE_ROUTES,
-  // Korean routes (/ko prefix)
-  ...BASE_ROUTES.map((route) => ({
-    ...route,
-    path: route.path === '/' ? KO_PREFIX : KO_PREFIX + route.path,
-  })),
-  // 404 - must be last
-  { path: '*', element: <NotFound /> },
+  { path: '/', element: <Home />, lazy: false },
+  { path: '/music-tools', element: <MusicTools />, lazy: true },
+  { path: '/other-tools', element: <OtherTools />, lazy: true },
+  { path: '/combined-tools', element: <CombinedTools />, lazy: true },
+  { path: '/metronome', element: <Metronome />, lazy: true },
+  { path: '/drum', element: <Drum />, lazy: true },
+  { path: '/drum-synth', element: <DrumSynth />, lazy: true },
+  { path: '/drum-tool', element: <DrumTool />, lazy: true },
+  { path: '/qr', element: <QR />, lazy: true },
+  { path: '/sitemap', element: <Sitemap />, lazy: true },
+  { path: '/opensource', element: <OpenSource />, lazy: true },
+  { path: '/tools-used', element: <ToolsUsed />, lazy: true },
+  { path: '/downloads', element: <Downloads />, lazy: true },
+  { path: '/privacy', element: <Privacy />, lazy: true },
+  { path: '/terms', element: <Terms />, lazy: true },
+  { path: '*', element: <NotFound />, lazy: false },
 ] as const;
 
 /**
@@ -113,11 +95,7 @@ function AppContent() {
   return (
     <NavigationLayout apps={apps}>
       <SkipLink />
-      <main
-        id="main-content"
-        role="main"
-        style={{ viewTransitionName: 'main-content' }}
-      >
+      <main id="main-content" className="main-content" role="main">
         <Suspense fallback={<PageLoader />}>
           <Routes>
             {ROUTES.map((route) => (

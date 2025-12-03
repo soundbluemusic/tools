@@ -16,6 +16,7 @@ import {
   TIMING,
   PENDULUM,
 } from '../constants';
+import './MetronomePlayer.css';
 
 /**
  * Props for MetronomePlayer component
@@ -167,7 +168,7 @@ const NoteIcon = memo<{
         height={size * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="block"
+        className="metronome-note"
       >
         <ellipse
           cx="12"
@@ -190,7 +191,7 @@ const NoteIcon = memo<{
         height={size * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="block"
+        className="metronome-note"
       >
         <ellipse cx="12" cy="24" rx="7" ry="5" fill={color} />
         <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
@@ -205,7 +206,7 @@ const NoteIcon = memo<{
         height={size * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="block"
+        className="metronome-note"
       >
         <ellipse cx="12" cy="24" rx="7" ry="5" fill={color} />
         <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
@@ -221,7 +222,7 @@ const NoteIcon = memo<{
         height={size * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="block"
+        className="metronome-note"
       >
         <ellipse cx="12" cy="24" rx="7" ry="5" fill={color} />
         <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
@@ -592,14 +593,12 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
     countdownTime > 0 ? Math.max(0, countdownTime - countdownElapsed) : 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="metronome">
       {/* Top controls */}
-      <div className="flex flex-wrap gap-4 justify-between max-sm:flex-col max-sm:gap-3">
+      <div className="metronome-controls">
         {/* Time signature */}
-        <div className="flex items-center gap-2 bg-bg-tertiary p-3 px-4 rounded-lg max-sm:w-full max-sm:justify-between max-sm:p-3 max-xs:p-2">
-          <span className="text-text-tertiary text-xs uppercase tracking-wide whitespace-nowrap max-xs:text-[0.625rem]">
-            {t.timeSignature}
-          </span>
+        <div className="metronome-control-group">
+          <span className="metronome-label">{t.timeSignature}</span>
           <input
             type="number"
             min="1"
@@ -610,14 +609,14 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
                 Math.max(1, Math.min(12, parseInt(e.target.value) || 1))
               )
             }
-            className="w-10 p-1 px-2 text-base font-medium text-center bg-transparent border-none text-text-primary outline-none disabled:opacity-50 max-sm:w-10 max-xs:text-sm"
+            className="metronome-input metronome-input--small"
             disabled={isPlaying}
           />
-          <span className="text-text-primary text-lg font-medium">/</span>
+          <span className="metronome-divider">/</span>
           <select
             value={beatUnit}
             onChange={(e) => setBeatUnit(parseInt(e.target.value))}
-            className="w-10 p-1 text-base font-medium text-center bg-transparent border-none text-text-primary cursor-pointer outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            className="metronome-select"
             disabled={isPlaying}
           >
             <option value="2">2</option>
@@ -628,10 +627,8 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
         </div>
 
         {/* Timer */}
-        <div className="flex items-center gap-2 bg-bg-tertiary p-3 px-4 rounded-lg max-sm:w-full max-sm:justify-between max-sm:p-3 max-xs:p-2">
-          <span className="text-text-tertiary text-xs uppercase tracking-wide whitespace-nowrap max-xs:text-[0.625rem]">
-            {t.timer}
-          </span>
+        <div className="metronome-control-group">
+          <span className="metronome-label">{t.timer}</span>
           <input
             type="number"
             min="0"
@@ -644,12 +641,10 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
               })
             }
             placeholder="0"
-            className="w-10 p-1 px-2 text-base font-medium text-center bg-transparent border-none text-text-primary outline-none disabled:opacity-50 max-sm:w-10 max-xs:text-sm"
+            className="metronome-input metronome-input--small"
             disabled={isPlaying || elapsedTime > 0}
           />
-          <span className="text-text-tertiary text-xs whitespace-nowrap">
-            {t.minutes}
-          </span>
+          <span className="metronome-unit">{t.minutes}</span>
           <input
             type="number"
             min="0"
@@ -662,19 +657,15 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
               })
             }
             placeholder="0"
-            className="w-10 p-1 px-2 text-base font-medium text-center bg-transparent border-none text-text-primary outline-none disabled:opacity-50 max-sm:w-10 max-xs:text-sm"
+            className="metronome-input metronome-input--small"
             disabled={isPlaying || elapsedTime > 0}
           />
-          <span className="text-text-tertiary text-xs whitespace-nowrap">
-            {t.seconds}
-          </span>
-          <span className="w-px h-6 bg-border-secondary mx-2" />
-          <div className="flex flex-col items-center min-w-[4.5rem]">
-            <span className="text-text-tertiary text-[0.625rem] uppercase tracking-wide whitespace-nowrap">
-              {t.countdown}
-            </span>
+          <span className="metronome-unit">{t.seconds}</span>
+          <span className="metronome-separator" />
+          <div className="metronome-countdown">
+            <span className="metronome-countdown-label">{t.countdown}</span>
             <span
-              className={`font-mono text-sm font-bold tabular-nums ${countdownTime > 0 ? 'text-text-primary' : 'text-text-tertiary'}`}
+              className={`metronome-countdown-value ${countdownTime > 0 ? 'active' : ''}`}
             >
               {formatTime(currentCountdown)}
             </span>
@@ -683,20 +674,16 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       </div>
 
       {/* Main display */}
-      <div className="grid grid-cols-[1fr_auto_1fr] gap-6 items-end max-md:gap-4 max-sm:grid-cols-[1fr_1fr_1fr] max-sm:gap-2 max-sm:items-center">
+      <div className="metronome-main">
         {/* BPM display */}
-        <div className="text-center first:text-left last:text-right max-sm:first:text-center max-sm:last:text-center">
-          <div className="text-text-tertiary text-xs uppercase tracking-wide mb-2 max-sm:text-[0.625rem]">
-            {t.bpm}
-          </div>
-          <div className="text-[clamp(2.5rem,8vw,4.5rem)] font-extralight text-text-primary tracking-tight leading-none max-md:text-[clamp(2rem,7vw,3.5rem)] max-sm:text-[1.75rem] max-xs:text-[1.5rem]">
-            {bpm}
-          </div>
+        <div className="metronome-display">
+          <div className="metronome-display-label">{t.bpm}</div>
+          <div className="metronome-display-value">{bpm}</div>
         </div>
 
         {/* Pendulum */}
-        <div className="w-28 h-32 max-md:w-[5.5rem] max-md:h-[6.5rem] max-sm:w-14 max-sm:h-[4.5rem] max-xs:w-12 max-xs:h-16">
-          <svg viewBox="0 0 100 120" className="w-full h-full">
+        <div className="metronome-pendulum">
+          <svg viewBox="0 0 100 120" className="metronome-pendulum-svg">
             <rect
               x="15"
               y="112"
@@ -715,9 +702,8 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
               style={{
                 transformOrigin: '50px 108px',
                 transform: `rotate(${pendulumAngle}deg)`,
-                willChange: 'transform',
-                backfaceVisibility: 'hidden',
               }}
+              className="metronome-pendulum-arm"
             >
               <line
                 x1="50"
@@ -740,43 +726,39 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
         </div>
 
         {/* Volume display */}
-        <div className="text-center first:text-left last:text-right max-sm:first:text-center max-sm:last:text-center">
-          <div className="text-text-tertiary text-xs uppercase tracking-wide mb-2 max-sm:text-[0.625rem]">
-            {t.volume}
-          </div>
-          <div className="text-[clamp(2.5rem,8vw,4.5rem)] font-extralight text-text-primary tracking-tight leading-none max-md:text-[clamp(2rem,7vw,3.5rem)] max-sm:text-[1.75rem] max-xs:text-[1.5rem]">
-            {volume}
-          </div>
+        <div className="metronome-display">
+          <div className="metronome-display-label">{t.volume}</div>
+          <div className="metronome-display-value">{volume}</div>
         </div>
       </div>
 
       {/* Sliders */}
-      <div className="flex flex-col gap-6 max-sm:gap-4">
-        <div className="flex flex-col gap-2">
+      <div className="metronome-sliders">
+        <div className="metronome-slider-group">
           <input
             type="range"
             min={BPM_RANGE.MIN}
             max={BPM_RANGE.MAX}
             value={bpm}
             onChange={(e) => setBpm(parseInt(e.target.value))}
-            className="w-full h-1 bg-border-secondary rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-text-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-fast [&::-webkit-slider-thumb:hover]:scale-110 motion-reduce:[&::-webkit-slider-thumb]:transition-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-text-primary [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
+            className="metronome-slider"
           />
-          <div className="flex justify-between text-[0.625rem] text-text-tertiary uppercase tracking-wide">
+          <div className="metronome-slider-labels">
             <span>{t.slow}</span>
             <span>{t.fast}</span>
           </div>
         </div>
 
-        <div className="flex flex-col gap-2">
+        <div className="metronome-slider-group">
           <input
             type="range"
             min={VOLUME_RANGE.MIN}
             max={VOLUME_RANGE.MAX}
             value={volume}
             onChange={(e) => setVolume(parseInt(e.target.value))}
-            className="w-full h-1 bg-border-secondary rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:bg-text-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-fast [&::-webkit-slider-thumb:hover]:scale-110 motion-reduce:[&::-webkit-slider-thumb]:transition-none [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:bg-text-primary [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-pointer"
+            className="metronome-slider"
           />
-          <div className="flex justify-between text-[0.625rem] text-text-tertiary uppercase tracking-wide">
+          <div className="metronome-slider-labels">
             <span>{t.quiet}</span>
             <span>{t.loud}</span>
           </div>
@@ -784,12 +766,9 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       </div>
 
       {/* Beat visualization */}
-      <div className="flex justify-center items-center gap-4 min-h-14 overflow-x-auto p-2 px-4 max-sm:gap-2 max-sm:min-h-12 max-sm:p-1 max-sm:px-2">
+      <div className="metronome-beats">
         {[...Array(beatsPerMeasure)].map((_, i) => (
-          <div
-            key={i}
-            className="flex items-center justify-center w-8 h-14 flex-shrink-0 max-sm:w-5 max-sm:h-8 max-xs:w-4 max-xs:h-7"
-          >
+          <div key={i} className="metronome-beat">
             <NoteIcon
               unit={beatUnit}
               isActive={isPlaying && i === beat}
@@ -800,31 +779,25 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       </div>
 
       {/* Info display */}
-      <div className="grid grid-cols-2 gap-8 max-md:gap-6 max-sm:grid-cols-1 max-sm:gap-4">
-        <div className="text-center p-4 border-t border-border-secondary max-sm:p-3">
-          <div className="text-text-tertiary text-xs uppercase tracking-wide mb-2">
-            {t.measure}
-          </div>
-          <div className="text-3xl font-light text-text-primary max-md:text-2xl max-sm:text-xl">
-            {measureCount}
-          </div>
+      <div className="metronome-info">
+        <div className="metronome-info-item">
+          <div className="metronome-info-label">{t.measure}</div>
+          <div className="metronome-info-value">{measureCount}</div>
         </div>
-        <div className="text-center p-4 border-t border-border-secondary max-sm:p-3">
-          <div className="text-text-tertiary text-xs uppercase tracking-wide mb-2">
-            {t.elapsed}
-          </div>
-          <div className="font-mono font-bold text-2xl tabular-nums text-text-primary max-sm:text-lg">
+        <div className="metronome-info-item">
+          <div className="metronome-info-label">{t.elapsed}</div>
+          <div className="metronome-info-value metronome-info-value--mono">
             {formatTime(elapsedTime)}
           </div>
-          <div className="text-text-tertiary text-xs mt-1">{t.precision}</div>
+          <div className="metronome-info-precision">{t.precision}</div>
         </div>
       </div>
 
       {/* Action buttons */}
-      <div className="flex gap-3 max-sm:gap-2">
+      <div className="metronome-actions">
         <button
           onClick={handleStart}
-          className="flex flex-1 items-center justify-center gap-3 p-4 px-6 text-lg font-medium rounded-lg transition-colors duration-fast bg-accent-primary text-text-inverse hover:bg-accent-hover max-sm:p-3 max-sm:px-4 max-sm:text-base max-sm:min-h-12"
+          className="metronome-btn metronome-btn--primary"
         >
           {isPlaying ? (
             <>
@@ -855,7 +828,7 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
         </button>
         <button
           onClick={reset}
-          className="flex items-center justify-center p-4 text-lg font-medium rounded-lg transition-colors duration-fast bg-bg-tertiary text-text-primary hover:bg-interactive-hover max-sm:text-base max-sm:min-h-12 max-sm:min-w-12"
+          className="metronome-btn metronome-btn--secondary"
         >
           <svg
             width="18"
@@ -872,9 +845,9 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       </div>
 
       {/* Sync info */}
-      <div className="text-center text-text-tertiary text-xs">
-        <div className="font-bold text-text-primary mb-1">{t.perfectSync}</div>
-        <div>{t.syncDescription}</div>
+      <div className="metronome-sync">
+        <div className="metronome-sync-title">{t.perfectSync}</div>
+        <div className="metronome-sync-desc">{t.syncDescription}</div>
       </div>
     </div>
   );

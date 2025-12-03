@@ -43,7 +43,7 @@ const ToolsUsed = memo(function ToolsUsed() {
   useSEO({
     title: pageContent.title[language],
     description: pageContent.description[language],
-    basePath: '/tools-used',
+    canonicalPath: '/tools-used',
     noindex: true,
   });
 

@@ -18,7 +18,7 @@ const QR = memo(function QR() {
     title: qr.seo.title,
     description: qr.seo.description,
     keywords: qr.seo.keywords,
-    basePath: '/qr',
+    canonicalPath: '/qr',
   });
 
   // Breadcrumb items

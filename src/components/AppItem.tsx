@@ -31,12 +31,12 @@ const AppItem = memo<AppItemProps>(
     return (
       <Link
         to={app.url}
-        className="block p-5 no-underline text-text-primary bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-border-primary active:bg-interactive-active transition-colors duration-fast"
+        className="app-item"
         aria-label={`${name} - ${desc}`}
         role="listitem"
         onClick={handleClick}
       >
-        <span className="text-base font-normal leading-base">{name}</span>
+        <span className="app-item-text">{name}</span>
       </Link>
     );
   },
