@@ -170,7 +170,31 @@ export class NavigationLayout extends Component<
 
   private toggleSidebar(): void {
     const newState = !this.state.isSidebarOpen;
-    this.setState({ isSidebarOpen: newState });
+    // Update state directly without triggering re-render
+    this.state.isSidebarOpen = newState;
+
+    // Update main content wrapper classes directly
+    const mainWrapper =
+      this.element?.querySelector('#app-content')?.parentElement;
+    if (mainWrapper) {
+      if (newState) {
+        mainWrapper.classList.add('lg:pl-sidebar');
+        mainWrapper.classList.remove('lg:pl-0');
+      } else {
+        mainWrapper.classList.remove('lg:pl-sidebar');
+        mainWrapper.classList.add('lg:pl-0');
+      }
+    }
+
+    // Update footer classes directly
+    const footer = this.element?.querySelector('footer');
+    if (footer) {
+      if (newState) {
+        footer.classList.add('lg:pl-sidebar');
+      } else {
+        footer.classList.remove('lg:pl-sidebar');
+      }
+    }
 
     // Update child components
     if (this.headerComponent) {
@@ -183,7 +207,8 @@ export class NavigationLayout extends Component<
 
   private toggleBottomNav(): void {
     const newState = !this.state.isBottomNavOpen;
-    this.setState({ isBottomNavOpen: newState });
+    // Update state directly without triggering re-render
+    this.state.isBottomNavOpen = newState;
 
     if (this.bottomNavComponent) {
       this.bottomNavComponent.setProps({ isOpen: newState });
