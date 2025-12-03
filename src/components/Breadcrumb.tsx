@@ -1,6 +1,7 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n';
+import { useLocalizedPath } from '../hooks';
 import './Breadcrumb.css';
 
 interface BreadcrumbItem {
@@ -18,6 +19,13 @@ interface BreadcrumbProps {
  */
 export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
   const { language } = useLanguage();
+  const { toLocalizedPath } = useLocalizedPath();
+
+  // Memoize localized path function
+  const getPath = useCallback(
+    (path: string) => toLocalizedPath(path),
+    [toLocalizedPath]
+  );
 
   return (
     <nav className="breadcrumb" aria-label="Breadcrumb">
@@ -30,7 +38,7 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
             <li key={index} className="breadcrumb-item">
               {!isLast && item.href ? (
                 <>
-                  <Link to={item.href} className="breadcrumb-link">
+                  <Link to={getPath(item.href)} className="breadcrumb-link">
                     {index === 0 && (
                       <svg
                         className="breadcrumb-home-icon"

@@ -2,6 +2,7 @@ import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n';
 import { useTheme } from '../hooks/useTheme';
+import { useLocalizedPath } from '../hooks';
 import type { Theme } from '../hooks/useTheme';
 import { ThemeIcon } from './ui';
 import './Header.css';
@@ -23,6 +24,7 @@ export const Header = memo(function Header({
 }: HeaderProps) {
   const { language, toggleLanguage } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const { toLocalizedPath } = useLocalizedPath();
 
   const handleSearchClick = useCallback(() => {
     onSearchClick?.();
@@ -114,7 +116,7 @@ export const Header = memo(function Header({
 
       <div className="header-inner">
         {/* Logo */}
-        <Link to="/" className="header-logo">
+        <Link to={toLocalizedPath('/')} className="header-logo">
           <span className="header-logo-text">tools</span>
           <span className="header-logo-badge">beta</span>
         </Link>

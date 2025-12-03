@@ -1,6 +1,6 @@
 import { memo, useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
+import { useLocalizedNavigate } from '../../hooks';
 import type { App } from '../../types';
 import './CommandPalette.css';
 
@@ -78,7 +78,7 @@ export const CommandPalette = memo(function CommandPalette({
   apps,
 }: CommandPaletteProps) {
   const { language } = useLanguage();
-  const navigate = useNavigate();
+  const navigate = useLocalizedNavigate();
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
