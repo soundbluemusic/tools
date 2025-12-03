@@ -248,7 +248,7 @@ export class DownloadsPage extends Component<
       // Clear any existing timeout for this item
       const existingTimeout = this.statusTimeouts.get(item.id);
       if (existingTimeout) clearTimeout(existingTimeout);
-      const timeout = setTimeout(() => {
+      const timeout = window.setTimeout(() => {
         this.statusTimeouts.delete(item.id);
         this.setState({
           downloadStatus: { ...this.state.downloadStatus, [item.id]: '' },
@@ -260,15 +260,15 @@ export class DownloadsPage extends Component<
         downloadStatus: { ...this.state.downloadStatus, [item.id]: 'error' },
       });
       // Clear any existing timeout for this item
-      const existingTimeout = this.statusTimeouts.get(item.id);
-      if (existingTimeout) clearTimeout(existingTimeout);
-      const timeout = setTimeout(() => {
+      const existingTimeout2 = this.statusTimeouts.get(item.id);
+      if (existingTimeout2) clearTimeout(existingTimeout2);
+      const timeout2 = window.setTimeout(() => {
         this.statusTimeouts.delete(item.id);
         this.setState({
           downloadStatus: { ...this.state.downloadStatus, [item.id]: '' },
         });
       }, 3000);
-      this.statusTimeouts.set(item.id, timeout);
+      this.statusTimeouts.set(item.id, timeout2);
     }
   }
 

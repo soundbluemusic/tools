@@ -625,7 +625,7 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
     if (this.isPlayingTimeout) {
       clearTimeout(this.isPlayingTimeout);
     }
-    this.isPlayingTimeout = setTimeout(() => {
+    this.isPlayingTimeout = window.setTimeout(() => {
       this.isPlayingTimeout = null;
       this.setState({ isPlaying: null });
     }, 150);

@@ -1045,7 +1045,7 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
       clearTimeout(this.statusTimeout);
     }
     this.setState({ statusMessage: { text, type } });
-    this.statusTimeout = setTimeout(() => {
+    this.statusTimeout = window.setTimeout(() => {
       this.statusTimeout = null;
       this.setState({ statusMessage: null });
     }, 3000);
