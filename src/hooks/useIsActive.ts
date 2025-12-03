@@ -1,23 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
-
-/**
- * Korean language prefix
- */
-const KO_PREFIX = '/ko';
-
-/**
- * Get the base path without language prefix
- */
-function getBasePath(pathname: string): string {
-  if (pathname.startsWith(KO_PREFIX + '/')) {
-    return pathname.slice(KO_PREFIX.length);
-  }
-  if (pathname === KO_PREFIX) {
-    return '/';
-  }
-  return pathname;
-}
+import { getBasePath } from '../utils/localization';
 
 /**
  * Hook for checking if a path is active in navigation
