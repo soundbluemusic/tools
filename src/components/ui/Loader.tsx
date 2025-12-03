@@ -21,7 +21,11 @@ export const Loader = memo<LoaderProps>(function Loader({
 }) {
   return (
     <div
-      className={cn('loader-spinner', SIZE_CLASSES.loader[size], className)}
+      className={cn(
+        'border-skeleton border-t-text-primary rounded-full animate-spin',
+        SIZE_CLASSES.loader[size],
+        className
+      )}
       role="status"
       aria-label={label}
     >
@@ -44,7 +48,11 @@ export const PageLoader = memo<PageLoaderProps>(function PageLoader({
   minHeight = '200px',
 }) {
   return (
-    <div className="page-loader" aria-busy="true" style={{ minHeight }}>
+    <div
+      className="flex items-center justify-center"
+      aria-busy="true"
+      style={{ minHeight }}
+    >
       <Loader size="lg" label="페이지 로딩 중..." />
     </div>
   );
