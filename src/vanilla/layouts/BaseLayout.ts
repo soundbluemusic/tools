@@ -7,6 +7,7 @@ import { router } from '../../core/Router';
 import { themeStore, languageStore } from '../../core/Store';
 
 export interface BaseLayoutProps {
+  [key: string]: unknown;
   title?: string;
   description?: string;
 }
