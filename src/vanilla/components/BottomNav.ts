@@ -15,6 +15,9 @@ export interface BottomNavProps {
 const MUSIC_APP_PATHS = ['/metronome', '/drum', '/drum-synth', '/drum-tool'];
 
 export class BottomNav extends Component<BottomNavProps> {
+  private routerUnsubscribe: (() => void) | null = null;
+  private languageUnsubscribe: (() => void) | null = null;
+
   protected render(): string {
     const language = languageStore.getState().language;
     const { isOpen = true } = this.props;
@@ -193,13 +196,24 @@ export class BottomNav extends Component<BottomNavProps> {
 
   protected onMount(): void {
     // Subscribe to route changes to update active state
-    router.subscribe(() => {
+    this.routerUnsubscribe = router.subscribe(() => {
       this.update();
     });
 
     // Subscribe to language changes
-    languageStore.subscribe(() => {
+    this.languageUnsubscribe = languageStore.subscribe(() => {
       this.update();
     });
+  }
+
+  protected onDestroy(): void {
+    if (this.routerUnsubscribe) {
+      this.routerUnsubscribe();
+      this.routerUnsubscribe = null;
+    }
+    if (this.languageUnsubscribe) {
+      this.languageUnsubscribe();
+      this.languageUnsubscribe = null;
+    }
   }
 }

@@ -179,6 +179,10 @@ export class DownloadsPage extends Component<
   DownloadsPageProps,
   DownloadsPageState
 > {
+  private handleStorageChange: ((e: StorageEvent) => void) | null = null;
+  private statusTimeouts: Map<string, ReturnType<typeof setTimeout>> =
+    new Map();
+
   protected getInitialState(): DownloadsPageState {
     const lang = (localStorage.getItem('tools-language') || 'en') as Language;
     return {
@@ -242,20 +246,30 @@ export class DownloadsPage extends Component<
       this.setState({
         downloadStatus: { ...this.state.downloadStatus, [item.id]: 'success' },
       });
-      setTimeout(() => {
+      // Clear any existing timeout for this item
+      const existingTimeout = this.statusTimeouts.get(item.id);
+      if (existingTimeout) clearTimeout(existingTimeout);
+      const timeout = setTimeout(() => {
+        this.statusTimeouts.delete(item.id);
         this.setState({
           downloadStatus: { ...this.state.downloadStatus, [item.id]: '' },
         });
       }, 2000);
+      this.statusTimeouts.set(item.id, timeout);
     } catch {
       this.setState({
         downloadStatus: { ...this.state.downloadStatus, [item.id]: 'error' },
       });
-      setTimeout(() => {
+      // Clear any existing timeout for this item
+      const existingTimeout = this.statusTimeouts.get(item.id);
+      if (existingTimeout) clearTimeout(existingTimeout);
+      const timeout = setTimeout(() => {
+        this.statusTimeouts.delete(item.id);
         this.setState({
           downloadStatus: { ...this.state.downloadStatus, [item.id]: '' },
         });
       }, 3000);
+      this.statusTimeouts.set(item.id, timeout);
     }
   }
 
@@ -452,12 +466,25 @@ export class DownloadsPage extends Component<
       });
     });
 
-    // Language change listener
-    window.addEventListener('storage', (e) => {
+    // Language change listener - store reference for cleanup
+    this.handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'tools-language') {
         const lang = (e.newValue || 'en') as Language;
         this.setState({ language: lang });
       }
-    });
+    };
+    window.addEventListener('storage', this.handleStorageChange);
+  }
+
+  protected onDestroy(): void {
+    // Clean up storage listener
+    if (this.handleStorageChange) {
+      window.removeEventListener('storage', this.handleStorageChange);
+      this.handleStorageChange = null;
+    }
+
+    // Clean up all pending timeouts
+    this.statusTimeouts.forEach((timeout) => clearTimeout(timeout));
+    this.statusTimeouts.clear();
   }
 }

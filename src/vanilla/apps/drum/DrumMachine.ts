@@ -111,6 +111,7 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
   private schedulerLoop = 0;
   private noiseBufferCache: Map<string, AudioBuffer> = new Map();
   private languageUnsubscribe: (() => void) | null = null;
+  private statusTimeout: ReturnType<typeof setTimeout> | null = null;
   private nextLoopId = 2;
   private isDragging = false;
   private paintMode: boolean | null = null;
@@ -486,11 +487,17 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
     this.stop();
     if (this.languageUnsubscribe) {
       this.languageUnsubscribe();
+      this.languageUnsubscribe = null;
+    }
+    if (this.statusTimeout) {
+      clearTimeout(this.statusTimeout);
+      this.statusTimeout = null;
     }
     if (this.audioContext) {
       this.audioContext.close();
       this.audioContext = null;
     }
+    this.noiseBufferCache.clear();
     this.removeGlobalListeners();
   }
 
@@ -1033,7 +1040,14 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
   }
 
   private showStatus(text: string, type: 'success' | 'error' | 'info'): void {
+    // Clear any existing status timeout
+    if (this.statusTimeout) {
+      clearTimeout(this.statusTimeout);
+    }
     this.setState({ statusMessage: { text, type } });
-    setTimeout(() => this.setState({ statusMessage: null }), 3000);
+    this.statusTimeout = setTimeout(() => {
+      this.statusTimeout = null;
+      this.setState({ statusMessage: null });
+    }, 3000);
   }
 }

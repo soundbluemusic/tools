@@ -9,6 +9,8 @@ import { getAppsSorted } from '../config';
 import type { AppConfig } from '../config';
 
 export class HomePage extends Component {
+  private languageUnsubscribe: (() => void) | null = null;
+
   protected render(): string {
     const language = languageStore.getState().language;
     const apps = getAppsSorted();
@@ -76,8 +78,15 @@ export class HomePage extends Component {
 
   protected onMount(): void {
     // Subscribe to language changes
-    languageStore.subscribe(() => {
+    this.languageUnsubscribe = languageStore.subscribe(() => {
       this.update();
     });
+  }
+
+  protected onDestroy(): void {
+    if (this.languageUnsubscribe) {
+      this.languageUnsubscribe();
+      this.languageUnsubscribe = null;
+    }
   }
 }

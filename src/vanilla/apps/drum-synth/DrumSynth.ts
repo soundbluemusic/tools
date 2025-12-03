@@ -156,7 +156,9 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
   private audioContext: AudioContext | null = null;
   private noiseBufferCache: Map<string, AudioBuffer> = new Map();
   private distortionCurveCache: Map<number, Float32Array> = new Map();
-  private statusTimeout: number | null = null;
+  private statusTimeout: ReturnType<typeof setTimeout> | null = null;
+  private isPlayingTimeout: ReturnType<typeof setTimeout> | null = null;
+  private handleStorageChange: ((e: StorageEvent) => void) | null = null;
 
   protected getInitialState(): DrumSynthState {
     const lang = (localStorage.getItem('tools-language') || 'en') as Language;
@@ -619,7 +621,14 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
     }
 
     this.setState({ isPlaying: drumType });
-    setTimeout(() => this.setState({ isPlaying: null }), 150);
+    // Clear any existing isPlaying timeout
+    if (this.isPlayingTimeout) {
+      clearTimeout(this.isPlayingTimeout);
+    }
+    this.isPlayingTimeout = setTimeout(() => {
+      this.isPlayingTimeout = null;
+      this.setState({ isPlaying: null });
+    }, 150);
 
     const masterVolume = this.state.params.master.volume;
 
@@ -1486,22 +1495,41 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
       exportAllBtn.addEventListener('click', () => this.handleExportAll('wav'));
     }
 
-    // Language change listener
-    window.addEventListener('storage', (e) => {
+    // Language change listener - store reference for cleanup
+    this.handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'tools-language') {
         const lang = (e.newValue || 'en') as Language;
         this.setState({ language: lang });
       }
-    });
+    };
+    window.addEventListener('storage', this.handleStorageChange);
   }
 
   protected onDestroy(): void {
+    // Clean up audio context
     if (this.audioContext) {
       this.audioContext.close();
       this.audioContext = null;
     }
+
+    // Clean up storage listener
+    if (this.handleStorageChange) {
+      window.removeEventListener('storage', this.handleStorageChange);
+      this.handleStorageChange = null;
+    }
+
+    // Clean up timeouts
     if (this.statusTimeout) {
       clearTimeout(this.statusTimeout);
+      this.statusTimeout = null;
     }
+    if (this.isPlayingTimeout) {
+      clearTimeout(this.isPlayingTimeout);
+      this.isPlayingTimeout = null;
+    }
+
+    // Clear caches
+    this.noiseBufferCache.clear();
+    this.distortionCurveCache.clear();
   }
 }
