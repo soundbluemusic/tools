@@ -5,7 +5,8 @@
 import { router } from '../core/Router';
 import type { RouteConfig } from '../core/Router';
 import { themeStore, languageStore } from '../core/Store';
-import { BaseLayout } from './layouts/BaseLayout';
+import { NavigationLayout } from './layouts/NavigationLayout';
+import type { SidebarApp } from './components';
 import {
   NotFoundPage,
   HomePage,
@@ -15,6 +16,32 @@ import {
   OpenSourcePage,
   ToolsUsedPage,
 } from './pages';
+
+/**
+ * App list for navigation sidebar
+ */
+const APPS: SidebarApp[] = [
+  {
+    url: '/metronome',
+    name: { ko: '메트로놈', en: 'Metronome' },
+    icon: '🎵',
+  },
+  {
+    url: '/drum',
+    name: { ko: '드럼머신', en: 'Drum Machine' },
+    icon: '🥁',
+  },
+  {
+    url: '/drum-synth',
+    name: { ko: '드럼 신스', en: 'Drum Synth' },
+    icon: '🎛️',
+  },
+  {
+    url: '/qr',
+    name: { ko: 'QR 코드', en: 'QR Code' },
+    icon: '📱',
+  },
+];
 
 /**
  * Route configuration
@@ -68,8 +95,8 @@ export function initApp(): void {
     (navigator.language.startsWith('ko') ? 'ko' : 'en');
   languageStore.setState({ language: savedLang as 'ko' | 'en' });
 
-  // Create layout and mount to root
-  const layout = new BaseLayout();
+  // Create navigation layout and mount to root
+  const layout = new NavigationLayout({ apps: APPS });
   const rootEl = document.getElementById('root');
   if (rootEl) {
     layout.mount(rootEl);
