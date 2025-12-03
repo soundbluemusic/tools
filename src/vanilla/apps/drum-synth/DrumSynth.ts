@@ -156,8 +156,8 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
   private audioContext: AudioContext | null = null;
   private noiseBufferCache: Map<string, AudioBuffer> = new Map();
   private distortionCurveCache: Map<number, Float32Array> = new Map();
-  private statusTimeout: ReturnType<typeof setTimeout> | null = null;
-  private isPlayingTimeout: ReturnType<typeof setTimeout> | null = null;
+  private statusTimeout: number | null = null;
+  private isPlayingTimeout: number | null = null;
   private handleStorageChange: ((e: StorageEvent) => void) | null = null;
 
   protected getInitialState(): DrumSynthState {

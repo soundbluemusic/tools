@@ -111,7 +111,7 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
   private schedulerLoop = 0;
   private noiseBufferCache: Map<string, AudioBuffer> = new Map();
   private languageUnsubscribe: (() => void) | null = null;
-  private statusTimeout: ReturnType<typeof setTimeout> | null = null;
+  private statusTimeout: number | null = null;
   private nextLoopId = 2;
   private isDragging = false;
   private paintMode: boolean | null = null;

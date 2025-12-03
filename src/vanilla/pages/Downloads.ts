@@ -180,8 +180,7 @@ export class DownloadsPage extends Component<
   DownloadsPageState
 > {
   private handleStorageChange: ((e: StorageEvent) => void) | null = null;
-  private statusTimeouts: Map<string, ReturnType<typeof setTimeout>> =
-    new Map();
+  private statusTimeouts: Map<string, number> = new Map();
 
   protected getInitialState(): DownloadsPageState {
     const lang = (localStorage.getItem('tools-language') || 'en') as Language;
