@@ -3,6 +3,7 @@
  * Sitemap Generation Script
  *
  * Generates sitemap.xml from app configs and routes.
+ * Automatically includes both English and Korean URLs.
  * Usage: npx tsx scripts/generate-sitemap.ts
  */
 
@@ -23,6 +24,7 @@ interface SitemapUrl {
     | 'yearly'
     | 'never';
   priority: number;
+  alternates?: { lang: string; href: string }[];
 }
 
 interface RouteConfig {
@@ -45,6 +47,9 @@ const STATIC_ROUTES: RouteConfig[] = [
   { path: '/opensource', changefreq: 'monthly', priority: 0.5 },
   { path: '/tools-used', changefreq: 'monthly', priority: 0.5 },
   { path: '/downloads', changefreq: 'monthly', priority: 0.5 },
+  { path: '/music-tools', changefreq: 'monthly', priority: 0.6 },
+  { path: '/combined-tools', changefreq: 'monthly', priority: 0.6 },
+  { path: '/other-tools', changefreq: 'monthly', priority: 0.6 },
   { path: '/privacy', changefreq: 'yearly', priority: 0.3 },
   { path: '/terms', changefreq: 'yearly', priority: 0.3 },
 ];
@@ -87,21 +92,31 @@ async function getAppRoutes(): Promise<string[]> {
   }
 }
 
-// Generate XML for a single URL
+// Generate XML for a single URL with hreflang alternates
 function generateUrlEntry(url: SitemapUrl): string {
+  const alternatesXml = url.alternates
+    ? url.alternates
+        .map(
+          (alt) =>
+            `    <xhtml:link rel="alternate" hreflang="${alt.lang}" href="${alt.href}"/>`
+        )
+        .join('\n')
+    : '';
+
   return `  <url>
     <loc>${url.loc}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority.toFixed(1)}</priority>
-  </url>`;
+${alternatesXml}  </url>`;
 }
 
 // Generate complete sitemap XML
 function generateSitemapXml(urls: SitemapUrl[]): string {
   const urlEntries = urls.map(generateUrlEntry).join('\n\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 ${urlEntries}
 
@@ -122,24 +137,54 @@ async function main() {
   const today = getToday();
   const urls: SitemapUrl[] = [];
 
-  // Add static routes
-  for (const route of STATIC_ROUTES) {
+  // Helper to create URL entries with alternates
+  const createUrlEntry = (
+    path: string,
+    changefreq: SitemapUrl['changefreq'],
+    priority: number
+  ): void => {
+    const enPath = path === '/' ? '' : path;
+    const koPath = path === '/' ? '/ko' : `/ko${path}`;
+
+    // English version
     urls.push({
-      loc: siteUrl + (route.path === '/' ? '' : route.path),
+      loc: siteUrl + enPath,
       lastmod: today,
-      changefreq: route.changefreq,
-      priority: route.priority,
+      changefreq,
+      priority,
+      alternates: [
+        { lang: 'en', href: siteUrl + enPath },
+        { lang: 'ko', href: siteUrl + koPath },
+        { lang: 'x-default', href: siteUrl + enPath },
+      ],
     });
+
+    // Korean version
+    urls.push({
+      loc: siteUrl + koPath,
+      lastmod: today,
+      changefreq,
+      priority,
+      alternates: [
+        { lang: 'en', href: siteUrl + enPath },
+        { lang: 'ko', href: siteUrl + koPath },
+        { lang: 'x-default', href: siteUrl + enPath },
+      ],
+    });
+  };
+
+  // Add static routes (both EN and KO)
+  for (const route of STATIC_ROUTES) {
+    createUrlEntry(route.path, route.changefreq, route.priority);
   }
 
-  // Add app routes
+  // Add app routes (both EN and KO)
   for (const appPath of appRoutes) {
-    urls.push({
-      loc: siteUrl + appPath,
-      lastmod: today,
-      changefreq: APP_ROUTE_CONFIG.changefreq,
-      priority: APP_ROUTE_CONFIG.priority,
-    });
+    createUrlEntry(
+      appPath,
+      APP_ROUTE_CONFIG.changefreq,
+      APP_ROUTE_CONFIG.priority
+    );
   }
 
   // Sort by priority then path

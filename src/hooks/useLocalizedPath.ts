@@ -1,8 +1,4 @@
-import { useCallback, useMemo } from 'react';
-import {
-  useLocation,
-  useNavigate as useRouterNavigate,
-} from 'react-router-dom';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { useLanguage } from '../i18n';
 import type { Language } from '../i18n/types';
 
@@ -54,9 +50,20 @@ export function getLanguageFromPath(pathname: string): Language {
 /**
  * Hook for generating localized paths
  * Returns a function that adds language prefix to paths
+ * Updated for Astro compatibility (no react-router-dom)
  */
 export function useLocalizedPath() {
   const { language } = useLanguage();
+  const [pathname, setPathname] = useState(
+    typeof window !== 'undefined' ? window.location.pathname : '/'
+  );
+
+  // Sync pathname with window.location
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname);
+    }
+  }, []);
 
   /**
    * Convert a base path to a localized path
@@ -71,11 +78,7 @@ export function useLocalizedPath() {
   /**
    * Get the current base path (without language prefix)
    */
-  const location = useLocation();
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
-    [location.pathname]
-  );
+  const basePath = useMemo(() => getBasePath(pathname), [pathname]);
 
   return {
     toLocalizedPath,
@@ -94,16 +97,23 @@ interface NavigateOptions {
 
 /**
  * Custom navigate hook that adds language prefix
+ * Updated for Astro compatibility - uses window.location instead of react-router-dom
  */
 export function useLocalizedNavigate() {
-  const navigate = useRouterNavigate();
   const { language } = useLanguage();
 
   return useCallback(
     (path: string, options?: NavigateOptions) => {
+      if (typeof window === 'undefined') return;
+
       const localPath = localizedPath(path, language);
-      navigate(localPath, options);
+
+      if (options?.replace) {
+        window.location.replace(localPath);
+      } else {
+        window.location.href = localPath;
+      }
     },
-    [navigate, language]
+    [language]
   );
 }

@@ -1,30 +1,28 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 /**
  * Custom hook for navigation with View Transitions API support
  * Consolidates duplicate View Transitions logic across components
+ * Updated for Astro compatibility - uses window.location instead of react-router-dom
  *
  * @returns Object containing navigation handler and click handler factory
  */
 export function useViewTransition() {
-  const navigate = useNavigate();
-
   /**
    * Navigate to a URL with View Transitions API support
    */
-  const navigateWithTransition = useCallback(
-    (to: string) => {
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          navigate(to);
-        });
-      } else {
-        navigate(to);
-      }
-    },
-    [navigate]
-  );
+  const navigateWithTransition = useCallback((to: string) => {
+    if (typeof window === 'undefined') return;
+
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        // eslint-disable-next-line react-compiler/react-compiler
+        window.location.href = to;
+      });
+    } else {
+      window.location.href = to;
+    }
+  }, []);
 
   /**
    * Create a click handler for Link components that uses View Transitions
@@ -33,15 +31,17 @@ export function useViewTransition() {
    */
   const createClickHandler = useCallback(
     (to: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (typeof window === 'undefined') return;
+
       if (document.startViewTransition) {
         e.preventDefault();
         document.startViewTransition(() => {
-          navigate(to);
+          window.location.href = to;
         });
       }
       // If View Transitions not supported, let Link handle navigation normally
     },
-    [navigate]
+    []
   );
 
   return {
