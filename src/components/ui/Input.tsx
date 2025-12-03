@@ -68,8 +68,8 @@ export const Input = memo(
             error &&
               'border-error focus:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]',
             disabled && 'opacity-50 cursor-not-allowed',
-            startAdornment && 'pl-10',
-            endAdornment && 'pr-10',
+            !!startAdornment && 'pl-10',
+            !!endAdornment && 'pr-10',
             className
           )}
           disabled={disabled}
