@@ -1,8 +1,8 @@
-import { memo } from 'react';
+import { memo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
-import { useSEO } from '../hooks';
+import { useSEO, useLocalizedPath } from '../hooks';
 import { APPS, BRAND } from '../constants';
 import './Sitemap.css';
 
@@ -155,7 +155,14 @@ function buildSitemapSections(): SitemapSection[] {
  */
 const Sitemap = memo(function Sitemap() {
   const { language } = useLanguage();
+  const { toLocalizedPath } = useLocalizedPath();
   const sections = buildSitemapSections();
+
+  // Memoize localized path function
+  const getPath = useCallback(
+    (path: string) => toLocalizedPath(path),
+    [toLocalizedPath]
+  );
 
   // SEO for Sitemap page
   useSEO({
@@ -194,7 +201,7 @@ const Sitemap = memo(function Sitemap() {
                       <span className="sitemap-link-external-icon">↗</span>
                     </a>
                   ) : (
-                    <Link to={item.url} className="sitemap-link">
+                    <Link to={getPath(item.url)} className="sitemap-link">
                       <span className="sitemap-link-name">
                         {item.name[language]}
                       </span>

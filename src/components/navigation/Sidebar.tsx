@@ -1,7 +1,7 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useLanguage } from '../../i18n';
-import { useIsActive } from '../../hooks';
+import { useIsActive, useLocalizedPath } from '../../hooks';
 import { MUSIC_APP_PATHS, COMBINED_APP_PATHS } from '../../constants/apps';
 import type { App } from '../../types';
 import './Sidebar.css';
@@ -24,6 +24,13 @@ export const Sidebar = memo(function Sidebar({
 }: SidebarProps) {
   const { language } = useLanguage();
   const { isActive } = useIsActive();
+  const { toLocalizedPath } = useLocalizedPath();
+
+  // Memoize localized path function for stability
+  const getPath = useCallback(
+    (path: string) => toLocalizedPath(path),
+    [toLocalizedPath]
+  );
 
   // Memoize filtered apps
   const { musicApps, combinedApps, otherApps } = useMemo(
@@ -48,7 +55,7 @@ export const Sidebar = memo(function Sidebar({
       <nav className="sidebar-nav">
         {/* Home */}
         <NavLink
-          to="/"
+          to={getPath('/')}
           className={`sidebar-item ${isActive('/') ? 'active' : ''}`}
         >
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -73,7 +80,7 @@ export const Sidebar = memo(function Sidebar({
         {musicApps.map((app) => (
           <NavLink
             key={app.url}
-            to={app.url}
+            to={getPath(app.url)}
             className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
           >
             <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
@@ -93,7 +100,7 @@ export const Sidebar = memo(function Sidebar({
         {combinedApps.map((app) => (
           <NavLink
             key={app.url}
-            to={app.url}
+            to={getPath(app.url)}
             className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
           >
             <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
@@ -113,7 +120,7 @@ export const Sidebar = memo(function Sidebar({
         {otherApps.map((app) => (
           <NavLink
             key={app.url}
-            to={app.url}
+            to={getPath(app.url)}
             className={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
           >
             <span className="sidebar-icon sidebar-emoji">{app.icon}</span>
@@ -127,7 +134,7 @@ export const Sidebar = memo(function Sidebar({
 
         {/* Downloads */}
         <NavLink
-          to="/downloads"
+          to={getPath('/downloads')}
           className={`sidebar-item ${isActive('/downloads') ? 'active' : ''}`}
         >
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
@@ -140,7 +147,7 @@ export const Sidebar = memo(function Sidebar({
 
         {/* Menu / Settings */}
         <NavLink
-          to="/sitemap"
+          to={getPath('/sitemap')}
           className={`sidebar-item ${isActive('/sitemap') ? 'active' : ''}`}
         >
           <svg className="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">

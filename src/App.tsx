@@ -49,9 +49,9 @@ function PageLoader() {
 }
 
 /**
- * Route configuration with lazy loading support
+ * Base route configuration (without language prefix)
  */
-const ROUTES = [
+const BASE_ROUTES = [
   { path: '/', element: <Home />, lazy: false },
   { path: '/music-tools', element: <MusicTools />, lazy: true },
   { path: '/other-tools', element: <OtherTools />, lazy: true },
@@ -67,6 +67,26 @@ const ROUTES = [
   { path: '/downloads', element: <Downloads />, lazy: true },
   { path: '/privacy', element: <Privacy />, lazy: true },
   { path: '/terms', element: <Terms />, lazy: true },
+] as const;
+
+/**
+ * Korean language prefix for SEO
+ */
+const KOREAN_PREFIX = '/ko';
+
+/**
+ * Route configuration with lazy loading support
+ * Includes both English (root) and Korean (/ko) paths
+ */
+const ROUTES = [
+  // English routes (default, no prefix)
+  ...BASE_ROUTES,
+  // Korean routes (/ko prefix)
+  ...BASE_ROUTES.map((route) => ({
+    ...route,
+    path: route.path === '/' ? KOREAN_PREFIX : `${KOREAN_PREFIX}${route.path}`,
+  })),
+  // 404 fallback
   { path: '*', element: <NotFound />, lazy: false },
 ] as const;
 
