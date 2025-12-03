@@ -25,3 +25,20 @@ export {
   applyTheme,
   getOppositeTheme,
 } from './theme';
+export {
+  KO_PREFIX,
+  getLanguageFromPath,
+  getBasePath,
+  buildLocalizedPath,
+  buildLocalizedUrl,
+} from './localization';
+export {
+  type SEOConfig,
+  type SEOMetaData,
+  updateMetaTag,
+  updateCanonicalLink,
+  updateHreflangLink,
+  updateDocumentTitle,
+  buildSEOMetaData,
+  applySEOMetaTags,
+} from './seo';

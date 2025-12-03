@@ -1,59 +1,20 @@
 import { useCallback, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { Language } from '../i18n/types';
+import {
+  getLanguageFromPath,
+  getBasePath,
+  buildLocalizedPath,
+  buildLocalizedUrl,
+} from '../utils/localization';
 
-/**
- * Korean language prefix for URLs
- * English is the default language and has no prefix
- */
-export const KO_PREFIX = '/ko';
-
-/**
- * Extract language from URL path
- * - /ko/* -> 'ko'
- * - /* -> 'en' (default)
- */
-export function getLanguageFromPath(pathname: string): Language {
-  return pathname.startsWith(KO_PREFIX + '/') || pathname === KO_PREFIX
-    ? 'ko'
-    : 'en';
-}
-
-/**
- * Get the base path without language prefix
- * - /ko/metronome -> /metronome
- * - /metronome -> /metronome
- */
-export function getBasePath(pathname: string): string {
-  if (pathname.startsWith(KO_PREFIX + '/')) {
-    return pathname.slice(KO_PREFIX.length);
-  }
-  if (pathname === KO_PREFIX) {
-    return '/';
-  }
-  return pathname;
-}
-
-/**
- * Build localized path for given language
- * - ('/', 'ko') -> '/ko'
- * - ('/metronome', 'ko') -> '/ko/metronome'
- * - ('/', 'en') -> '/'
- * - ('/metronome', 'en') -> '/metronome'
- */
-export function buildLocalizedPath(
-  basePath: string,
-  language: Language
-): string {
-  if (language === 'en') {
-    return basePath;
-  }
-  // Korean: add /ko prefix
-  if (basePath === '/') {
-    return KO_PREFIX;
-  }
-  return KO_PREFIX + basePath;
-}
+// Re-export pure functions for backwards compatibility
+export {
+  KO_PREFIX,
+  getLanguageFromPath,
+  getBasePath,
+  buildLocalizedPath,
+} from '../utils/localization';
 
 /**
  * Hook for language-aware routing
@@ -103,8 +64,7 @@ export function useLocalizedPath() {
   // Get alternate language URL for SEO
   const getAlternateUrl = useCallback(
     (baseUrl: string, targetLanguage: Language): string => {
-      const targetPath = buildLocalizedPath(basePath, targetLanguage);
-      return baseUrl + targetPath;
+      return buildLocalizedUrl(baseUrl, basePath, targetLanguage);
     },
     [basePath]
   );
