@@ -16,6 +16,7 @@ export interface NavigationLayoutProps {
 }
 
 interface NavigationLayoutState {
+  [key: string]: unknown;
   isSidebarOpen: boolean;
   isBottomNavOpen: boolean;
 }
