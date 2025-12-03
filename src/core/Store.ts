@@ -11,7 +11,7 @@ export type Unsubscribe = () => void;
  * Reactive Store class
  * Provides centralized state management with subscriptions
  */
-export class Store<T extends Record<string, unknown>> {
+export class Store<T extends object> {
   private state: T;
   private listeners: Set<Listener<T>> = new Set();
   private selectorListeners: Map<Selector<T, unknown>, Set<Listener<unknown>>> =
@@ -116,24 +116,18 @@ export class Store<T extends Record<string, unknown>> {
 /**
  * Create a store with the given initial state
  */
-export function createStore<T extends Record<string, unknown>>(
-  initialState: T
-): Store<T> {
+export function createStore<T extends object>(initialState: T): Store<T> {
   return new Store(initialState);
 }
 
 /**
  * Computed value that updates when dependencies change
  */
-export class Computed<T, R> {
-  private store: Store<T>;
-  private selector: Selector<T, R>;
+export class Computed<T extends object, R> {
   private cachedValue: R;
   private listeners: Set<Listener<R>> = new Set();
 
   constructor(store: Store<T>, selector: Selector<T, R>) {
-    this.store = store;
-    this.selector = selector;
     this.cachedValue = selector(store.getState());
 
     // Subscribe to store changes
@@ -162,7 +156,7 @@ export class Computed<T, R> {
 /**
  * Create a computed value from a store
  */
-export function computed<T extends Record<string, unknown>, R>(
+export function computed<T extends object, R>(
   store: Store<T>,
   selector: Selector<T, R>
 ): Computed<T, R> {
