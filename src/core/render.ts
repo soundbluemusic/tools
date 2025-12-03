@@ -284,15 +284,3 @@ export function fragment(html: string): DocumentFragment {
   template.innerHTML = html.trim();
   return template.content;
 }
-
-/**
- * Safely set innerHTML with sanitization (basic)
- */
-export function safeHTML(element: HTMLElement, html: string): void {
-  // Basic sanitization - remove script tags
-  const sanitized = html.replace(
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    ''
-  );
-  element.innerHTML = sanitized;
-}

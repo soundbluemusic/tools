@@ -75,5 +75,4 @@ export {
   each,
   classNames,
   fragment,
-  safeHTML,
 } from './render';

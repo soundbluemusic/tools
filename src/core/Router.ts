@@ -242,8 +242,10 @@ class RouterClass {
     }
 
     // Convert pattern to regex
+    // Escape special regex characters in pattern (backslash first, then others)
     const paramNames: string[] = [];
     const regexPattern = pattern
+      .replace(/\\/g, '\\\\')
       .replace(/\//g, '\\/')
       .replace(/:([^/]+)/g, (_, paramName) => {
         paramNames.push(paramName);
