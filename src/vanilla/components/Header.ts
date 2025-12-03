@@ -71,7 +71,7 @@ export class Header extends Component<HeaderProps> {
         <div class="flex items-center gap-4 w-full h-full px-4 lg:pl-64">
           <!-- Logo -->
           <a
-            href="/"
+            href="${router.localizeUrl('/')}"
             class="flex items-center gap-[6px] no-underline flex-shrink-0"
             data-link
           >
@@ -194,13 +194,14 @@ export class Header extends Component<HeaderProps> {
       this.update();
     });
 
-    // Language toggle
+    // Language toggle - navigate to localized URL
     this.addEventListenerById('lang-toggle', 'click', () => {
       const current = languageStore.getState().language;
       const newLang = current === 'ko' ? 'en' : 'ko';
-      languageStore.setState({ language: newLang });
-      localStorage.setItem('language', newLang);
-      this.update();
+      // Get current path without language prefix and create new localized URL
+      const currentPath = router.stripLangPrefix(window.location.pathname);
+      const newPath = router.localizeUrl(currentPath, newLang);
+      router.navigate(newPath);
     });
 
     // Search button

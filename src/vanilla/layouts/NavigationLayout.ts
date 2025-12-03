@@ -73,13 +73,22 @@ export class NavigationLayout extends Component<
           >
             <p>© ${new Date().getFullYear()} Tools. Open Source.</p>
             <div class="mt-2 flex justify-center gap-4">
-              <a href="/privacy" class="hover:text-text-primary" data-link
+              <a
+                href="${router.localizeUrl('/privacy')}"
+                class="hover:text-text-primary"
+                data-link
                 >Privacy</a
               >
-              <a href="/terms" class="hover:text-text-primary" data-link
+              <a
+                href="${router.localizeUrl('/terms')}"
+                class="hover:text-text-primary"
+                data-link
                 >Terms</a
               >
-              <a href="/opensource" class="hover:text-text-primary" data-link
+              <a
+                href="${router.localizeUrl('/opensource')}"
+                class="hover:text-text-primary"
+                data-link
                 >Open Source</a
               >
             </div>

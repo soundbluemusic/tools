@@ -20,9 +20,11 @@ export class BottomNav extends Component<BottomNavProps> {
     const { isOpen = true } = this.props;
     const currentPath = window.location.pathname;
 
-    const isActive = (path: string) => currentPath === path;
+    // Compare paths without language prefix for active state
+    const cleanCurrentPath = router.stripLangPrefix(currentPath);
+    const isActive = (path: string) => cleanCurrentPath === path;
     const isMusicActive = MUSIC_APP_PATHS.some((p) =>
-      currentPath.startsWith(p)
+      cleanCurrentPath.startsWith(p)
     );
 
     const homeIcon = isActive('/')
@@ -99,7 +101,7 @@ export class BottomNav extends Component<BottomNavProps> {
 
         <!-- Home -->
         <a
-          href="/"
+          href="${router.localizeUrl('/')}"
           class="flex flex-col items-center justify-center flex-1 h-14 no-underline ${isActive(
             '/'
           )
@@ -117,7 +119,7 @@ export class BottomNav extends Component<BottomNavProps> {
 
         <!-- Music -->
         <a
-          href="/metronome"
+          href="${router.localizeUrl('/metronome')}"
           class="flex flex-col items-center justify-center flex-1 h-14 no-underline ${isMusicActive
             ? 'text-text-primary'
             : 'text-text-secondary'}"
@@ -133,7 +135,7 @@ export class BottomNav extends Component<BottomNavProps> {
 
         <!-- QR -->
         <a
-          href="/qr"
+          href="${router.localizeUrl('/qr')}"
           class="flex flex-col items-center justify-center flex-1 h-14 no-underline ${isActive(
             '/qr'
           )
@@ -151,7 +153,7 @@ export class BottomNav extends Component<BottomNavProps> {
 
         <!-- Menu -->
         <a
-          href="/sitemap"
+          href="${router.localizeUrl('/sitemap')}"
           class="flex flex-col items-center justify-center flex-1 h-14 no-underline ${isActive(
             '/sitemap'
           )

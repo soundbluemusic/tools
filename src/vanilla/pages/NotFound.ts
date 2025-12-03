@@ -3,9 +3,11 @@
  */
 import { Component, html } from '../../core';
 import { router } from '../../core/Router';
+import { languageStore } from '../../core/Store';
 
 export class NotFoundPage extends Component {
   protected render(): string {
+    const language = languageStore.getState().language;
     return html`
       <main
         class="max-w-container-md mx-auto animate-[fadeIn_0.2s_ease-out]"
@@ -18,17 +20,21 @@ export class NotFoundPage extends Component {
             404
           </h1>
           <h2 class="text-2xl sm:text-xl font-semibold mb-3 text-text-primary">
-            페이지를 찾을 수 없습니다
+            ${language === 'ko'
+              ? '페이지를 찾을 수 없습니다'
+              : 'Page Not Found'}
           </h2>
           <p class="text-text-secondary mb-8">
-            요청하신 페이지가 존재하지 않거나 이동되었습니다.
+            ${language === 'ko'
+              ? '요청하신 페이지가 존재하지 않거나 이동되었습니다.'
+              : 'The page you requested does not exist or has been moved.'}
           </p>
           <a
-            href="/"
+            href="${router.localizeUrl('/')}"
             class="inline-block px-6 py-3 bg-accent-primary text-text-inverse rounded-md font-medium transition-colors duration-fast hover:bg-accent-hover"
             data-link
           >
-            ← 홈으로 돌아가기
+            ${language === 'ko' ? '← 홈으로 돌아가기' : '← Back to Home'}
           </a>
         </div>
       </main>

@@ -39,7 +39,9 @@ export class Sidebar extends Component<SidebarProps> {
         !COMBINED_APP_PATHS.includes(app.url)
     );
 
-    const isActive = (path: string) => currentPath === path;
+    // Compare paths without language prefix for active state
+    const cleanCurrentPath = router.stripLangPrefix(currentPath);
+    const isActive = (path: string) => cleanCurrentPath === path;
 
     const renderNavLink = (
       url: string,
@@ -48,9 +50,10 @@ export class Sidebar extends Component<SidebarProps> {
       isIconSvg = false
     ) => {
       const active = isActive(url);
+      const localizedUrl = router.localizeUrl(url);
       return html`
         <a
-          href="${url}"
+          href="${localizedUrl}"
           class="flex items-center gap-3 h-10 px-3 rounded-lg text-sm no-underline ${active
             ? 'bg-interactive-active text-text-primary font-medium'
             : 'text-text-secondary font-normal hover:bg-interactive-hover hover:text-text-primary'}"

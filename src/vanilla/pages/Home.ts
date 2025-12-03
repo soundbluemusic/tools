@@ -42,9 +42,10 @@ export class HomePage extends Component {
   }
 
   private renderAppCard(app: AppConfig, language: 'ko' | 'en'): string {
+    const localizedUrl = router.localizeUrl(app.url);
     return html`
       <a
-        href="${app.url}"
+        href="${localizedUrl}"
         class="group block p-6 bg-bg-secondary border border-border-secondary rounded-lg hover:bg-bg-tertiary hover:border-accent-primary hover:shadow-lg transition-all duration-200"
         data-link
       >

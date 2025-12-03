@@ -103,11 +103,19 @@ export function initApp(): void {
   themeStore.setState({ theme: resolvedTheme as 'light' | 'dark' });
   document.documentElement.setAttribute('data-theme', resolvedTheme);
 
-  // Initialize language from localStorage
-  const savedLang =
-    localStorage.getItem('language') ||
-    (navigator.language.startsWith('ko') ? 'ko' : 'en');
-  languageStore.setState({ language: savedLang as 'ko' | 'en' });
+  // Initialize language from URL (primary) or localStorage (fallback)
+  const urlLang = router.getLanguageFromPath(window.location.pathname);
+  const savedLang = localStorage.getItem('language') as 'ko' | 'en' | null;
+  const browserLang = navigator.language.startsWith('ko') ? 'ko' : 'en';
+  const initialLang = urlLang || savedLang || browserLang;
+  languageStore.setState({ language: initialLang });
+  localStorage.setItem('language', initialLang);
+
+  // Sync languageStore when router detects language change from URL
+  router.onLanguageChange((lang) => {
+    languageStore.setState({ language: lang });
+    localStorage.setItem('language', lang);
+  });
 
   // Create navigation layout and mount to root
   const layout = new NavigationLayout({ apps: APPS });

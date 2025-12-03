@@ -1,6 +1,7 @@
 /**
  * Vanilla TypeScript Router
  * Replaces React Router with History API based routing
+ * Supports i18n URL prefixes (e.g., /ko/ for Korean)
  */
 
 import type { Component } from './Component';
@@ -22,6 +23,10 @@ export type RouteChangeListener = (
   prevMatch: RouteMatch | null
 ) => void;
 
+export type Language = 'ko' | 'en';
+export type LanguageChangeListener = (lang: Language) => void;
+const LANG_PREFIX = '/ko';
+
 /**
  * Router class using History API
  */
@@ -31,14 +36,75 @@ class RouterClass {
   private currentComponent: Component | null = null;
   private container: HTMLElement | null = null;
   private listeners: Set<RouteChangeListener> = new Set();
+  private languageListeners: Set<LanguageChangeListener> = new Set();
   private loadingComponent: (() => string) | null = null;
   private notFoundComponent: (() => Component) | null = null;
+  private currentLanguage: Language = 'en';
 
   constructor() {
     // Listen for browser back/forward
     window.addEventListener('popstate', () => {
       this.handleRouteChange();
     });
+  }
+
+  /**
+   * Get language from URL path
+   */
+  getLanguageFromPath(path: string = window.location.pathname): Language {
+    return path.startsWith(LANG_PREFIX + '/') || path === LANG_PREFIX
+      ? 'ko'
+      : 'en';
+  }
+
+  /**
+   * Get current language
+   */
+  getLanguage(): Language {
+    return this.currentLanguage;
+  }
+
+  /**
+   * Strip language prefix from path for route matching
+   */
+  stripLangPrefix(path: string): string {
+    if (path.startsWith(LANG_PREFIX + '/')) {
+      return path.slice(LANG_PREFIX.length) || '/';
+    }
+    if (path === LANG_PREFIX) {
+      return '/';
+    }
+    return path;
+  }
+
+  /**
+   * Create localized URL based on language
+   */
+  localizeUrl(path: string, lang?: Language): string {
+    const language = lang ?? this.currentLanguage;
+    // Strip any existing prefix first
+    const cleanPath = this.stripLangPrefix(path);
+    if (language === 'ko') {
+      return cleanPath === '/' ? LANG_PREFIX : LANG_PREFIX + cleanPath;
+    }
+    return cleanPath;
+  }
+
+  /**
+   * Subscribe to language changes
+   */
+  onLanguageChange(listener: LanguageChangeListener): () => void {
+    this.languageListeners.add(listener);
+    return () => {
+      this.languageListeners.delete(listener);
+    };
+  }
+
+  /**
+   * Notify language change listeners
+   */
+  private notifyLanguageChange(lang: Language): void {
+    this.languageListeners.forEach((listener) => listener(lang));
   }
 
   /**
@@ -138,9 +204,19 @@ class RouterClass {
    * Handle route change
    */
   private async handleRouteChange(): Promise<void> {
-    const path = window.location.pathname;
+    const fullPath = window.location.pathname;
     const query = new URLSearchParams(window.location.search);
     const prevMatch = this.currentMatch;
+
+    // Detect language from URL and update if changed
+    const newLang = this.getLanguageFromPath(fullPath);
+    if (newLang !== this.currentLanguage) {
+      this.currentLanguage = newLang;
+      this.notifyLanguageChange(newLang);
+    }
+
+    // Strip language prefix for route matching
+    const path = this.stripLangPrefix(fullPath);
 
     // Find matching route
     const matchResult = this.matchRoute(path);
