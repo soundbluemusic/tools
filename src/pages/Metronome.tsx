@@ -18,7 +18,7 @@ const Metronome = memo(function Metronome() {
     title: metronome.seo.title,
     description: metronome.seo.description,
     keywords: metronome.seo.keywords,
-    canonicalPath: '/metronome',
+    basePath: '/metronome',
   });
 
   // Breadcrumb items

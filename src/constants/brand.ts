@@ -16,6 +16,12 @@ export const BRAND = {
   name: 'Tools',
 
   /**
+   * 태그라인 (Tagline)
+   * 사이트 제목 옆에 표시되는 짧은 설명
+   */
+  tagline: 'Open Source Productivity Tools',
+
+  /**
    * 저작권 표시 이름 (Copyright holder name)
    * 푸터 저작권 표시에 사용됩니다
    * 예: "© Your Name. MIT License"

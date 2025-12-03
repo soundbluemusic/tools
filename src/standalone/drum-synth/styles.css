@@ -1,8 +1,7 @@
 /**
  * Standalone Drum Synth Styles
  * Base styles and CSS variables for standalone app
- * Component styles come from DrumSynth.css via component import
+ * Component styles now use Tailwind CSS classes
  */
 
 @import '../common/base.css';
-@import '../../apps/drum-synth/components/DrumSynth.css';

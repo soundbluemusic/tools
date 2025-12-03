@@ -1,30 +1,30 @@
 {
   "name": "tools",
   "private": true,
-  "version": "0.1.5-베타",
+  "version": "0.1.14-베타",
   "type": "module",
   "description": "A collection of utility tools built with React",
   "author": "Tools Team",
   "license": "MIT",
-    "homepage": "https://tools.soundbluemusic.com",
-    "repository": {
-          "type": "git",
-          "url": "https://github.com/soundbluemusic/tools.git"
-    },
-    "bugs": {
-          "url": "https://github.com/soundbluemusic/tools/issues"
-    },
-    "keywords": [
-          "react",
-          "typescript",
-          "vite",
-          "metronome",
-          "drum-machine",
-          "qr-code",
-          "web-audio",
-          "pwa",
-          "music-tools"
-    ],
+  "homepage": "https://tools.soundbluemusic.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soundbluemusic/tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/soundbluemusic/tools/issues"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "vite",
+    "metronome",
+    "drum-machine",
+    "qr-code",
+    "web-audio",
+    "pwa",
+    "music-tools"
+  ],
   "scripts": {
     "dev": "vite",
     "prebuild": "npm run generate-sitemap",
@@ -76,6 +76,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
+    "autoprefixer": "^10.4.22",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
@@ -86,8 +87,10 @@
     "jiti": "^2.6.1",
     "jsdom": "^27.2.0",
     "lint-staged": "^16.2.7",
+    "postcss": "^8.5.6",
     "prettier": "^3.4.2",
     "sharp": "^0.34.5",
+    "tailwindcss": "^3.4.18",
     "tsx": "^4.21.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",

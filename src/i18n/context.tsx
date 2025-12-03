@@ -7,37 +7,18 @@ import {
   useMemo,
   type ReactNode,
 } from 'react';
-import type { Language, Translations, AllTranslations } from './types';
-import { commonKo, commonEn } from './translations/common';
-import { qrKo, qrEn } from './translations/qr';
-import { metronomeKo, metronomeEn } from './translations/metronome';
-import { drumKo, drumEn } from './translations/drum';
-import { drumSynthKo, drumSynthEn } from './translations/drum-synth';
+import { useLocation, useNavigate } from 'react-router-dom';
+import type { Language, Translations } from './types';
 import {
-  getStorageItem,
-  setStorageItem,
-  createEnumValidator,
-} from '../utils/storage';
-
-/**
- * All translations organized by language
- */
-const allTranslations: AllTranslations = {
-  ko: {
-    common: commonKo,
-    qr: qrKo,
-    metronome: metronomeKo,
-    drum: drumKo,
-    drumSynth: drumSynthKo,
-  },
-  en: {
-    common: commonEn,
-    qr: qrEn,
-    metronome: metronomeEn,
-    drum: drumEn,
-    drumSynth: drumSynthEn,
-  },
-};
+  getLanguageFromPath,
+  getBasePath,
+  buildLocalizedPath,
+} from '../utils/localization';
+import {
+  allTranslations,
+  getOppositeLanguage,
+  updateHtmlLang,
+} from '../utils/i18n';
 
 /**
  * Language context value type
@@ -47,6 +28,10 @@ interface LanguageContextValue {
   setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
   t: Translations;
+  /** Get localized path for current language */
+  localizedPath: (path: string) => string;
+  /** Get base path without language prefix */
+  basePath: string;
 }
 
 /**
@@ -57,91 +42,80 @@ const LanguageContext = createContext<LanguageContextValue | undefined>(
 );
 
 /**
- * Local storage key for language preference
- */
-const LANGUAGE_STORAGE_KEY = 'preferred-language';
-
-/**
- * Supported languages for validation
- */
-const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
-
-/**
- * Type-safe validator for language values
- */
-const isLanguage = createEnumValidator(SUPPORTED_LANGUAGES);
-
-/**
- * Get initial language from localStorage or detect from browser
- */
-const getInitialLanguage = (): Language => {
-  if (typeof window === 'undefined') return 'ko';
-
-  // Try to get from storage with validation
-  const stored = getStorageItem<Language>(
-    LANGUAGE_STORAGE_KEY,
-    null as unknown as Language,
-    {
-      validator: isLanguage,
-    }
-  );
-
-  if (stored) {
-    return stored;
-  }
-
-  // Detect browser language
-  const browserLang = navigator.language.toLowerCase();
-  if (browserLang.startsWith('en')) {
-    return 'en';
-  }
-
-  return 'ko';
-};
-
-/**
  * Language Provider Component
- * Wraps the app to provide language context to all components
+ * Derives language from URL path:
+ * - /ko/* -> Korean
+ * - /* -> English (default)
  */
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Save language preference to localStorage with type safety
-  const setLanguage = useCallback((lang: Language) => {
-    setLanguageState(lang);
-    setStorageItem(LANGUAGE_STORAGE_KEY, lang);
-  }, []);
+  // Derive language from URL
+  const language = useMemo(
+    () => getLanguageFromPath(location.pathname),
+    [location.pathname]
+  );
 
-  // Toggle between languages - use state updater to avoid language dependency
-  const toggleLanguage = useCallback(() => {
-    setLanguageState((prev) => {
-      const next = prev === 'ko' ? 'en' : 'ko';
-      setStorageItem(LANGUAGE_STORAGE_KEY, next);
-      return next;
-    });
-  }, []);
+  // Get base path without language prefix
+  const basePath = useMemo(
+    () => getBasePath(location.pathname),
+    [location.pathname]
+  );
 
-  // Sync with localStorage on mount (with validation)
-  useEffect(() => {
-    const stored = getStorageItem<Language>(
-      LANGUAGE_STORAGE_KEY,
-      null as unknown as Language,
-      {
-        validator: isLanguage,
+  // For standalone pages that don't use router
+  const [standaloneLanguage, setStandaloneLanguage] = useState<Language>('en');
+  const isStandalone = typeof window !== 'undefined' && !location.pathname;
+
+  // Set language by navigating to new URL
+  const setLanguage = useCallback(
+    (lang: Language) => {
+      if (isStandalone) {
+        setStandaloneLanguage(lang);
+        return;
       }
-    );
-    if (stored) {
-      setLanguageState(stored);
-    }
-  }, []);
+      const newPath = buildLocalizedPath(basePath, lang);
+      navigate(newPath + location.search + location.hash, { replace: true });
+    },
+    [basePath, location.search, location.hash, navigate, isStandalone]
+  );
+
+  // Toggle between languages
+  const toggleLanguage = useCallback(() => {
+    const currentLang = isStandalone ? standaloneLanguage : language;
+    setLanguage(getOppositeLanguage(currentLang));
+  }, [language, standaloneLanguage, isStandalone, setLanguage]);
+
+  // Build path for current language
+  const localizedPath = useCallback(
+    (path: string): string => {
+      const currentLang = isStandalone ? standaloneLanguage : language;
+      return buildLocalizedPath(path, currentLang);
+    },
+    [language, standaloneLanguage, isStandalone]
+  );
+
+  // Update HTML lang attribute when language changes
+  useEffect(() => {
+    const currentLang = isStandalone ? standaloneLanguage : language;
+    updateHtmlLang(currentLang);
+  }, [language, standaloneLanguage, isStandalone]);
 
   // Current translations based on language
-  const t = allTranslations[language];
+  const currentLang = isStandalone ? standaloneLanguage : language;
+  const t = allTranslations[currentLang];
 
   // Memoize context value to prevent unnecessary re-renders of consumers
   const contextValue = useMemo<LanguageContextValue>(
-    () => ({ language, setLanguage, toggleLanguage, t }),
-    [language, setLanguage, toggleLanguage, t]
+    () => ({
+      language: currentLang,
+      setLanguage,
+      toggleLanguage,
+      t,
+      localizedPath,
+      basePath,
+    }),
+    [currentLang, setLanguage, toggleLanguage, t, localizedPath, basePath]
   );
 
   return (

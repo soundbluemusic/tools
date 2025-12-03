@@ -70,7 +70,7 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
 
       - name: Update package-lock.json
-        run: npm install --package-lock-only
+        run: npm install --package-lock-only --ignore-scripts
 
       - name: Commit version bump
         run: |

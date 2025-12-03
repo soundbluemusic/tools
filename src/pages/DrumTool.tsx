@@ -36,7 +36,7 @@ const DrumTool = memo(function DrumTool() {
     title: drumToolSEO[language].title,
     description: drumToolSEO[language].description,
     keywords: drumToolSEO[language].keywords,
-    canonicalPath: '/drum-tool',
+    basePath: '/drum-tool',
   });
 
   const title = language === 'ko' ? '드럼 툴' : 'Drum Tool';

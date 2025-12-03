@@ -2,12 +2,14 @@
 
 # Tools
 
+**Open Source Productivity Tools**
+
 [![CI](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml/badge.svg)](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
 
-React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
+React + TypeScript + Vite 기반의 오픈소스 생산성 도구 모음
 
 🌐 **[English README](./README.md)**
 
@@ -100,6 +102,10 @@ React + TypeScript + Vite 기반의 유틸리티 앱 대시보드
 > 이 프로젝트는 [MIT 라이선스](./LICENSE)로 공개됩니다.
 >
 > 자유롭게 사용, 수정, 배포할 수 있습니다. 상업적 이용도 가능합니다.
+>
+> ## 아이콘 색상
+>
+> #9370DB
 >
 > ## 상표 가이드라인
 >
