@@ -18,6 +18,11 @@ import {
   QRPage,
   MetronomePage,
   DrumPage,
+  DrumSynthPage,
+  DownloadsPage,
+  MusicToolsPage,
+  OtherToolsPage,
+  CombinedToolsPage,
 } from './pages';
 
 /**
@@ -60,6 +65,26 @@ const routes: RouteConfig[] = [
   {
     path: '/drum',
     component: () => new DrumPage(),
+  },
+  {
+    path: '/drum-synth',
+    component: () => new DrumSynthPage(),
+  },
+  {
+    path: '/downloads',
+    component: () => new DownloadsPage(),
+  },
+  {
+    path: '/music-tools',
+    component: () => new MusicToolsPage(),
+  },
+  {
+    path: '/other-tools',
+    component: () => new OtherToolsPage(),
+  },
+  {
+    path: '/combined-tools',
+    component: () => new CombinedToolsPage(),
   },
 ];
 
