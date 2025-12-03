@@ -124,7 +124,8 @@ const translations = {
 };
 
 export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
-  private debounceTimer: ReturnType<typeof setTimeout> | null = null;
+  private debounceTimer: number | null = null;
+  private copySuccessTimeout: number | null = null;
   private languageUnsubscribe: (() => void) | null = null;
 
   protected getInitialState(): QRGeneratorState {
@@ -473,9 +474,9 @@ export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
 
         // Debounce QR generation
         if (this.debounceTimer) {
-          clearTimeout(this.debounceTimer);
+          window.clearTimeout(this.debounceTimer);
         }
-        this.debounceTimer = setTimeout(() => {
+        this.debounceTimer = window.setTimeout(() => {
           this.generateQR();
         }, URL_DEBOUNCE_MS);
       });
@@ -525,7 +526,10 @@ export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
 
   protected onDestroy(): void {
     if (this.debounceTimer) {
-      clearTimeout(this.debounceTimer);
+      window.clearTimeout(this.debounceTimer);
+    }
+    if (this.copySuccessTimeout) {
+      window.clearTimeout(this.copySuccessTimeout);
     }
     if (this.languageUnsubscribe) {
       this.languageUnsubscribe();
@@ -684,7 +688,11 @@ export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
                   const item = new ClipboardItem({ 'image/png': blob });
                   await navigator.clipboard.write([item]);
                   this.setState({ copySuccess: true });
-                  setTimeout(() => {
+                  // Clear any existing timeout before setting new one
+                  if (this.copySuccessTimeout) {
+                    window.clearTimeout(this.copySuccessTimeout);
+                  }
+                  this.copySuccessTimeout = window.setTimeout(() => {
                     this.setState({ copySuccess: false });
                   }, TIMEOUTS.COPY_SUCCESS);
                   return;

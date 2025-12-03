@@ -29,6 +29,9 @@ export class NavigationLayout extends Component<
   private sidebarComponent: Sidebar | null = null;
   private bottomNavComponent: BottomNav | null = null;
 
+  // Bound handler for keyboard events (stable reference for add/remove)
+  private boundHandleKeyDown = (e: KeyboardEvent) => this.handleKeyDown(e);
+
   protected getInitialState(): NavigationLayoutState {
     return {
       isSidebarOpen: true,
@@ -131,7 +134,7 @@ export class NavigationLayout extends Component<
     }
 
     // Global keyboard shortcut for Cmd+K / Ctrl+K
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('keydown', this.boundHandleKeyDown);
 
     // SPA navigation for footer links
     this.addEventListener(this.element!, 'click', (e: Event) => {
@@ -145,7 +148,7 @@ export class NavigationLayout extends Component<
   }
 
   protected onDestroy(): void {
-    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    document.removeEventListener('keydown', this.boundHandleKeyDown);
 
     if (this.headerComponent) {
       this.headerComponent.unmount();

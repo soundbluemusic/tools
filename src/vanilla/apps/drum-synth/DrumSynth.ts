@@ -1411,17 +1411,17 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
   }
 
   protected bindEvents(): void {
-    // Quick play buttons
+    // Quick play buttons - use Component's addEventListener for proper cleanup
     this.queryAll('[data-quick-play]').forEach((btn) => {
-      btn.addEventListener('click', () => {
+      this.addEventListener(btn, 'click', () => {
         const drum = btn.getAttribute('data-quick-play') as DrumType;
         this.playDrum(drum);
       });
     });
 
-    // Drum type selector
+    // Drum type selector - use Component's addEventListener for proper cleanup
     this.queryAll('[data-select-drum]').forEach((btn) => {
-      btn.addEventListener('click', () => {
+      this.addEventListener(btn, 'click', () => {
         const drum = btn.getAttribute('data-select-drum') as DrumType;
         this.setState({ selectedDrum: drum });
       });
@@ -1430,7 +1430,7 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
     // Play button
     const playBtn = this.query('[data-action="play"]');
     if (playBtn) {
-      playBtn.addEventListener('click', () => {
+      this.addEventListener(playBtn, 'click', () => {
         this.playDrum(this.state.selectedDrum);
       });
     }
@@ -1438,14 +1438,14 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
     // Reset button
     const resetBtn = this.query('[data-action="reset"]');
     if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
+      this.addEventListener(resetBtn, 'click', () => {
         this.setState({ params: { ...DEFAULT_ALL_PARAMS } });
       });
     }
 
-    // Parameter sliders
+    // Parameter sliders - use Component's addEventListener for proper cleanup
     this.queryAll('.synth-slider').forEach((slider) => {
-      slider.addEventListener('input', (e) => {
+      this.addEventListener(slider, 'input', (e) => {
         const input = e.target as HTMLInputElement;
         const paramKey = input.getAttribute('data-param');
         if (!paramKey) return;
@@ -1468,9 +1468,9 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
       });
     });
 
-    // Preset buttons
+    // Preset buttons - use Component's addEventListener for proper cleanup
     this.queryAll('[data-preset]').forEach((btn) => {
-      btn.addEventListener('click', () => {
+      this.addEventListener(btn, 'click', () => {
         const preset = btn.getAttribute('data-preset') as string;
         const presetParams = SYNTH_PRESETS[preset];
         if (presetParams) {
@@ -1479,20 +1479,26 @@ export class DrumSynth extends Component<DrumSynthProps, DrumSynthState> {
       });
     });
 
-    // Export buttons
+    // Export buttons - use Component's addEventListener for proper cleanup
     const exportWavBtn = this.query('[data-export="wav"]');
     if (exportWavBtn) {
-      exportWavBtn.addEventListener('click', () => this.handleExport('wav'));
+      this.addEventListener(exportWavBtn, 'click', () =>
+        this.handleExport('wav')
+      );
     }
 
     const exportMp3Btn = this.query('[data-export="mp3"]');
     if (exportMp3Btn) {
-      exportMp3Btn.addEventListener('click', () => this.handleExport('mp3'));
+      this.addEventListener(exportMp3Btn, 'click', () =>
+        this.handleExport('mp3')
+      );
     }
 
     const exportAllBtn = this.query('[data-export="all"]');
     if (exportAllBtn) {
-      exportAllBtn.addEventListener('click', () => this.handleExportAll('wav'));
+      this.addEventListener(exportAllBtn, 'click', () =>
+        this.handleExportAll('wav')
+      );
     }
 
     // Language change listener - store reference for cleanup

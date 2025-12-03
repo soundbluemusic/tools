@@ -106,6 +106,7 @@ const translations = {
 export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
   private audioContext: AudioContext | null = null;
   private schedulerFrame: number | null = null;
+  private schedulerTimeouts: Set<number> = new Set();
   private nextStepTime = 0;
   private schedulerStep = 0;
   private schedulerLoop = 0;
@@ -490,9 +491,12 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
       this.languageUnsubscribe = null;
     }
     if (this.statusTimeout) {
-      clearTimeout(this.statusTimeout);
+      window.clearTimeout(this.statusTimeout);
       this.statusTimeout = null;
     }
+    // Clear all pending scheduler timeouts
+    this.schedulerTimeouts.forEach((id) => window.clearTimeout(id));
+    this.schedulerTimeouts.clear();
     if (this.audioContext) {
       this.audioContext.close();
       this.audioContext = null;
@@ -795,8 +799,9 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
       const timeUntilStep =
         (this.nextStepTime - this.audioContext.currentTime) * 1000;
 
-      setTimeout(
+      const timeoutId = window.setTimeout(
         () => {
+          this.schedulerTimeouts.delete(timeoutId);
           if (this.state.isPlaying) {
             this.setState({
               currentStep: stepToShow,
@@ -806,6 +811,7 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
         },
         Math.max(0, timeUntilStep)
       );
+      this.schedulerTimeouts.add(timeoutId);
 
       this.schedulerStep++;
       if (this.schedulerStep >= STEPS) {
@@ -1042,7 +1048,7 @@ export class DrumMachine extends Component<DrumMachineProps, DrumMachineState> {
   private showStatus(text: string, type: 'success' | 'error' | 'info'): void {
     // Clear any existing status timeout
     if (this.statusTimeout) {
-      clearTimeout(this.statusTimeout);
+      window.clearTimeout(this.statusTimeout);
     }
     this.setState({ statusMessage: { text, type } });
     this.statusTimeout = window.setTimeout(() => {
