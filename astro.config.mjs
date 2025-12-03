@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import AstroPWA from '@vite-pwa/astro';
+import tailwindcss from '@tailwindcss/vite';
 
 // React Compiler configuration
 const ReactCompilerConfig = {
@@ -19,19 +20,23 @@ export default defineConfig({
     AstroPWA({
       registerType: 'autoUpdate',
       injectRegister: null,
-      includeAssets: ['icons/icon.svg'],
+      includeAssets: ['icons/icon.svg', 'robots.txt', 'llms.txt'],
       manifest: {
-        name: 'Tools',
+        name: 'Tools - Free Online Utilities',
         short_name: 'Tools',
         description:
-          'Free online tools - QR code generator, metronome, drum machine and more',
-        theme_color: '#242424',
-        background_color: '#1a1a2e',
+          'Free online tools - QR code generator, metronome, drum machine, drum synthesizer and more. No signup required.',
+        theme_color: '#1c1917',
+        background_color: '#faf9f7',
         display: 'standalone',
         orientation: 'portrait-primary',
         scope: '/',
         start_url: '/',
-        categories: ['utilities', 'productivity'],
+        id: '/',
+        categories: ['utilities', 'productivity', 'music'],
+        lang: 'en',
+        dir: 'ltr',
+        prefer_related_applications: false,
         icons: [
           {
             src: 'icons/icon-72.png',
@@ -100,19 +105,43 @@ export default defineConfig({
             sizes: '1280x720',
             type: 'image/png',
             form_factor: 'wide',
-            label: 'Tools Dashboard',
+            label: 'Tools Dashboard - Desktop View',
           },
           {
             src: 'icons/screenshot-narrow.png',
             sizes: '720x1280',
             type: 'image/png',
             form_factor: 'narrow',
-            label: 'Tools Dashboard Mobile',
+            label: 'Tools Dashboard - Mobile View',
+          },
+        ],
+        shortcuts: [
+          {
+            name: 'Metronome',
+            short_name: 'Metronome',
+            description: 'Practice with a precise metronome',
+            url: '/metronome',
+            icons: [{ src: 'icons/icon-96.png', sizes: '96x96' }],
+          },
+          {
+            name: 'Drum Machine',
+            short_name: 'Drums',
+            description: 'Create drum patterns',
+            url: '/drum',
+            icons: [{ src: 'icons/icon-96.png', sizes: '96x96' }],
+          },
+          {
+            name: 'QR Generator',
+            short_name: 'QR',
+            description: 'Generate QR codes instantly',
+            url: '/qr',
+            icons: [{ src: 'icons/icon-96.png', sizes: '96x96' }],
           },
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,webp,avif}'],
+        navigateFallback: null,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -142,17 +171,29 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
         ],
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
       },
       devOptions: {
-        enabled: true,
+        enabled: false,
       },
     }),
   ],
   vite: {
+    plugins: [tailwindcss()],
     build: {
       target: 'esnext',
       minify: 'esbuild',
@@ -184,5 +225,9 @@ export default defineConfig({
       drop: ['console', 'debugger'],
       legalComments: 'none',
     },
+  },
+  compressHTML: true,
+  build: {
+    inlineStylesheets: 'auto',
   },
 });

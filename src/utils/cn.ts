@@ -1,24 +1,17 @@
 /**
  * Utility for conditionally joining classNames together
- * Similar to clsx/classnames but lightweight
+ * Uses clsx for conditional classes and tailwind-merge for Tailwind class deduplication
  */
-type ClassValue = string | number | boolean | undefined | null | ClassValue[];
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
+/**
+ * Combines clsx and tailwind-merge for optimal class handling
+ * - clsx: handles conditional classes
+ * - tailwind-merge: deduplicates conflicting Tailwind classes
+ */
 export function cn(...inputs: ClassValue[]): string {
-  const classes: string[] = [];
-
-  for (const input of inputs) {
-    if (!input) continue;
-
-    if (typeof input === 'string' || typeof input === 'number') {
-      classes.push(String(input));
-    } else if (Array.isArray(input)) {
-      const inner = cn(...input);
-      if (inner) classes.push(inner);
-    }
-  }
-
-  return classes.join(' ');
+  return twMerge(clsx(inputs));
 }
 
 /**

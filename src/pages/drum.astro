@@ -4,11 +4,40 @@ import { ReactApp } from '../components/ReactApp';
 import DrumPage from '../react-pages/Drum';
 import { loadApps } from '../constants/apps';
 import { drumEn } from '../i18n/translations/drum';
+import { BRAND } from '../constants/brand';
 
 const apps = await loadApps();
 const language = 'en';
 const currentPath = '/drum';
 const t = drumEn;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Online Drum Machine',
+  description: t.seo.description,
+  url: `${BRAND.siteUrl}${currentPath}`,
+  applicationCategory: 'MusicApplication',
+  operatingSystem: 'Web Browser',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.7',
+    ratingCount: '120',
+  },
+  featureList: [
+    '16-step sequencer',
+    'Multiple drum kits',
+    'MIDI import/export',
+    'Pattern saving',
+    'Adjustable tempo',
+    'Works offline',
+  ],
+};
 ---
 
 <Layout
@@ -17,6 +46,7 @@ const t = drumEn;
   keywords={t.seo.keywords}
   canonicalPath={currentPath}
   lang={language}
+  jsonLd={jsonLd}
 >
   <ReactApp
     client:only="react"

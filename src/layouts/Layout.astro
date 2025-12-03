@@ -11,6 +11,7 @@ interface Props {
   ogType?: 'website' | 'article' | 'product';
   noindex?: boolean;
   lang?: 'ko' | 'en';
+  jsonLd?: Record<string, unknown>;
 }
 
 const {
@@ -22,6 +23,7 @@ const {
   ogType = 'website',
   noindex = false,
   lang = 'en',
+  jsonLd,
 } = Astro.props;
 
 const siteUrl = BRAND.siteUrl;
@@ -32,10 +34,33 @@ const canonicalUrl = `${siteUrl}${canonicalPath}`;
 const fullOgImage = ogImage.startsWith('http')
   ? ogImage
   : `${siteUrl}${ogImage}`;
+
+// Default JSON-LD for WebSite
+const defaultJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: BRAND.name,
+  description: description,
+  url: siteUrl,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${siteUrl}/sitemap?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+  inLanguage: [
+    { '@type': 'Language', name: 'English', alternateName: 'en' },
+    { '@type': 'Language', name: 'Korean', alternateName: 'ko' },
+  ],
+};
+
+const structuredData = jsonLd || defaultJsonLd;
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={lang} class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -63,6 +88,13 @@ const fullOgImage = ogImage.startsWith('http')
     <meta name="revisit-after" content="7 days" />
     <meta name="rating" content="general" />
     <meta name="distribution" content="global" />
+
+    <!-- AI/LLM Bot Meta Tags -->
+    <meta name="ai-content-declaration" content="human-authored" />
+    <meta
+      name="ai-summary"
+      content={`${BRAND.name}: Free online tools including metronome, drum machine, drum synthesizer, and QR code generator. No signup required.`}
+    />
 
     <!-- Canonical URL -->
     <link rel="canonical" href={canonicalUrl} />
@@ -107,15 +139,15 @@ const fullOgImage = ogImage.startsWith('http')
     <!-- Theme & PWA -->
     <meta
       name="theme-color"
-      content="#242424"
+      content="#1c1917"
       media="(prefers-color-scheme: dark)"
     />
     <meta
       name="theme-color"
-      content="#ffffff"
+      content="#faf9f7"
       media="(prefers-color-scheme: light)"
     />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -124,12 +156,16 @@ const fullOgImage = ogImage.startsWith('http')
     />
     <meta name="apple-mobile-web-app-title" content={BRAND.name} />
     <meta name="application-name" content={BRAND.name} />
-    <meta name="msapplication-TileColor" content="#1a1a2e" />
+    <meta name="msapplication-TileColor" content="#1c1917" />
+    <meta name="format-detection" content="telephone=no" />
 
     <!-- Performance hints -->
     <meta http-equiv="x-dns-prefetch-control" content="on" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Favicon & Icons -->
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
     <link
       rel="icon"
       type="image/png"
@@ -147,22 +183,21 @@ const fullOgImage = ogImage.startsWith('http')
       sizes="180x180"
       href="/icons/apple-touch-icon.png"
     />
+    <link rel="manifest" href="/manifest.webmanifest" />
 
     <!-- View Transitions -->
     <meta name="view-transition" content="same-origin" />
+
+    <!-- JSON-LD Structured Data -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(structuredData)}
+    />
   </head>
-  <body>
-    <style>
-      body {
-        margin: 0;
-        min-height: 100vh;
-      }
-      #root {
-        width: 100%;
-        min-height: 100vh;
-      }
-    </style>
-    <div id="root">
+  <body
+    class="min-h-screen bg-bg-primary text-text-primary antialiased transition-colors duration-normal"
+  >
+    <div id="root" class="min-h-screen w-full">
       <slot />
     </div>
   </body>
