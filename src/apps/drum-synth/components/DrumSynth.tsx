@@ -41,6 +41,7 @@ import {
   exportAllDrums,
   type ExportFormat,
 } from '../utils/audioExport';
+import './DrumSynth.css';
 
 /**
  * Parameter Slider Component
@@ -66,18 +67,18 @@ const ParamSlider = memo(function ParamSlider({
 }: ParamSliderProps) {
   const displayValue = step < 1 ? value.toFixed(2) : value;
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between items-center">
-        <span className="text-xs font-medium text-text-secondary">{label}</span>
-        <span className="text-xs font-semibold text-text-primary tabular-nums min-w-[50px] text-right">
+    <div className="synth-param">
+      <div className="synth-param-header">
+        <span className="synth-param-label">{label}</span>
+        <span className="synth-param-value">
           {displayValue}
           {unit}
         </span>
       </div>
-      <div className="relative h-11 flex items-center">
+      <div className="synth-param-slider-wrap">
         <input
           type="range"
-          className="w-full h-1 appearance-none bg-border-primary rounded-sm outline-none cursor-pointer touch-pan-x [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-text-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-grab [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:duration-100 [&::-webkit-slider-thumb:hover]:scale-110 [&::-webkit-slider-thumb:active]:cursor-grabbing [&::-webkit-slider-thumb:active]:scale-115 [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-text-primary [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:cursor-grab focus-visible:[&::-webkit-slider-thumb]:shadow-[0_0_0_3px_rgba(0,0,0,0.15)]"
+          className="synth-param-slider"
           min={min}
           max={max}
           step={step}
@@ -1234,25 +1235,17 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
   }, []);
 
   return (
-    <div className="flex flex-col gap-6 max-w-[800px] mx-auto p-4 sm:gap-6 sm:p-6 md:gap-8 md:p-8 max-[380px]:gap-4 max-[380px]:p-3">
+    <div className="drum-synth">
       {/* Quick Play Pads */}
-      <div className="flex flex-col gap-3">
-        <span className="text-[0.6875rem] font-medium text-text-secondary uppercase tracking-wide">
-          {drumSynth.quickPlay}
-        </span>
-        <div className="grid grid-cols-6 gap-2 sm:gap-2.5 max-[380px]:grid-cols-3 max-[380px]:gap-1.5">
+      <div className="synth-pads">
+        <span className="synth-pads-label">{drumSynth.quickPlay}</span>
+        <div className="synth-pads-grid">
           {DRUM_TYPES.map((drum) => (
             <button
               key={drum}
               className={cn(
-                'aspect-square flex items-center justify-center p-2 text-[0.6875rem] font-semibold uppercase tracking-tight text-text-primary bg-bg-primary border border-border-primary rounded-lg cursor-pointer transition-[background-color,border-color,transform] duration-[100ms,100ms,80ms] select-none touch-manipulation',
-                'hover:bg-interactive-hover hover:border-text-secondary',
-                'focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-2',
-                'active:bg-text-primary active:text-bg-primary active:scale-95',
-                'sm:text-xs md:text-[0.8125rem] max-[380px]:text-[0.625rem]',
-                'motion-reduce:transition-none motion-reduce:active:scale-100',
-                isPlaying === drum &&
-                  'bg-text-primary text-bg-primary scale-95 motion-reduce:scale-100'
+                'synth-pad',
+                isPlaying === drum && 'synth-pad--playing'
               )}
               onClick={() => playDrum(drum)}
               aria-label={getDrumLabel(drum)}
@@ -1264,19 +1257,14 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
       </div>
 
       {/* Drum Type Selector */}
-      <div className="flex gap-1 p-1 bg-bg-secondary rounded-lg overflow-x-auto scrollbar-none [-webkit-overflow-scrolling:touch]">
+      <div className="synth-selector">
         {DRUM_TYPES.map((drum) => (
           <button
             key={drum}
             className={cn(
-              'flex-1 min-w-0 py-2.5 px-2 text-xs font-medium text-text-secondary bg-transparent border-0 rounded-md cursor-pointer transition-[background-color,color] duration-150 touch-manipulation whitespace-nowrap',
-              'hover:text-text-primary',
-              'md:py-3 md:px-4 md:text-[0.8125rem]',
-              'max-[380px]:py-2 max-[380px]:px-1.5 max-[380px]:text-[0.6875rem]',
-              'motion-reduce:transition-none',
-              selectedDrum === drum &&
-                'text-text-primary bg-bg-primary font-semibold shadow-xs',
-              isPlaying === drum && 'bg-text-primary text-bg-primary'
+              'synth-drum-btn',
+              selectedDrum === drum && 'synth-drum-btn--selected',
+              isPlaying === drum && 'synth-drum-btn--playing'
             )}
             onClick={() => setSelectedDrum(drum)}
           >
@@ -1286,15 +1274,15 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_auto] lg:gap-8 lg:items-start">
+      <div className="synth-content">
         {/* Parameter Controls */}
-        <div className="bg-bg-secondary rounded-xl p-5 md:p-6 lg:col-start-1">
-          <div className="flex justify-between items-center mb-5 pb-3 border-b border-border-primary">
-            <h3 className="m-0 text-sm font-semibold text-text-primary md:text-[0.9375rem]">
+        <div className="synth-params">
+          <div className="synth-params-header">
+            <h3 className="synth-params-title">
               {getDrumLabel(selectedDrum)} {drumSynth.parameters}
             </h3>
             <button
-              className="flex items-center justify-center w-9 h-9 p-0 text-text-secondary bg-bg-primary border border-border-primary rounded-md cursor-pointer transition-[background-color,color] duration-150 touch-manipulation hover:bg-interactive-hover hover:text-text-primary focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-2 motion-reduce:transition-none"
+              className="synth-reset-btn"
               onClick={resetParams}
               aria-label={drumSynth.reset}
               title={drumSynth.reset}
@@ -1302,24 +1290,15 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
               <ResetIcon />
             </button>
           </div>
-          <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-x-8 lg:grid-cols-3">
-            {renderParams()}
-          </div>
+          <div className="synth-params-grid">{renderParams()}</div>
         </div>
 
         {/* Play Button */}
-        <div className="flex justify-center py-2 lg:sticky lg:top-4">
+        <div className="synth-play-section">
           <button
             className={cn(
-              'flex items-center justify-center gap-2 min-w-[140px] py-3.5 px-7 text-sm font-semibold text-bg-primary bg-text-primary border-0 rounded-lg cursor-pointer transition-[background-color,transform] duration-[150ms,100ms] touch-manipulation',
-              'hover:bg-text-secondary',
-              'focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-[3px]',
-              'active:scale-[0.97]',
-              'max-[380px]:min-w-[120px] max-[380px]:py-3 max-[380px]:px-5 max-[380px]:text-[0.8125rem]',
-              'lg:flex-col lg:min-w-[100px] lg:py-5 lg:px-4',
-              'motion-reduce:transition-none motion-reduce:active:scale-100',
-              isPlaying === selectedDrum &&
-                'scale-[0.97] motion-reduce:scale-100'
+              'synth-play-btn',
+              isPlaying === selectedDrum && 'synth-play-btn--playing'
             )}
             onClick={() => playDrum(selectedDrum)}
             aria-label={`${drumSynth.play} ${getDrumLabel(selectedDrum)}`}
@@ -1331,10 +1310,8 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
       </div>
 
       {/* Master Section */}
-      <div className="bg-bg-secondary rounded-xl p-5">
-        <h3 className="m-0 mb-4 text-[0.6875rem] font-medium text-text-secondary uppercase tracking-wide">
-          {drumSynth.master}
-        </h3>
+      <div className="synth-master">
+        <h3 className="synth-section-title">{drumSynth.master}</h3>
         <ParamSlider
           label={drumSynth.volume}
           value={params.master.volume}
@@ -1347,11 +1324,9 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
       </div>
 
       {/* Presets */}
-      <div className="flex flex-col gap-3 p-5 bg-bg-secondary rounded-xl">
-        <span className="text-[0.6875rem] font-medium text-text-secondary uppercase tracking-wide">
-          {drumSynth.presets}
-        </span>
-        <div className="flex flex-wrap gap-2">
+      <div className="synth-presets">
+        <span className="synth-presets-label">{drumSynth.presets}</span>
+        <div className="synth-presets-buttons">
           {Object.keys(SYNTH_PRESETS).map((preset) => {
             const presetLabels: Record<string, string> = {
               classic808: drumSynth.presetClassic808,
@@ -1363,7 +1338,7 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
             return (
               <button
                 key={preset}
-                className="flex-1 min-w-[90px] py-2.5 px-4 text-xs font-medium text-text-primary bg-bg-primary border border-border-primary rounded-md cursor-pointer transition-[background-color,border-color] duration-150 touch-manipulation hover:bg-interactive-hover hover:border-text-secondary focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-2 motion-reduce:transition-none max-[380px]:min-w-[70px] max-[380px]:py-2 max-[380px]:px-2.5 max-[380px]:text-[0.6875rem]"
+                className="synth-preset-btn"
                 onClick={() => loadPreset(preset)}
               >
                 {presetLabels[preset] || preset}
@@ -1374,19 +1349,13 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
       </div>
 
       {/* Export Section */}
-      <div className="flex flex-col gap-3 p-5 bg-bg-secondary rounded-xl">
-        <span className="text-[0.6875rem] font-medium text-text-secondary uppercase tracking-wide">
-          {drumSynth.export}
-        </span>
-        <div className="flex flex-wrap gap-2">
+      <div className="synth-export">
+        <span className="synth-export-label">{drumSynth.export}</span>
+        <div className="synth-export-buttons">
           <button
             className={cn(
-              'flex items-center justify-center gap-1.5 flex-1 min-w-[120px] py-2.5 px-4 text-xs font-medium text-text-primary bg-bg-primary border border-border-primary rounded-md cursor-pointer transition-[background-color,border-color,opacity] duration-150 touch-manipulation',
-              'hover:not-disabled:bg-interactive-hover hover:not-disabled:border-text-secondary',
-              'focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-2',
-              'motion-reduce:transition-none',
-              '[&>svg]:flex-shrink-0',
-              isExporting && 'opacity-50 cursor-not-allowed'
+              'synth-export-btn',
+              isExporting && 'synth-export-btn--disabled'
             )}
             onClick={() => handleExport('wav')}
             disabled={isExporting}
@@ -1397,12 +1366,8 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
           </button>
           <button
             className={cn(
-              'flex items-center justify-center gap-1.5 flex-1 min-w-[120px] py-2.5 px-4 text-xs font-medium text-text-primary bg-bg-primary border border-border-primary rounded-md cursor-pointer transition-[background-color,border-color,opacity] duration-150 touch-manipulation',
-              'hover:not-disabled:bg-interactive-hover hover:not-disabled:border-text-secondary',
-              'focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-2',
-              'motion-reduce:transition-none',
-              '[&>svg]:flex-shrink-0',
-              isExporting && 'opacity-50 cursor-not-allowed'
+              'synth-export-btn',
+              isExporting && 'synth-export-btn--disabled'
             )}
             onClick={() => handleExport('mp3')}
             disabled={isExporting}
@@ -1413,12 +1378,9 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
           </button>
           <button
             className={cn(
-              'flex items-center justify-center gap-1.5 flex-1 min-w-[120px] py-2.5 px-4 text-xs font-medium text-bg-primary bg-text-primary border border-text-primary rounded-md cursor-pointer transition-[background-color,border-color,opacity] duration-150 touch-manipulation',
-              'hover:not-disabled:bg-text-secondary hover:not-disabled:border-text-secondary',
-              'focus-visible:outline-2 focus-visible:outline-text-primary focus-visible:outline-offset-2',
-              'motion-reduce:transition-none',
-              '[&>svg]:flex-shrink-0',
-              isExporting && 'opacity-50 cursor-not-allowed'
+              'synth-export-btn',
+              'synth-export-btn--all',
+              isExporting && 'synth-export-btn--disabled'
             )}
             onClick={() => handleExportAll('wav')}
             disabled={isExporting}
@@ -1429,20 +1391,14 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
           </button>
         </div>
         {isExporting && (
-          <div className="text-xs text-text-secondary text-center p-2">
-            {drumSynth.exporting}
-          </div>
+          <div className="synth-export-status">{drumSynth.exporting}</div>
         )}
       </div>
 
       {/* Status Message */}
       {statusMessage && (
         <div
-          className={cn(
-            'fixed bottom-6 left-1/2 -translate-x-1/2 py-3 px-5 text-[0.8125rem] font-medium rounded-lg shadow-lg z-dropdown animate-synth-status-slide-in motion-reduce:animate-none',
-            statusMessage.type === 'success' && 'bg-success text-white',
-            statusMessage.type === 'error' && 'bg-error text-white'
-          )}
+          className={cn('synth-status', `synth-status--${statusMessage.type}`)}
         >
           {statusMessage.text}
         </div>

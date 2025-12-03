@@ -35,7 +35,7 @@ const MusicTools = memo(function MusicTools() {
     title: musicToolsSEO[language].title,
     description: musicToolsSEO[language].description,
     keywords: musicToolsSEO[language].keywords,
-    basePath: '/music-tools',
+    canonicalPath: '/music-tools',
   });
 
   // Filter music apps
@@ -59,16 +59,16 @@ const MusicTools = memo(function MusicTools() {
     language === 'ko' ? '음악 도구 목록' : 'Music tools list';
 
   return (
-    <div className="p-4 sm:py-5 sm:px-6 md:py-6 md:px-8">
+    <div className="home-page">
       <Breadcrumb items={breadcrumb} />
 
       {/* Page Header */}
-      <div className="flex flex-col items-start gap-4 mb-4 md:mb-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl md:text-2xl font-semibold m-0 text-text-primary">
+      <div className="home-header category-header">
+        <div className="category-header-text">
+          <h1 className="home-title">
             {language === 'ko' ? '음악 도구' : 'Music Tools'}
           </h1>
-          <p className="m-0 text-[0.95rem] text-text-secondary font-normal">
+          <p className="category-description">
             {language === 'ko'
               ? '음악 연습과 작곡에 필요한 도구들'
               : 'Tools for music practice and composition'}
@@ -86,7 +86,7 @@ const MusicTools = memo(function MusicTools() {
 
       {/* No Results Message */}
       {musicApps.length === 0 && !isLoading && (
-        <p className="text-center text-text-secondary p-8 text-[0.95rem]">
+        <p className="no-results">
           {language === 'ko' ? '도구가 없습니다.' : 'No tools found.'}
         </p>
       )}

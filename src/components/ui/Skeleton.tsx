@@ -14,19 +14,6 @@ interface SkeletonProps {
   className?: string;
 }
 
-const VARIANT_CLASSES = {
-  text: 'h-4',
-  circular: 'rounded-full',
-  rectangular: '',
-  rounded: 'rounded-md',
-} as const;
-
-const ANIMATION_CLASSES = {
-  pulse: 'animate-pulse',
-  wave: 'animate-pulse',
-  none: '',
-} as const;
-
 /**
  * Skeleton loading placeholder component
  */
@@ -37,14 +24,22 @@ export const Skeleton = memo<SkeletonProps>(function Skeleton({
   animation = 'pulse',
   className,
 }) {
+  const variantClass = {
+    text: 'skeleton--text',
+    circular: 'skeleton--circular',
+    rectangular: 'skeleton--rectangular',
+    rounded: 'skeleton--rounded',
+  }[variant];
+
+  const animationClass = {
+    pulse: 'skeleton--pulse',
+    wave: 'skeleton--wave',
+    none: '',
+  }[animation];
+
   return (
     <div
-      className={cn(
-        'bg-skeleton rounded',
-        VARIANT_CLASSES[variant],
-        ANIMATION_CLASSES[animation],
-        className
-      )}
+      className={cn('skeleton', variantClass, animationClass, className)}
       style={{ width, height }}
       aria-hidden="true"
     />
@@ -69,17 +64,13 @@ export const SkeletonList = memo<SkeletonListProps>(function SkeletonList({
 }) {
   return (
     <div
-      className="pointer-events-none bg-bg-tertiary rounded-lg overflow-hidden"
+      className="skeleton-list"
       role="status"
       aria-busy="true"
       aria-label="Loading applications"
     >
       {Array.from({ length: count }, (_, i) => (
-        <div
-          key={i}
-          className="flex items-center py-4 px-5 border-b border-border-primary last:border-b-0"
-          style={{ height: itemHeight }}
-        >
+        <div key={i} className="skeleton-item" style={{ height: itemHeight }}>
           <Skeleton width="60%" height="1.2rem" />
         </div>
       ))}

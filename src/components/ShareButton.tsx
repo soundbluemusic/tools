@@ -118,16 +118,14 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
     typeof navigator !== 'undefined' && 'share' in navigator;
 
   return (
-    <div ref={containerRef} className={cn('relative inline-block', className)}>
+    <div ref={containerRef} className={cn('share-button-container', className)}>
       <button
         ref={buttonRef}
         type="button"
         className={cn(
-          'inline-flex items-center gap-2 font-medium cursor-pointer transition-all duration-fast',
-          variant === 'footer'
-            ? 'px-2 py-1 bg-transparent border-none rounded-sm text-xs text-text-tertiary hover:bg-interactive-hover hover:text-text-primary'
-            : 'px-4 py-2 text-sm text-text-primary bg-bg-secondary border border-border-primary rounded-full hover:bg-bg-tertiary hover:border-border-hover hover:shadow-sm hover:-translate-y-px active:translate-y-0 focus-visible:outline-2 focus-visible:outline-border-focus focus-visible:outline-offset-2',
-          compact && 'p-2 rounded-md'
+          'share-button',
+          compact && 'share-button--compact',
+          variant === 'footer' && 'share-button--footer'
         )}
         onClick={handleToggle}
         aria-expanded={isOpen}
@@ -137,7 +135,9 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
         {variant === 'footer' ? (
           <>
             <svg
-              className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100"
+              className="share-button-icon-svg"
+              width="14"
+              height="14"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -152,21 +152,23 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
               <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
             </svg>
-            <span>{t.common.share.button}</span>
+            <span className="share-button-text">{t.common.share.button}</span>
           </>
         ) : (
           <>
-            <span className="text-base leading-none" aria-hidden="true">
+            <span className="share-button-icon" aria-hidden="true">
               ↗
             </span>
-            {!compact && <span>{t.common.share.button}</span>}
+            {!compact && (
+              <span className="share-button-text">{t.common.share.button}</span>
+            )}
           </>
         )}
       </button>
 
       {isOpen && (
         <div
-          className="absolute top-[calc(100%+0.5rem)] right-0 z-popover min-w-[200px] p-2 bg-bg-secondary border border-border-secondary rounded-lg shadow-xl animate-[shareDropdownIn_0.15s_ease-out]"
+          className="share-dropdown"
           role="menu"
           aria-label={t.common.share.button}
         >
@@ -174,16 +176,16 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
           <button
             type="button"
             className={cn(
-              'flex items-center gap-3 w-full px-3 py-2 text-sm text-text-primary text-left bg-transparent border-none rounded-md cursor-pointer transition-all duration-fast hover:bg-interactive-hover active:scale-[0.98]',
-              copied && 'text-success'
+              'share-dropdown-item',
+              copied && 'share-dropdown-item--success'
             )}
             onClick={handleCopyLink}
             role="menuitem"
           >
-            <span className="flex items-center justify-center shrink-0 w-6 h-6 text-base rounded-sm bg-bg-tertiary">
+            <span className="share-item-icon" aria-hidden="true">
               {copied ? '✓' : '🔗'}
             </span>
-            <span className="flex-1 font-medium">
+            <span className="share-item-label">
               {copied ? t.common.share.copied : t.common.share.copyLink}
             </span>
           </button>
@@ -192,32 +194,32 @@ export const ShareButton = memo<ShareButtonProps>(function ShareButton({
           {hasNativeShare && (
             <button
               type="button"
-              className="flex items-center gap-3 w-full px-3 py-2 text-sm text-text-primary text-left bg-transparent border-none rounded-md cursor-pointer transition-all duration-fast hover:bg-interactive-hover active:scale-[0.98]"
+              className="share-dropdown-item"
               onClick={handleNativeShare}
               role="menuitem"
             >
-              <span className="flex items-center justify-center shrink-0 w-6 h-6 text-base rounded-sm bg-bg-tertiary">
+              <span className="share-item-icon" aria-hidden="true">
                 📤
               </span>
-              <span className="flex-1 font-medium">{t.common.share.more}</span>
+              <span className="share-item-label">{t.common.share.more}</span>
             </button>
           )}
 
-          <div className="h-px my-2 bg-border-primary" role="separator" />
+          <div className="share-dropdown-divider" role="separator" />
 
           {/* Social Share Links */}
           {shareLinks.map((link) => (
             <button
               key={link.name}
               type="button"
-              className="flex items-center gap-3 w-full px-3 py-2 text-sm text-text-primary text-left bg-transparent border-none rounded-md cursor-pointer transition-all duration-fast hover:bg-interactive-hover active:scale-[0.98]"
+              className="share-dropdown-item"
               onClick={() => handleShareClick(link.url)}
               role="menuitem"
             >
-              <span className="flex items-center justify-center shrink-0 w-6 h-6 text-base rounded-sm bg-bg-tertiary">
+              <span className="share-item-icon" aria-hidden="true">
                 {link.icon}
               </span>
-              <span className="flex-1 font-medium">{link.label}</span>
+              <span className="share-item-label">{link.label}</span>
             </button>
           ))}
         </div>

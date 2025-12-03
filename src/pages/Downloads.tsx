@@ -2,6 +2,7 @@ import { memo, useState, useCallback } from 'react';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
+import './Downloads.css';
 
 interface DownloadItem {
   id: string;
@@ -146,7 +147,7 @@ const Downloads = memo(function Downloads() {
       language === 'ko'
         ? '메트로놈, 드럼머신 등 도구를 독립 실행형 파일로 다운로드'
         : 'Download metronome, drum machine and other tools as standalone files',
-    basePath: '/downloads',
+    canonicalPath: '/downloads',
   });
 
   const handleDownload = useCallback(async (item: DownloadItem) => {
@@ -248,74 +249,54 @@ const Downloads = memo(function Downloads() {
   return (
     <PageLayout title={title} description={description}>
       {/* How to use section */}
-      <section className="mb-8 rounded-lg bg-bg-tertiary p-6 sm:p-4">
-        <h2 className="mb-4 text-lg font-semibold text-text-primary">
-          {howToUse[language].title}
-        </h2>
-        <ol className="list-decimal pl-6 leading-relaxed text-text-secondary [&>li]:mb-2">
+      <section className="downloads-howto">
+        <h2 className="downloads-howto-title">{howToUse[language].title}</h2>
+        <ol className="downloads-howto-steps">
           {howToUse[language].steps.map((step, index) => (
-            <li key={index} className="text-sm">
-              {step}
-            </li>
+            <li key={index}>{step}</li>
           ))}
         </ol>
       </section>
 
       {/* Download items */}
-      <section className="flex flex-col gap-6">
+      <section className="downloads-list">
         {DOWNLOADS.map((item) => {
           const status = downloadStatus[item.id] || '';
           return (
-            <article
-              key={item.id}
-              className="rounded-lg border border-border-primary bg-bg-secondary p-6 transition-shadow duration-fast hover:shadow-card-hover sm:p-4"
-            >
-              <div className="mb-4 flex gap-4 sm:flex-col sm:gap-3">
-                <span className="shrink-0 text-[2.5rem] leading-none sm:text-[2rem]">
-                  {item.icon}
-                </span>
-                <div className="flex-1">
-                  <h3 className="mb-1 text-xl font-semibold text-text-primary">
-                    {item.name[language]}
-                  </h3>
-                  <p className="text-sm text-text-secondary">
+            <article key={item.id} className="download-card">
+              <div className="download-card-header">
+                <span className="download-card-icon">{item.icon}</span>
+                <div className="download-card-info">
+                  <h3 className="download-card-name">{item.name[language]}</h3>
+                  <p className="download-card-desc">
                     {item.description[language]}
                   </p>
                 </div>
               </div>
 
-              <div className="mb-4 rounded-md bg-bg-tertiary p-4">
-                <ul className="m-0 grid list-none gap-2 p-0">
+              <div className="download-card-features">
+                <ul>
                   {item.features[language].map((feature, index) => (
-                    <li
-                      key={index}
-                      className="relative pl-5 text-sm text-text-secondary before:absolute before:left-0 before:font-bold before:text-success before:content-['✓']"
-                    >
-                      {feature}
-                    </li>
+                    <li key={index}>{feature}</li>
                   ))}
                 </ul>
               </div>
 
-              <div className="flex items-center justify-between gap-4 border-t border-border-secondary pt-4 sm:flex-col sm:items-stretch">
-                <div className="flex gap-3 text-xs text-text-tertiary sm:mb-2 sm:justify-center">
-                  <span className="font-mono">{item.fileName}</span>
-                  <span className="opacity-80">{item.fileSize}</span>
+              <div className="download-card-footer">
+                <div className="download-card-meta">
+                  <span className="download-card-filename">
+                    {item.fileName}
+                  </span>
+                  <span className="download-card-size">{item.fileSize}</span>
                 </div>
                 <button
-                  className={`flex cursor-pointer items-center gap-2 rounded-md border-none px-5 py-3 text-sm font-medium transition-colors duration-fast sm:justify-center ${
-                    status === 'success'
-                      ? 'bg-success text-text-inverse'
-                      : status === 'error'
-                        ? 'bg-error text-text-inverse'
-                        : 'bg-accent-primary text-text-inverse hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-70'
-                  }`}
+                  className={`download-btn ${status ? `download-btn--${status}` : ''}`}
                   onClick={() => handleDownload(item)}
                   disabled={status === 'downloading'}
                 >
                   {status === 'downloading' && (
                     <svg
-                      className="animate-spin"
+                      className="download-btn-spinner"
                       viewBox="0 0 24 24"
                       width="18"
                       height="18"
@@ -371,7 +352,7 @@ const Downloads = memo(function Downloads() {
       </section>
 
       {/* Info note */}
-      <p className="mt-8 text-center text-sm text-text-tertiary">
+      <p className="downloads-note">
         {language === 'ko'
           ? '※ 모든 도구는 단일 HTML 파일로, 브라우저만 있으면 어디서든 작동합니다.'
           : '※ All tools are single HTML files that work anywhere with a browser.'}

@@ -1,30 +1,24 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getBasePath } from '../utils/localization';
 
 /**
  * Hook for checking if a path is active in navigation
- * Handles both English (default) and Korean (/ko prefix) routes
+ * Consolidates duplicate isActive logic from Sidebar and BottomNav
  */
 export function useIsActive() {
   const location = useLocation();
 
-  // Get base path without language prefix for comparison
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
+  const isActive = useCallback(
+    (path: string) => {
+      if (path === '/') return location.pathname === '/';
+      // Exact match or match with trailing content that starts with /
+      // This prevents /drum from matching /drum-synth
+      return (
+        location.pathname === path || location.pathname.startsWith(path + '/')
+      );
+    },
     [location.pathname]
   );
 
-  const isActive = useCallback(
-    (path: string) => {
-      // Compare against base path (without language prefix)
-      if (path === '/') return basePath === '/';
-      // Exact match or match with trailing content that starts with /
-      // This prevents /drum from matching /drum-synth
-      return basePath === path || basePath.startsWith(path + '/');
-    },
-    [basePath]
-  );
-
-  return { isActive, pathname: location.pathname, basePath };
+  return { isActive, pathname: location.pathname };
 }

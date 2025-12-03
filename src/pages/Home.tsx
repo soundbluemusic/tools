@@ -2,8 +2,8 @@ import { memo, useState, useMemo, useCallback, useTransition } from 'react';
 import { useLanguage } from '../i18n';
 import { useSEO, useApps } from '../hooks';
 import AppList from '../components/AppList';
-import { sortApps } from '../utils/sort';
-import type { SortOption } from '../types';
+import type { App, SortOption } from '../types';
+import type { Language } from '../i18n/types';
 
 const homeSEO = {
   ko: {
@@ -21,6 +21,44 @@ const homeSEO = {
 };
 
 /**
+ * Sort apps based on selected option
+ * Uses stable sort for consistent ordering
+ */
+function sortApps(
+  apps: readonly App[],
+  sortBy: SortOption,
+  language: Language
+): readonly App[] {
+  const sorted = [...apps];
+  const locale = language === 'ko' ? 'ko' : 'en';
+
+  switch (sortBy) {
+    case 'name-asc':
+      return sorted.sort((a, b) =>
+        a.name[language].localeCompare(b.name[language], locale)
+      );
+    case 'name-desc':
+      return sorted.sort((a, b) =>
+        b.name[language].localeCompare(a.name[language], locale)
+      );
+    case 'name-long':
+      return sorted.sort(
+        (a, b) => b.name[language].length - a.name[language].length
+      );
+    case 'name-short':
+      return sorted.sort(
+        (a, b) => a.name[language].length - b.name[language].length
+      );
+    case 'size-large':
+      return sorted.sort((a, b) => b.size - a.size);
+    case 'size-small':
+      return sorted.sort((a, b) => a.size - b.size);
+    default:
+      return apps;
+  }
+}
+
+/**
  * Home Page Component
  * Displays a searchable and sortable list of tools
  * Optimized for instant interactions
@@ -33,7 +71,7 @@ const Home = memo(function Home() {
   useSEO({
     description: homeSEO[language].description,
     keywords: homeSEO[language].keywords,
-    basePath: '/',
+    canonicalPath: '/',
     isHomePage: true,
   });
 
@@ -77,16 +115,16 @@ const Home = memo(function Home() {
     language === 'ko' ? '사용 가능한 도구' : 'Available tools';
 
   return (
-    <div>
+    <div className="home-page">
       {/* Page Header with Controls */}
-      <div className="flex justify-between items-center gap-4 flex-wrap mb-6">
-        <h1 className="text-xl md:text-2xl font-semibold text-text-primary tracking-tight">
+      <div className="home-header">
+        <h1 className="home-title">
           {language === 'ko' ? '모든 도구' : 'All Tools'}
         </h1>
-        <div className="flex gap-3 items-center flex-wrap">
+        <div className="home-controls">
           {/* Sort Dropdown */}
           <select
-            className="px-4 py-3 text-sm font-inherit border border-border-secondary rounded-md bg-bg-tertiary text-text-primary cursor-pointer outline-none transition-all duration-fast focus:border-border-focus focus:shadow-focus hover:border-border-primary min-w-[150px]"
+            className="sort-dropdown"
             value={sortBy}
             onChange={handleSortChange}
             aria-label={homeT.sortAriaLabel}
@@ -110,7 +148,7 @@ const Home = memo(function Home() {
 
       {/* No Results Message */}
       {sortedApps.length === 0 && !isLoading && (
-        <p className="text-center text-text-secondary py-8 text-sm">
+        <p className="no-results">
           {language === 'ko' ? '도구가 없습니다.' : 'No tools found.'}
         </p>
       )}

@@ -4,6 +4,7 @@ import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import { CommandPalette } from './CommandPalette';
 import type { App } from '../../types';
+import './NavigationLayout.css';
 
 interface NavigationLayoutProps {
   apps: App[];
@@ -76,7 +77,9 @@ export const NavigationLayout = memo(function NavigationLayout({
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen">
+    <div
+      className={`navigation-layout${isSidebarOpen ? '' : ' sidebar-collapsed'}`}
+    >
       {/* Fixed Header */}
       <Header
         onSearchClick={openCommandPalette}
@@ -88,15 +91,8 @@ export const NavigationLayout = memo(function NavigationLayout({
       <Sidebar apps={apps} isOpen={isSidebarOpen} />
 
       {/* Main Content Wrapper */}
-      <div
-        className={`w-full min-h-screen pt-14 ${
-          isSidebarOpen ? 'lg:pl-sidebar' : 'lg:pl-0'
-        }`}
-        style={{
-          paddingBottom: 'calc(56px + env(safe-area-inset-bottom, 0px))',
-        }}
-      >
-        <div className="w-full min-h-[calc(100vh-56px)]">{children}</div>
+      <div className="navigation-content">
+        <div className="content-wrapper">{children}</div>
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}

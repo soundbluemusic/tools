@@ -33,7 +33,7 @@ const OtherTools = memo(function OtherTools() {
     title: otherToolsSEO[language].title,
     description: otherToolsSEO[language].description,
     keywords: otherToolsSEO[language].keywords,
-    basePath: '/other-tools',
+    canonicalPath: '/other-tools',
   });
 
   // Filter non-music and non-combined apps
@@ -63,16 +63,16 @@ const OtherTools = memo(function OtherTools() {
     language === 'ko' ? '기타 도구 목록' : 'Other tools list';
 
   return (
-    <div className="p-4 sm:py-5 sm:px-6 md:py-6 md:px-8">
+    <div className="home-page">
       <Breadcrumb items={breadcrumb} />
 
       {/* Page Header */}
-      <div className="flex flex-col items-start gap-4 mb-4 md:mb-6">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl md:text-2xl font-semibold m-0 text-text-primary">
+      <div className="home-header category-header">
+        <div className="category-header-text">
+          <h1 className="home-title">
             {language === 'ko' ? '기타 도구' : 'Other Tools'}
           </h1>
-          <p className="m-0 text-[0.95rem] text-text-secondary font-normal">
+          <p className="category-description">
             {language === 'ko'
               ? '다양한 유틸리티 도구들'
               : 'Various utility tools'}
@@ -90,7 +90,7 @@ const OtherTools = memo(function OtherTools() {
 
       {/* No Results Message */}
       {otherApps.length === 0 && !isLoading && (
-        <p className="text-center text-text-secondary p-8 text-[0.95rem]">
+        <p className="no-results">
           {language === 'ko' ? '도구가 없습니다.' : 'No tools found.'}
         </p>
       )}

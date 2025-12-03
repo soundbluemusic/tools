@@ -18,7 +18,7 @@ const Drum = memo(function Drum() {
     title: drum.seo.title,
     description: drum.seo.description,
     keywords: drum.seo.keywords,
-    basePath: '/drum',
+    canonicalPath: '/drum',
   });
 
   // Breadcrumb items

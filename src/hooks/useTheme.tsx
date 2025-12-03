@@ -8,15 +8,16 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import {
-  type Theme,
-  getInitialTheme,
-  saveTheme,
-  applyTheme,
-  getOppositeTheme,
-} from '../utils/theme';
+  getStorageItem,
+  setStorageItem,
+  createEnumValidator,
+} from '../utils/storage';
 
-// Re-export Theme type for consumers
-export type { Theme } from '../utils/theme';
+/** Available theme options */
+export type Theme = 'light' | 'dark';
+
+const THEMES = ['light', 'dark'] as const;
+const THEME_STORAGE_KEY = 'theme-preference';
 
 interface ThemeContextValue {
   /** Current theme setting */
@@ -49,23 +50,37 @@ interface ThemeProviderProps {
  * Manages theme state and applies to document
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
+  const isTheme = createEnumValidator(THEMES);
+
   // Get initial theme from storage or detect system preference
-  const [theme, setThemeState] = useState<Theme>(getInitialTheme);
+  const [theme, setThemeState] = useState<Theme>(() => {
+    const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
+      validator: (v): v is Theme => isTheme(v),
+    });
+    if (stored) return stored;
+    // Default to system preference on first visit
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+    return 'light';
+  });
 
   // Apply theme to document
   useEffect(() => {
-    applyTheme(theme);
+    document.documentElement.dataset.theme = theme;
   }, [theme]);
 
   // Set theme and persist
   const setTheme = useCallback((newTheme: Theme) => {
     setThemeState(newTheme);
-    saveTheme(newTheme);
+    setStorageItem(THEME_STORAGE_KEY, newTheme);
   }, []);
 
   // Toggle between light and dark
   const toggleTheme = useCallback(() => {
-    setTheme(getOppositeTheme(theme));
+    setTheme(theme === 'light' ? 'dark' : 'light');
   }, [theme, setTheme]);
 
   const value = useMemo(
