@@ -17,6 +17,9 @@ export default {
           elevated: 'var(--color-bg-elevated)',
           overlay: 'var(--color-bg-overlay)',
         },
+        item: {
+          hover: 'var(--item-hover-bg)',
+        },
         text: {
           primary: 'var(--color-text-primary)',
           secondary: 'var(--color-text-secondary)',
@@ -216,6 +219,79 @@ export default {
         md: '768px',
         lg: '1024px',
         xl: '1280px',
+      },
+
+      // Animations
+      keyframes: {
+        fadeIn: {
+          from: {
+            opacity: '0',
+            transform: 'translateY(4px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        toolPageEnter: {
+          from: {
+            opacity: '0',
+            transform: 'translateY(8px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+        slideDown: {
+          from: {
+            opacity: '0',
+            transform: 'translateY(-16px) scale(0.98)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateY(0) scale(1)',
+          },
+        },
+        'synth-status-slide-in': {
+          from: {
+            opacity: '0',
+            transform: 'translateX(-50%) translateY(10px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translateX(-50%) translateY(0)',
+          },
+        },
+        'drum-loop-pulse': {
+          from: {
+            transform: 'scale(1)',
+            boxShadow:
+              '0 0 0 0 rgba(var(--color-accent-rgb, 59, 130, 246), 0.4)',
+          },
+          to: {
+            transform: 'scale(1.08)',
+            boxShadow:
+              '0 0 8px 2px rgba(var(--color-accent-rgb, 59, 130, 246), 0.6)',
+          },
+        },
+        'drum-status-slide-up': {
+          from: {
+            opacity: '0',
+            transform: 'translate(-50%, 20px)',
+          },
+          to: {
+            opacity: '1',
+            transform: 'translate(-50%, 0)',
+          },
+        },
+      },
+      animation: {
+        fadeIn: 'fadeIn 150ms ease-out',
+        slideDown: 'slideDown 150ms ease-out',
+        'synth-status-slide-in': 'synth-status-slide-in 0.2s ease-out',
+        'drum-loop-pulse': 'drum-loop-pulse 0.5s ease-in-out infinite alternate',
+        'drum-status-slide-up': 'drum-status-slide-up 0.3s ease-out',
       },
     },
   },

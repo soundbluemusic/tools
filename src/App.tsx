@@ -7,7 +7,6 @@ import { NavigationLayout } from './components/navigation';
 import { Loader } from './components/ui';
 import { LanguageProvider } from './i18n';
 import { ThemeProvider, AppsProvider, useApps } from './hooks';
-import './App.css';
 
 // Critical pages - direct imports for instant loading
 import Home from './pages/Home';
@@ -42,7 +41,7 @@ const Terms = lazy(() => import('./pages/Terms'));
  */
 function PageLoader() {
   return (
-    <div className="page-loader">
+    <div className="flex items-center justify-center min-h-[200px] [contain:layout_style]">
       <Loader size="lg" />
     </div>
   );

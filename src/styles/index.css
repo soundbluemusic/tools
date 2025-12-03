@@ -9,8 +9,8 @@
 /* Base styles and resets */
 @import './base.css';
 
-/* Legacy component styles (gradually migrating to Tailwind) */
-@import './components.css';
+/* App-level styles (legacy, will be gradually migrated to Tailwind) */
+@import '../App.css';
 
 /* Tailwind layers - after @imports per CSS spec */
 @tailwind base;

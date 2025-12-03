@@ -1,8 +1,7 @@
 /**
  * Standalone Metronome Styles
  * Base styles and CSS variables for standalone app
- * Component styles come from MetronomePlayer.css via component import
+ * Component styles are now defined using Tailwind CSS classes
  */
 
 @import '../common/base.css';
-@import '../../apps/metronome/components/MetronomePlayer.css';

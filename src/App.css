@@ -313,16 +313,9 @@
 }
 
 /* ==========================================================================
-   Page Loader - GPU accelerated spinner
+   Loader Spinner - GPU accelerated spinner
+   Note: .page-loader has been migrated to Tailwind in App.tsx
    ========================================================================== */
-.page-loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 200px;
-  contain: layout style;
-}
-
 .loader-spinner {
   width: 32px;
   height: 32px;

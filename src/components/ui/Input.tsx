@@ -48,32 +48,35 @@ export const Input = memo(
     return (
       <div
         className={cn(
-          'input-container',
-          fullWidth && 'input-container--full-width',
+          'relative inline-flex items-center',
+          fullWidth && 'w-full',
           containerClassName
         )}
       >
         {startAdornment && (
-          <span className="input-adornment input-adornment--start">
+          <span className="absolute left-3 flex items-center text-text-tertiary">
             {startAdornment}
           </span>
         )}
         <input
           ref={ref}
           className={cn(
-            'input',
+            'w-full border border-border-secondary rounded-md bg-bg-tertiary text-text-primary outline-none transition-all duration-fast',
+            'focus:border-border-focus focus:shadow-focus',
+            'placeholder:text-text-tertiary',
             sizeClass,
-            error && 'input--error',
-            disabled && 'input--disabled',
-            !!startAdornment && 'input--with-start-adornment',
-            !!endAdornment && 'input--with-end-adornment',
+            error &&
+              'border-error focus:shadow-[0_0_0_3px_rgba(220,38,38,0.1)]',
+            disabled && 'opacity-50 cursor-not-allowed',
+            startAdornment && 'pl-10',
+            endAdornment && 'pr-10',
             className
           )}
           disabled={disabled}
           {...props}
         />
         {endAdornment && (
-          <span className="input-adornment input-adornment--end">
+          <span className="absolute right-3 flex items-center text-text-tertiary">
             {endAdornment}
           </span>
         )}

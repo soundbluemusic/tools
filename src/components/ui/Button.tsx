@@ -7,12 +7,13 @@ import {
 import { cn } from '../../utils';
 import { SIZE_CLASSES } from '../../utils/sizeClass';
 
-// Move class mappings to module level to avoid recreation on every render
+// Tailwind variant classes
 const VARIANT_CLASSES = {
-  primary: 'btn--primary',
-  secondary: 'btn--secondary',
-  ghost: 'btn--ghost',
-  outline: 'btn--outline',
+  primary: 'bg-accent-primary text-text-inverse hover:bg-accent-hover',
+  secondary: 'bg-bg-secondary text-text-primary hover:bg-interactive-hover',
+  ghost: 'bg-transparent text-text-primary hover:bg-interactive-hover',
+  outline:
+    'bg-transparent border border-border-primary text-text-primary hover:bg-interactive-hover',
 } as const;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -56,11 +57,11 @@ export const Button = memo(
       <button
         ref={ref}
         className={cn(
-          'btn',
+          'inline-flex items-center justify-center gap-2 font-medium rounded-md transition-colors duration-fast',
           variantClass,
           sizeClass,
-          fullWidth && 'btn--full-width',
-          loading && 'btn--loading',
+          fullWidth && 'w-full',
+          loading && 'pointer-events-none opacity-70',
           className
         )}
         disabled={disabled || loading}
@@ -68,14 +69,15 @@ export const Button = memo(
         aria-disabled={disabled || loading || undefined}
         {...props}
       >
-        {loading && <span className="btn-spinner" aria-hidden="true" />}
-        {!loading && startIcon && (
-          <span className="btn-icon btn-icon--start">{startIcon}</span>
+        {loading && (
+          <span
+            className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"
+            aria-hidden="true"
+          />
         )}
-        <span className="btn-content">{children}</span>
-        {!loading && endIcon && (
-          <span className="btn-icon btn-icon--end">{endIcon}</span>
-        )}
+        {!loading && startIcon && <span>{startIcon}</span>}
+        <span>{children}</span>
+        {!loading && endIcon && <span>{endIcon}</span>}
       </button>
     );
   })

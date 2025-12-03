@@ -77,16 +77,16 @@ const Home = memo(function Home() {
     language === 'ko' ? '사용 가능한 도구' : 'Available tools';
 
   return (
-    <div className="home-page">
+    <div>
       {/* Page Header with Controls */}
-      <div className="home-header">
-        <h1 className="home-title">
+      <div className="flex justify-between items-center gap-4 flex-wrap mb-6">
+        <h1 className="text-xl md:text-2xl font-semibold text-text-primary tracking-tight">
           {language === 'ko' ? '모든 도구' : 'All Tools'}
         </h1>
-        <div className="home-controls">
+        <div className="flex gap-3 items-center flex-wrap">
           {/* Sort Dropdown */}
           <select
-            className="sort-dropdown"
+            className="px-4 py-3 text-sm font-inherit border border-border-secondary rounded-md bg-bg-tertiary text-text-primary cursor-pointer outline-none transition-all duration-fast focus:border-border-focus focus:shadow-focus hover:border-border-primary min-w-[150px]"
             value={sortBy}
             onChange={handleSortChange}
             aria-label={homeT.sortAriaLabel}
@@ -110,7 +110,7 @@ const Home = memo(function Home() {
 
       {/* No Results Message */}
       {sortedApps.length === 0 && !isLoading && (
-        <p className="no-results">
+        <p className="text-center text-text-secondary py-8 text-sm">
           {language === 'ko' ? '도구가 없습니다.' : 'No tools found.'}
         </p>
       )}
