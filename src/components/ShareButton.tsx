@@ -1,7 +1,7 @@
 import { memo, useState, useCallback, useRef } from 'react';
 import { useTranslations } from '../i18n/context';
 import { cn, copyToClipboard } from '../utils';
-import { useDropdown, useDropdownToggle } from '../hooks';
+import { useDropdown, useDropdownToggle } from '../hooks/useDropdown';
 
 interface ShareButtonProps {
   /** URL to share (defaults to current page) */
