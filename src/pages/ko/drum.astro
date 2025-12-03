@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import DrumPage from '../../react-pages/Drum';
 import { loadApps } from '../../constants/apps';
 import { drumKo } from '../../i18n/translations/drum';
 
@@ -23,7 +22,6 @@ const t = drumKo;
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <DrumPage language={language} />
-  </ReactApp>
+    page="drum"
+  />
 </Layout>

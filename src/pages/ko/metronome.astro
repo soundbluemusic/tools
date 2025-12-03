@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import MetronomePage from '../../react-pages/Metronome';
 import { loadApps } from '../../constants/apps';
 import { metronomeKo } from '../../i18n/translations/metronome';
 
@@ -23,7 +22,6 @@ const t = metronomeKo;
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <MetronomePage language={language} />
-  </ReactApp>
+    page="metronome"
+  />
 </Layout>

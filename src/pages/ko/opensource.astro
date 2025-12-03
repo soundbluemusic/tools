@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import OpenSourcePage from '../../react-pages/OpenSource';
 import { loadApps } from '../../constants/apps';
 
 const apps = await loadApps();
@@ -28,7 +27,6 @@ const seo = {
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <OpenSourcePage language={language} />
-  </ReactApp>
+    page="opensource"
+  />
 </Layout>

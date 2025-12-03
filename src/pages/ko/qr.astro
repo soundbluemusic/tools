@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import QRPage from '../../react-pages/QR';
 import { loadApps } from '../../constants/apps';
 import { qrKo } from '../../i18n/translations/qr';
 
@@ -23,7 +22,6 @@ const t = qrKo;
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <QRPage language={language} />
-  </ReactApp>
+    page="qr"
+  />
 </Layout>

@@ -3,8 +3,11 @@
  *
  * 각 Astro 페이지에서 이 컴포넌트를 client:only="react"로 로드합니다.
  * 이전의 React Router 기반 App.tsx를 대체합니다.
+ *
+ * IMPORTANT: children은 Astro에서 client:only로 전달 시 hydration 문제가 있어
+ * page prop으로 페이지 식별자를 받아서 내부에서 렌더링합니다.
  */
-import { memo, useState, useCallback, useEffect } from 'react';
+import { memo, useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import { ErrorBoundary } from './ErrorBoundary';
 import { SkipLink } from './SkipLink';
 import { ThemeProvider } from '../hooks/useTheme';
@@ -13,6 +16,41 @@ import type { App } from '../types';
 import { commonKo, commonEn } from '../i18n/translations/common';
 import '../App.css';
 
+// Lazy load all page components for code splitting
+const HomePage = lazy(() => import('../react-pages/Home'));
+const MetronomePage = lazy(() => import('../react-pages/Metronome'));
+const DrumPage = lazy(() => import('../react-pages/Drum'));
+const DrumSynthPage = lazy(() => import('../react-pages/DrumSynth'));
+const QRPage = lazy(() => import('../react-pages/QR'));
+const SitemapPage = lazy(() => import('../react-pages/Sitemap'));
+const OpenSourcePage = lazy(() => import('../react-pages/OpenSource'));
+const ToolsUsedPage = lazy(() => import('../react-pages/ToolsUsed'));
+const DownloadsPage = lazy(() => import('../react-pages/Downloads'));
+const PrivacyPage = lazy(() => import('../react-pages/Privacy'));
+const TermsPage = lazy(() => import('../react-pages/Terms'));
+const MusicToolsPage = lazy(() => import('../react-pages/MusicTools'));
+const CombinedToolsPage = lazy(() => import('../react-pages/CombinedTools'));
+const OtherToolsPage = lazy(() => import('../react-pages/OtherTools'));
+const DrumToolPage = lazy(() => import('../react-pages/DrumTool'));
+
+// Page type union
+type PageType =
+  | 'home'
+  | 'metronome'
+  | 'drum'
+  | 'drum-synth'
+  | 'drum-tool'
+  | 'qr'
+  | 'sitemap'
+  | 'opensource'
+  | 'tools-used'
+  | 'downloads'
+  | 'privacy'
+  | 'terms'
+  | 'music-tools'
+  | 'combined-tools'
+  | 'other-tools';
+
 interface ReactAppProps {
   /** Current path for active state */
   currentPath: string;
@@ -20,9 +58,57 @@ interface ReactAppProps {
   language: 'ko' | 'en';
   /** Apps list */
   apps: App[];
-  /** Children to render */
-  children: React.ReactNode;
+  /** Page identifier to render */
+  page: PageType;
 }
+
+/**
+ * Render the appropriate page component based on page prop
+ */
+const PageRenderer = memo(function PageRenderer({
+  page,
+  language,
+  apps,
+}: {
+  page: PageType;
+  language: 'ko' | 'en';
+  apps: App[];
+}) {
+  const fallback = (
+    <div
+      className="page-loading"
+      style={{ padding: '2rem', textAlign: 'center' }}
+    >
+      <div className="loader" />
+    </div>
+  );
+
+  return (
+    <Suspense fallback={fallback}>
+      {page === 'home' && <HomePage language={language} apps={apps} />}
+      {page === 'metronome' && <MetronomePage language={language} />}
+      {page === 'drum' && <DrumPage language={language} />}
+      {page === 'drum-synth' && <DrumSynthPage language={language} />}
+      {page === 'qr' && <QRPage language={language} />}
+      {page === 'sitemap' && <SitemapPage language={language} apps={apps} />}
+      {page === 'opensource' && <OpenSourcePage language={language} />}
+      {page === 'tools-used' && <ToolsUsedPage language={language} />}
+      {page === 'downloads' && <DownloadsPage language={language} />}
+      {page === 'privacy' && <PrivacyPage language={language} />}
+      {page === 'terms' && <TermsPage language={language} />}
+      {page === 'music-tools' && (
+        <MusicToolsPage language={language} apps={apps} />
+      )}
+      {page === 'combined-tools' && (
+        <CombinedToolsPage language={language} apps={apps} />
+      )}
+      {page === 'other-tools' && (
+        <OtherToolsPage language={language} apps={apps} />
+      )}
+      {page === 'drum-tool' && <DrumToolPage language={language} />}
+    </Suspense>
+  );
+});
 
 /**
  * Navigation wrapper component for Astro
@@ -31,7 +117,7 @@ const ReactApp = memo(function ReactApp({
   currentPath,
   language,
   apps,
-  children,
+  page,
 }: ReactAppProps) {
   return (
     <LanguageProvider initialLanguage={language} currentPath={currentPath}>
@@ -44,7 +130,7 @@ const ReactApp = memo(function ReactApp({
           >
             <SkipLink />
             <main id="main-content" className="main-content" role="main">
-              {children}
+              <PageRenderer page={page} language={language} apps={apps} />
             </main>
             <FooterAstro language={language} />
           </NavigationLayoutAstro>

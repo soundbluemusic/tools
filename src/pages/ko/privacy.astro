@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import PrivacyPage from '../../react-pages/Privacy';
 import { loadApps } from '../../constants/apps';
 
 const apps = await loadApps();
@@ -21,7 +20,6 @@ const currentPath = '/ko/privacy';
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <PrivacyPage language={language} />
-  </ReactApp>
+    page="privacy"
+  />
 </Layout>

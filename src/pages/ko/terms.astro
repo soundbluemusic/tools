@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import TermsPage from '../../react-pages/Terms';
 import { loadApps } from '../../constants/apps';
 
 const apps = await loadApps();
@@ -21,7 +20,6 @@ const currentPath = '/ko/terms';
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <TermsPage language={language} />
-  </ReactApp>
+    page="terms"
+  />
 </Layout>

@@ -1,7 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { ReactApp } from '../../components/ReactApp';
-import Home from '../../react-pages/Home';
 import { loadApps } from '../../constants/apps';
 
 const apps = await loadApps();
@@ -27,7 +26,6 @@ const seo = {
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <Home language={language} apps={apps} />
-  </ReactApp>
+    page="home"
+  />
 </Layout>

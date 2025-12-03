@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { ReactApp } from '../components/ReactApp';
-import QRPage from '../react-pages/QR';
 import { loadApps } from '../constants/apps';
 import { qrEn } from '../i18n/translations/qr';
 import { BRAND } from '../constants/brand';
@@ -54,7 +53,6 @@ const jsonLd = {
     currentPath={currentPath}
     language={language}
     apps={apps}
-  >
-    <QRPage language={language} />
-  </ReactApp>
+    page="qr"
+  />
 </Layout>
