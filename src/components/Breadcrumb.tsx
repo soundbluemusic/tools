@@ -1,7 +1,6 @@
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n';
-import './Breadcrumb.css';
 
 interface BreadcrumbItem {
   label: { ko: string; en: string };
@@ -17,23 +16,26 @@ interface BreadcrumbProps {
  * Shows hierarchical navigation path (e.g., Home > Music Tools > Metronome)
  */
 export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
-  const { language } = useLanguage();
+  const { language, localizedPath } = useLanguage();
 
   return (
-    <nav className="breadcrumb" aria-label="Breadcrumb">
-      <ol className="breadcrumb-list">
+    <nav className="mb-4" aria-label="Breadcrumb">
+      <ol className="flex items-center flex-wrap gap-0 m-0 p-0 list-none text-xs sm:text-sm">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           const label = item.label[language];
 
           return (
-            <li key={index} className="breadcrumb-item">
+            <li key={index} className="flex items-center">
               {!isLast && item.href ? (
                 <>
-                  <Link to={item.href} className="breadcrumb-link">
+                  <Link
+                    to={localizedPath(item.href)}
+                    className="inline-flex items-center gap-1 text-text-secondary no-underline py-1 transition-colors duration-fast hover:text-text-primary"
+                  >
                     {index === 0 && (
                       <svg
-                        className="breadcrumb-home-icon"
+                        className="shrink-0"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         width="14"
@@ -45,7 +47,7 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
                     <span>{label}</span>
                   </Link>
                   <svg
-                    className="breadcrumb-separator"
+                    className="mx-1 sm:mx-1.5 text-text-tertiary shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -60,7 +62,10 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
                   </svg>
                 </>
               ) : (
-                <span className="breadcrumb-current" aria-current="page">
+                <span
+                  className="text-text-primary font-medium"
+                  aria-current="page"
+                >
                   {label}
                 </span>
               )}

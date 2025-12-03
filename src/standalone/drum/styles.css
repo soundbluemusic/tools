@@ -1,8 +1,7 @@
 /**
  * Standalone Drum Machine Styles
  * Base styles and CSS variables for standalone app
- * Component styles come from DrumMachine.css via component import
+ * Component styles now use Tailwind CSS classes
  */
 
 @import '../common/base.css';
-@import '../../apps/drum/components/DrumMachine.css';

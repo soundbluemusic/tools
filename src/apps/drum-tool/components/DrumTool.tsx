@@ -7,7 +7,6 @@ import {
   type AllDrumParams,
 } from '../../drum-synth/constants';
 import { cn } from '../../../utils';
-import './DrumTool.css';
 
 type TabType = 'machine' | 'synth';
 
@@ -46,9 +45,12 @@ export const DrumTool = memo(function DrumTool() {
   ];
 
   return (
-    <div className="drum-tool">
+    <div className="flex flex-col gap-4">
       {/* Tab Navigation */}
-      <div className="drum-tool-tabs" role="tablist">
+      <div
+        className="flex gap-2 rounded-xl border border-border-primary bg-bg-secondary p-1"
+        role="tablist"
+      >
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -56,26 +58,28 @@ export const DrumTool = memo(function DrumTool() {
             aria-selected={activeTab === tab.id}
             aria-controls={`tabpanel-${tab.id}`}
             className={cn(
-              'drum-tool-tab',
-              activeTab === tab.id && 'drum-tool-tab--active'
+              'flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-[10px] border-none bg-transparent px-4 py-3 text-[0.95rem] font-medium text-text-secondary transition-[background-color,color,box-shadow] duration-150 ease-default hover:bg-bg-tertiary hover:text-text-primary sm:px-3 sm:py-2.5 sm:text-sm',
+              activeTab === tab.id &&
+                'bg-bg-primary text-text-primary shadow-[0_2px_8px_rgba(0,0,0,0.08)] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]'
             )}
             onClick={() => handleTabChange(tab.id)}
           >
-            <span className="drum-tool-tab-icon">{tab.icon}</span>
-            <span className="drum-tool-tab-label">{tab.label}</span>
+            <span className="text-[1.1rem] sm:text-base">{tab.icon}</span>
+            <span className="font-medium">{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Tab Panels */}
-      <div className="drum-tool-content">
+      <div className="min-h-[400px]">
         <div
           id="tabpanel-machine"
           role="tabpanel"
           aria-labelledby="tab-machine"
           className={cn(
-            'drum-tool-panel',
-            activeTab === 'machine' && 'drum-tool-panel--active'
+            'hidden',
+            activeTab === 'machine' &&
+              'block animate-[fadeIn_0.2s_ease-out] motion-reduce:animate-none'
           )}
           hidden={activeTab !== 'machine'}
         >
@@ -87,8 +91,9 @@ export const DrumTool = memo(function DrumTool() {
           role="tabpanel"
           aria-labelledby="tab-synth"
           className={cn(
-            'drum-tool-panel',
-            activeTab === 'synth' && 'drum-tool-panel--active'
+            'hidden',
+            activeTab === 'synth' &&
+              'block animate-[fadeIn_0.2s_ease-out] motion-reduce:animate-none'
           )}
           hidden={activeTab !== 'synth'}
         >
@@ -102,7 +107,7 @@ export const DrumTool = memo(function DrumTool() {
       </div>
 
       {/* Integration indicator */}
-      <div className="drum-tool-integration-info">
+      <div className="rounded-lg border border-border-primary bg-bg-secondary px-4 py-3 text-center text-[0.85rem] text-text-secondary">
         {language === 'ko'
           ? '사운드 합성기에서 수정한 소리가 드럼 머신에서 사용됩니다.'
           : 'Sounds edited in Sound Synth are used by Drum Machine.'}

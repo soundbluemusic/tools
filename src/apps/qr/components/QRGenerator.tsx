@@ -9,7 +9,6 @@ import {
   COLOR_THRESHOLD,
   TIMEOUTS,
 } from '../constants';
-import './QRGenerator.css';
 
 type ErrorLevel = 'L' | 'M' | 'Q' | 'H';
 type ColorMode = 'black' | 'white';
@@ -308,45 +307,67 @@ const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
       : 'high_recovery_transparent_qr_white.png';
 
   return (
-    <div className="qr-generator">
-      <div className="qr-card">
-        <div className="qr-grid">
+    <div className="w-full">
+      <div className="bg-bg-tertiary border border-border-secondary rounded-lg shadow-md overflow-hidden p-4 sm:p-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
           {/* Input Section */}
-          <div className="qr-input-section">
-            <h2>{qrT.urlInput}</h2>
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-text-primary m-0 mb-3 sm:mb-4">
+              {qrT.urlInput}
+            </h2>
 
-            <div className="qr-input-group">
-              <label>{qrT.urlLabel}</label>
+            <div className="flex flex-col">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
+                {qrT.urlLabel}
+              </label>
               <input
                 type="text"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder={qrT.urlPlaceholder}
-                className="qr-input"
+                className="w-full px-3 sm:px-4 py-3 border border-border-secondary rounded-md text-base bg-bg-primary text-text-primary outline-none transition-[border-color,box-shadow] duration-fast ease-default box-border focus:border-border-focus focus:shadow-focus placeholder:text-text-tertiary min-h-12 sm:min-h-0"
               />
-              <p className="qr-help-text">{qrT.urlHelp}</p>
+              <p className="text-xs text-text-tertiary mt-1">{qrT.urlHelp}</p>
             </div>
 
-            <div className="qr-error-section">
-              <h3>{qrT.errorCorrectionLevel}</h3>
+            <div>
+              <h3 className="text-base md:text-lg font-semibold text-text-primary m-0 mb-4">
+                {qrT.errorCorrectionLevel}
+              </h3>
               {/* Desktop: Table view */}
-              <div className="qr-table-wrapper">
-                <table className="qr-table">
+              <div className="overflow-x-auto mb-4 hidden sm:block">
+                <table className="w-full text-sm border-collapse">
                   <thead>
                     <tr>
-                      <th>{qrT.level}</th>
-                      <th>{qrT.recoveryRate}</th>
-                      <th>{qrT.recommendedEnvironment}</th>
-                      <th>{qrT.description}</th>
+                      <th className="text-left px-3 py-2 font-medium text-text-secondary border-b border-border-secondary">
+                        {qrT.level}
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-text-secondary border-b border-border-secondary">
+                        {qrT.recoveryRate}
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-text-secondary border-b border-border-secondary">
+                        {qrT.recommendedEnvironment}
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-text-secondary border-b border-border-secondary">
+                        {qrT.description}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {errorLevels.map((item, idx) => (
                       <tr key={idx}>
-                        <td className="qr-level-cell">{item.level}</td>
-                        <td>{item.recovery}</td>
-                        <td>{item.use}</td>
-                        <td className="qr-desc-cell">{item.desc}</td>
+                        <td className="px-3 py-2 text-text-primary border-b border-border-secondary last:border-b-0 font-semibold">
+                          {item.level}
+                        </td>
+                        <td className="px-3 py-2 text-text-primary border-b border-border-secondary last:border-b-0">
+                          {item.recovery}
+                        </td>
+                        <td className="px-3 py-2 text-text-primary border-b border-border-secondary last:border-b-0">
+                          {item.use}
+                        </td>
+                        <td className="px-3 py-2 text-text-primary border-b border-border-secondary last:border-b-0 text-text-secondary">
+                          {item.desc}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -354,50 +375,73 @@ const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
               </div>
 
               {/* Mobile: Card view */}
-              <div className="qr-table-mobile">
+              <div className="flex flex-col gap-3 sm:hidden">
                 {errorLevels.map((item, idx) => (
-                  <div key={idx} className="qr-table-mobile-card">
-                    <div className="qr-table-mobile-card-header">
-                      <span className="qr-table-mobile-level">
+                  <div
+                    key={idx}
+                    className="bg-bg-primary border border-border-secondary rounded-md p-3"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-bold text-lg text-info">
                         {item.level}
                       </span>
-                      <span className="qr-table-mobile-recovery">
+                      <span className="text-sm text-text-secondary bg-bg-tertiary px-2 py-1 rounded-sm">
                         {item.recovery}
                       </span>
                     </div>
-                    <div className="qr-table-mobile-use">{item.use}</div>
-                    <div className="qr-table-mobile-desc">{item.desc}</div>
+                    <div className="text-sm font-medium text-text-primary mb-1">
+                      {item.use}
+                    </div>
+                    <div className="text-xs text-text-tertiary">
+                      {item.desc}
+                    </div>
                   </div>
                 ))}
               </div>
 
-              <div className="qr-level-buttons">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {errorLevels.map((item) => (
                   <button
                     key={item.level}
                     onClick={() => setErrorLevel(item.level)}
-                    className={`qr-level-btn ${errorLevel === item.level ? 'active' : ''}`}
+                    className={`px-3 sm:px-4 py-2 sm:py-3 rounded-md font-semibold cursor-pointer transition-all duration-fast ease-default border text-sm sm:text-base min-h-11 sm:min-h-0 ${
+                      errorLevel === item.level
+                        ? 'bg-info border-info text-white shadow-md'
+                        : 'border-border-secondary bg-bg-primary text-text-primary hover:bg-interactive-hover'
+                    }`}
                   >
                     {item.level}
                   </button>
                 ))}
               </div>
 
-              <p className="qr-info-text">{qrT.errorLevelInfo}</p>
+              <p className="text-sm text-text-secondary mt-4 leading-relaxed">
+                {qrT.errorLevelInfo}
+              </p>
             </div>
 
-            <div className="qr-color-section">
-              <h3>{qrT.qrCodeColor}</h3>
-              <div className="qr-color-buttons">
+            <div>
+              <h3 className="text-base md:text-lg font-semibold text-text-primary m-0 mb-4">
+                {qrT.qrCodeColor}
+              </h3>
+              <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => setColorMode('black')}
-                  className={`qr-color-btn ${colorMode === 'black' ? 'active' : ''}`}
+                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-md font-semibold cursor-pointer transition-all duration-fast ease-default border text-sm sm:text-base min-h-11 sm:min-h-0 ${
+                    colorMode === 'black'
+                      ? 'bg-text-primary border-text-primary text-text-inverse shadow-md'
+                      : 'border-border-secondary bg-bg-primary text-text-primary hover:bg-interactive-hover'
+                  }`}
                 >
                   {qrT.black}
                 </button>
                 <button
                   onClick={() => setColorMode('white')}
-                  className={`qr-color-btn ${colorMode === 'white' ? 'active' : ''}`}
+                  className={`px-3 sm:px-4 py-2 sm:py-3 rounded-md font-semibold cursor-pointer transition-all duration-fast ease-default border text-sm sm:text-base min-h-11 sm:min-h-0 ${
+                    colorMode === 'white'
+                      ? 'bg-text-primary border-text-primary text-text-inverse shadow-md'
+                      : 'border-border-secondary bg-bg-primary text-text-primary hover:bg-interactive-hover'
+                  }`}
                 >
                   {qrT.white}
                 </button>
@@ -406,28 +450,30 @@ const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
           </div>
 
           {/* QR Code Display Section */}
-          <div className="qr-display-section">
-            <h2>{qrT.generatedQrCode}</h2>
+          <div className="flex flex-col gap-4 sm:gap-6">
+            <h2 className="text-base sm:text-lg md:text-xl font-semibold text-text-primary m-0 mb-3 sm:mb-4">
+              {qrT.generatedQrCode}
+            </h2>
 
-            <div className="qr-preview-card">
-              <h3>
+            <div className="bg-bg-secondary rounded-lg p-4 sm:p-6">
+              <h3 className="text-lg font-semibold text-text-primary m-0 mb-4 text-center">
                 {colorMode === 'black' ? qrT.blackQrCode : qrT.whiteQrCode}
               </h3>
               <div
-                className={`qr-preview ${colorMode === 'black' ? 'light-bg' : 'dark-bg'}`}
+                className={`rounded-md p-4 sm:p-6 mb-4 flex justify-center items-center min-h-[200px] sm:min-h-[300px] ${
+                  colorMode === 'black' ? 'bg-bg-tertiary' : 'bg-bg-primary'
+                }`}
               >
                 {currentQR ? (
                   <img
                     src={currentQR}
                     alt={`${colorMode === 'black' ? 'Black' : 'White'} QR Code`}
-                    className="qr-image"
+                    className="w-full max-w-[300px] h-auto"
                   />
                 ) : (
-                  <div
-                    className={`qr-placeholder ${colorMode === 'black' ? 'light' : 'dark'}`}
-                  >
+                  <div className="text-center text-text-tertiary">
                     <svg
-                      className="qr-placeholder-icon"
+                      className="w-12 h-12 mx-auto mb-2"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -439,15 +485,15 @@ const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
                         d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
                       />
                     </svg>
-                    <p>{qrT.enterUrl}</p>
+                    <p className="text-sm m-0">{qrT.enterUrl}</p>
                   </div>
                 )}
               </div>
               {currentQR && (
-                <div className="qr-actions">
+                <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={() => copyImage(currentQR)}
-                    className="qr-action-btn secondary"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-3 rounded-md font-medium cursor-pointer transition-all duration-fast ease-default border bg-bg-primary border-border-secondary text-text-primary hover:bg-interactive-hover text-sm sm:text-base min-h-12 sm:min-h-0"
                   >
                     <svg
                       width="16"
@@ -475,7 +521,7 @@ const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
                   </button>
                   <button
                     onClick={() => downloadQR(currentQR, currentFilename)}
-                    className="qr-action-btn primary"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-3 rounded-md font-medium cursor-pointer transition-all duration-fast ease-default border border-transparent bg-text-primary text-text-inverse hover:opacity-90 text-sm sm:text-base min-h-12 sm:min-h-0"
                   >
                     <svg
                       width="16"
@@ -495,14 +541,16 @@ const QRGenerator = memo<QRGeneratorProps>(function QRGenerator({
                   </button>
                 </div>
               )}
-              <p className="qr-spec-text">{qrT.transparentBg}</p>
+              <p className="text-xs text-text-tertiary mt-3 text-center">
+                {qrT.transparentBg}
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="qr-footer">
-        <p>{qrT.footer}</p>
+      <div className="text-center mt-6 text-text-tertiary text-sm">
+        <p className="m-0">{qrT.footer}</p>
       </div>
     </div>
   );
