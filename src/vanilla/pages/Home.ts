@@ -61,7 +61,7 @@ export class HomePage extends Component {
     `;
   }
 
-  protected onMount(): void {
+  protected bindEvents(): void {
     // SPA navigation for app cards
     this.addEventListener(this.element!, 'click', (e: Event) => {
       const target = e.target as HTMLElement;

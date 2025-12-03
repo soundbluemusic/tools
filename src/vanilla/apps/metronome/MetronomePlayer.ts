@@ -582,6 +582,11 @@ export class MetronomePlayer extends Component<MetronomeProps, MetronomeState> {
     `;
   }
 
+  protected bindEvents(): void {
+    // Setup event listeners (called after each render)
+    this.setupEventListeners();
+  }
+
   protected onMount(): void {
     // Subscribe to language changes
     this.languageUnsubscribe = languageStore.subscribe(() => {
@@ -590,9 +595,6 @@ export class MetronomePlayer extends Component<MetronomeProps, MetronomeState> {
 
     // Initialize AudioContext
     this.initAudioContext();
-
-    // Setup event listeners
-    this.setupEventListeners();
   }
 
   protected onDestroy(): void {

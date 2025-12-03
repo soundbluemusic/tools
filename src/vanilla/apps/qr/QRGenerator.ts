@@ -461,12 +461,7 @@ export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
     `;
   }
 
-  protected onMount(): void {
-    // Subscribe to language changes
-    this.languageUnsubscribe = languageStore.subscribe(() => {
-      this.update();
-    });
-
+  protected bindEvents(): void {
     // URL input handler with debounce
     const urlInput = document.getElementById(
       'qr-url-input'
@@ -518,6 +513,13 @@ export class QRGenerator extends Component<QRGeneratorProps, QRGeneratorState> {
         this.downloadQR();
         return;
       }
+    });
+  }
+
+  protected onMount(): void {
+    // Subscribe to language changes
+    this.languageUnsubscribe = languageStore.subscribe(() => {
+      this.update();
     });
   }
 

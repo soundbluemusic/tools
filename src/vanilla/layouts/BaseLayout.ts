@@ -83,31 +83,25 @@ export class BaseLayout extends Component<BaseLayoutProps> {
     `;
   }
 
-  protected onMount(): void {
+  protected bindEvents(): void {
     // Theme toggle
-    this.addEventListener(
-      document.getElementById('theme-toggle')!,
-      'click',
-      () => {
-        const current = themeStore.getState().theme;
-        const newTheme = current === 'dark' ? 'light' : 'dark';
-        themeStore.setState({ theme: newTheme });
-        document.documentElement.setAttribute('data-theme', newTheme);
-        this.update();
-      }
-    );
+    this.addEventListenerById('theme-toggle', 'click', () => {
+      const current = themeStore.getState().theme;
+      const newTheme = current === 'dark' ? 'light' : 'dark';
+      themeStore.setState({ theme: newTheme });
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      this.update();
+    });
 
     // Language toggle
-    this.addEventListener(
-      document.getElementById('lang-toggle')!,
-      'click',
-      () => {
-        const current = languageStore.getState().language;
-        const newLang = current === 'ko' ? 'en' : 'ko';
-        languageStore.setState({ language: newLang });
-        this.update();
-      }
-    );
+    this.addEventListenerById('lang-toggle', 'click', () => {
+      const current = languageStore.getState().language;
+      const newLang = current === 'ko' ? 'en' : 'ko';
+      languageStore.setState({ language: newLang });
+      localStorage.setItem('language', newLang);
+      this.update();
+    });
 
     // Handle SPA navigation for all links with data-link
     this.addEventListener(document.body, 'click', (e: Event) => {

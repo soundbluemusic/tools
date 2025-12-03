@@ -35,7 +35,7 @@ export class NotFoundPage extends Component {
     `;
   }
 
-  protected onMount(): void {
+  protected bindEvents(): void {
     // Handle SPA navigation
     this.addEventListener(this.element!, 'click', (e: Event) => {
       const target = e.target as HTMLElement;

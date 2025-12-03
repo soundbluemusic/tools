@@ -170,11 +170,10 @@ export class BottomNav extends Component<BottomNavProps> {
     `;
   }
 
-  protected onMount(): void {
+  protected bindEvents(): void {
     // Toggle button
-    const toggleBtn = document.getElementById('bottom-nav-toggle');
-    if (toggleBtn && this.props.onToggle) {
-      this.addEventListener(toggleBtn, 'click', () => {
+    if (this.props.onToggle) {
+      this.addEventListenerById('bottom-nav-toggle', 'click', () => {
         (this.props.onToggle as () => void)();
       });
     }
@@ -188,7 +187,9 @@ export class BottomNav extends Component<BottomNavProps> {
         router.navigate(link.pathname);
       }
     });
+  }
 
+  protected onMount(): void {
     // Subscribe to route changes to update active state
     router.subscribe(() => {
       this.update();
