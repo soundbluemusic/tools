@@ -48,16 +48,18 @@ A collection of open source productivity tools built with React + TypeScript + V
 > | Routing | React Router 7 |
 > | Language | TypeScript 5 |
 > | Build | Vite 7 |
+> | WASM | AssemblyScript |
 > | Testing | Vitest + React Testing Library |
 > | Deployment | Cloudflare Pages |
 >
 > ## Features
 >
 > - 🎯 **PWA Support** - Works offline as a Progressive Web App
-> - - 🌙 **Dark Mode** - Clean dark theme interface
->   - - 📱 **Responsive** - Optimized for various screen sizes
->     - - ♿ **Accessible** - Built with accessibility in mind
->       - - 🚀 **Fast** - Optimized bundle size and performance
+> - 🌙 **Dark Mode** - Clean dark theme interface
+> - 📱 **Responsive** - Optimized for various screen sizes
+> - ♿ **Accessible** - Built with accessibility in mind
+> - 🚀 **Fast** - WASM-powered for compute-intensive tasks
+> - ⚡ **Performance** - Optimized bundle size with JS fallback
 >        
 >         - ## Fork & Deploy Guide
 >        

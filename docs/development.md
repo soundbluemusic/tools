@@ -97,6 +97,15 @@ npm run generate-og-image
 npm run convert-webp
 ```
 
+### WASM 빌드
+
+```bash
+# AssemblyScript → WASM 컴파일
+npm run wasm:build
+```
+
+**참고:** 컴파일된 `src/wasm/processing.wasm`은 저장소에 커밋됩니다. Cloudflare Pages 등 AssemblyScript가 없는 환경에서도 빌드가 가능합니다.
+
 ## 개발 워크플로우
 
 ### 1. 브랜치 생성

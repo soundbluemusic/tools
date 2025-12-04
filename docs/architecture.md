@@ -5,6 +5,10 @@
 ## 디렉토리 구조
 
 ```
+assembly/                    # AssemblyScript WASM 소스
+├── index.ts                 # WASM 함수 구현
+└── tsconfig.json            # AS 컴파일러 설정
+
 src/
 ├── apps/                    # 앱 모듈 (자동 로드)
 │   └── [app-name]/
@@ -23,6 +27,10 @@ src/
 ├── i18n/                    # 국제화 (한국어/영어)
 ├── constants/               # 앱 메타데이터 및 상수
 ├── utils/                   # 유틸리티 함수
+├── wasm/                    # WebAssembly 모듈
+│   ├── wasmProcessor.ts     # WASM 로더 및 래퍼
+│   ├── processing.wasm      # 컴파일된 바이너리
+│   └── index.ts             # 배럴 export
 ├── types/                   # TypeScript 타입 정의
 ├── styles/                  # 글로벌 스타일시트
 └── test/                    # 테스트 유틸리티
@@ -93,6 +101,25 @@ import { useTheme } from '../hooks';
 
 function ThemeExample() {
   const { theme, setTheme, resolvedTheme } = useTheme();
+}
+```
+
+### 5. WASM 통합
+
+AssemblyScript 기반 WASM 모듈로 계산 집약적 작업 최적화.
+
+**WASM 함수 및 성능 정보:** [`src/wasm/wasmProcessor.ts`](https://github.com/soundbluemusic/tools/blob/main/src/wasm/wasmProcessor.ts) 참조
+
+**사용 패턴:**
+
+```typescript
+import { isWasmLoaded, makeTransparentWasm } from '../wasm';
+
+// WASM 사용 가능 시 사용, 아니면 JS 폴백
+if (isWasmLoaded()) {
+  makeTransparentWasm(imageData, isWhite);
+} else {
+  makeTransparentJS(imageData, isWhite);
 }
 ```
 

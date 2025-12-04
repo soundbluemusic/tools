@@ -107,6 +107,44 @@ const MyApp = lazy(() => import('./pages/MyApp'));
 
 5. `docs/apps/[app-name].md` 문서 작성
 
+## WASM 개발
+
+계산 집약적 작업에 WASM을 활용합니다.
+
+### WASM 모듈 빌드
+
+```bash
+# AssemblyScript → WASM 컴파일
+npm run wasm:build
+```
+
+### 새 WASM 함수 추가
+
+1. `assembly/index.ts`에 함수 구현
+
+```typescript
+export function myFunction(ptr: usize, length: i32): void {
+  // WASM 구현
+}
+```
+
+2. `src/wasm/wasmProcessor.ts`에 TypeScript 래퍼 추가
+
+```typescript
+export function myFunctionWasm(data: Float32Array): Float32Array {
+  if (!wasmExports) throw new Error('WASM not loaded');
+  // 메모리 할당 및 호출
+}
+```
+
+3. JS 폴백 구현 (WASM 미지원 환경용)
+
+### 주의사항
+
+- 컴파일된 `processing.wasm`은 반드시 커밋
+- 모든 WASM 함수에 JS 폴백 필수
+- 메모리 할당 후 반드시 해제
+
 ## 라이선스
 
 기여하신 코드는 MIT 라이선스로 배포됩니다.

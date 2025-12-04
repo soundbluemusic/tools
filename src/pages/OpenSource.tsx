@@ -87,6 +87,16 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
     title: { ko: '빌드 도구', en: 'Build Tools' },
     libraries: [
       {
+        name: 'AssemblyScript',
+        version: '0.27.36',
+        license: 'Apache-2.0',
+        url: 'https://www.assemblyscript.org',
+        description: {
+          ko: 'TypeScript에서 WebAssembly로 컴파일하는 도구 (계산 집약적 작업 최적화)',
+          en: 'TypeScript to WebAssembly compiler for compute-intensive operations',
+        },
+      },
+      {
         name: 'Vite',
         version: '7.2.6',
         license: 'MIT',

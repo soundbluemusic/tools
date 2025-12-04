@@ -27,6 +27,7 @@
 | Routing      | React Router DOM               | ^7.9.6  |
 | Language     | TypeScript                     | ^5.5.3  |
 | Build Tool   | Vite                           | ^7.2.6  |
+| WASM         | AssemblyScript                 | ^0.27.36 |
 | Unit Testing | Vitest + React Testing Library | ^4.0.14 |
 | E2E Testing  | Playwright                     | ^1.48.0 |
 | Linting      | ESLint                         | ^9.9.0  |
@@ -39,6 +40,10 @@
 ## Directory Structure
 
 ```
+assembly/                    # AssemblyScript WASM source
+├── index.ts                 # WASM function implementations
+└── tsconfig.json            # AssemblyScript compiler config
+
 src/
 ├── apps/                    # Feature modules (auto-loaded via glob)
 │   └── [app-name]/
@@ -120,6 +125,11 @@ src/
 │   ├── format.ts            # Formatting utilities
 │   ├── storage.ts           # localStorage helpers
 │   └── sizeClass.ts         # Size class utilities
+│
+├── wasm/                    # WebAssembly modules
+│   ├── wasmProcessor.ts     # WASM loader & TypeScript wrapper
+│   ├── processing.wasm      # Compiled WASM binary
+│   └── index.ts             # Barrel export
 │
 ├── types/                   # TypeScript type definitions
 │   ├── index.ts             # Core interfaces (App, AppConfig, etc.)
@@ -246,14 +256,47 @@ function ThemeExample() {
 }
 ```
 
-### 5. Component Patterns
+### 5. WASM Integration
+
+AssemblyScript-based WebAssembly modules for compute-intensive operations.
+
+**WASM 함수 및 성능 정보:** [`src/wasm/wasmProcessor.ts`](https://github.com/soundbluemusic/tools/blob/main/src/wasm/wasmProcessor.ts) 참조
+
+**Usage pattern with JS fallback:**
+
+```typescript
+import { loadWasmProcessor, isWasmLoaded, makeTransparentWasm } from '../wasm';
+
+// Load WASM on component mount
+useEffect(() => {
+  loadWasmProcessor().catch(console.warn);
+}, []);
+
+// Use WASM if available, fallback to JS
+if (isWasmLoaded()) {
+  makeTransparentWasm(imageData, isWhite);
+} else {
+  // JS fallback implementation
+  makeTransparentJS(imageData, isWhite);
+}
+```
+
+**Building WASM modules:**
+
+```bash
+npm run wasm:build    # Compile AssemblyScript → WASM
+```
+
+**Note:** The compiled `processing.wasm` is committed to the repo for deployment environments without AssemblyScript.
+
+### 6. Component Patterns
 
 - **Memoization**: Use `memo()`, `useMemo()`, `useCallback()` for performance
 - **Error Boundaries**: Wrap feature components with `withErrorBoundary` HOC
 - **UI Components**: Use primitives from `src/components/ui/`
 - **Lazy Loading**: Tool pages are lazy-loaded for code splitting
 
-### 6. Styling
+### 7. Styling
 
 - CSS Modules + CSS Custom Properties (Design Tokens)
 - Dark/Light mode via `prefers-color-scheme` and `data-theme` attribute

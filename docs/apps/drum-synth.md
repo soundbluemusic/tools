@@ -52,6 +52,11 @@ Noise Source → Gain (Mix) ──────────↑
 - `AudioBufferSourceNode`: 노이즈 생성
 - `WaveShaperNode`: 디스토션 효과
 
+## WASM 최적화
+
+노이즈 생성, 디스토션 커브, WAV 인코딩에 WASM을 활용합니다.
+자세한 내용은 [아키텍처 문서](../architecture.md#5-wasm-통합)를 참조하세요.
+
 ## 관련 링크
 
 - [드럼머신](./drum.md) - 생성한 사운드로 패턴 만들기

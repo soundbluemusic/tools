@@ -59,6 +59,11 @@ WIFI:T:WPA;S:네트워크이름;P:비밀번호;;
 - **렌더링**: Canvas API
 - **다운로드**: Blob + URL.createObjectURL
 
+## WASM 최적화
+
+투명 배경 처리에 WASM을 활용하여 고해상도(1024px+)에서 10-25x 성능 향상.
+자세한 내용은 [아키텍처 문서](../architecture.md#5-wasm-통합)를 참조하세요.
+
 ## 관련 링크
 
 - [메인 페이지](../) - 다른 도구 둘러보기

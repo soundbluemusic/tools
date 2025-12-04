@@ -2,6 +2,7 @@ import { memo, useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslations } from '../../../i18n';
 import type { DrumSynthTranslation } from '../../../i18n/types';
 import { cn } from '../../../utils';
+import { loadWasmProcessor } from '../../../wasm';
 
 /**
  * Props for DrumSynth component
@@ -181,6 +182,13 @@ export const DrumSynth = memo<DrumSynthProps>(function DrumSynth({
     text: string;
     type: 'success' | 'error';
   } | null>(null);
+
+  // Load WASM on mount for performance optimization
+  useEffect(() => {
+    loadWasmProcessor().catch((err) => {
+      console.warn('WASM load failed, using JS fallback:', err);
+    });
+  }, []);
 
   // Refs
   const audioContextRef = useRef<AudioContext | null>(null);
