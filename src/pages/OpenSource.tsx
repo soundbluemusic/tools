@@ -88,7 +88,7 @@ const LIBRARY_CATEGORIES: LibraryCategory[] = [
     libraries: [
       {
         name: 'AssemblyScript',
-        version: '0.27.36',
+        version: '0.28.9',
         license: 'Apache-2.0',
         url: 'https://www.assemblyscript.org',
         description: {
