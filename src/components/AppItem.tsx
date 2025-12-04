@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useViewTransition, useLocalizedPath } from '../hooks';
 import type { App } from '../types';
 import type { Language } from '../i18n/types';
@@ -10,7 +10,8 @@ interface AppItemProps {
 }
 
 /**
- * AppItem Component - Single app list item
+ * AppItem Component - Single app card item
+ * - Shows icon, name, and description
  * - GPU accelerated hover via CSS
  * - View Transitions API support for smooth navigation
  */
@@ -38,12 +39,16 @@ const AppItem = memo<AppItemProps>(
     return (
       <Link
         to={localizedUrl}
-        className="app-item"
+        className="app-card"
         aria-label={`${name} - ${desc}`}
         role="listitem"
         onClick={handleClick}
       >
-        <span className="app-item-text">{name}</span>
+        <span className="icon">{app.icon}</span>
+        <div className="app-info">
+          <span className="name">{name}</span>
+          <span className="desc">{desc}</span>
+        </div>
       </Link>
     );
   },

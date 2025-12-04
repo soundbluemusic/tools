@@ -23,14 +23,17 @@ export const COMBINED_APP_PATHS = ['/drum-tool'] as const;
  * The following are auto-generated:
  * - id: Generated from sorted index
  * - url: Generated from folder name (e.g., /contract, /qr)
+ *
+ * NOTE: Using { eager: true } for synchronous loading
+ * This is required for React Router Framework Mode pre-rendering
  */
 const appModules = import.meta.glob<{ default: AppConfig }>(
-  '../apps/*/config.ts'
+  '../apps/*/config.ts',
+  { eager: true }
 );
 
-/** Cache for loaded apps */
+/** Cached apps list - loaded synchronously at module initialization */
 let appsCache: App[] | null = null;
-let loadingPromise: Promise<App[]> | null = null;
 
 /**
  * Parse loaded app modules into App objects
@@ -67,60 +70,51 @@ function parseAppModules(
 }
 
 /**
- * Load all apps asynchronously (lazy loading)
+ * Initialize apps from eagerly loaded modules
+ * Called once at module initialization for SSR/pre-rendering support
+ */
+function initializeApps(): App[] {
+  if (!appsCache) {
+    appsCache = parseAppModules(appModules);
+  }
+  return appsCache;
+}
+
+// Initialize apps immediately for pre-rendering support
+const INITIALIZED_APPS = initializeApps();
+
+/**
+ * Load all apps (synchronous with eager loading)
  * Results are cached for subsequent calls
  */
 export async function loadApps(): Promise<App[]> {
-  // Return cached apps if available
-  if (appsCache) {
-    return appsCache;
-  }
-
-  // Reuse existing loading promise to prevent duplicate loads
-  if (loadingPromise) {
-    return loadingPromise;
-  }
-
-  // Load all app configs in parallel
-  loadingPromise = Promise.all(
-    Object.entries(appModules).map(async ([path, loader]) => {
-      const module = await loader();
-      return [path, module] as const;
-    })
-  ).then((entries) => {
-    const modules = Object.fromEntries(entries);
-    appsCache = parseAppModules(modules);
-    loadingPromise = null;
-    return appsCache;
-  });
-
-  return loadingPromise;
+  return INITIALIZED_APPS;
 }
 
 /**
- * Get cached apps synchronously (returns empty array if not loaded)
- * Use loadApps() for guaranteed data
+ * Get apps synchronously
+ * With eager loading, apps are always available
  */
 export function getAppsSync(): AppList {
-  return appsCache ? Object.freeze(appsCache) : [];
+  return Object.freeze(INITIALIZED_APPS);
 }
 
-/** @deprecated Use loadApps() instead for lazy loading */
-export const APPS: AppList = [];
+/** Apps list - available synchronously */
+export const APPS: AppList = INITIALIZED_APPS;
 
-/** Total number of loaded apps (0 until loaded) */
-export const APPS_COUNT = 0;
+/** Total number of loaded apps */
+export const APPS_COUNT = INITIALIZED_APPS.length;
 
 /**
  * Find an app by its ID
  */
 export function getAppById(id: number): App | undefined {
-  return APPS.find((app) => app.id === id);
+  return INITIALIZED_APPS.find((app) => app.id === id);
 }
 
 /**
  * Find an app by its URL
  */
 export function getAppByUrl(url: string): App | undefined {
-  return APPS.find((app) => app.url === url);
+  return INITIALIZED_APPS.find((app) => app.url === url);
 }

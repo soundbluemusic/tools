@@ -1,0 +1,197 @@
+/* ============================================
+ * CSS Imports (MUST be at the top)
+ * ============================================ */
+@import '../src/styles/variables.css';
+@import '../src/styles/base.css';
+@import '../src/components/navigation/NavigationLayout.css';
+@import '../src/styles/components.css';
+@import '../src/styles/tool-page.css';
+@import '../src/styles/qr-page.css';
+@import '../src/styles/not-found.css';
+
+/* ============================================
+ * Tailwind CSS v4 - Utilities Only (No Preflight)
+ * Preflight is disabled to avoid conflicts with existing styles
+ * ============================================ */
+@import "tailwindcss/utilities";
+
+/* ============================================
+ * Layout Components
+ * ============================================ */
+.navigation-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .navigation-layout {
+    flex-direction: row;
+    padding-left: var(--sidebar-width);
+  }
+
+  .navigation-layout.sidebar-collapsed {
+    padding-left: var(--sidebar-collapsed-width);
+  }
+}
+
+.navigation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: var(--bottom-nav-height);
+}
+
+@media (min-width: 768px) {
+  .navigation-content {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+}
+
+.content-wrapper {
+  flex: 1;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+ * Error Page Styles
+ * ============================================ */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-bg-primary);
+}
+
+.error-content {
+  text-align: center;
+  max-width: 32rem;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.error-details {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.error-stack {
+  text-align: left;
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  background-color: var(--color-bg-tertiary);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.error-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity var(--transition-fast);
+}
+
+.error-link:hover {
+  opacity: 0.9;
+}
+
+/* ============================================
+ * Skip Link (Accessibility)
+ * ============================================ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 1rem;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  z-index: var(--z-tooltip);
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+ * Footer Styles
+ * ============================================ */
+.footer {
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+.footer-share {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-link:hover {
+  color: var(--color-text-primary);
+}
+
+.footer-copyright {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* ============================================
+ * Loader Styles
+ * ============================================ */
+.page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}

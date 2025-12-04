@@ -27,3 +27,6 @@ dist-ssr
 # AssemblyScript build output
 build/
 tests/
+
+# React Router generated files
+.react-router/
