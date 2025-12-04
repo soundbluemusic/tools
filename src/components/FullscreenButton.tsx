@@ -5,6 +5,7 @@ import {
   onCleanup,
   Show,
 } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { useTranslations } from '../i18n/context';
 import { cn } from '../utils';
 
@@ -20,6 +21,8 @@ interface FullscreenButtonProps {
 /**
  * Fullscreen toggle button component
  * Allows users to enter/exit fullscreen mode for the tool
+ *
+ * Hydration-safe: Only accesses document APIs on client
  */
 export const FullscreenButton: Component<FullscreenButtonProps> = (props) => {
   const t = useTranslations();
@@ -28,6 +31,8 @@ export const FullscreenButton: Component<FullscreenButtonProps> = (props) => {
 
   // Check fullscreen state on mount and listen for changes
   createEffect(() => {
+    if (isServer || typeof document === 'undefined') return;
+
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
     };

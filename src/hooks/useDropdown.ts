@@ -1,4 +1,5 @@
 import { createEffect, onCleanup, type Accessor } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 interface UseDropdownOptions {
   /** Getter function for container element */
@@ -20,6 +21,8 @@ interface UseDropdownOptions {
 /**
  * Hook to manage dropdown behavior (click outside, scroll, escape key)
  * Consolidates common dropdown logic used in ShareButton, EmbedButton, etc.
+ *
+ * Hydration-safe: Only runs on client
  */
 export function useDropdown({
   containerRef,
@@ -32,7 +35,7 @@ export function useDropdown({
 }: UseDropdownOptions): void {
   // Close dropdown on click outside
   createEffect(() => {
-    if (!isOpen() || !closeOnClickOutside) return;
+    if (isServer || !isOpen() || !closeOnClickOutside) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       const container = containerRef();
@@ -42,12 +45,14 @@ export function useDropdown({
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    onCleanup(() => document.removeEventListener('mousedown', handleClickOutside));
+    onCleanup(() =>
+      document.removeEventListener('mousedown', handleClickOutside)
+    );
   });
 
   // Close dropdown on scroll (throttled to prevent cascading re-renders)
   createEffect(() => {
-    if (!isOpen() || !closeOnScroll) return;
+    if (isServer || !isOpen() || !closeOnScroll) return;
 
     let throttleTimer: ReturnType<typeof setTimeout> | null = null;
     const handleScroll = () => {
@@ -67,7 +72,7 @@ export function useDropdown({
 
   // Close dropdown on Escape key
   createEffect(() => {
-    if (!isOpen() || !closeOnEscape) return;
+    if (isServer || !isOpen() || !closeOnEscape) return;
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {

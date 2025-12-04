@@ -4,26 +4,26 @@ import { useNavigate } from '@solidjs/router';
 /**
  * Custom hook for navigation with View Transitions API support
  * Consolidates duplicate View Transitions logic across components
- * SSR-safe: returns no-op functions during prerendering
+ *
+ * Hydration-safe: Uses same code path for SSR and client
  *
  * @returns Object containing navigation handler and click handler factory
  */
 export function useViewTransition() {
-  // SSR fallback
-  if (isServer) {
-    return {
-      navigateWithTransition: () => {},
-      createClickHandler: () => () => {},
-    };
-  }
-
-  const navigate = useNavigate();
+  // Get navigate function only on client (for use in callbacks)
+  const navigate = isServer ? null : useNavigate();
 
   /**
    * Navigate to a URL with View Transitions API support
    */
   const navigateWithTransition = (to: string) => {
-    if (document.startViewTransition) {
+    if (!navigate) return;
+
+    if (
+      !isServer &&
+      typeof document !== 'undefined' &&
+      document.startViewTransition
+    ) {
       document.startViewTransition(() => {
         navigate(to);
       });
@@ -38,7 +38,13 @@ export function useViewTransition() {
    * @returns Click event handler
    */
   const createClickHandler = (to: string) => (e: MouseEvent) => {
-    if (document.startViewTransition) {
+    if (!navigate) return;
+
+    if (
+      !isServer &&
+      typeof document !== 'undefined' &&
+      document.startViewTransition
+    ) {
       e.preventDefault();
       document.startViewTransition(() => {
         navigate(to);

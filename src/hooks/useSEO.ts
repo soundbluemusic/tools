@@ -1,4 +1,5 @@
 import { createEffect, onCleanup } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { BRAND } from '../constants';
 
 interface SEOConfig {
@@ -24,6 +25,8 @@ function updateMetaTag(
   key: string,
   content: string
 ): void {
+  if (isServer || typeof document === 'undefined') return;
+
   let element = document.querySelector(
     `meta[${attribute}="${key}"]`
   ) as HTMLMetaElement | null;
@@ -41,6 +44,8 @@ function updateMetaTag(
  * Update canonical link
  */
 function updateCanonicalLink(url: string): void {
+  if (isServer || typeof document === 'undefined') return;
+
   let link = document.querySelector(
     'link[rel="canonical"]'
   ) as HTMLLinkElement | null;
@@ -57,9 +62,14 @@ function updateCanonicalLink(url: string): void {
 /**
  * Custom hook for SEO optimization
  * Updates document title and meta tags dynamically for each page
+ *
+ * Hydration-safe: Only runs on client
  */
 export function useSEO(config: SEOConfig): void {
   createEffect(() => {
+    // Skip during SSR
+    if (isServer || typeof document === 'undefined') return;
+
     const {
       title,
       description,

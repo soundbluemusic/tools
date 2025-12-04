@@ -1,4 +1,10 @@
-import { createSignal, createEffect, onCleanup, type ParentComponent } from 'solid-js';
+import {
+  createSignal,
+  createEffect,
+  onCleanup,
+  type ParentComponent,
+} from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { Header } from '../Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
@@ -22,7 +28,9 @@ interface NavigationLayoutProps {
  * CSS handles visibility based on viewport size.
  * This prevents hydration mismatches and flickering.
  */
-export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (props) => {
+export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
+  props
+) => {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = createSignal(false);
   const [isSidebarOpen, setIsSidebarOpen] = createSignal(true);
   const [isBottomNavOpen, setIsBottomNavOpen] = createSignal(true);
@@ -49,6 +57,8 @@ export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (props) 
 
   // Global keyboard shortcut for Cmd+K / Ctrl+K
   createEffect(() => {
+    if (isServer || typeof document === 'undefined') return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       // Cmd+K (Mac) or Ctrl+K (Windows/Linux)
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
