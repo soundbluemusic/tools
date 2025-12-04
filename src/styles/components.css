@@ -27,13 +27,40 @@
 }
 
 /* ============================================
- * Home Page
+ * Home Page - Responsive Container
+ *
+ * Container:
+ * - Max width: 1280px (centered)
+ * - Padding: 16px mobile, 24px tablet, 32px desktop
+ *
+ * Breakpoints (Mobile First):
+ * - 0-639px: Mobile
+ * - 640-767px: Large mobile
+ * - 768-1023px: Tablet
+ * - 1024-1279px: Laptop
+ * - 1280-1535px: Desktop
+ * - 1536px+: Large monitor
  * ============================================ */
 
 .home-page {
-  padding: var(--spacing-6) var(--spacing-4);
-  max-width: var(--container-xl);
+  /* Container: max 1280px, centered */
+  max-width: 1280px;
   margin: 0 auto;
+
+  /* Responsive padding: 16px -> 24px -> 32px */
+  padding: 1rem; /* 16px mobile */
+}
+
+@media (min-width: 768px) {
+  .home-page {
+    padding: 1.5rem; /* 24px tablet */
+  }
+}
+
+@media (min-width: 1280px) {
+  .home-page {
+    padding: 2rem; /* 32px desktop */
+  }
 }
 
 .home-header {
@@ -41,8 +68,20 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  margin-bottom: 1rem; /* 16px mobile */
   flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .home-header {
+    margin-bottom: 1.5rem; /* 24px tablet */
+  }
+}
+
+@media (min-width: 1280px) {
+  .home-header {
+    margin-bottom: 2rem; /* 32px desktop */
+  }
 }
 
 .home-title {
@@ -59,10 +98,6 @@
 }
 
 @media (max-width: 480px) {
-  .home-page {
-    padding: var(--spacing-4) var(--spacing-3);
-  }
-
   .home-header {
     flex-direction: column;
     align-items: flex-start;
@@ -205,12 +240,12 @@
 
 /* ============================================
  * App List
+ * Note: Grid layout is now handled by Tailwind in AppList.tsx
+ * Responsive columns: 1 -> 2 -> 3 -> 4 -> 5
  * ============================================ */
 
+/* Legacy support - now using Tailwind classes */
 .app-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: var(--spacing-4);
   contain: content;
 }
 
@@ -251,44 +286,22 @@
 
 /* ============================================
  * App Card (Grid View)
+ * Note: Card styles are now handled by Tailwind in AppItem.tsx
+ * Features: Responsive padding, hover effects, equal heights
  * ============================================ */
 
+/* Legacy fallback - main styles via Tailwind */
 .app-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--spacing-6);
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-secondary);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
+  /* Ensure text color inheritance */
   color: var(--color-text-primary);
 }
 
-.app-card:hover {
-  background: var(--color-bg-tertiary);
-  border-color: var(--color-border-primary);
-}
-
-.app-card .icon {
-  font-size: var(--font-size-3xl);
-  margin-bottom: var(--spacing-3);
-}
-
-.app-card .app-info {
-  text-align: center;
-}
-
-.app-card .name {
-  display: block;
-  font-weight: var(--font-weight-medium);
-  margin-bottom: var(--spacing-1);
-}
-
-.app-card .desc {
-  display: block;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
+/* Touch device optimizations */
+@media (hover: none) {
+  .app-card:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 /* ============================================
