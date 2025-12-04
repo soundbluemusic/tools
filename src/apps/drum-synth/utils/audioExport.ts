@@ -122,7 +122,8 @@ function renderKick(
 
   if (kickParams.drive > 0) {
     const distortion = ctx.createWaveShaper();
-    distortion.curve = makeDistortionCurve(kickParams.drive);
+    const curve = makeDistortionCurve(kickParams.drive);
+    distortion.curve = new Float32Array(curve);
     distortion.oversample = '2x';
     osc.connect(distortion);
     distortion.connect(gainNode);

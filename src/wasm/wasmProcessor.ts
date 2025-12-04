@@ -77,7 +77,7 @@ export async function loadWasmProcessor(): Promise<WasmExports> {
     const wasmInstance = await WebAssembly.instantiate(wasmBuffer, {
       env: {
         abort: (
-          message: number,
+          _message: number,
           fileName: number,
           line: number,
           column: number
