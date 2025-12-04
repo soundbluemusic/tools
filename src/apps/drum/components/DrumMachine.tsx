@@ -1,4 +1,11 @@
-import { memo, useCallback, useRef, useEffect } from 'react';
+import {
+  type Component,
+  createEffect,
+  onMount,
+  onCleanup,
+  For,
+  Show,
+} from 'solid-js';
 import { useTranslations } from '../../../i18n';
 import type { DrumTranslation } from '../../../i18n/types';
 import { cn } from '../../../utils';
@@ -41,7 +48,7 @@ import './DrumMachine.css';
 /**
  * Play icon SVG
  */
-const PlayIcon = memo(function PlayIcon() {
+const PlayIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -49,20 +56,20 @@ const PlayIcon = memo(function PlayIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <polygon points="5 3 19 12 5 21 5 3" />
     </svg>
   );
-});
+};
 
 /**
  * Pause icon SVG
  */
-const PauseIcon = memo(function PauseIcon() {
+const PauseIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -70,21 +77,21 @@ const PauseIcon = memo(function PauseIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <rect x="6" y="4" width="4" height="16" />
       <rect x="14" y="4" width="4" height="16" />
     </svg>
   );
-});
+};
 
 /**
  * Stop icon SVG
  */
-const StopIcon = memo(function StopIcon() {
+const StopIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -92,20 +99,20 @@ const StopIcon = memo(function StopIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
     </svg>
   );
-});
+};
 
 /**
  * Clear icon SVG
  */
-const ClearIcon = memo(function ClearIcon() {
+const ClearIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -113,9 +120,9 @@ const ClearIcon = memo(function ClearIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
@@ -123,12 +130,12 @@ const ClearIcon = memo(function ClearIcon() {
       <line x1="12" y1="9" x2="18" y2="15" />
     </svg>
   );
-});
+};
 
 /**
  * Download/Export icon SVG
  */
-const DownloadIcon = memo(function DownloadIcon() {
+const DownloadIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -136,9 +143,9 @@ const DownloadIcon = memo(function DownloadIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -146,12 +153,12 @@ const DownloadIcon = memo(function DownloadIcon() {
       <line x1="12" y1="15" x2="12" y2="3" />
     </svg>
   );
-});
+};
 
 /**
  * Upload/Import icon SVG
  */
-const UploadIcon = memo(function UploadIcon() {
+const UploadIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -159,9 +166,9 @@ const UploadIcon = memo(function UploadIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -169,12 +176,12 @@ const UploadIcon = memo(function UploadIcon() {
       <line x1="12" y1="3" x2="12" y2="15" />
     </svg>
   );
-});
+};
 
 /**
  * Plus icon SVG for adding loops
  */
-const PlusIcon = memo(function PlusIcon() {
+const PlusIcon: Component = () => {
   return (
     <svg
       width="14"
@@ -182,21 +189,21 @@ const PlusIcon = memo(function PlusIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <line x1="12" y1="5" x2="12" y2="19" />
       <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   );
-});
+};
 
 /**
  * Minus icon SVG for removing loops
  */
-const MinusIcon = memo(function MinusIcon() {
+const MinusIcon: Component = () => {
   return (
     <svg
       width="14"
@@ -204,20 +211,20 @@ const MinusIcon = memo(function MinusIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   );
-});
+};
 
 /**
  * Copy icon SVG for copying loops
  */
-const CopyIcon = memo(function CopyIcon() {
+const CopyIcon: Component = () => {
   return (
     <svg
       width="14"
@@ -225,21 +232,21 @@ const CopyIcon = memo(function CopyIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
     </svg>
   );
-});
+};
 
 /**
  * Chevron left icon SVG
  */
-const ChevronLeftIcon = memo(function ChevronLeftIcon() {
+const ChevronLeftIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -247,20 +254,20 @@ const ChevronLeftIcon = memo(function ChevronLeftIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <polyline points="15 18 9 12 15 6" />
     </svg>
   );
-});
+};
 
 /**
  * Chevron right icon SVG
  */
-const ChevronRightIcon = memo(function ChevronRightIcon() {
+const ChevronRightIcon: Component = () => {
   return (
     <svg
       width="16"
@@ -268,432 +275,459 @@ const ChevronRightIcon = memo(function ChevronRightIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
       aria-hidden="true"
     >
       <polyline points="9 18 15 12 9 6" />
     </svg>
   );
-});
+};
 
 /**
  * DrumMachine Component
  * A 16-step drum sequencer with Web Audio synthesis
  * Supports both main site mode (using i18n context) and standalone mode (using props)
  */
-export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
-  translations,
-  synthParams,
-}) {
+export const DrumMachine: Component<DrumMachineProps> = (props) => {
   // Use provided translations (standalone) or i18n context (main site)
   const contextTranslations = useTranslations();
-  const drum = translations ?? contextTranslations.drum;
+  const drum = () => props.translations ?? contextTranslations().drum;
 
   // Zustand store state
-  const {
-    loops,
-    loopIds,
-    currentLoopIndex,
-    setCurrentLoopIndex,
-    tempo,
-    setTempo,
-    volumes,
-    setVolume,
-    isPlaying,
-    setIsPlaying,
-    currentStep,
-    setCurrentStep,
-    playingLoopIndex,
-    setPlayingLoopIndex,
-    statusMessage,
-    showStatus,
-    dragLoopIndex,
-    setDragLoopIndex,
-    dragOverLoopIndex,
-    setDragOverLoopIndex,
-    addLoop: storeAddLoop,
-    removeLoop: storeRemoveLoop,
-    copyLoop: storeCopyLoop,
-    loadPreset: storeLoadPreset,
-    reorderLoops,
-    setStepVelocity: storeSetStepVelocity,
-    stop: storeStop,
-    reset: storeReset,
-  } = useDrumStore();
+  const store = useDrumStore();
 
   // Derived state: which loop to display (playing loop during playback, editing loop otherwise)
-  const displayLoopIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
-  const pattern = loops[displayLoopIndex];
+  const displayLoopIndex = () =>
+    store.isPlaying ? store.playingLoopIndex : store.currentLoopIndex;
+  const pattern = () => store.loops[displayLoopIndex()];
 
   // Refs
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const schedulerRef = useRef<number | null>(null);
-  const nextStepTimeRef = useRef<number>(0);
-  const currentStepRef = useRef<number>(0);
-  const loopsRef = useRef<MultiLoopPattern>(loops);
-  const currentPlayingLoopRef = useRef<number>(0);
-  const tempoRef = useRef<number>(tempo);
-  const volumesRef = useRef<InstrumentVolumes>(volumes);
-  const isPlayingRef = useRef<boolean>(false);
-  const isDraggingRef = useRef(false);
-  const paintModeRef = useRef<boolean | null>(null); // true = paint on, false = paint off
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  let audioContext: AudioContext | null = null;
+  let schedulerAnimationId: number | null = null;
+  let nextStepTime = 0;
+  let currentStepValue = 0;
+  let loopsValue: MultiLoopPattern = store.loops;
+  let currentPlayingLoop = 0;
+  let tempoValue: number = store.tempo;
+  let volumesValue: InstrumentVolumes = store.volumes;
+  let isPlayingValue = false;
+  let isDragging = false;
+  let paintMode: boolean | null = null; // true = paint on, false = paint off
+  let fileInputEl: HTMLInputElement | undefined;
   // Cached noise buffers for performance (avoid regenerating on every hit)
-  const noiseBufferCacheRef = useRef<Map<string, AudioBuffer>>(new Map());
+  const noiseBufferCache = new Map<string, AudioBuffer>();
   // Velocity drag refs
-  const velocityDragRef = useRef<{
+  let velocityDrag: {
     inst: Instrument;
     step: number;
     startY: number;
     startVelocity: number;
-    hasMoved: boolean; // Track if user actually dragged
-  } | null>(null);
+    hasMoved: boolean;
+  } | null = null;
   // Ref to store the mousemove handler for dynamic add/remove during velocity drag
-  const mouseMoveHandlerRef = useRef<((e: MouseEvent) => void) | null>(null);
+  let mouseMoveHandler: ((e: MouseEvent) => void) | null = null;
+  // Synth params ref
+  let synthParamsValue: AllDrumParams | undefined = props.synthParams;
 
-  // Keep refs in sync with state
-  useEffect(() => {
-    loopsRef.current = loops;
-  }, [loops]);
+  // Keep refs in sync with store state
+  createEffect(() => {
+    loopsValue = store.loops;
+  });
 
-  useEffect(() => {
-    tempoRef.current = tempo;
-  }, [tempo]);
+  createEffect(() => {
+    tempoValue = store.tempo;
+  });
 
-  useEffect(() => {
-    volumesRef.current = volumes;
-  }, [volumes]);
+  createEffect(() => {
+    volumesValue = store.volumes;
+  });
+
+  createEffect(() => {
+    synthParamsValue = props.synthParams;
+  });
 
   /**
    * Get or create audio context
    */
-  const getAudioContext = useCallback(() => {
-    if (!audioContextRef.current) {
-      audioContextRef.current = new (
+  const getAudioContext = () => {
+    if (!audioContext) {
+      audioContext = new (
         window.AudioContext ||
         (window as unknown as { webkitAudioContext: typeof AudioContext })
           .webkitAudioContext
       )();
     }
-    return audioContextRef.current;
-  }, []);
+    return audioContext;
+  };
 
   /**
    * Get or create cached noise buffer
    * Caches noise buffers by duration to avoid expensive regeneration on every hit
    */
-  const getNoiseBuffer = useCallback(
-    (ctx: AudioContext, duration: number): AudioBuffer => {
-      const key = `noise-${duration}`;
-      const cached = noiseBufferCacheRef.current.get(key);
-      if (cached && cached.sampleRate === ctx.sampleRate) {
-        return cached;
-      }
-      // Create new noise buffer
-      const buffer = ctx.createBuffer(
-        1,
-        ctx.sampleRate * duration,
-        ctx.sampleRate
-      );
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < buffer.length; i++) {
-        data[i] = Math.random() * 2 - 1;
-      }
-      noiseBufferCacheRef.current.set(key, buffer);
-      return buffer;
-    },
-    []
-  );
-
-  // Keep synthParams ref in sync
-  const synthParamsRef = useRef<AllDrumParams | undefined>(synthParams);
-  useEffect(() => {
-    synthParamsRef.current = synthParams;
-  }, [synthParams]);
+  const getNoiseBuffer = (ctx: AudioContext, duration: number): AudioBuffer => {
+    const key = `noise-${duration}`;
+    const cached = noiseBufferCache.get(key);
+    if (cached && cached.sampleRate === ctx.sampleRate) {
+      return cached;
+    }
+    // Create new noise buffer
+    const buffer = ctx.createBuffer(
+      1,
+      ctx.sampleRate * duration,
+      ctx.sampleRate
+    );
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < buffer.length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    noiseBufferCache.set(key, buffer);
+    return buffer;
+  };
 
   /**
    * Play a single instrument sound at a specific time
    * Uses synth parameters when available (integrated mode), otherwise basic synthesis
-   * @param inst - Instrument to play
-   * @param time - Audio context time to schedule the sound
-   * @param velocity - Note velocity (0-100), affects volume
    */
-  const playSound = useCallback(
-    (inst: Instrument, time?: number, velocity: number = VELOCITY.DEFAULT) => {
-      const ctx = audioContextRef.current;
-      if (!ctx || velocity <= 0) return;
+  const playSound = (
+    inst: Instrument,
+    time?: number,
+    velocity: number = VELOCITY.DEFAULT
+  ) => {
+    const ctx = audioContext;
+    if (!ctx || velocity <= 0) return;
 
-      const startTime = time ?? ctx.currentTime;
+    const startTime = time ?? ctx.currentTime;
 
-      // Use synth parameters when available (integrated mode with DrumSynth)
-      if (synthParamsRef.current) {
-        // Calculate delay for scheduled sounds
-        const delay = Math.max(0, (startTime - ctx.currentTime) * 1000);
-        const adjustedVelocity = (volumesRef.current[inst] / 100) * velocity;
+    // Use synth parameters when available (integrated mode with DrumSynth)
+    if (synthParamsValue) {
+      // Calculate delay for scheduled sounds
+      const delay = Math.max(0, (startTime - ctx.currentTime) * 1000);
+      const adjustedVelocity = (volumesValue[inst] / 100) * velocity;
 
-        setTimeout(() => {
-          if (ctx && synthParamsRef.current) {
-            playSynthSound(
-              ctx,
-              inst as DrumMachineInstrument,
-              synthParamsRef.current,
-              adjustedVelocity
-            );
-          }
-        }, delay);
-        return;
+      setTimeout(() => {
+        if (ctx && synthParamsValue) {
+          playSynthSound(
+            ctx,
+            inst as DrumMachineInstrument,
+            synthParamsValue,
+            adjustedVelocity
+          );
+        }
+      }, delay);
+      return;
+    }
+
+    // Basic synthesis (standalone mode)
+    // Combine instrument volume and note velocity
+    const volumeMultiplier = (volumesValue[inst] / 100) * (velocity / 100);
+
+    switch (inst) {
+      case 'kick': {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.setValueAtTime(AUDIO.KICK.FREQUENCY_START, startTime);
+        osc.frequency.exponentialRampToValueAtTime(
+          AUDIO.KICK.FREQUENCY_END,
+          startTime + AUDIO.KICK.DURATION
+        );
+        gain.gain.setValueAtTime(AUDIO.KICK.GAIN * volumeMultiplier, startTime);
+        gain.gain.exponentialRampToValueAtTime(
+          0.01,
+          startTime + AUDIO.KICK.DURATION
+        );
+        osc.start(startTime);
+        osc.stop(startTime + AUDIO.KICK.DURATION);
+        break;
       }
-
-      // Basic synthesis (standalone mode)
-      // Combine instrument volume and note velocity
-      const volumeMultiplier =
-        (volumesRef.current[inst] / 100) * (velocity / 100);
-
-      switch (inst) {
-        case 'kick': {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.frequency.setValueAtTime(AUDIO.KICK.FREQUENCY_START, startTime);
-          osc.frequency.exponentialRampToValueAtTime(
-            AUDIO.KICK.FREQUENCY_END,
-            startTime + AUDIO.KICK.DURATION
-          );
-          gain.gain.setValueAtTime(
-            AUDIO.KICK.GAIN * volumeMultiplier,
-            startTime
-          );
-          gain.gain.exponentialRampToValueAtTime(
-            0.01,
-            startTime + AUDIO.KICK.DURATION
-          );
-          osc.start(startTime);
-          osc.stop(startTime + AUDIO.KICK.DURATION);
-          break;
-        }
-        case 'snare': {
-          // Use cached noise buffer for better performance
-          const buffer = getNoiseBuffer(ctx, AUDIO.SNARE.DURATION);
-          const source = ctx.createBufferSource();
-          source.buffer = buffer;
-          const gain = ctx.createGain();
-          source.connect(gain);
-          gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(
-            AUDIO.SNARE.GAIN * volumeMultiplier,
-            startTime
-          );
-          gain.gain.exponentialRampToValueAtTime(
-            0.01,
-            startTime + AUDIO.SNARE.DURATION
-          );
-          source.start(startTime);
-          break;
-        }
-        case 'hihat':
-        case 'openhat': {
-          const isOpen = inst === 'openhat';
-          const duration = isOpen
-            ? AUDIO.OPENHAT.DURATION
-            : AUDIO.HIHAT.DURATION;
-          // Use cached noise buffer for better performance
-          const buffer = getNoiseBuffer(ctx, duration);
-          const source = ctx.createBufferSource();
-          source.buffer = buffer;
-          const gain = ctx.createGain();
-          const filter = ctx.createBiquadFilter();
-          filter.type = 'highpass';
-          filter.frequency.value = isOpen
-            ? AUDIO.OPENHAT.FILTER_FREQUENCY
-            : AUDIO.HIHAT.FILTER_FREQUENCY;
-          source.connect(filter);
-          filter.connect(gain);
-          gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(
-            (isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN) * volumeMultiplier,
-            startTime
-          );
-          gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
-          source.start(startTime);
-          break;
-        }
-        case 'clap': {
-          // Use cached noise buffer for better performance
-          const buffer = getNoiseBuffer(ctx, AUDIO.CLAP.DURATION);
-          const source = ctx.createBufferSource();
-          source.buffer = buffer;
-          const gain = ctx.createGain();
-          source.connect(gain);
-          gain.connect(ctx.destination);
-          gain.gain.setValueAtTime(
-            AUDIO.CLAP.GAIN * volumeMultiplier,
-            startTime
-          );
-          gain.gain.exponentialRampToValueAtTime(
-            0.01,
-            startTime + AUDIO.CLAP.DURATION
-          );
-          source.start(startTime);
-          break;
-        }
+      case 'snare': {
+        // Use cached noise buffer for better performance
+        const buffer = getNoiseBuffer(ctx, AUDIO.SNARE.DURATION);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        const gain = ctx.createGain();
+        source.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(
+          AUDIO.SNARE.GAIN * volumeMultiplier,
+          startTime
+        );
+        gain.gain.exponentialRampToValueAtTime(
+          0.01,
+          startTime + AUDIO.SNARE.DURATION
+        );
+        source.start(startTime);
+        break;
       }
-    },
-    [getNoiseBuffer]
-  );
+      case 'hihat':
+      case 'openhat': {
+        const isOpen = inst === 'openhat';
+        const duration = isOpen ? AUDIO.OPENHAT.DURATION : AUDIO.HIHAT.DURATION;
+        // Use cached noise buffer for better performance
+        const buffer = getNoiseBuffer(ctx, duration);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = isOpen
+          ? AUDIO.OPENHAT.FILTER_FREQUENCY
+          : AUDIO.HIHAT.FILTER_FREQUENCY;
+        source.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(
+          (isOpen ? AUDIO.OPENHAT.GAIN : AUDIO.HIHAT.GAIN) * volumeMultiplier,
+          startTime
+        );
+        gain.gain.exponentialRampToValueAtTime(0.01, startTime + duration);
+        source.start(startTime);
+        break;
+      }
+      case 'clap': {
+        // Use cached noise buffer for better performance
+        const buffer = getNoiseBuffer(ctx, AUDIO.CLAP.DURATION);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        const gain = ctx.createGain();
+        source.connect(gain);
+        gain.connect(ctx.destination);
+        gain.gain.setValueAtTime(AUDIO.CLAP.GAIN * volumeMultiplier, startTime);
+        gain.gain.exponentialRampToValueAtTime(
+          0.01,
+          startTime + AUDIO.CLAP.DURATION
+        );
+        source.start(startTime);
+        break;
+      }
+    }
+  };
 
   /**
    * Schedule sounds for upcoming steps using Web Audio timing
    */
-  const scheduleStep = useCallback(
-    (stepIndex: number, loopIndex: number, time: number) => {
-      const currentPattern = loopsRef.current[loopIndex];
-      if (!currentPattern) return;
-      INSTRUMENTS.forEach((inst) => {
-        const velocity = currentPattern[inst][stepIndex];
-        if (velocity > 0) {
-          playSound(inst, time, velocity);
-        }
-      });
-    },
-    [playSound]
-  );
+  const scheduleStep = (stepIndex: number, loopIndex: number, time: number) => {
+    const currentPattern = loopsValue[loopIndex];
+    if (!currentPattern) return;
+    INSTRUMENTS.forEach((inst) => {
+      const velocity = currentPattern[inst][stepIndex];
+      if (velocity > 0) {
+        playSound(inst, time, velocity);
+      }
+    });
+  };
 
   /**
    * Scheduler loop using requestAnimationFrame
    * Schedules notes ahead of time for accurate timing
    */
-  const scheduler = useCallback(() => {
-    const ctx = audioContextRef.current;
-    if (!ctx || !isPlayingRef.current) return;
+  const scheduler = () => {
+    const ctx = audioContext;
+    if (!ctx || !isPlayingValue) return;
 
     const scheduleAheadTime = 0.1; // Schedule 100ms ahead
-    const stepDuration = 60 / tempoRef.current / 4; // Duration of one 16th note in seconds
+    const stepDuration = 60 / tempoValue / 4; // Duration of one 16th note in seconds
 
     // Schedule all notes that fall within the look-ahead window
-    while (nextStepTimeRef.current < ctx.currentTime + scheduleAheadTime) {
-      scheduleStep(
-        currentStepRef.current,
-        currentPlayingLoopRef.current,
-        nextStepTimeRef.current
-      );
+    while (nextStepTime < ctx.currentTime + scheduleAheadTime) {
+      scheduleStep(currentStepValue, currentPlayingLoop, nextStepTime);
 
       // Update visual step and loop (use setTimeout for UI sync)
-      const stepToShow = currentStepRef.current;
-      const loopToShow = currentPlayingLoopRef.current;
-      const timeUntilStep = (nextStepTimeRef.current - ctx.currentTime) * 1000;
+      const stepToShow = currentStepValue;
+      const loopToShow = currentPlayingLoop;
+      const timeUntilStep = (nextStepTime - ctx.currentTime) * 1000;
       setTimeout(
         () => {
-          setCurrentStep(stepToShow);
-          setPlayingLoopIndex(loopToShow);
+          store.setCurrentStep(stepToShow);
+          store.setPlayingLoopIndex(loopToShow);
         },
         Math.max(0, timeUntilStep)
       );
 
       // Advance to next step
-      currentStepRef.current = currentStepRef.current + 1;
+      currentStepValue = currentStepValue + 1;
 
       // Check if we need to advance to next loop
-      if (currentStepRef.current >= STEPS) {
-        currentStepRef.current = 0;
-        currentPlayingLoopRef.current =
-          (currentPlayingLoopRef.current + 1) % loopsRef.current.length;
+      if (currentStepValue >= STEPS) {
+        currentStepValue = 0;
+        currentPlayingLoop = (currentPlayingLoop + 1) % loopsValue.length;
       }
 
-      nextStepTimeRef.current += stepDuration;
+      nextStepTime += stepDuration;
     }
 
     // Continue scheduling if still playing
-    schedulerRef.current = requestAnimationFrame(scheduler);
-  }, [scheduleStep, setCurrentStep, setPlayingLoopIndex]);
+    schedulerAnimationId = requestAnimationFrame(scheduler);
+  };
 
   /**
    * Start playback
    */
-  const play = useCallback(() => {
+  const play = () => {
     const ctx = getAudioContext();
     if (!ctx) return;
 
-    if (!isPlaying) {
+    if (!store.isPlaying) {
       // Resume audio context if suspended (browser autoplay policy)
       if (ctx.state === 'suspended') {
         ctx.resume();
       }
-      setIsPlaying(true);
-      isPlayingRef.current = true;
+      store.setIsPlaying(true);
+      isPlayingValue = true;
       // Initialize timing from current audio context time
-      nextStepTimeRef.current = ctx.currentTime;
-      currentStepRef.current = currentStep;
+      nextStepTime = ctx.currentTime;
+      currentStepValue = store.currentStep;
       // Start the scheduler
-      schedulerRef.current = requestAnimationFrame(scheduler);
+      schedulerAnimationId = requestAnimationFrame(scheduler);
     } else {
       // Pause
-      setIsPlaying(false);
-      isPlayingRef.current = false;
-      if (schedulerRef.current) {
-        cancelAnimationFrame(schedulerRef.current);
-        schedulerRef.current = null;
+      store.setIsPlaying(false);
+      isPlayingValue = false;
+      if (schedulerAnimationId) {
+        cancelAnimationFrame(schedulerAnimationId);
+        schedulerAnimationId = null;
       }
     }
-  }, [isPlaying, currentStep, getAudioContext, scheduler, setIsPlaying]);
+  };
 
   /**
    * Stop playback
    */
-  const stop = useCallback(() => {
-    storeStop();
-    isPlayingRef.current = false;
-    currentStepRef.current = 0;
-    currentPlayingLoopRef.current = 0;
-    if (schedulerRef.current) {
-      cancelAnimationFrame(schedulerRef.current);
-      schedulerRef.current = null;
+  const stop = () => {
+    store.stop();
+    isPlayingValue = false;
+    currentStepValue = 0;
+    currentPlayingLoop = 0;
+    if (schedulerAnimationId) {
+      cancelAnimationFrame(schedulerAnimationId);
+      schedulerAnimationId = null;
     }
-  }, [storeStop]);
-
+  };
 
   /**
    * Clear all loops and reset to initial state
    */
-  const clear = useCallback(() => {
+  const clear = () => {
     // If multiple loops exist, show warning message
-    if (loops.length > 1) {
-      showStatus(drum.clearAllLoops, 'info');
+    if (store.loops.length > 1) {
+      store.showStatus(drum().clearAllLoops, 'info');
     }
     // Reset to initial state via store
-    storeReset();
-    currentPlayingLoopRef.current = 0;
-  }, [loops.length, drum.clearAllLoops, showStatus, storeReset]);
+    store.reset();
+    currentPlayingLoop = 0;
+  };
 
   /**
    * Set a step velocity value in displayed loop (follows playback during play)
    */
-  const setStepVelocity = useCallback(
-    (inst: Instrument, step: number, velocity: number) => {
-      const targetIndex = isPlaying ? playingLoopIndex : currentLoopIndex;
-      storeSetStepVelocity(targetIndex, inst, step, velocity);
-    },
-    [currentLoopIndex, isPlaying, playingLoopIndex, storeSetStepVelocity]
-  );
+  const setStepVelocity = (
+    inst: Instrument,
+    step: number,
+    velocity: number
+  ) => {
+    const targetIndex = store.isPlaying
+      ? store.playingLoopIndex
+      : store.currentLoopIndex;
+    store.setStepVelocity(targetIndex, inst, step, velocity);
+  };
 
   /**
    * Handle mouse move for velocity adjustment
    * NOTE: Defined before handleStepMouseDown because it's referenced there
    */
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent | MouseEvent) => {
-      if (!velocityDragRef.current) return;
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!velocityDrag) return;
 
-      const { inst, step, startY, startVelocity } = velocityDragRef.current;
-      // Drag down = decrease velocity, drag up = increase velocity
-      const deltaY = e.clientY - startY;
+    const { inst, step, startY, startVelocity } = velocityDrag;
+    // Drag down = decrease velocity, drag up = increase velocity
+    const deltaY = e.clientY - startY;
 
-      // Only process if moved more than 3px (threshold to distinguish click from drag)
+    // Only process if moved more than 3px (threshold to distinguish click from drag)
+    if (Math.abs(deltaY) > 3) {
+      velocityDrag.hasMoved = true;
+      // 100px drag = full velocity change
+      const velocityChange = Math.round(-deltaY * 1);
+      const newVelocity = Math.max(
+        VELOCITY.OFF,
+        Math.min(VELOCITY.MAX, startVelocity + velocityChange)
+      );
+      setStepVelocity(inst, step, newVelocity);
+    }
+  };
+
+  /**
+   * Handle drag start on a step
+   */
+  const handleStepMouseDown = (
+    inst: Instrument,
+    step: number,
+    clientY: number
+  ) => {
+    const currentValue = pattern()[inst][step];
+
+    if (currentValue > 0) {
+      // Active note: start velocity drag mode (or remove on click without drag)
+      velocityDrag = {
+        inst,
+        step,
+        startY: clientY,
+        startVelocity: currentValue,
+        hasMoved: false,
+      };
+      isDragging = false;
+      paintMode = null;
+      // Dynamically add mousemove listener only during velocity drag
+      mouseMoveHandler = handleMouseMove;
+      window.addEventListener('mousemove', handleMouseMove);
+    } else {
+      // Inactive note: start paint mode with full velocity
+      isDragging = true;
+      paintMode = true;
+      velocityDrag = null;
+      setStepVelocity(inst, step, VELOCITY.DEFAULT);
+    }
+  };
+
+  /**
+   * Handle mouse enter while dragging (paint mode only)
+   */
+  const handleStepMouseEnter = (inst: Instrument, step: number) => {
+    if (isDragging && paintMode) {
+      setStepVelocity(inst, step, VELOCITY.DEFAULT);
+    }
+  };
+
+  /**
+   * Handle drag end - remove note if clicked without dragging
+   */
+  const handleDragEnd = () => {
+    // If velocity drag mode was active and user didn't move, remove the note
+    if (velocityDrag && !velocityDrag.hasMoved) {
+      const { inst, step } = velocityDrag;
+      setStepVelocity(inst, step, VELOCITY.OFF);
+    }
+    isDragging = false;
+    paintMode = null;
+    velocityDrag = null;
+  };
+
+  /**
+   * Handle touch move for mobile (paint mode and velocity adjustment)
+   */
+  const handleTouchMove = (e: TouchEvent) => {
+    const touch = e.touches[0];
+
+    // Velocity drag mode
+    if (velocityDrag) {
+      const { inst, step, startY, startVelocity } = velocityDrag;
+      const deltaY = touch.clientY - startY;
+
+      // Only process if moved more than 3px
       if (Math.abs(deltaY) > 3) {
-        velocityDragRef.current.hasMoved = true;
-        // 100px drag = full velocity change
+        velocityDrag.hasMoved = true;
         const velocityChange = Math.round(-deltaY * 1);
         const newVelocity = Math.max(
           VELOCITY.OFF,
@@ -701,409 +735,300 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
         );
         setStepVelocity(inst, step, newVelocity);
       }
-    },
-    [setStepVelocity]
-  );
-
-  /**
-   * Handle drag start on a step
-   */
-  const handleStepMouseDown = useCallback(
-    (inst: Instrument, step: number, clientY: number) => {
-      const currentValue = pattern[inst][step];
-
-      if (currentValue > 0) {
-        // Active note: start velocity drag mode (or remove on click without drag)
-        velocityDragRef.current = {
-          inst,
-          step,
-          startY: clientY,
-          startVelocity: currentValue,
-          hasMoved: false,
-        };
-        isDraggingRef.current = false;
-        paintModeRef.current = null;
-        // Dynamically add mousemove listener only during velocity drag
-        mouseMoveHandlerRef.current = handleMouseMove;
-        window.addEventListener('mousemove', handleMouseMove);
-      } else {
-        // Inactive note: start paint mode with full velocity
-        isDraggingRef.current = true;
-        paintModeRef.current = true;
-        velocityDragRef.current = null;
-        setStepVelocity(inst, step, VELOCITY.DEFAULT);
-      }
-    },
-    [pattern, setStepVelocity, handleMouseMove]
-  );
-
-  /**
-   * Handle mouse enter while dragging (paint mode only)
-   */
-  const handleStepMouseEnter = useCallback(
-    (inst: Instrument, step: number) => {
-      if (isDraggingRef.current && paintModeRef.current) {
-        setStepVelocity(inst, step, VELOCITY.DEFAULT);
-      }
-    },
-    [setStepVelocity]
-  );
-
-  /**
-   * Handle drag end - remove note if clicked without dragging
-   */
-  const handleDragEnd = useCallback(() => {
-    // If velocity drag mode was active and user didn't move, remove the note
-    if (velocityDragRef.current && !velocityDragRef.current.hasMoved) {
-      const { inst, step } = velocityDragRef.current;
-      setStepVelocity(inst, step, VELOCITY.OFF);
+      return;
     }
-    isDraggingRef.current = false;
-    paintModeRef.current = null;
-    velocityDragRef.current = null;
-  }, [setStepVelocity]);
 
-  /**
-   * Handle touch move for mobile (paint mode and velocity adjustment)
-   */
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent) => {
-      const touch = e.touches[0];
+    // Paint mode
+    if (!isDragging || !paintMode) return;
 
-      // Velocity drag mode
-      if (velocityDragRef.current) {
-        const { inst, step, startY, startVelocity } = velocityDragRef.current;
-        const deltaY = touch.clientY - startY;
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
 
-        // Only process if moved more than 3px
-        if (Math.abs(deltaY) > 3) {
-          velocityDragRef.current.hasMoved = true;
-          const velocityChange = Math.round(-deltaY * 1);
-          const newVelocity = Math.max(
-            VELOCITY.OFF,
-            Math.min(VELOCITY.MAX, startVelocity + velocityChange)
-          );
-          setStepVelocity(inst, step, newVelocity);
-        }
-        return;
+    if (element && element.classList.contains('drum-step')) {
+      const inst = element.getAttribute('data-instrument') as Instrument;
+      const stepAttr = element.getAttribute('data-step');
+      const stepNum = stepAttr ? parseInt(stepAttr, 10) : NaN;
+
+      if (inst && !isNaN(stepNum)) {
+        setStepVelocity(inst, stepNum, VELOCITY.DEFAULT);
       }
-
-      // Paint mode
-      if (!isDraggingRef.current || !paintModeRef.current) return;
-
-      const element = document.elementFromPoint(touch.clientX, touch.clientY);
-
-      if (element && element.classList.contains('drum-step')) {
-        const inst = element.getAttribute('data-instrument') as Instrument;
-        const stepAttr = element.getAttribute('data-step');
-        const step = stepAttr ? parseInt(stepAttr, 10) : NaN;
-
-        if (inst && !isNaN(step)) {
-          setStepVelocity(inst, step, VELOCITY.DEFAULT);
-        }
-      }
-    },
-    [setStepVelocity]
-  );
+    }
+  };
 
   /**
    * Add global mouse listeners for drag handling
    * Note: mousemove is added/removed dynamically only during velocity drag
    */
-  useEffect(() => {
+  onMount(() => {
     const handleGlobalMouseUp = () => {
       // Remove mousemove listener if it was attached
-      if (mouseMoveHandlerRef.current) {
-        window.removeEventListener('mousemove', mouseMoveHandlerRef.current);
-        mouseMoveHandlerRef.current = null;
+      if (mouseMoveHandler) {
+        window.removeEventListener('mousemove', mouseMoveHandler);
+        mouseMoveHandler = null;
       }
       // If velocity drag mode was active and user didn't move, remove the note
-      if (velocityDragRef.current && !velocityDragRef.current.hasMoved) {
-        const { inst, step } = velocityDragRef.current;
+      if (velocityDrag && !velocityDrag.hasMoved) {
+        const { inst, step } = velocityDrag;
         setStepVelocity(inst, step, VELOCITY.OFF);
       }
-      isDraggingRef.current = false;
-      paintModeRef.current = null;
-      velocityDragRef.current = null;
+      isDragging = false;
+      paintMode = null;
+      velocityDrag = null;
     };
 
     window.addEventListener('mouseup', handleGlobalMouseUp);
     window.addEventListener('touchend', handleGlobalMouseUp);
 
-    return () => {
+    onCleanup(() => {
       window.removeEventListener('mouseup', handleGlobalMouseUp);
       window.removeEventListener('touchend', handleGlobalMouseUp);
       // Clean up mousemove if still attached
-      if (mouseMoveHandlerRef.current) {
-        window.removeEventListener('mousemove', mouseMoveHandlerRef.current);
-        mouseMoveHandlerRef.current = null;
+      if (mouseMoveHandler) {
+        window.removeEventListener('mousemove', mouseMoveHandler);
+        mouseMoveHandler = null;
       }
-    };
-  }, [setStepVelocity]);
+    });
+  });
 
   /**
    * Load a preset into current loop
    */
-  const loadPreset = useCallback(
-    (presetName: string) => {
-      const preset = PRESETS[presetName];
-      if (preset) {
-        storeLoadPreset(currentLoopIndex, preset);
-        showStatus(
-          drum.loadedPreset.replace('{preset}', presetName),
-          'success'
-        );
-      }
-    },
-    [currentLoopIndex, drum.loadedPreset, showStatus, storeLoadPreset]
-  );
+  const loadPreset = (presetName: string) => {
+    const preset = PRESETS[presetName];
+    if (preset) {
+      store.loadPreset(store.currentLoopIndex, preset);
+      store.showStatus(
+        drum().loadedPreset.replace('{preset}', presetName),
+        'success'
+      );
+    }
+  };
 
   /**
    * Export all loops as MIDI file
    */
-  const handleExportMidi = useCallback(() => {
+  const handleExportMidi = () => {
     exportMidi({
-      loops,
-      tempo,
+      loops: store.loops,
+      tempo: store.tempo,
       filename: 'drum-pattern',
     });
-    showStatus(drum.exportSuccess, 'success');
-  }, [loops, tempo, drum.exportSuccess, showStatus]);
+    store.showStatus(drum().exportSuccess, 'success');
+  };
 
   /**
    * Trigger file input for MIDI import
    */
-  const handleImportClick = useCallback(() => {
-    fileInputRef.current?.click();
-  }, []);
+  const handleImportClick = () => {
+    fileInputEl?.click();
+  };
 
   /**
    * Handle MIDI file import
    */
-  const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+  const handleFileChange = async (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (!file) return;
 
-      const result = await importMidiFile(file);
+    const result = await importMidiFile(file);
 
-      if (result) {
-        // Import into current loop
-        storeLoadPreset(currentLoopIndex, result.pattern);
-        setTempo(result.tempo);
-        showStatus(drum.importSuccess, 'success');
-      } else {
-        showStatus(drum.importError, 'error');
-      }
+    if (result) {
+      // Import into current loop
+      store.loadPreset(store.currentLoopIndex, result.pattern);
+      store.setTempo(result.tempo);
+      store.showStatus(drum().importSuccess, 'success');
+    } else {
+      store.showStatus(drum().importError, 'error');
+    }
 
-      // Reset input so same file can be selected again
-      e.target.value = '';
-    },
-    [currentLoopIndex, drum.importSuccess, drum.importError, showStatus, storeLoadPreset, setTempo]
-  );
+    // Reset input so same file can be selected again
+    target.value = '';
+  };
 
   /**
    * Add a new empty loop
    */
-  const addLoop = useCallback(() => {
-    if (loops.length >= MAX_LOOPS) {
-      showStatus(drum.maxLoopsReached, 'error');
+  const addLoop = () => {
+    if (store.loops.length >= MAX_LOOPS) {
+      store.showStatus(drum().maxLoopsReached, 'error');
       return;
     }
-    storeAddLoop();
-    setCurrentLoopIndex(loops.length);
-  }, [loops.length, drum.maxLoopsReached, showStatus, storeAddLoop, setCurrentLoopIndex]);
+    store.addLoop();
+    store.setCurrentLoopIndex(store.loops.length);
+  };
 
   /**
    * Copy current loop and add as new loop
    */
-  const copyCurrentLoop = useCallback(() => {
-    if (loops.length >= MAX_LOOPS) {
-      showStatus(drum.maxLoopsReached, 'error');
+  const copyCurrentLoop = () => {
+    if (store.loops.length >= MAX_LOOPS) {
+      store.showStatus(drum().maxLoopsReached, 'error');
       return;
     }
-    storeCopyLoop(currentLoopIndex);
-    setCurrentLoopIndex(loops.length);
-  }, [
-    loops.length,
-    currentLoopIndex,
-    drum.maxLoopsReached,
-    showStatus,
-    storeCopyLoop,
-    setCurrentLoopIndex,
-  ]);
+    store.copyLoop(store.currentLoopIndex);
+    store.setCurrentLoopIndex(store.loops.length);
+  };
 
   /**
    * Remove current loop
    */
-  const removeCurrentLoop = useCallback(() => {
-    if (loops.length <= 1) return; // Keep at least one loop
-    storeRemoveLoop(currentLoopIndex);
-  }, [loops.length, currentLoopIndex, storeRemoveLoop]);
+  const removeCurrentLoop = () => {
+    if (store.loops.length <= 1) return; // Keep at least one loop
+    store.removeLoop(store.currentLoopIndex);
+  };
 
   /**
    * Move current loop left (swap with previous)
    */
-  const moveLoopLeft = useCallback(() => {
-    if (currentLoopIndex <= 0) return;
-    reorderLoops(currentLoopIndex, currentLoopIndex - 1);
-  }, [currentLoopIndex, reorderLoops]);
+  const moveLoopLeft = () => {
+    if (store.currentLoopIndex <= 0) return;
+    store.reorderLoops(store.currentLoopIndex, store.currentLoopIndex - 1);
+  };
 
   /**
    * Move current loop right (swap with next)
    */
-  const moveLoopRight = useCallback(() => {
-    if (currentLoopIndex >= loops.length - 1) return;
-    reorderLoops(currentLoopIndex, currentLoopIndex + 1);
-  }, [currentLoopIndex, loops.length, reorderLoops]);
+  const moveLoopRight = () => {
+    if (store.currentLoopIndex >= store.loops.length - 1) return;
+    store.reorderLoops(store.currentLoopIndex, store.currentLoopIndex + 1);
+  };
 
   /**
    * Handle loop drag start
    */
-  const handleLoopDragStart = useCallback((index: number) => {
-    setDragLoopIndex(index);
-  }, [setDragLoopIndex]);
+  const handleLoopDragStart = (index: number) => {
+    store.setDragLoopIndex(index);
+  };
 
   /**
    * Handle loop drag over
    */
-  const handleLoopDragOver = useCallback(
-    (index: number) => {
-      if (dragLoopIndex !== null && dragLoopIndex !== index) {
-        setDragOverLoopIndex(index);
-      }
-    },
-    [dragLoopIndex, setDragOverLoopIndex]
-  );
+  const handleLoopDragOver = (index: number) => {
+    if (store.dragLoopIndex !== null && store.dragLoopIndex !== index) {
+      store.setDragOverLoopIndex(index);
+    }
+  };
 
   /**
    * Handle loop drag end - reorder loops
    */
-  const handleLoopDragEnd = useCallback(() => {
+  const handleLoopDragEnd = () => {
     if (
-      dragLoopIndex !== null &&
-      dragOverLoopIndex !== null &&
-      dragLoopIndex !== dragOverLoopIndex
+      store.dragLoopIndex !== null &&
+      store.dragOverLoopIndex !== null &&
+      store.dragLoopIndex !== store.dragOverLoopIndex
     ) {
-      reorderLoops(dragLoopIndex, dragOverLoopIndex);
+      store.reorderLoops(store.dragLoopIndex, store.dragOverLoopIndex);
     }
-    setDragLoopIndex(null);
-    setDragOverLoopIndex(null);
-  }, [dragLoopIndex, dragOverLoopIndex, reorderLoops, setDragLoopIndex, setDragOverLoopIndex]);
+    store.setDragLoopIndex(null);
+    store.setDragOverLoopIndex(null);
+  };
 
   /**
    * Handle loop drag leave
    */
-  const handleLoopDragLeave = useCallback(() => {
-    setDragOverLoopIndex(null);
-  }, [setDragOverLoopIndex]);
+  const handleLoopDragLeave = () => {
+    store.setDragOverLoopIndex(null);
+  };
 
   /**
    * Handle tempo change
    */
-  const handleTempoChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newTempo = parseInt(e.target.value, 10);
-      setTempo(newTempo);
-      // Scheduler will pick up new tempo automatically on next iteration
-    },
-    [setTempo]
-  );
+  const handleTempoChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    const newTempo = parseInt(target.value, 10);
+    store.setTempo(newTempo);
+    // Scheduler will pick up new tempo automatically on next iteration
+  };
 
   /**
    * Handle instrument volume change
    */
-  const handleVolumeChange = useCallback((inst: Instrument, value: number) => {
-    setVolume(inst, value);
-  }, [setVolume]);
+  const handleVolumeChange = (inst: Instrument, value: number) => {
+    store.setVolume(inst, value);
+  };
 
   /**
    * Cleanup on unmount
    */
-  useEffect(() => {
-    return () => {
-      if (schedulerRef.current) {
-        cancelAnimationFrame(schedulerRef.current);
-      }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
-    };
-  }, []);
+  onCleanup(() => {
+    if (schedulerAnimationId) {
+      cancelAnimationFrame(schedulerAnimationId);
+    }
+    if (audioContext) {
+      audioContext.close();
+    }
+  });
 
   /**
    * Get translated instrument label
    */
-  const getInstrumentLabel = useCallback(
-    (inst: Instrument): string => {
-      const labels: Record<Instrument, string> = {
-        kick: drum.kick,
-        snare: drum.snare,
-        hihat: drum.hihat,
-        openhat: drum.openhat,
-        clap: drum.clap,
-      };
-      return labels[inst];
-    },
-    [drum]
-  );
+  const getInstrumentLabel = (inst: Instrument): string => {
+    const labels: Record<Instrument, string> = {
+      kick: drum().kick,
+      snare: drum().snare,
+      hihat: drum().hihat,
+      openhat: drum().openhat,
+      clap: drum().clap,
+    };
+    return labels[inst];
+  };
 
   /**
    * Get translated preset label
    */
-  const getPresetLabel = useCallback(
-    (preset: string): string => {
-      const labels: Record<string, string> = {
-        techno: drum.presetTechno,
-        house: drum.presetHouse,
-        trap: drum.presetTrap,
-        breakbeat: drum.presetBreakbeat,
-        minimal: drum.presetMinimal,
-      };
-      return labels[preset] || preset;
-    },
-    [drum]
-  );
+  const getPresetLabel = (preset: string): string => {
+    const labels: Record<string, string> = {
+      techno: drum().presetTechno,
+      house: drum().presetHouse,
+      trap: drum().presetTrap,
+      breakbeat: drum().presetBreakbeat,
+      minimal: drum().presetMinimal,
+    };
+    return labels[preset] || preset;
+  };
 
   return (
-    <div className="drum-machine">
+    <div class="drum-machine">
       {/* Transport Controls */}
-      <div className="drum-transport">
-        <div className="drum-transport-controls">
+      <div class="drum-transport">
+        <div class="drum-transport-controls">
           <button
-            className={cn('drum-btn', isPlaying && 'drum-btn--active')}
+            class={cn('drum-btn', store.isPlaying && 'drum-btn--active')}
             onClick={play}
-            aria-label={isPlaying ? drum.pause : drum.play}
+            aria-label={store.isPlaying ? drum().pause : drum().play}
           >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
-            <span>{isPlaying ? drum.pause : drum.play}</span>
+            <Show when={store.isPlaying} fallback={<PlayIcon />}>
+              <PauseIcon />
+            </Show>
+            <span>{store.isPlaying ? drum().pause : drum().play}</span>
           </button>
-          <button className="drum-btn" onClick={stop} aria-label={drum.stop}>
+          <button class="drum-btn" onClick={stop} aria-label={drum().stop}>
             <StopIcon />
-            <span>{drum.stop}</span>
+            <span>{drum().stop}</span>
           </button>
-          <button className="drum-btn" onClick={clear} aria-label={drum.clear}>
+          <button class="drum-btn" onClick={clear} aria-label={drum().clear}>
             <ClearIcon />
-            <span>{drum.clear}</span>
+            <span>{drum().clear}</span>
           </button>
           <button
-            className="drum-btn drum-btn--export"
+            class="drum-btn drum-btn--export"
             onClick={handleExportMidi}
-            aria-label={drum.exportMidi}
+            aria-label={drum().exportMidi}
           >
             <DownloadIcon />
-            <span>{drum.exportMidi}</span>
+            <span>{drum().exportMidi}</span>
           </button>
           <button
-            className="drum-btn drum-btn--import"
+            class="drum-btn drum-btn--import"
             onClick={handleImportClick}
-            aria-label={drum.importMidi}
+            aria-label={drum().importMidi}
           >
             <UploadIcon />
-            <span>{drum.importMidi}</span>
+            <span>{drum().importMidi}</span>
           </button>
           <input
-            ref={fileInputRef}
+            ref={fileInputEl}
             type="file"
             accept=".mid,.midi,audio/midi,audio/x-midi"
             onChange={handleFileChange}
@@ -1112,105 +1037,109 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
           />
         </div>
 
-        <div className="drum-tempo">
-          <span className="drum-tempo-label">{drum.tempo}</span>
+        <div class="drum-tempo">
+          <span class="drum-tempo-label">{drum().tempo}</span>
           <input
             type="range"
-            className="drum-slider"
+            class="drum-slider"
             min={TEMPO_RANGE.MIN}
             max={TEMPO_RANGE.MAX}
-            value={tempo}
-            onChange={handleTempoChange}
-            aria-label={drum.tempo}
+            value={store.tempo}
+            onInput={handleTempoChange}
+            aria-label={drum().tempo}
           />
-          <span className="drum-tempo-value">
-            {tempo} BPM
-            <span className="drum-tempo-duration">
-              {loops.length > 1 && `x${loops.length} `}(
-              {((240 / tempo) * loops.length).toFixed(1)}s)
+          <span class="drum-tempo-value">
+            {store.tempo} BPM
+            <span class="drum-tempo-duration">
+              {store.loops.length > 1 && `x${store.loops.length} `}(
+              {((240 / store.tempo) * store.loops.length).toFixed(1)}s)
             </span>
           </span>
         </div>
       </div>
 
       {/* Loop Controls */}
-      <div className="drum-loop-controls">
-        <div className="drum-loop-row">
-          <span className="drum-loop-label">{drum.loop}</span>
-          <div className="drum-loop-blocks">
-            {loops.map((_, index) => (
-              <button
-                key={loopIds[index]}
-                className={cn(
-                  'drum-loop-block',
-                  index === currentLoopIndex && 'drum-loop-block--selected',
-                  isPlaying &&
-                    index === playingLoopIndex &&
-                    'drum-loop-block--playing',
-                  dragLoopIndex === index && 'drum-loop-block--dragging',
-                  dragOverLoopIndex === index && 'drum-loop-block--drag-over'
-                )}
-                draggable
-                onDragStart={() => handleLoopDragStart(index)}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  handleLoopDragOver(index);
-                }}
-                onDragLeave={handleLoopDragLeave}
-                onDragEnd={handleLoopDragEnd}
-                onDrop={handleLoopDragEnd}
-                onClick={() => setCurrentLoopIndex(index)}
-                aria-label={`${drum.loop} ${loopIds[index]}`}
-                title={`${drum.loop} ${loopIds[index]}`}
-              >
-                {loopIds[index]}
-              </button>
-            ))}
+      <div class="drum-loop-controls">
+        <div class="drum-loop-row">
+          <span class="drum-loop-label">{drum().loop}</span>
+          <div class="drum-loop-blocks">
+            <For each={store.loops}>
+              {(_, index) => (
+                <button
+                  class={cn(
+                    'drum-loop-block',
+                    index() === store.currentLoopIndex &&
+                      'drum-loop-block--selected',
+                    store.isPlaying &&
+                      index() === store.playingLoopIndex &&
+                      'drum-loop-block--playing',
+                    store.dragLoopIndex === index() &&
+                      'drum-loop-block--dragging',
+                    store.dragOverLoopIndex === index() &&
+                      'drum-loop-block--drag-over'
+                  )}
+                  draggable={true}
+                  onDragStart={() => handleLoopDragStart(index())}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    handleLoopDragOver(index());
+                  }}
+                  onDragLeave={handleLoopDragLeave}
+                  onDragEnd={handleLoopDragEnd}
+                  onDrop={handleLoopDragEnd}
+                  onClick={() => store.setCurrentLoopIndex(index())}
+                  aria-label={`${drum().loop} ${store.loopIds[index()]}`}
+                  title={`${drum().loop} ${store.loopIds[index()]}`}
+                >
+                  {store.loopIds[index()]}
+                </button>
+              )}
+            </For>
           </div>
         </div>
-        <div className="drum-loop-actions">
+        <div class="drum-loop-actions">
           <button
-            className="drum-loop-btn drum-loop-btn--action"
+            class="drum-loop-btn drum-loop-btn--action"
             onClick={moveLoopLeft}
-            disabled={currentLoopIndex <= 0}
-            aria-label={drum.moveLoopLeft}
-            title={drum.moveLoopLeft}
+            disabled={store.currentLoopIndex <= 0}
+            aria-label={drum().moveLoopLeft}
+            title={drum().moveLoopLeft}
           >
             <ChevronLeftIcon />
           </button>
           <button
-            className="drum-loop-btn drum-loop-btn--action"
+            class="drum-loop-btn drum-loop-btn--action"
             onClick={moveLoopRight}
-            disabled={currentLoopIndex >= loops.length - 1}
-            aria-label={drum.moveLoopRight}
-            title={drum.moveLoopRight}
+            disabled={store.currentLoopIndex >= store.loops.length - 1}
+            aria-label={drum().moveLoopRight}
+            title={drum().moveLoopRight}
           >
             <ChevronRightIcon />
           </button>
           <button
-            className="drum-loop-btn drum-loop-btn--action"
+            class="drum-loop-btn drum-loop-btn--action"
             onClick={addLoop}
-            disabled={loops.length >= MAX_LOOPS}
-            aria-label={drum.addLoop}
-            title={drum.addLoop}
+            disabled={store.loops.length >= MAX_LOOPS}
+            aria-label={drum().addLoop}
+            title={drum().addLoop}
           >
             <PlusIcon />
           </button>
           <button
-            className="drum-loop-btn drum-loop-btn--action"
+            class="drum-loop-btn drum-loop-btn--action"
             onClick={copyCurrentLoop}
-            disabled={loops.length >= MAX_LOOPS}
-            aria-label={drum.copyLoop}
-            title={drum.copyLoop}
+            disabled={store.loops.length >= MAX_LOOPS}
+            aria-label={drum().copyLoop}
+            title={drum().copyLoop}
           >
             <CopyIcon />
           </button>
           <button
-            className="drum-loop-btn drum-loop-btn--action"
+            class="drum-loop-btn drum-loop-btn--action"
             onClick={removeCurrentLoop}
-            disabled={loops.length <= 1}
-            aria-label={drum.removeLoop}
-            title={drum.removeLoop}
+            disabled={store.loops.length <= 1}
+            aria-label={drum().removeLoop}
+            title={drum().removeLoop}
           >
             <MinusIcon />
           </button>
@@ -1219,99 +1148,106 @@ export const DrumMachine = memo<DrumMachineProps>(function DrumMachine({
 
       {/* Sequencer Grid */}
       <div
-        className="drum-sequencer"
+        class="drum-sequencer"
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragEnd}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleDragEnd}
       >
-        {INSTRUMENTS.map((inst) => (
-          <div key={inst} className="drum-track">
-            <div className="drum-track-info">
-              <div className="drum-track-label">{getInstrumentLabel(inst)}</div>
-              <div className="drum-track-volume">
-                <input
-                  type="range"
-                  className="drum-volume-slider"
-                  min={VOLUME_RANGE.MIN}
-                  max={VOLUME_RANGE.MAX}
-                  value={volumes[inst]}
-                  onChange={(e) =>
-                    handleVolumeChange(inst, parseInt(e.target.value, 10))
-                  }
-                  aria-label={`${getInstrumentLabel(inst)} ${drum.volume}`}
-                />
-                <span className="drum-volume-value">{volumes[inst]}</span>
+        <For each={INSTRUMENTS}>
+          {(inst) => (
+            <div class="drum-track">
+              <div class="drum-track-info">
+                <div class="drum-track-label">{getInstrumentLabel(inst)}</div>
+                <div class="drum-track-volume">
+                  <input
+                    type="range"
+                    class="drum-volume-slider"
+                    min={VOLUME_RANGE.MIN}
+                    max={VOLUME_RANGE.MAX}
+                    value={store.volumes[inst]}
+                    onInput={(e) =>
+                      handleVolumeChange(
+                        inst,
+                        parseInt((e.target as HTMLInputElement).value, 10)
+                      )
+                    }
+                    aria-label={`${getInstrumentLabel(inst)} ${drum().volume}`}
+                  />
+                  <span class="drum-volume-value">{store.volumes[inst]}</span>
+                </div>
+              </div>
+              <div class="drum-track-steps">
+                <For each={Array.from({ length: STEPS })}>
+                  {(_, stepIndex) => {
+                    const step = stepIndex();
+                    const velocity = () => pattern()[inst][step];
+                    const isActive = () => velocity() > 0;
+                    // Opacity: min 0.3 at velocity 10, max 1 at velocity 100
+                    const opacity = () =>
+                      isActive() ? 0.3 + (velocity() / VELOCITY.MAX) * 0.7 : 1;
+                    return (
+                      <button
+                        class={cn(
+                          'drum-step',
+                          isActive() && 'drum-step--active',
+                          store.isPlaying &&
+                            store.currentStep === step &&
+                            'drum-step--playing'
+                        )}
+                        style={isActive() ? { opacity: opacity() } : undefined}
+                        data-instrument={inst}
+                        data-step={step}
+                        onMouseDown={(e) => {
+                          e.preventDefault();
+                          handleStepMouseDown(inst, step, e.clientY);
+                        }}
+                        onMouseEnter={() => handleStepMouseEnter(inst, step)}
+                        onTouchStart={(e) => {
+                          e.preventDefault();
+                          const touch = e.touches[0];
+                          handleStepMouseDown(inst, step, touch.clientY);
+                        }}
+                        aria-label={`${getInstrumentLabel(inst)} ${drum().step} ${step + 1}${isActive() ? ` (${velocity()}%)` : ''}`}
+                        aria-pressed={isActive()}
+                      />
+                    );
+                  }}
+                </For>
               </div>
             </div>
-            <div className="drum-track-steps">
-              {Array.from({ length: STEPS }).map((_, step) => {
-                const velocity = pattern[inst][step];
-                const isActive = velocity > 0;
-                // Opacity: min 0.3 at velocity 10, max 1 at velocity 100
-                const opacity = isActive
-                  ? 0.3 + (velocity / VELOCITY.MAX) * 0.7
-                  : 1;
-                return (
-                  <button
-                    key={step}
-                    className={cn(
-                      'drum-step',
-                      isActive && 'drum-step--active',
-                      isPlaying && currentStep === step && 'drum-step--playing'
-                    )}
-                    style={isActive ? { opacity } : undefined}
-                    data-instrument={inst}
-                    data-step={step}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      handleStepMouseDown(inst, step, e.clientY);
-                    }}
-                    onMouseEnter={() => handleStepMouseEnter(inst, step)}
-                    onTouchStart={(e) => {
-                      e.preventDefault();
-                      const touch = e.touches[0];
-                      handleStepMouseDown(inst, step, touch.clientY);
-                    }}
-                    aria-label={`${getInstrumentLabel(inst)} ${drum.step} ${step + 1}${isActive ? ` (${velocity}%)` : ''}`}
-                    aria-pressed={isActive}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        ))}
+          )}
+        </For>
       </div>
 
       {/* Presets */}
-      <div className="drum-presets">
-        <span className="drum-presets-label">{drum.presets}</span>
-        <div className="drum-presets-buttons">
-          {Object.keys(PRESETS).map((preset) => (
-            <button
-              key={preset}
-              className="drum-preset-btn"
-              onClick={() => loadPreset(preset)}
-            >
-              {getPresetLabel(preset)}
-            </button>
-          ))}
+      <div class="drum-presets">
+        <span class="drum-presets-label">{drum().presets}</span>
+        <div class="drum-presets-buttons">
+          <For each={Object.keys(PRESETS)}>
+            {(preset) => (
+              <button
+                class="drum-preset-btn"
+                onClick={() => loadPreset(preset)}
+              >
+                {getPresetLabel(preset)}
+              </button>
+            )}
+          </For>
         </div>
       </div>
 
       {/* Synthesis Info */}
-      <div className="drum-synthesis-info">{drum.synthesisInfo}</div>
+      <div class="drum-synthesis-info">{drum().synthesisInfo}</div>
 
       {/* Status Message */}
-      {statusMessage && (
+      <Show when={store.statusMessage}>
         <div
-          className={cn('drum-status', `drum-status--${statusMessage.type}`)}
+          class={cn('drum-status', `drum-status--${store.statusMessage?.type}`)}
         >
-          {statusMessage.text}
+          {store.statusMessage?.text}
         </div>
-      )}
+      </Show>
     </div>
   );
-});
-
-DrumMachine.displayName = 'DrumMachine';
+};

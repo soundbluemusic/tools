@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react';
+import { type Component, createSignal } from 'solid-js';
 import { useLanguage } from '../../../i18n';
 import { DrumMachine } from '../../drum/components/DrumMachine';
 import { DrumSynth } from '../../drum-synth/components';
@@ -16,85 +16,86 @@ type TabType = 'machine' | 'synth';
  * Combines Drum Machine and Drum Synth into a single tool with tabs
  * Both components share synth parameters - DrumSynth edits them, DrumMachine uses them
  */
-export const DrumTool = memo(function DrumTool() {
+export const DrumTool: Component = () => {
   const { language } = useLanguage();
-  const [activeTab, setActiveTab] = useState<TabType>('machine');
+  const [activeTab, setActiveTab] = createSignal<TabType>('machine');
 
   // Shared synth parameters - edited in DrumSynth, used in DrumMachine
   const [synthParams, setSynthParams] =
-    useState<AllDrumParams>(DEFAULT_ALL_PARAMS);
+    createSignal<AllDrumParams>(DEFAULT_ALL_PARAMS);
 
-  const handleTabChange = useCallback((tab: TabType) => {
+  const handleTabChange = (tab: TabType) => {
     setActiveTab(tab);
-  }, []);
+  };
 
-  const handleSynthParamsChange = useCallback((params: AllDrumParams) => {
+  const handleSynthParamsChange = (params: AllDrumParams) => {
     setSynthParams(params);
-  }, []);
+  };
 
   const tabs = [
     {
       id: 'machine' as const,
-      label: language === 'ko' ? '드럼 머신' : 'Drum Machine',
+      label: language() === 'ko' ? '드럼 머신' : 'Drum Machine',
       icon: '🥁',
     },
     {
       id: 'synth' as const,
-      label: language === 'ko' ? '사운드 합성기' : 'Sound Synth',
+      label: language() === 'ko' ? '사운드 합성기' : 'Sound Synth',
       icon: '🎛️',
     },
   ];
 
   return (
-    <div className="drum-tool">
+    <div class="drum-tool">
       {/* Tab Navigation */}
-      <div className="drum-tool-tabs" role="tablist">
+      <div class="drum-tool-tabs" role="tablist">
         {tabs.map((tab) => (
           <button
-            key={tab.id}
             role="tab"
-            aria-selected={activeTab === tab.id}
+            aria-selected={activeTab() === tab.id}
             aria-controls={`tabpanel-${tab.id}`}
-            className={cn(
+            class={cn(
               'drum-tool-tab',
-              activeTab === tab.id && 'drum-tool-tab--active'
+              activeTab() === tab.id && 'drum-tool-tab--active'
             )}
             onClick={() => handleTabChange(tab.id)}
           >
-            <span className="drum-tool-tab-icon">{tab.icon}</span>
-            <span className="drum-tool-tab-label">{tab.label}</span>
+            <span class="drum-tool-tab-icon">{tab.icon}</span>
+            <span class="drum-tool-tab-label">{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Tab Panels */}
-      <div className="drum-tool-content">
+      <div class="drum-tool-content">
         <div
           id="tabpanel-machine"
           role="tabpanel"
           aria-labelledby="tab-machine"
-          className={cn(
+          class={cn(
             'drum-tool-panel',
-            activeTab === 'machine' && 'drum-tool-panel--active'
+            activeTab() === 'machine' && 'drum-tool-panel--active'
           )}
-          hidden={activeTab !== 'machine'}
+          hidden={activeTab() !== 'machine'}
         >
-          {activeTab === 'machine' && <DrumMachine synthParams={synthParams} />}
+          {activeTab() === 'machine' && (
+            <DrumMachine synthParams={synthParams()} />
+          )}
         </div>
 
         <div
           id="tabpanel-synth"
           role="tabpanel"
           aria-labelledby="tab-synth"
-          className={cn(
+          class={cn(
             'drum-tool-panel',
-            activeTab === 'synth' && 'drum-tool-panel--active'
+            activeTab() === 'synth' && 'drum-tool-panel--active'
           )}
-          hidden={activeTab !== 'synth'}
+          hidden={activeTab() !== 'synth'}
         >
-          {activeTab === 'synth' && (
+          {activeTab() === 'synth' && (
             <DrumSynth
-              params={synthParams}
+              params={synthParams()}
               onParamsChange={handleSynthParamsChange}
             />
           )}
@@ -102,13 +103,11 @@ export const DrumTool = memo(function DrumTool() {
       </div>
 
       {/* Integration indicator */}
-      <div className="drum-tool-integration-info">
-        {language === 'ko'
+      <div class="drum-tool-integration-info">
+        {language() === 'ko'
           ? '사운드 합성기에서 수정한 소리가 드럼 머신에서 사용됩니다.'
           : 'Sounds edited in Sound Synth are used by Drum Machine.'}
       </div>
     </div>
   );
-});
-
-DrumTool.displayName = 'DrumTool';
+};
