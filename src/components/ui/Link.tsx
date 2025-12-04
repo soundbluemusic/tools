@@ -1,6 +1,6 @@
-import { type JSX, type ParentComponent, Show } from 'solid-js';
+import { type ParentComponent } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { A } from '@solidjs/router';
+import { useNavigate } from '@solidjs/router';
 
 interface LinkProps {
   href: string;
@@ -21,40 +21,62 @@ interface LinkProps {
 }
 
 /**
- * SSR-safe Link component
- * Uses regular <a> tag during SSR prerendering, <A> from router on client
- * This prevents "router primitives can only be used inside a Route" errors during prerendering
+ * Hydration-safe Link component
+ * Always renders <a> tag for consistent SSR/client HTML
+ * Uses client-side navigation via useNavigate for SPA behavior
  */
 export const Link: ParentComponent<LinkProps> = (props) => {
-  // During SSR, use a regular anchor tag
-  if (isServer) {
-    return (
-      <a
-        href={props.href}
-        class={props.class}
-        title={props.title}
-        aria-label={props['aria-label']}
-        aria-current={props['aria-current']}
-        onClick={props.onClick}
-      >
-        {props.children}
-      </a>
-    );
-  }
+  // Get navigate function only on client
+  // This is safe because we only use it in the click handler
+  const navigate = isServer ? null : useNavigate();
 
-  // On client, use the router's <A> component for SPA navigation
+  const handleClick = (e: MouseEvent) => {
+    // Call user's onClick if provided
+    props.onClick?.(e);
+
+    // Skip SPA navigation if:
+    // - On server (no navigate function)
+    // - Event was prevented by user's onClick
+    // - Modifier keys held (for open in new tab, etc.)
+    // - Target is external link
+    if (
+      !navigate ||
+      e.defaultPrevented ||
+      e.metaKey ||
+      e.ctrlKey ||
+      e.shiftKey ||
+      e.altKey ||
+      e.button !== 0
+    ) {
+      return;
+    }
+
+    // Check if external link
+    const href = props.href;
+    if (
+      href.startsWith('http://') ||
+      href.startsWith('https://') ||
+      href.startsWith('//')
+    ) {
+      return; // Let browser handle external links
+    }
+
+    // Prevent default and use SPA navigation
+    e.preventDefault();
+    navigate(href);
+  };
+
+  // Always render <a> for consistent hydration
   return (
-    <A
+    <a
       href={props.href}
       class={props.class}
-      activeClass={props.activeClass}
-      inactiveClass={props.inactiveClass}
       title={props.title}
       aria-label={props['aria-label']}
       aria-current={props['aria-current']}
-      onClick={props.onClick}
+      onClick={handleClick}
     >
       {props.children}
-    </A>
+    </a>
   );
 };
