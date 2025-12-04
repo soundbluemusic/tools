@@ -265,9 +265,9 @@ AssemblyScript-based WebAssembly modules for compute-intensive operations:
 | Function | Purpose | Speedup |
 | -------- | ------- | ------- |
 | `makeTransparent` | QR code transparent background | 10-25x |
-| `generateNoiseBuffer` | Drum synth noise generation | 5-10x |
-| `makeDistortionCurve` | Distortion waveshaper curve | 3-5x |
-| `floatToInt16` | WAV encoding conversion | 5-10x |
+| `generateNoiseBuffer` | Drum synth noise generation | 3-5x |
+| `makeDistortionCurve` | Distortion waveshaper curve | 5-10x |
+| `floatToInt16` | WAV encoding conversion | 2-4x |
 
 **Usage pattern with JS fallback:**
 

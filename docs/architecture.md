@@ -113,9 +113,9 @@ AssemblyScript 기반 WASM 모듈로 계산 집약적 작업 최적화:
 | 기능 | 용도 | 성능 향상 |
 |:-----|:-----|:---------|
 | `makeTransparent` | QR 투명 배경 | 10-25x |
-| `generateNoiseBuffer` | 노이즈 생성 | 5-10x |
-| `makeDistortionCurve` | 디스토션 커브 | 3-5x |
-| `floatToInt16` | WAV 인코딩 | 5-10x |
+| `generateNoiseBuffer` | 노이즈 생성 | 3-5x |
+| `makeDistortionCurve` | 디스토션 커브 | 5-10x |
+| `floatToInt16` | WAV 인코딩 | 2-4x |
 
 **사용 패턴:**
 

@@ -58,9 +58,9 @@ Noise Source → Gain (Mix) ──────────↑
 
 | 기능 | 용도 | 성능 향상 |
 |:-----|:-----|:---------|
-| `generateNoiseBuffer` | 노이즈 버퍼 생성 (XorShift128+ PRNG) | 5-10x |
-| `makeDistortionCurve` | 디스토션 웨이브셰이퍼 커브 | 3-5x |
-| `floatToInt16` | WAV 인코딩 (Float32 → Int16) | 5-10x |
+| `generateNoiseBuffer` | 노이즈 버퍼 생성 (XorShift128+ PRNG) | 3-5x |
+| `makeDistortionCurve` | 디스토션 웨이브셰이퍼 커브 | 5-10x |
+| `floatToInt16` | WAV 인코딩 (Float32 → Int16) | 2-4x |
 
 **JS 폴백:** WASM 미지원 환경에서는 자동으로 JavaScript 구현이 사용됩니다.
 
