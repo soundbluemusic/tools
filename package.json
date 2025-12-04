@@ -27,8 +27,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run asbuild:release && npm run copy-wasm && npm run generate-sitemap",
-    "copy-wasm": "cp build/release.wasm src/wasm/processing.wasm",
+    "prebuild": "npm run generate-sitemap",
+    "wasm:build": "npm run asbuild:release && cp build/release.wasm src/wasm/processing.wasm",
     "build": "tsc -b && vite build && npm run build:standalone:all",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
