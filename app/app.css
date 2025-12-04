@@ -1,128 +1,10 @@
 @import "tailwindcss";
 
 /* ============================================
- * Custom CSS Variables (Design Tokens)
- * Tailwind CSS v4 uses CSS-first configuration
+ * Import Design System Variables
+ * All CSS custom properties (--spacing-*, --font-size-*, etc.)
  * ============================================ */
-
-@theme {
-  /* Colors - Light Mode (Warm Minimal) */
-  --color-bg-primary: #faf9f7;
-  --color-bg-secondary: #ffffff;
-  --color-bg-tertiary: #f5f4f1;
-  --color-bg-elevated: #ffffff;
-
-  --color-text-primary: #1c1917;
-  --color-text-secondary: #57534e;
-  --color-text-tertiary: #a8a29e;
-
-  --color-border-primary: #e7e5e4;
-  --color-border-secondary: #f5f5f4;
-  --color-border-focus: #1c1917;
-
-  --color-interactive-hover: rgba(28, 25, 23, 0.04);
-  --color-interactive-active: rgba(28, 25, 23, 0.08);
-
-  /* Semantic Colors */
-  --color-error: #dc2626;
-  --color-success: #059669;
-  --color-warning: #d97706;
-
-  /* Layout */
-  --sidebar-width: 240px;
-  --sidebar-collapsed-width: 72px;
-  --bottom-nav-height: 56px;
-  --container-max: 1440px;
-
-  /* Transitions */
-  --transition-fast: 150ms;
-  --transition-normal: 250ms;
-
-  /* Z-Index Scale */
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-fixed: 300;
-  --z-modal-backdrop: 400;
-  --z-modal: 500;
-  --z-popover: 600;
-  --z-tooltip: 700;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
-  --shadow-md: 0 2px 4px rgba(28, 25, 23, 0.04), 0 1px 2px rgba(28, 25, 23, 0.02);
-  --shadow-lg: 0 4px 12px rgba(28, 25, 23, 0.06);
-  --shadow-xl: 0 8px 24px rgba(28, 25, 23, 0.08);
-
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-
-  /* Font */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
-}
-
-/* ============================================
- * Dark Mode Variables
- * ============================================ */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --color-bg-primary: #1a1918;
-    --color-bg-secondary: #212120;
-    --color-bg-tertiary: #292827;
-    --color-bg-elevated: #2f2e2d;
-
-    --color-text-primary: #ececec;
-    --color-text-secondary: #a8a8a8;
-    --color-text-tertiary: #737373;
-
-    --color-border-primary: #333231;
-    --color-border-secondary: #292827;
-    --color-border-focus: #ececec;
-
-    --color-interactive-hover: rgba(236, 236, 236, 0.06);
-    --color-interactive-active: rgba(236, 236, 236, 0.1);
-
-    --color-error: #f87171;
-    --color-success: #4ade80;
-    --color-warning: #fbbf24;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
-    --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Manual dark mode override */
-:root[data-theme='dark'] {
-  --color-bg-primary: #1a1918;
-  --color-bg-secondary: #212120;
-  --color-bg-tertiary: #292827;
-  --color-bg-elevated: #2f2e2d;
-
-  --color-text-primary: #ececec;
-  --color-text-secondary: #a8a8a8;
-  --color-text-tertiary: #737373;
-
-  --color-border-primary: #333231;
-  --color-border-secondary: #292827;
-  --color-border-focus: #ececec;
-
-  --color-interactive-hover: rgba(236, 236, 236, 0.06);
-  --color-interactive-active: rgba(236, 236, 236, 0.1);
-
-  --color-error: #f87171;
-  --color-success: #4ade80;
-  --color-warning: #fbbf24;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
+@import '../src/styles/variables.css';
 
 /* ============================================
  * Base Styles
@@ -142,7 +24,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: var(--font-sans);
+  font-family: var(--font-family-base);
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);
   line-height: 1.5;
@@ -247,7 +129,7 @@ body {
 
 .error-stack {
   text-align: left;
-  font-family: var(--font-mono);
+  font-family: var(--font-family-mono);
   font-size: 0.75rem;
   background-color: var(--color-bg-tertiary);
   padding: 1rem;
@@ -344,7 +226,6 @@ body {
 
 /* ============================================
  * Import existing component styles
- * These will be migrated to Tailwind gradually
  * ============================================ */
 @import '../src/components/navigation/NavigationLayout.css';
 @import '../src/styles/components.css';
