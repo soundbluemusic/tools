@@ -1,47 +1,14 @@
-@import "tailwindcss";
-
 /* ============================================
- * Import Design System Variables
- * All CSS custom properties (--spacing-*, --font-size-*, etc.)
+ * Import Design System (Variables + Base Reset)
  * ============================================ */
 @import '../src/styles/variables.css';
+@import '../src/styles/base.css';
 
 /* ============================================
- * Base Styles
+ * Tailwind CSS v4 - Utilities Only (No Preflight)
+ * Preflight is disabled to avoid conflicts with existing styles
  * ============================================ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: var(--font-family-base);
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  line-height: 1.5;
-}
-
-/* Focus styles */
-:focus-visible {
-  outline: 2px solid var(--color-border-focus);
-  outline-offset: 2px;
-}
-
-/* Smooth scrolling */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
+@import "tailwindcss/utilities";
 
 /* ============================================
  * Layout Components
