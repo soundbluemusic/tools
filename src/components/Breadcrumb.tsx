@@ -1,5 +1,5 @@
-import { memo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { type Component, For, Show } from 'solid-js';
+import { Link } from './ui';
 import { useLanguage } from '../i18n';
 import { useLocalizedPath } from '../hooks';
 import './Breadcrumb.css';
@@ -17,31 +17,34 @@ interface BreadcrumbProps {
  * Breadcrumb Navigation Component
  * Shows hierarchical navigation path (e.g., Home > Music Tools > Metronome)
  */
-export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
+export const Breadcrumb: Component<BreadcrumbProps> = (props) => {
   const { language } = useLanguage();
   const { toLocalizedPath } = useLocalizedPath();
 
-  // Memoize localized path function
-  const getPath = useCallback(
-    (path: string) => toLocalizedPath(path),
-    [toLocalizedPath]
-  );
+  const getPath = (path: string) => toLocalizedPath(path);
 
   return (
-    <nav className="breadcrumb" aria-label="Breadcrumb">
-      <ol className="breadcrumb-list">
-        {items.map((item, index) => {
-          const isLast = index === items.length - 1;
-          const label = item.label[language];
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol class="breadcrumb-list">
+        <For each={props.items}>
+          {(item, index) => {
+            const isLast = () => index() === props.items.length - 1;
+            const label = () => item.label[language()];
 
-          return (
-            <li key={index} className="breadcrumb-item">
-              {!isLast && item.href ? (
-                <>
-                  <Link to={getPath(item.href)} className="breadcrumb-link">
-                    {index === 0 && (
+            return (
+              <li class="breadcrumb-item">
+                <Show
+                  when={!isLast() && item.href}
+                  fallback={
+                    <span class="breadcrumb-current" aria-current="page">
+                      {label()}
+                    </span>
+                  }
+                >
+                  <Link href={getPath(item.href!)} class="breadcrumb-link">
+                    <Show when={index() === 0}>
                       <svg
-                        className="breadcrumb-home-icon"
+                        class="breadcrumb-home-icon"
                         fill="currentColor"
                         viewBox="0 0 24 24"
                         width="14"
@@ -49,11 +52,11 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
                       >
                         <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z" />
                       </svg>
-                    )}
-                    <span>{label}</span>
+                    </Show>
+                    <span>{label()}</span>
                   </Link>
                   <svg
-                    className="breadcrumb-separator"
+                    class="breadcrumb-separator"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -61,23 +64,17 @@ export const Breadcrumb = memo(function Breadcrumb({ items }: BreadcrumbProps) {
                     height="14"
                   >
                     <path
-                      strokeWidth="2"
-                      strokeLinecap="round"
+                      stroke-width="2"
+                      stroke-linecap="round"
                       d="M9 5l7 7-7 7"
                     />
                   </svg>
-                </>
-              ) : (
-                <span className="breadcrumb-current" aria-current="page">
-                  {label}
-                </span>
-              )}
-            </li>
-          );
-        })}
+                </Show>
+              </li>
+            );
+          }}
+        </For>
       </ol>
     </nav>
   );
-});
-
-Breadcrumb.displayName = 'Breadcrumb';
+};

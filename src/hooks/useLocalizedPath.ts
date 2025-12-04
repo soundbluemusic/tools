@@ -1,8 +1,6 @@
-import { useCallback, useMemo } from 'react';
-import {
-  useLocation,
-  useNavigate as useRouterNavigate,
-} from 'react-router-dom';
+import { createMemo, createSignal, onMount } from 'solid-js';
+import { isServer } from 'solid-js/web';
+import { useNavigate as useRouterNavigate } from '@solidjs/router';
 import { useLanguage } from '../i18n';
 import type { Language } from '../i18n/types';
 
@@ -54,28 +52,31 @@ export function getLanguageFromPath(pathname: string): Language {
 /**
  * Hook for generating localized paths
  * Returns a function that adds language prefix to paths
+ *
+ * Hydration-safe: uses consistent values, updates after mount
  */
 export function useLocalizedPath() {
   const { language } = useLanguage();
 
+  // Use consistent default value for SSR and initial client render
+  const [pathname, setPathname] = createSignal('/');
+
+  // Update pathname after mount (client-only)
+  onMount(() => {
+    setPathname(window.location.pathname);
+  });
+
   /**
    * Convert a base path to a localized path
    */
-  const toLocalizedPath = useCallback(
-    (path: string): string => {
-      return localizedPath(path, language);
-    },
-    [language]
-  );
+  const toLocalizedPath = (path: string): string => {
+    return localizedPath(path, language());
+  };
 
   /**
    * Get the current base path (without language prefix)
    */
-  const location = useLocation();
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
-    [location.pathname]
-  );
+  const basePath = createMemo(() => getBasePath(pathname()));
 
   return {
     toLocalizedPath,
@@ -94,16 +95,17 @@ interface NavigateOptions {
 
 /**
  * Custom navigate hook that adds language prefix
+ * Hydration-safe: navigation only works on client
  */
 export function useLocalizedNavigate() {
-  const navigate = useRouterNavigate();
   const { language } = useLanguage();
 
-  return useCallback(
-    (path: string, options?: NavigateOptions) => {
-      const localPath = localizedPath(path, language);
-      navigate(localPath, options);
-    },
-    [navigate, language]
-  );
+  // Get navigate function only on client
+  const navigate = isServer ? null : useRouterNavigate();
+
+  return (path: string, options?: NavigateOptions) => {
+    if (!navigate) return;
+    const localPath = localizedPath(path, language());
+    navigate(localPath, options);
+  };
 }

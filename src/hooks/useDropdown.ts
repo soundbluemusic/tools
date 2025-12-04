@@ -1,12 +1,13 @@
-import { useEffect, useCallback, type RefObject } from 'react';
+import { createEffect, onCleanup, type Accessor } from 'solid-js';
+import { isServer } from 'solid-js/web';
 
 interface UseDropdownOptions {
-  /** Ref to the container element */
-  containerRef: RefObject<HTMLElement | null>;
-  /** Ref to the trigger button (for focus restoration) */
-  buttonRef?: RefObject<HTMLElement | null>;
+  /** Getter function for container element */
+  containerRef: () => HTMLElement | null | undefined;
+  /** Getter function for trigger button (for focus restoration) */
+  buttonRef?: () => HTMLElement | null | undefined;
   /** Whether the dropdown is open */
-  isOpen: boolean;
+  isOpen: Accessor<boolean>;
   /** Callback to close the dropdown */
   onClose: () => void;
   /** Close on scroll (default: true) */
@@ -20,6 +21,8 @@ interface UseDropdownOptions {
 /**
  * Hook to manage dropdown behavior (click outside, scroll, escape key)
  * Consolidates common dropdown logic used in ShareButton, EmbedButton, etc.
+ *
+ * Hydration-safe: Only runs on client
  */
 export function useDropdown({
   containerRef,
@@ -31,25 +34,25 @@ export function useDropdown({
   closeOnClickOutside = true,
 }: UseDropdownOptions): void {
   // Close dropdown on click outside
-  useEffect(() => {
-    if (!isOpen || !closeOnClickOutside) return;
+  createEffect(() => {
+    if (isServer || !isOpen() || !closeOnClickOutside) return;
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
+      const container = containerRef();
+      if (container && !container.contains(event.target as Node)) {
         onClose();
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isOpen, closeOnClickOutside, containerRef, onClose]);
+    onCleanup(() =>
+      document.removeEventListener('mousedown', handleClickOutside)
+    );
+  });
 
   // Close dropdown on scroll (throttled to prevent cascading re-renders)
-  useEffect(() => {
-    if (!isOpen || !closeOnScroll) return;
+  createEffect(() => {
+    if (isServer || !isOpen() || !closeOnScroll) return;
 
     let throttleTimer: ReturnType<typeof setTimeout> | null = null;
     const handleScroll = () => {
@@ -59,38 +62,39 @@ export function useDropdown({
         throttleTimer = null;
       }, 50);
     };
+
     window.addEventListener('scroll', handleScroll, true);
-    return () => {
+    onCleanup(() => {
       window.removeEventListener('scroll', handleScroll, true);
       if (throttleTimer) clearTimeout(throttleTimer);
-    };
-  }, [isOpen, closeOnScroll, onClose]);
+    });
+  });
 
   // Close dropdown on Escape key
-  useEffect(() => {
-    if (!isOpen || !closeOnEscape) return;
+  createEffect(() => {
+    if (isServer || !isOpen() || !closeOnEscape) return;
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose();
-        buttonRef?.current?.focus();
+        buttonRef?.()?.focus();
       }
     };
 
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, closeOnEscape, buttonRef, onClose]);
+    onCleanup(() => document.removeEventListener('keydown', handleEscape));
+  });
 }
 
 /**
- * Hook to create a toggle callback with copy state reset
+ * Helper to create a toggle callback with copy state reset
  */
 export function useDropdownToggle(
   setIsOpen: (value: boolean | ((prev: boolean) => boolean)) => void,
   setCopied?: (value: boolean) => void
 ) {
-  return useCallback(() => {
+  return () => {
     setIsOpen((prev) => !prev);
     setCopied?.(false);
-  }, [setIsOpen, setCopied]);
+  };
 }

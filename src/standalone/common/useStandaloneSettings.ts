@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { createSignal, createEffect, type Accessor } from 'solid-js';
 
 export type Theme = 'light' | 'dark';
 export type Language = 'ko' | 'en';
 
 interface StandaloneSettings {
-  theme: Theme;
-  language: Language;
+  theme: Accessor<Theme>;
+  language: Accessor<Language>;
   toggleTheme: () => void;
   toggleLanguage: () => void;
 }
@@ -39,40 +39,40 @@ export function useStandaloneSettings(appName: string): StandaloneSettings {
   const themeKey = `${appName}-theme`;
   const langKey = `${appName}-lang`;
 
-  const [theme, setTheme] = useState<Theme>(() => detectTheme(themeKey));
-  const [language, setLanguage] = useState<Language>(() =>
+  const [theme, setTheme] = createSignal<Theme>(detectTheme(themeKey));
+  const [language, setLanguage] = createSignal<Language>(
     detectLanguage(langKey)
   );
 
   // Theme toggle
-  const toggleTheme = useCallback(() => {
+  const toggleTheme = () => {
     setTheme((prev) => {
       const next = prev === 'light' ? 'dark' : 'light';
       localStorage.setItem(themeKey, next);
       document.documentElement.setAttribute('data-theme', next);
       return next;
     });
-  }, [themeKey]);
+  };
 
   // Language toggle
-  const toggleLanguage = useCallback(() => {
+  const toggleLanguage = () => {
     setLanguage((prev) => {
       const next = prev === 'ko' ? 'en' : 'ko';
       localStorage.setItem(langKey, next);
       return next;
     });
-  }, [langKey]);
+  };
 
   // Set initial theme attribute
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
+  createEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme());
+  });
 
   return { theme, language, toggleTheme, toggleLanguage };
 }
 
 /**
- * Initialize theme before React hydration (for main.tsx)
+ * Initialize theme before Solid hydration (for main.tsx)
  */
 export function initTheme(appName: string): void {
   const stored = localStorage.getItem(`${appName}-theme`);

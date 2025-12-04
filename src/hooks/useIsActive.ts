@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { createMemo, createSignal, onMount } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { getBasePath } from './useLocalizedPath';
 
 /**
@@ -11,27 +11,40 @@ const KOREAN_PREFIX = '/ko';
  * Hook for checking if a path is active in navigation
  * Handles both base paths and Korean prefixed paths (/ko/*)
  * Consolidates duplicate isActive logic from Sidebar and BottomNav
+ *
+ * Hydration-safe: returns consistent default values, updates after mount
  */
 export function useIsActive() {
-  const location = useLocation();
+  // Use consistent default values for SSR and initial client render
+  const [pathname, setPathname] = createSignal('/');
+
+  // Update pathname after mount (client-only)
+  onMount(() => {
+    setPathname(window.location.pathname);
+  });
 
   // Get base path without language prefix
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
-    [location.pathname]
-  );
+  const basePath = createMemo(() => getBasePath(pathname()));
 
-  const isActive = useCallback(
-    (path: string) => {
-      // Compare against base path (without language prefix)
-      if (path === '/')
-        return basePath === '/' || location.pathname === KOREAN_PREFIX;
-      // Exact match or match with trailing content that starts with /
-      // This prevents /drum from matching /drum-synth
-      return basePath === path || basePath.startsWith(path + '/');
-    },
-    [basePath, location.pathname]
-  );
+  const isActive = (path: string): boolean => {
+    // On server, always return false for consistent hydration
+    if (isServer) return false;
 
-  return { isActive, pathname: location.pathname, basePath };
+    const currentBasePath = basePath();
+    const currentPathname = pathname();
+
+    // Compare against base path (without language prefix)
+    if (path === '/') {
+      return currentBasePath === '/' || currentPathname === KOREAN_PREFIX;
+    }
+    // Exact match or match with trailing content that starts with /
+    // This prevents /drum from matching /drum-synth
+    return currentBasePath === path || currentBasePath.startsWith(path + '/');
+  };
+
+  return {
+    isActive,
+    pathname,
+    basePath,
+  };
 }

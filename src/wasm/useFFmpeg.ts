@@ -1,8 +1,8 @@
 /**
  * useFFmpeg Hook
- * React hook for using FFmpeg WASM
+ * Solid.js hook for using FFmpeg WASM
  */
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { createSignal, createEffect, onCleanup } from 'solid-js';
 import {
   loadFFmpeg,
   isFFmpegLoaded,
@@ -18,7 +18,7 @@ import {
  */
 export interface UseFFmpegReturn {
   // State
-  state: FFmpegLoadingState;
+  state: () => FFmpegLoadingState;
 
   // Actions
   load: () => Promise<void>;
@@ -29,23 +29,23 @@ export interface UseFFmpegReturn {
 }
 
 /**
- * Hook for using FFmpeg in React components
+ * Hook for using FFmpeg in Solid.js components
  * Handles loading state and provides convenient methods
  */
 export function useFFmpeg(autoLoad = false): UseFFmpegReturn {
-  const [state, setState] = useState<FFmpegLoadingState>({
+  const [state, setState] = createSignal<FFmpegLoadingState>({
     isLoading: false,
     isLoaded: isFFmpegLoaded(),
     progress: 0,
     error: null,
   });
 
-  const loadingRef = useRef(false);
+  let loadingRef = false;
 
-  const load = useCallback(async () => {
-    if (state.isLoaded || loadingRef.current) return;
+  const load = async () => {
+    if (state().isLoaded || loadingRef) return;
 
-    loadingRef.current = true;
+    loadingRef = true;
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
     try {
@@ -67,16 +67,16 @@ export function useFFmpeg(autoLoad = false): UseFFmpegReturn {
           error instanceof Error ? error : new Error('Failed to load FFmpeg'),
       });
     } finally {
-      loadingRef.current = false;
+      loadingRef = false;
     }
-  }, [state.isLoaded]);
+  };
 
   // Auto-load if requested
-  useEffect(() => {
-    if (autoLoad && !state.isLoaded && !state.isLoading) {
+  createEffect(() => {
+    if (autoLoad && !state().isLoaded && !state().isLoading) {
       load();
     }
-  }, [autoLoad, state.isLoaded, state.isLoading, load]);
+  });
 
   return {
     state,

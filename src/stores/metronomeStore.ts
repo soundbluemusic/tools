@@ -1,10 +1,9 @@
 /**
  * Metronome Store
- * Zustand store for metronome state management
+ * Solid.js store for metronome state management
  */
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { devtools } from './middleware';
+import { createStore, produce } from 'solid-js/store';
+import { createRoot } from 'solid-js';
 
 // ============================================
 // Types
@@ -74,6 +73,8 @@ const DEFAULTS = {
   BEAT_UNIT: 4,
 };
 
+const STORAGE_KEY = 'metronome-storage';
+
 // ============================================
 // Initial State
 // ============================================
@@ -100,105 +101,185 @@ const initialState: MetronomeState = {
 };
 
 // ============================================
-// Store
+// Persistence Helpers
 // ============================================
 
-export const useMetronomeStore = create<MetronomeStore>()(
-  devtools(
-    persist(
-      (set) => ({
-        ...initialState,
+function loadPersistedState(): Partial<MetronomeState> {
+  if (typeof window === 'undefined') return {};
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return {
+        bpm: parsed.bpm ?? initialState.bpm,
+        volume: parsed.volume ?? initialState.volume,
+        beatsPerMeasure: parsed.beatsPerMeasure ?? initialState.beatsPerMeasure,
+        beatUnit: parsed.beatUnit ?? initialState.beatUnit,
+      };
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return {};
+}
 
-        // Settings actions
-        setBpm: (bpm) => set({ bpm }, false, 'setBpm'),
+function persistState(state: MetronomeState): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const toStore = {
+      bpm: state.bpm,
+      volume: state.volume,
+      beatsPerMeasure: state.beatsPerMeasure,
+      beatUnit: state.beatUnit,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  } catch {
+    // Ignore storage errors
+  }
+}
 
-        setVolume: (volume) => set({ volume }, false, 'setVolume'),
+// ============================================
+// Store Creation
+// ============================================
 
-        setBeatsPerMeasure: (beats) =>
-          set({ beatsPerMeasure: beats }, false, 'setBeatsPerMeasure'),
+function createMetronomeStore(): MetronomeStore {
+  const persistedState = loadPersistedState();
+  const [state, setState] = createStore<MetronomeState>({
+    ...initialState,
+    ...persistedState,
+  });
 
-        setBeatUnit: (unit) => set({ beatUnit: unit }, false, 'setBeatUnit'),
+  const actions: MetronomeActions = {
+    // Settings actions
+    setBpm: (bpm) => {
+      setState('bpm', bpm);
+      persistState(state);
+    },
 
-        // Playback actions
-        setIsPlaying: (isPlaying) => set({ isPlaying }, false, 'setIsPlaying'),
+    setVolume: (volume) => {
+      setState('volume', volume);
+      persistState(state);
+    },
 
-        setBeat: (beat) => set({ beat }, false, 'setBeat'),
+    setBeatsPerMeasure: (beats) => {
+      setState('beatsPerMeasure', beats);
+      persistState(state);
+    },
 
-        setMeasureCount: (count) =>
-          set({ measureCount: count }, false, 'setMeasureCount'),
+    setBeatUnit: (unit) => {
+      setState('beatUnit', unit);
+      persistState(state);
+    },
 
-        setPendulumAngle: (angle) =>
-          set({ pendulumAngle: angle }, false, 'setPendulumAngle'),
+    // Playback actions
+    setIsPlaying: (isPlaying) => {
+      setState('isPlaying', isPlaying);
+    },
 
-        updateVisuals: (beat, measureCount, pendulumAngle) =>
-          set({ beat, measureCount, pendulumAngle }, false, 'updateVisuals'),
+    setBeat: (beat) => {
+      setState('beat', beat);
+    },
 
-        resetPlayback: () =>
-          set(
-            {
-              isPlaying: false,
-              beat: 0,
-              measureCount: 0,
-              pendulumAngle: 0,
-            },
-            false,
-            'resetPlayback'
-          ),
+    setMeasureCount: (count) => {
+      setState('measureCount', count);
+    },
 
-        // Timer actions
-        setTimerMinutes: (minutes) =>
-          set({ timerMinutes: minutes }, false, 'setTimerMinutes'),
+    setPendulumAngle: (angle) => {
+      setState('pendulumAngle', angle);
+    },
 
-        setTimerSeconds: (seconds) =>
-          set({ timerSeconds: seconds }, false, 'setTimerSeconds'),
+    updateVisuals: (beat, measureCount, pendulumAngle) => {
+      setState(
+        produce((s) => {
+          s.beat = beat;
+          s.measureCount = measureCount;
+          s.pendulumAngle = pendulumAngle;
+        })
+      );
+    },
 
-        startCountdown: (time) =>
-          set(
-            { countdownTime: time, countdownElapsed: 0 },
-            false,
-            'startCountdown'
-          ),
+    resetPlayback: () => {
+      setState(
+        produce((s) => {
+          s.isPlaying = false;
+          s.beat = 0;
+          s.measureCount = 0;
+          s.pendulumAngle = 0;
+        })
+      );
+    },
 
-        updateElapsed: (elapsed, countdownElapsed) =>
-          set(
-            (state) => ({
-              elapsedTime: elapsed,
-              countdownElapsed: countdownElapsed ?? state.countdownElapsed,
-            }),
-            false,
-            'updateElapsed'
-          ),
+    // Timer actions
+    setTimerMinutes: (minutes) => {
+      setState('timerMinutes', minutes);
+    },
 
-        resetTimer: () =>
-          set(
-            {
-              timerMinutes: '',
-              timerSeconds: '',
-              countdownTime: 0,
-              countdownElapsed: 0,
-              elapsedTime: 0,
-            },
-            false,
-            'resetTimer'
-          ),
+    setTimerSeconds: (seconds) => {
+      setState('timerSeconds', seconds);
+    },
 
-        // Full reset
-        reset: () => set(initialState, false, 'reset'),
-      }),
-      {
-        name: 'metronome-storage',
-        partialize: (state) => ({
-          // Only persist settings, not playback state
-          bpm: state.bpm,
-          volume: state.volume,
-          beatsPerMeasure: state.beatsPerMeasure,
-          beatUnit: state.beatUnit,
-        }),
+    startCountdown: (time) => {
+      setState(
+        produce((s) => {
+          s.countdownTime = time;
+          s.countdownElapsed = 0;
+        })
+      );
+    },
+
+    updateElapsed: (elapsed, countdownElapsed) => {
+      setState(
+        produce((s) => {
+          s.elapsedTime = elapsed;
+          if (countdownElapsed !== undefined) {
+            s.countdownElapsed = countdownElapsed;
+          }
+        })
+      );
+    },
+
+    resetTimer: () => {
+      setState(
+        produce((s) => {
+          s.timerMinutes = '';
+          s.timerSeconds = '';
+          s.countdownTime = 0;
+          s.countdownElapsed = 0;
+          s.elapsedTime = 0;
+        })
+      );
+    },
+
+    // Full reset
+    reset: () => {
+      setState(initialState);
+      persistState(initialState);
+    },
+  };
+
+  // Return merged state and actions
+  return new Proxy({} as MetronomeStore, {
+    get(_, prop: string) {
+      if (prop in actions) {
+        return actions[prop as keyof MetronomeActions];
       }
-    ),
-    { name: 'MetronomeStore' }
-  )
-);
+      return state[prop as keyof MetronomeState];
+    },
+  });
+}
+
+// ============================================
+// Singleton Store
+// ============================================
+
+let storeInstance: MetronomeStore | null = null;
+
+export function useMetronomeStore(): MetronomeStore {
+  if (!storeInstance) {
+    storeInstance = createRoot(() => createMetronomeStore());
+  }
+  return storeInstance;
+}
 
 // ============================================
 // Selectors

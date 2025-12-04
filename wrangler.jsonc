@@ -5,8 +5,8 @@
   "name": "productivity-tools",
   "compatibility_date": "2025-11-27",
 
-  // Pages 빌드 출력 디렉토리 (React Router v7 Framework Mode)
-  "pages_build_output_dir": "./dist/client",
+  // Pages 빌드 출력 디렉토리 (SolidStart / Vinxi)
+  "pages_build_output_dir": ".output/public",
 
   // 개발 서버 설정
   "dev": {

@@ -1,4 +1,13 @@
-import { memo, useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import {
+  type Component,
+  type JSX,
+  createSignal,
+  createEffect,
+  createMemo,
+  Show,
+  For,
+  onCleanup,
+} from 'solid-js';
 import { useLanguage } from '../../i18n';
 import { useLocalizedNavigate } from '../../hooks';
 import type { App } from '../../types';
@@ -12,9 +21,9 @@ const SearchIcon = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   >
     <circle cx="11" cy="11" r="8" />
     <path d="m21 21-4.35-4.35" />
@@ -28,9 +37,9 @@ const ArrowRightIcon = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   >
     <path d="M5 12h14M12 5l7 7-7 7" />
   </svg>
@@ -43,9 +52,9 @@ const EnterIcon = () => (
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
   >
     <polyline points="9 10 4 15 9 20" />
     <path d="M20 4v7a4 4 0 0 1-4 4H4" />
@@ -56,7 +65,7 @@ interface QuickAction {
   id: string;
   labelKo: string;
   labelEn: string;
-  icon: React.ReactNode;
+  icon: JSX.Element;
   action: () => void;
   keywords: string[];
 }
@@ -72,80 +81,73 @@ interface CommandPaletteProps {
  * Universal search and navigation for power users
  * Following patterns from Slack, Notion, Linear, Figma
  */
-export const CommandPalette = memo(function CommandPalette({
-  isOpen,
-  onClose,
-  apps,
-}: CommandPaletteProps) {
+export const CommandPalette: Component<CommandPaletteProps> = (props) => {
   const { language } = useLanguage();
   const navigate = useLocalizedNavigate();
-  const [query, setQuery] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+  const [query, setQuery] = createSignal('');
+  const [selectedIndex, setSelectedIndex] = createSignal(0);
+  let inputRef: HTMLInputElement | undefined;
+  let listRef: HTMLDivElement | undefined;
 
   // Quick actions
-  const quickActions = useMemo<QuickAction[]>(
-    () => [
-      {
-        id: 'home',
-        labelKo: '홈으로 이동',
-        labelEn: 'Go to Home',
-        icon: (
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            <polyline points="9 22 9 12 15 12 15 22" />
-          </svg>
-        ),
-        action: () => navigate('/'),
-        keywords: ['home', 'main', '홈', '메인'],
-      },
-      {
-        id: 'sitemap',
-        labelKo: '사이트맵 보기',
-        labelEn: 'View Sitemap',
-        icon: (
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <rect x="3" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="3" width="7" height="7" rx="1" />
-            <rect x="3" y="14" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-          </svg>
-        ),
-        action: () => navigate('/sitemap'),
-        keywords: ['sitemap', 'all', '사이트맵', '전체'],
-      },
-    ],
-    [navigate]
-  );
+  const quickActions = createMemo<QuickAction[]>(() => [
+    {
+      id: 'home',
+      labelKo: '홈으로 이동',
+      labelEn: 'Go to Home',
+      icon: (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+          <polyline points="9 22 9 12 15 12 15 22" />
+        </svg>
+      ),
+      action: () => navigate('/'),
+      keywords: ['home', 'main', '홈', '메인'],
+    },
+    {
+      id: 'sitemap',
+      labelKo: '사이트맵 보기',
+      labelEn: 'View Sitemap',
+      icon: (
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="3" y="3" width="7" height="7" rx="1" />
+          <rect x="14" y="3" width="7" height="7" rx="1" />
+          <rect x="3" y="14" width="7" height="7" rx="1" />
+          <rect x="14" y="14" width="7" height="7" rx="1" />
+        </svg>
+      ),
+      action: () => navigate('/sitemap'),
+      keywords: ['sitemap', 'all', '사이트맵', '전체'],
+    },
+  ]);
 
   // Filter results based on query
-  const filteredResults = useMemo(() => {
-    const normalizedQuery = query.toLowerCase().trim();
+  const filteredResults = createMemo(() => {
+    const normalizedQuery = query().toLowerCase().trim();
 
     if (!normalizedQuery) {
       // Show all apps and actions when empty
       return {
-        apps: apps,
-        actions: quickActions,
+        apps: props.apps,
+        actions: quickActions(),
       };
     }
 
-    const filteredApps = apps.filter((app) => {
+    const filteredApps = props.apps.filter((app) => {
       const nameKo = app.name.ko.toLowerCase();
       const nameEn = app.name.en.toLowerCase();
       const descKo = app.desc.ko.toLowerCase();
@@ -159,7 +161,7 @@ export const CommandPalette = memo(function CommandPalette({
       );
     });
 
-    const filteredActions = quickActions.filter((action) => {
+    const filteredActions = quickActions().filter((action) => {
       const labelKo = action.labelKo.toLowerCase();
       const labelEn = action.labelEn.toLowerCase();
       const keywords = action.keywords.join(' ').toLowerCase();
@@ -175,255 +177,248 @@ export const CommandPalette = memo(function CommandPalette({
       apps: filteredApps,
       actions: filteredActions,
     };
-  }, [query, apps, quickActions]);
+  });
 
   // Total results count
-  const totalResults =
-    filteredResults.apps.length + filteredResults.actions.length;
+  const totalResults = () =>
+    filteredResults().apps.length + filteredResults().actions.length;
 
-  // Reset selected index when results change
-  useEffect(() => {
+  // Reset selected index when query changes
+  createEffect(() => {
+    query(); // Track query changes
     setSelectedIndex(0);
-  }, [query]);
+  });
 
   // Focus input when opened
-  useEffect(() => {
-    if (isOpen) {
+  createEffect(() => {
+    if (props.isOpen) {
       setQuery('');
       setSelectedIndex(0);
       // Small delay to ensure modal is rendered
       requestAnimationFrame(() => {
-        inputRef.current?.focus();
+        inputRef?.focus();
       });
     }
-  }, [isOpen]);
+  });
 
   // Scroll selected item into view (instant to avoid jank during rapid keyboard navigation)
-  useEffect(() => {
-    if (!listRef.current) return;
-    const items = listRef.current.querySelectorAll('[data-command-item]');
-    const selectedItem = items[selectedIndex] as HTMLElement;
+  createEffect(() => {
+    const index = selectedIndex();
+    if (!listRef) return;
+    const items = listRef.querySelectorAll('[data-command-item]');
+    const selectedItem = items[index] as HTMLElement;
     if (selectedItem) {
       selectedItem.scrollIntoView({ block: 'nearest', behavior: 'auto' });
     }
-  }, [selectedIndex]);
+  });
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          setSelectedIndex((prev) => Math.min(prev + 1, totalResults - 1));
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          setSelectedIndex((prev) => Math.max(prev - 1, 0));
-          break;
-        case 'Enter':
-          e.preventDefault();
-          // Execute selected action
-          if (selectedIndex < filteredResults.apps.length) {
-            navigate(filteredResults.apps[selectedIndex].url);
-            onClose();
-          } else {
-            const actionIndex = selectedIndex - filteredResults.apps.length;
-            filteredResults.actions[actionIndex]?.action();
-            onClose();
-          }
-          break;
-        case 'Escape':
-          e.preventDefault();
-          onClose();
-          break;
-      }
-    },
-    [selectedIndex, totalResults, filteredResults, navigate, onClose]
-  );
-
-  // Handle item click - uses data-index attribute to avoid inline functions
-  const handleItemClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const index = parseInt(e.currentTarget.dataset.index || '0', 10);
-      if (index < filteredResults.apps.length) {
-        navigate(filteredResults.apps[index].url);
-      } else {
-        const actionIndex = index - filteredResults.apps.length;
-        filteredResults.actions[actionIndex]?.action();
-      }
-      onClose();
-    },
-    [filteredResults, navigate, onClose]
-  );
-
-  // Handle mouse enter - uses data-index attribute to avoid inline functions
-  const handleItemMouseEnter = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const index = parseInt(e.currentTarget.dataset.index || '0', 10);
-      setSelectedIndex(index);
-    },
-    []
-  );
-
-  // Handle backdrop click
-  const handleBackdropClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    },
-    [onClose]
-  );
-
-  // Handle query change - memoized to avoid recreation
-  const handleQueryChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setQuery(e.target.value);
-    },
-    []
-  );
-
-  const t = {
-    placeholder:
-      language === 'ko' ? '검색 또는 명령어...' : 'Search or type a command...',
-    tools: language === 'ko' ? '도구' : 'Tools',
-    actions: language === 'ko' ? '빠른 실행' : 'Quick Actions',
-    noResults: language === 'ko' ? '검색 결과가 없습니다' : 'No results found',
-    hint: language === 'ko' ? '이동하려면 Enter' : 'to navigate',
+  const handleKeyDown = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex((prev) => Math.min(prev + 1, totalResults() - 1));
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex((prev) => Math.max(prev - 1, 0));
+        break;
+      case 'Enter':
+        e.preventDefault();
+        // Execute selected action
+        if (selectedIndex() < filteredResults().apps.length) {
+          navigate(filteredResults().apps[selectedIndex()].url);
+          props.onClose();
+        } else {
+          const actionIndex = selectedIndex() - filteredResults().apps.length;
+          filteredResults().actions[actionIndex]?.action();
+          props.onClose();
+        }
+        break;
+      case 'Escape':
+        e.preventDefault();
+        props.onClose();
+        break;
+    }
   };
 
-  if (!isOpen) return null;
+  // Handle item click - uses data-index attribute to avoid inline functions
+  const handleItemClick = (e: MouseEvent) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    const index = parseInt(target.dataset.index || '0', 10);
+    if (index < filteredResults().apps.length) {
+      navigate(filteredResults().apps[index].url);
+    } else {
+      const actionIndex = index - filteredResults().apps.length;
+      filteredResults().actions[actionIndex]?.action();
+    }
+    props.onClose();
+  };
+
+  // Handle mouse enter - uses data-index attribute to avoid inline functions
+  const handleItemMouseEnter = (e: MouseEvent) => {
+    const target = e.currentTarget as HTMLButtonElement;
+    const index = parseInt(target.dataset.index || '0', 10);
+    setSelectedIndex(index);
+  };
+
+  // Handle backdrop click
+  const handleBackdropClick = (e: MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      props.onClose();
+    }
+  };
+
+  // Handle query change
+  const handleQueryChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    setQuery(target.value);
+  };
+
+  const t = () => ({
+    placeholder:
+      language() === 'ko'
+        ? '검색 또는 명령어...'
+        : 'Search or type a command...',
+    tools: language() === 'ko' ? '도구' : 'Tools',
+    actions: language() === 'ko' ? '빠른 실행' : 'Quick Actions',
+    noResults:
+      language() === 'ko' ? '검색 결과가 없습니다' : 'No results found',
+    hint: language() === 'ko' ? '이동하려면 Enter' : 'to navigate',
+  });
 
   return (
-    <div
-      className="command-palette-backdrop"
-      onClick={handleBackdropClick}
-      aria-hidden={!isOpen}
-    >
+    <Show when={props.isOpen}>
       <div
-        className="command-palette"
-        role="dialog"
-        aria-modal="true"
-        aria-label={language === 'ko' ? '명령 팔레트' : 'Command Palette'}
+        class="command-palette-backdrop"
+        onClick={handleBackdropClick}
+        aria-hidden={!props.isOpen}
       >
-        {/* Search Input */}
-        <div className="command-palette-header">
-          <SearchIcon />
-          <input
-            ref={inputRef}
-            type="text"
-            className="command-palette-input"
-            placeholder={t.placeholder}
-            value={query}
-            onChange={handleQueryChange}
-            onKeyDown={handleKeyDown}
-            aria-label={t.placeholder}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck="false"
-          />
-          <kbd className="command-palette-esc">ESC</kbd>
-        </div>
+        <div
+          class="command-palette"
+          role="dialog"
+          aria-modal="true"
+          aria-label={language() === 'ko' ? '명령 팔레트' : 'Command Palette'}
+        >
+          {/* Search Input */}
+          <div class="command-palette-header">
+            <SearchIcon />
+            <input
+              ref={inputRef}
+              type="text"
+              class="command-palette-input"
+              placeholder={t().placeholder}
+              value={query()}
+              onInput={handleQueryChange}
+              onKeyDown={handleKeyDown}
+              aria-label={t().placeholder}
+              autocomplete="off"
+              autocorrect="off"
+              autocapitalize="off"
+              spellcheck={false}
+            />
+            <kbd class="command-palette-esc">ESC</kbd>
+          </div>
 
-        {/* Results */}
-        <div className="command-palette-results" ref={listRef}>
-          {totalResults === 0 ? (
-            <div className="command-palette-empty">
-              <p>{t.noResults}</p>
-            </div>
-          ) : (
-            <>
-              {/* Apps */}
-              {filteredResults.apps.length > 0 && (
-                <div className="command-palette-section">
-                  <div className="command-palette-section-label">{t.tools}</div>
-                  {filteredResults.apps.map((app, index) => (
-                    <button
-                      key={app.id}
-                      data-command-item
-                      data-index={index}
-                      className={`command-palette-item ${selectedIndex === index ? 'selected' : ''}`}
-                      onClick={handleItemClick}
-                      onMouseEnter={handleItemMouseEnter}
-                    >
-                      <span
-                        className="command-palette-item-icon"
-                        aria-hidden="true"
-                      >
-                        {app.icon}
-                      </span>
-                      <div className="command-palette-item-content">
-                        <span className="command-palette-item-title">
-                          {language === 'ko' ? app.name.ko : app.name.en}
-                        </span>
-                        <span className="command-palette-item-desc">
-                          {language === 'ko' ? app.desc.ko : app.desc.en}
-                        </span>
-                      </div>
-                      <ArrowRightIcon />
-                    </button>
-                  ))}
+          {/* Results */}
+          <div class="command-palette-results" ref={listRef}>
+            <Show
+              when={totalResults() > 0}
+              fallback={
+                <div class="command-palette-empty">
+                  <p>{t().noResults}</p>
                 </div>
-              )}
-
-              {/* Quick Actions */}
-              {filteredResults.actions.length > 0 && (
-                <div className="command-palette-section">
-                  <div className="command-palette-section-label">
-                    {t.actions}
-                  </div>
-                  {filteredResults.actions.map((action, index) => {
-                    const itemIndex = filteredResults.apps.length + index;
-                    return (
+              }
+            >
+              {/* Apps */}
+              <Show when={filteredResults().apps.length > 0}>
+                <div class="command-palette-section">
+                  <div class="command-palette-section-label">{t().tools}</div>
+                  <For each={filteredResults().apps}>
+                    {(app, index) => (
                       <button
-                        key={action.id}
                         data-command-item
-                        data-index={itemIndex}
-                        className={`command-palette-item ${selectedIndex === itemIndex ? 'selected' : ''}`}
+                        data-index={index()}
+                        class={`command-palette-item ${selectedIndex() === index() ? 'selected' : ''}`}
                         onClick={handleItemClick}
                         onMouseEnter={handleItemMouseEnter}
                       >
                         <span
-                          className="command-palette-item-icon"
+                          class="command-palette-item-icon"
                           aria-hidden="true"
                         >
-                          {action.icon}
+                          {app.icon}
                         </span>
-                        <div className="command-palette-item-content">
-                          <span className="command-palette-item-title">
-                            {language === 'ko'
-                              ? action.labelKo
-                              : action.labelEn}
+                        <div class="command-palette-item-content">
+                          <span class="command-palette-item-title">
+                            {language() === 'ko' ? app.name.ko : app.name.en}
+                          </span>
+                          <span class="command-palette-item-desc">
+                            {language() === 'ko' ? app.desc.ko : app.desc.en}
                           </span>
                         </div>
                         <ArrowRightIcon />
                       </button>
-                    );
-                  })}
+                    )}
+                  </For>
                 </div>
-              )}
-            </>
-          )}
-        </div>
+              </Show>
 
-        {/* Footer */}
-        <div className="command-palette-footer">
-          <div className="command-palette-hint">
-            <kbd>
-              <EnterIcon />
-            </kbd>
-            <span>{t.hint}</span>
+              {/* Quick Actions */}
+              <Show when={filteredResults().actions.length > 0}>
+                <div class="command-palette-section">
+                  <div class="command-palette-section-label">{t().actions}</div>
+                  <For each={filteredResults().actions}>
+                    {(action, index) => {
+                      const itemIndex = () =>
+                        filteredResults().apps.length + index();
+                      return (
+                        <button
+                          data-command-item
+                          data-index={itemIndex()}
+                          class={`command-palette-item ${selectedIndex() === itemIndex() ? 'selected' : ''}`}
+                          onClick={handleItemClick}
+                          onMouseEnter={handleItemMouseEnter}
+                        >
+                          <span
+                            class="command-palette-item-icon"
+                            aria-hidden="true"
+                          >
+                            {action.icon}
+                          </span>
+                          <div class="command-palette-item-content">
+                            <span class="command-palette-item-title">
+                              {language() === 'ko'
+                                ? action.labelKo
+                                : action.labelEn}
+                            </span>
+                          </div>
+                          <ArrowRightIcon />
+                        </button>
+                      );
+                    }}
+                  </For>
+                </div>
+              </Show>
+            </Show>
           </div>
-          <div className="command-palette-hint">
-            <kbd>↑</kbd>
-            <kbd>↓</kbd>
-            <span>{language === 'ko' ? '탐색' : 'navigate'}</span>
+
+          {/* Footer */}
+          <div class="command-palette-footer">
+            <div class="command-palette-hint">
+              <kbd>
+                <EnterIcon />
+              </kbd>
+              <span>{t().hint}</span>
+            </div>
+            <div class="command-palette-hint">
+              <kbd>↑</kbd>
+              <kbd>↓</kbd>
+              <span>{language() === 'ko' ? '탐색' : 'navigate'}</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Show>
   );
-});
-
-CommandPalette.displayName = 'CommandPalette';
+};

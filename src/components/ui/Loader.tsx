@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import type { Component } from 'solid-js';
 import { cn } from '../../utils';
 import { SIZE_CLASSES } from '../../utils/sizeClass';
 
@@ -6,7 +6,7 @@ interface LoaderProps {
   /** Size variant */
   size?: 'sm' | 'md' | 'lg';
   /** Additional class names */
-  className?: string;
+  class?: string;
   /** Accessible label */
   label?: string;
 }
@@ -14,23 +14,20 @@ interface LoaderProps {
 /**
  * Spinner Loader Component
  */
-export const Loader = memo<LoaderProps>(function Loader({
-  size = 'md',
-  className,
-  label = 'Loading...',
-}) {
+export const Loader: Component<LoaderProps> = (props) => {
+  const size = () => props.size ?? 'md';
+  const label = () => props.label ?? 'Loading...';
+
   return (
     <div
-      className={cn('loader-spinner', SIZE_CLASSES.loader[size], className)}
+      class={cn('loader-spinner', SIZE_CLASSES.loader[size()], props.class)}
       role="status"
-      aria-label={label}
+      aria-label={label()}
     >
-      <span className="sr-only">{label}</span>
+      <span class="sr-only">{label()}</span>
     </div>
   );
-});
-
-Loader.displayName = 'Loader';
+};
 
 interface PageLoaderProps {
   /** Minimum height */
@@ -40,14 +37,12 @@ interface PageLoaderProps {
 /**
  * Full page loader component
  */
-export const PageLoader = memo<PageLoaderProps>(function PageLoader({
-  minHeight = '200px',
-}) {
+export const PageLoader: Component<PageLoaderProps> = (props) => {
+  const minHeight = () => props.minHeight ?? '200px';
+
   return (
-    <div className="page-loader" aria-busy="true" style={{ minHeight }}>
+    <div class="page-loader" aria-busy="true" style={{ "min-height": minHeight() }}>
       <Loader size="lg" label="페이지 로딩 중..." />
     </div>
   );
-});
-
-PageLoader.displayName = 'PageLoader';
+};

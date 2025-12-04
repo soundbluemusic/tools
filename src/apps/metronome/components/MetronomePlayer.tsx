@@ -1,4 +1,10 @@
-import { useEffect, useRef, memo, useCallback } from 'react';
+import {
+  type Component,
+  createEffect,
+  onMount,
+  onCleanup,
+  For,
+} from 'solid-js';
 import { useTranslations } from '../../../i18n';
 import type { MetronomeTranslation } from '../../../i18n/types';
 import { useMetronomeStore } from '../../../stores';
@@ -22,31 +28,31 @@ export interface MetronomePlayerProps {
   translations?: MetronomeTranslation;
 }
 
-
 /**
  * Note icon component for beat visualization
  */
-const NoteIcon = memo<{
+const NoteIcon: Component<{
   unit: number;
   isActive: boolean;
   isFirstBeat: boolean;
-}>(function NoteIcon({ unit, isActive, isFirstBeat }) {
-  const size = isActive ? (isFirstBeat ? 28 : 24) : 16;
-  const color = isActive
-    ? isFirstBeat
-      ? 'var(--color-error)'
-      : 'var(--color-text-primary)'
-    : 'var(--color-text-tertiary)';
+}> = (props) => {
+  const size = () => (props.isActive ? (props.isFirstBeat ? 28 : 24) : 16);
+  const color = () =>
+    props.isActive
+      ? props.isFirstBeat
+        ? 'var(--color-error)'
+        : 'var(--color-text-primary)'
+      : 'var(--color-text-tertiary)';
 
   // Half note (2)
-  if (unit === 2) {
+  if (props.unit === 2) {
     return (
       <svg
-        width={size}
-        height={size * 1.4}
+        width={size()}
+        height={size() * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="metronome-note"
+        class="metronome-note"
       >
         <ellipse
           cx="12"
@@ -54,161 +60,162 @@ const NoteIcon = memo<{
           rx="7"
           ry="5"
           fill="var(--color-bg-tertiary)"
-          stroke={color}
-          strokeWidth="2"
+          stroke={color()}
+          stroke-width="2"
         />
-        <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
+        <line
+          x1="19"
+          y1="24"
+          x2="19"
+          y2="4"
+          stroke={color()}
+          stroke-width="2"
+        />
       </svg>
     );
   }
   // Quarter note (4)
-  if (unit === 4) {
+  if (props.unit === 4) {
     return (
       <svg
-        width={size}
-        height={size * 1.4}
+        width={size()}
+        height={size() * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="metronome-note"
+        class="metronome-note"
       >
-        <ellipse cx="12" cy="24" rx="7" ry="5" fill={color} />
-        <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
+        <ellipse cx="12" cy="24" rx="7" ry="5" fill={color()} />
+        <line
+          x1="19"
+          y1="24"
+          x2="19"
+          y2="4"
+          stroke={color()}
+          stroke-width="2"
+        />
       </svg>
     );
   }
   // Eighth note (8)
-  if (unit === 8) {
+  if (props.unit === 8) {
     return (
       <svg
-        width={size}
-        height={size * 1.4}
+        width={size()}
+        height={size() * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="metronome-note"
+        class="metronome-note"
       >
-        <ellipse cx="12" cy="24" rx="7" ry="5" fill={color} />
-        <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
-        <path d="M19 4 L19 10 L24 8 L24 2 Z" fill={color} />
+        <ellipse cx="12" cy="24" rx="7" ry="5" fill={color()} />
+        <line
+          x1="19"
+          y1="24"
+          x2="19"
+          y2="4"
+          stroke={color()}
+          stroke-width="2"
+        />
+        <path d="M19 4 L19 10 L24 8 L24 2 Z" fill={color()} />
       </svg>
     );
   }
   // Sixteenth note (16)
-  if (unit === 16) {
+  if (props.unit === 16) {
     return (
       <svg
-        width={size}
-        height={size * 1.4}
+        width={size()}
+        height={size() * 1.4}
         viewBox="0 0 24 34"
         fill="none"
-        className="metronome-note"
+        class="metronome-note"
       >
-        <ellipse cx="12" cy="24" rx="7" ry="5" fill={color} />
-        <line x1="19" y1="24" x2="19" y2="4" stroke={color} strokeWidth="2" />
-        <path d="M19 4 L19 10 L24 8 L24 2 Z" fill={color} />
-        <path d="M19 8 L19 14 L24 12 L24 6 Z" fill={color} />
+        <ellipse cx="12" cy="24" rx="7" ry="5" fill={color()} />
+        <line
+          x1="19"
+          y1="24"
+          x2="19"
+          y2="4"
+          stroke={color()}
+          stroke-width="2"
+        />
+        <path d="M19 4 L19 10 L24 8 L24 2 Z" fill={color()} />
+        <path d="M19 8 L19 14 L24 12 L24 6 Z" fill={color()} />
       </svg>
     );
   }
 
   return null;
-});
-
-NoteIcon.displayName = 'NoteIcon';
+};
 
 /**
  * MetronomePlayer component
  * Features accurate BPM timing, timer, and beat visualization
  * Supports both main site mode (using i18n context) and standalone mode (using props)
  */
-const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
-  translations,
-}) {
+const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
   // Zustand store state
-  const {
-    bpm,
-    setBpm,
-    volume,
-    setVolume,
-    beatsPerMeasure,
-    setBeatsPerMeasure,
-    beatUnit,
-    setBeatUnit,
-    isPlaying,
-    setIsPlaying,
-    beat,
-    measureCount,
-    pendulumAngle,
-    updateVisuals,
-    setPendulumAngle,
-    resetPlayback,
-    timerMinutes,
-    setTimerMinutes,
-    timerSeconds,
-    setTimerSeconds,
-    countdownTime,
-    countdownElapsed,
-    elapsedTime,
-    startCountdown,
-    updateElapsed,
-    resetTimer,
-  } = useMetronomeStore();
+  const store = useMetronomeStore();
 
   // Use provided translations (standalone) or i18n context (main site)
   const contextTranslations = useTranslations();
-  const t = translations ?? contextTranslations.metronome;
+  const t = () => props.translations ?? contextTranslations().metronome;
 
   // Timing refs
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const nextNoteTimeRef = useRef(0);
-  const schedulerBeatRef = useRef(0);
-  const schedulerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const bpmRef = useRef<number>(DEFAULTS.BPM);
-  const volumeRef = useRef<number>(DEFAULTS.VOLUME);
-  const beatsPerMeasureRef = useRef<number>(DEFAULTS.BEATS_PER_MEASURE);
-  const animationRef = useRef<number | null>(null);
-  const startAudioTimeRef = useRef(0);
+  let audioContext: AudioContext | null = null;
+  let nextNoteTime = 0;
+  let schedulerBeat = 0;
+  let schedulerInterval: ReturnType<typeof setInterval> | null = null;
+  let bpmValue: number = DEFAULTS.BPM;
+  let volumeValue: number = DEFAULTS.VOLUME;
+  let beatsPerMeasureValue: number = DEFAULTS.BEATS_PER_MEASURE;
+  let animationId: number | null = null;
+  let startAudioTime = 0;
+  let elapsedTimeValue = 0;
 
   // Get accent pattern - only first beat of each measure is accented
-  const isAccentBeat = useCallback((beatIndex: number) => beatIndex === 0, []);
+  const isAccentBeat = (beatIndex: number) => beatIndex === 0;
 
   // Update refs when state changes
-  useEffect(() => {
-    bpmRef.current = bpm;
-  }, [bpm]);
+  createEffect(() => {
+    bpmValue = store.bpm;
+  });
 
-  useEffect(() => {
-    volumeRef.current = volume;
-  }, [volume]);
+  createEffect(() => {
+    volumeValue = store.volume;
+  });
 
-  useEffect(() => {
-    beatsPerMeasureRef.current = beatsPerMeasure;
-  }, [beatsPerMeasure]);
+  createEffect(() => {
+    beatsPerMeasureValue = store.beatsPerMeasure;
+  });
+
+  createEffect(() => {
+    elapsedTimeValue = store.elapsedTime;
+  });
 
   // Animation loop for visual updates - synced with audio scheduler
-  useEffect(() => {
-    if (isPlaying && audioContextRef.current) {
+  createEffect(() => {
+    if (store.isPlaying && audioContext) {
       const animate = () => {
-        if (!audioContextRef.current) {
-          animationRef.current = requestAnimationFrame(animate);
+        if (!audioContext) {
+          animationId = requestAnimationFrame(animate);
           return;
         }
 
-        // Wait for startAudioTimeRef to be set by handleStart
-        if (startAudioTimeRef.current === 0) {
-          animationRef.current = requestAnimationFrame(animate);
+        // Wait for startAudioTime to be set by handleStart
+        if (startAudioTime === 0) {
+          animationId = requestAnimationFrame(animate);
           return;
         }
 
-        const currentTime = audioContextRef.current.currentTime;
-        const secondsPerBeat = 60 / bpmRef.current;
-        const elapsed = currentTime - startAudioTimeRef.current;
+        const currentTime = audioContext.currentTime;
+        const secondsPerBeat = 60 / bpmValue;
+        const elapsed = currentTime - startAudioTime;
         const totalBeats = elapsed / secondsPerBeat;
-        const currentBeatIndex =
-          Math.floor(totalBeats) % beatsPerMeasureRef.current;
+        const currentBeatIndex = Math.floor(totalBeats) % beatsPerMeasureValue;
 
         // Calculate measure count from elapsed time (synced with beat visualization)
         const currentMeasure =
-          Math.floor(totalBeats / beatsPerMeasureRef.current) + 1;
+          Math.floor(totalBeats / beatsPerMeasureValue) + 1;
 
         // Pendulum swing (one cycle per 2 beats)
         const swingCycle = totalBeats % 2;
@@ -218,270 +225,259 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
             : PENDULUM.MAX_ANGLE - (swingCycle - 1) * PENDULUM.SWING_RANGE;
 
         // Batch visual updates
-        updateVisuals(currentBeatIndex, currentMeasure, angle);
+        store.updateVisuals(currentBeatIndex, currentMeasure, angle);
 
         const elapsedMs = elapsed * 1000;
 
-        if (countdownTime > 0) {
-          const remaining = countdownTime - elapsedMs;
+        if (store.countdownTime > 0) {
+          const remaining = store.countdownTime - elapsedMs;
           if (remaining <= 0) {
-            updateElapsed(elapsedMs, countdownTime);
-            setIsPlaying(false);
+            store.updateElapsed(elapsedMs, store.countdownTime);
+            store.setIsPlaying(false);
             return;
           }
-          updateElapsed(elapsedMs, elapsedMs);
+          store.updateElapsed(elapsedMs, elapsedMs);
         } else {
-          updateElapsed(elapsedMs);
+          store.updateElapsed(elapsedMs);
         }
 
-        animationRef.current = requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
       };
 
-      animationRef.current = requestAnimationFrame(animate);
+      animationId = requestAnimationFrame(animate);
     } else {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-      if (!isPlaying) setPendulumAngle(0);
+      if (animationId) cancelAnimationFrame(animationId);
+      if (!store.isPlaying) store.setPendulumAngle(0);
     }
-
-    return () => {
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-    };
-  }, [isPlaying, countdownTime, updateVisuals, updateElapsed, setIsPlaying, setPendulumAngle]);
+  });
 
   // Initialize AudioContext
-  useEffect(() => {
+  onMount(() => {
     const AudioContextClass =
       window.AudioContext ||
       (window as { webkitAudioContext?: typeof AudioContext })
         .webkitAudioContext;
     if (AudioContextClass) {
-      audioContextRef.current = new AudioContextClass();
+      audioContext = new AudioContextClass();
     }
 
-    return () => {
-      if (audioContextRef.current) audioContextRef.current.close();
-    };
-  }, []);
+    onCleanup(() => {
+      if (audioContext) audioContext.close();
+    });
+  });
 
-  // Use ref for elapsedTime to avoid dependency issues
-  const elapsedTimeRef = useRef(0);
-  useEffect(() => {
-    elapsedTimeRef.current = elapsedTime;
-  }, [elapsedTime]);
+  const playClick = (time: number, beatNumber: number) => {
+    const ctx = audioContext;
+    if (!ctx) return;
 
-  const playClick = useCallback(
-    (time: number, beatNumber: number) => {
-      const ctx = audioContextRef.current;
-      if (!ctx) return;
+    const isFirst = isAccentBeat(beatNumber);
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
 
-      const isFirst = isAccentBeat(beatNumber);
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
 
-      osc.connect(gain);
-      gain.connect(ctx.destination);
+    const volumeMultiplier = volumeValue / 100;
 
-      const volumeMultiplier = volumeRef.current / 100;
+    if (isFirst) {
+      osc.frequency.value = FREQUENCIES.ACCENT;
+      gain.gain.setValueAtTime(0.8 * volumeMultiplier, time);
+    } else {
+      osc.frequency.value = FREQUENCIES.REGULAR;
+      gain.gain.setValueAtTime(0.4 * volumeMultiplier, time);
+    }
 
-      if (isFirst) {
-        osc.frequency.value = FREQUENCIES.ACCENT;
-        gain.gain.setValueAtTime(0.8 * volumeMultiplier, time);
-      } else {
-        osc.frequency.value = FREQUENCIES.REGULAR;
-        gain.gain.setValueAtTime(0.4 * volumeMultiplier, time);
-      }
+    gain.gain.exponentialRampToValueAtTime(
+      Math.max(0.001, 0.01 * volumeMultiplier),
+      time + TIMING.CLICK_DURATION_SECONDS
+    );
 
-      gain.gain.exponentialRampToValueAtTime(
-        Math.max(0.001, 0.01 * volumeMultiplier),
-        time + TIMING.CLICK_DURATION_SECONDS
-      );
-
-      osc.start(time);
-      osc.stop(time + TIMING.CLICK_DURATION_SECONDS);
-    },
-    [isAccentBeat]
-  );
+    osc.start(time);
+    osc.stop(time + TIMING.CLICK_DURATION_SECONDS);
+  };
 
   // Scheduler effect - timing is already initialized in handleStart
-  useEffect(() => {
-    if (isPlaying && audioContextRef.current) {
+  createEffect(() => {
+    if (store.isPlaying && audioContext) {
       const scheduleNotes = () => {
-        if (!audioContextRef.current) return;
+        if (!audioContext) return;
 
-        const secondsPerBeat = 60.0 / bpmRef.current;
-        const now = audioContextRef.current.currentTime;
+        const secondsPerBeat = 60.0 / bpmValue;
+        const now = audioContext.currentTime;
 
-        while (nextNoteTimeRef.current < now + TIMING.LOOK_AHEAD_SECONDS) {
+        while (nextNoteTime < now + TIMING.LOOK_AHEAD_SECONDS) {
           // Only schedule sound - measure count is calculated in animation loop
-          playClick(nextNoteTimeRef.current, schedulerBeatRef.current);
+          playClick(nextNoteTime, schedulerBeat);
 
-          nextNoteTimeRef.current += secondsPerBeat;
-          schedulerBeatRef.current =
-            (schedulerBeatRef.current + 1) % beatsPerMeasureRef.current;
+          nextNoteTime += secondsPerBeat;
+          schedulerBeat = (schedulerBeat + 1) % beatsPerMeasureValue;
         }
       };
 
-      schedulerRef.current = setInterval(
+      schedulerInterval = setInterval(
         scheduleNotes,
         TIMING.SCHEDULER_INTERVAL_MS
       );
     } else {
-      if (schedulerRef.current) {
-        clearInterval(schedulerRef.current);
-        schedulerRef.current = null;
+      if (schedulerInterval) {
+        clearInterval(schedulerInterval);
+        schedulerInterval = null;
       }
     }
+  });
 
-    return () => {
-      if (schedulerRef.current) {
-        clearInterval(schedulerRef.current);
-        schedulerRef.current = null;
-      }
-    };
-  }, [isPlaying, playClick]);
+  // Cleanup on unmount
+  onCleanup(() => {
+    if (schedulerInterval) {
+      clearInterval(schedulerInterval);
+      schedulerInterval = null;
+    }
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  });
 
-  const handleStart = useCallback(async () => {
+  const handleStart = async () => {
     // Ensure AudioContext exists
-    if (!audioContextRef.current) {
+    if (!audioContext) {
       const AudioContextClass =
         window.AudioContext ||
         (window as { webkitAudioContext?: typeof AudioContext })
           .webkitAudioContext;
       if (AudioContextClass) {
-        audioContextRef.current = new AudioContextClass();
+        audioContext = new AudioContextClass();
       }
     }
 
     // Resume AudioContext if suspended (required for mobile browsers)
-    if (audioContextRef.current?.state === 'suspended') {
+    if (audioContext?.state === 'suspended') {
       try {
-        await audioContextRef.current.resume();
+        await audioContext.resume();
       } catch (err) {
         console.error('AudioContext resume failed:', err);
         return;
       }
     }
 
-    const timerEnded = countdownTime > 0 && countdownElapsed >= countdownTime;
+    const timerEnded =
+      store.countdownTime > 0 && store.countdownElapsed >= store.countdownTime;
 
-    if (!isPlaying) {
+    if (!store.isPlaying) {
       // Initialize timing BEFORE setIsPlaying so both effects use the same start time
-      if (audioContextRef.current) {
-        const currentTime = audioContextRef.current.currentTime;
+      if (audioContext) {
+        const currentTime = audioContext.currentTime;
 
-        if (elapsedTime === 0 && countdownTime === 0) {
-          const totalMinutes = parseInt(timerMinutes) || 0;
-          const totalSeconds = parseInt(timerSeconds) || 0;
+        if (store.elapsedTime === 0 && store.countdownTime === 0) {
+          const totalMinutes = parseInt(store.timerMinutes) || 0;
+          const totalSeconds = parseInt(store.timerSeconds) || 0;
           const totalMs = (totalMinutes * 60 + totalSeconds) * 1000;
 
           if (totalMs > 0) {
-            startCountdown(totalMs);
+            store.startCountdown(totalMs);
           }
           // Fresh start
-          startAudioTimeRef.current = currentTime;
-          nextNoteTimeRef.current = currentTime;
-          schedulerBeatRef.current = 0;
-          updateVisuals(0, 0, 0);
+          startAudioTime = currentTime;
+          nextNoteTime = currentTime;
+          schedulerBeat = 0;
+          store.updateVisuals(0, 0, 0);
         } else if (timerEnded) {
           // Timer ended, restart fresh
-          updateElapsed(0, 0);
-          updateVisuals(0, 0, 0);
-          schedulerBeatRef.current = 0;
-          startAudioTimeRef.current = currentTime;
-          nextNoteTimeRef.current = currentTime;
+          store.updateElapsed(0, 0);
+          store.updateVisuals(0, 0, 0);
+          schedulerBeat = 0;
+          startAudioTime = currentTime;
+          nextNoteTime = currentTime;
         } else {
           // Resume from pause - adjust start time to maintain elapsed time
-          const elapsedSeconds = elapsedTimeRef.current / 1000;
-          startAudioTimeRef.current = currentTime - elapsedSeconds;
+          const elapsedSeconds = elapsedTimeValue / 1000;
+          startAudioTime = currentTime - elapsedSeconds;
 
           // Calculate which beat we're on and when the next beat should occur
-          const secondsPerBeat = 60 / bpmRef.current;
+          const secondsPerBeat = 60 / bpmValue;
           const totalBeats = elapsedSeconds / secondsPerBeat;
           const currentBeatNumber = Math.floor(totalBeats);
 
-          schedulerBeatRef.current =
-            (currentBeatNumber + 1) % beatsPerMeasureRef.current;
+          schedulerBeat = (currentBeatNumber + 1) % beatsPerMeasureValue;
 
           // Next beat should occur at the next whole beat number
           const nextBeatTime =
-            startAudioTimeRef.current +
-            (currentBeatNumber + 1) * secondsPerBeat;
-          nextNoteTimeRef.current = nextBeatTime;
+            startAudioTime + (currentBeatNumber + 1) * secondsPerBeat;
+          nextNoteTime = nextBeatTime;
         }
       }
 
-      setIsPlaying(true);
+      store.setIsPlaying(true);
     } else {
-      setIsPlaying(false);
+      store.setIsPlaying(false);
     }
-  }, [
-    isPlaying,
-    countdownTime,
-    countdownElapsed,
-    elapsedTime,
-    timerMinutes,
-    timerSeconds,
-    startCountdown,
-    updateVisuals,
-    updateElapsed,
-    setIsPlaying,
-  ]);
+  };
 
-  const reset = useCallback(() => {
-    resetPlayback();
-    resetTimer();
-    schedulerBeatRef.current = 0;
-    startAudioTimeRef.current = 0;
+  const reset = () => {
+    store.resetPlayback();
+    store.resetTimer();
+    schedulerBeat = 0;
+    startAudioTime = 0;
 
-    if (schedulerRef.current) {
-      clearInterval(schedulerRef.current);
-      schedulerRef.current = null;
+    if (schedulerInterval) {
+      clearInterval(schedulerInterval);
+      schedulerInterval = null;
     }
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
     }
-  }, [resetPlayback, resetTimer]);
+  };
 
   // Format time as MM:SS.cc (centiseconds)
-  const formatTime = useCallback((ms: number) => {
+  const formatTime = (ms: number) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     const centiseconds = Math.floor((ms % 1000) / 10);
 
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`;
-  }, []);
+  };
 
-  const currentCountdown =
-    countdownTime > 0 ? Math.max(0, countdownTime - countdownElapsed) : 0;
+  const currentCountdown = () =>
+    store.countdownTime > 0
+      ? Math.max(0, store.countdownTime - store.countdownElapsed)
+      : 0;
 
   return (
-    <div className="metronome">
+    <div class="metronome">
       {/* Top controls */}
-      <div className="metronome-controls">
+      <div class="metronome-controls">
         {/* Time signature */}
-        <div className="metronome-control-group">
-          <span className="metronome-label">{t.timeSignature}</span>
+        <div class="metronome-control-group">
+          <span class="metronome-label">{t().timeSignature}</span>
           <input
             type="number"
             min="1"
             max="12"
-            value={beatsPerMeasure}
-            onChange={(e) =>
-              setBeatsPerMeasure(
-                Math.max(1, Math.min(12, parseInt(e.target.value) || 1))
+            value={store.beatsPerMeasure}
+            onInput={(e) =>
+              store.setBeatsPerMeasure(
+                Math.max(
+                  1,
+                  Math.min(
+                    12,
+                    parseInt((e.target as HTMLInputElement).value) || 1
+                  )
+                )
               )
             }
-            className="metronome-input metronome-input--small"
-            disabled={isPlaying}
+            class="metronome-input metronome-input--small"
+            disabled={store.isPlaying}
           />
-          <span className="metronome-divider">/</span>
+          <span class="metronome-divider">/</span>
           <select
-            value={beatUnit}
-            onChange={(e) => setBeatUnit(parseInt(e.target.value))}
-            className="metronome-select"
-            disabled={isPlaying}
+            value={store.beatUnit}
+            onChange={(e) =>
+              store.setBeatUnit(parseInt((e.target as HTMLSelectElement).value))
+            }
+            class="metronome-select"
+            disabled={store.isPlaying}
           >
             <option value="2">2</option>
             <option value="4">4</option>
@@ -491,53 +487,57 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
         </div>
 
         {/* Timer */}
-        <div className="metronome-control-group">
-          <span className="metronome-label">{t.timer}</span>
+        <div class="metronome-control-group">
+          <span class="metronome-label">{t().timer}</span>
           <input
             type="number"
             min="0"
             max="99"
-            value={timerMinutes}
-            onChange={(e) => setTimerMinutes(e.target.value)}
+            value={store.timerMinutes}
+            onInput={(e) =>
+              store.setTimerMinutes((e.target as HTMLInputElement).value)
+            }
             placeholder="0"
-            className="metronome-input metronome-input--small"
-            disabled={isPlaying || elapsedTime > 0}
+            class="metronome-input metronome-input--small"
+            disabled={store.isPlaying || store.elapsedTime > 0}
           />
-          <span className="metronome-unit">{t.minutes}</span>
+          <span class="metronome-unit">{t().minutes}</span>
           <input
             type="number"
             min="0"
             max="59"
-            value={timerSeconds}
-            onChange={(e) => setTimerSeconds(e.target.value)}
+            value={store.timerSeconds}
+            onInput={(e) =>
+              store.setTimerSeconds((e.target as HTMLInputElement).value)
+            }
             placeholder="0"
-            className="metronome-input metronome-input--small"
-            disabled={isPlaying || elapsedTime > 0}
+            class="metronome-input metronome-input--small"
+            disabled={store.isPlaying || store.elapsedTime > 0}
           />
-          <span className="metronome-unit">{t.seconds}</span>
-          <span className="metronome-separator" />
-          <div className="metronome-countdown">
-            <span className="metronome-countdown-label">{t.countdown}</span>
+          <span class="metronome-unit">{t().seconds}</span>
+          <span class="metronome-separator" />
+          <div class="metronome-countdown">
+            <span class="metronome-countdown-label">{t().countdown}</span>
             <span
-              className={`metronome-countdown-value ${countdownTime > 0 ? 'active' : ''}`}
+              class={`metronome-countdown-value ${store.countdownTime > 0 ? 'active' : ''}`}
             >
-              {formatTime(currentCountdown)}
+              {formatTime(currentCountdown())}
             </span>
           </div>
         </div>
       </div>
 
       {/* Main display */}
-      <div className="metronome-main">
+      <div class="metronome-main">
         {/* BPM display */}
-        <div className="metronome-display">
-          <div className="metronome-display-label">{t.bpm}</div>
-          <div className="metronome-display-value">{bpm}</div>
+        <div class="metronome-display">
+          <div class="metronome-display-label">{t().bpm}</div>
+          <div class="metronome-display-value">{store.bpm}</div>
         </div>
 
         {/* Pendulum */}
-        <div className="metronome-pendulum">
-          <svg viewBox="0 0 100 120" className="metronome-pendulum-svg">
+        <div class="metronome-pendulum">
+          <svg viewBox="0 0 100 120" class="metronome-pendulum-svg">
             <rect
               x="15"
               y="112"
@@ -550,14 +550,14 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
               d="M 50 22 L 22 112 L 78 112 Z"
               fill="var(--color-bg-tertiary)"
               stroke="var(--color-border-secondary)"
-              strokeWidth="1.5"
+              stroke-width="1.5"
             />
             <g
               style={{
-                transformOrigin: '50px 108px',
-                transform: `rotate(${pendulumAngle}deg)`,
+                'transform-origin': '50px 108px',
+                transform: `rotate(${store.pendulumAngle}deg)`,
               }}
-              className="metronome-pendulum-arm"
+              class="metronome-pendulum-arm"
             >
               <line
                 x1="50"
@@ -565,8 +565,8 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
                 x2="50"
                 y2="108"
                 stroke="var(--color-text-primary)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
+                stroke-width="1.5"
+                stroke-linecap="round"
               />
               <circle cx="50" cy="55" r="4" fill="var(--color-text-primary)" />
             </g>
@@ -580,80 +580,86 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
         </div>
 
         {/* Volume display */}
-        <div className="metronome-display">
-          <div className="metronome-display-label">{t.volume}</div>
-          <div className="metronome-display-value">{volume}</div>
+        <div class="metronome-display">
+          <div class="metronome-display-label">{t().volume}</div>
+          <div class="metronome-display-value">{store.volume}</div>
         </div>
       </div>
 
       {/* Sliders */}
-      <div className="metronome-sliders">
-        <div className="metronome-slider-group">
+      <div class="metronome-sliders">
+        <div class="metronome-slider-group">
           <input
             type="range"
             min={BPM_RANGE.MIN}
             max={BPM_RANGE.MAX}
-            value={bpm}
-            onChange={(e) => setBpm(parseInt(e.target.value))}
-            className="metronome-slider"
+            value={store.bpm}
+            onInput={(e) =>
+              store.setBpm(parseInt((e.target as HTMLInputElement).value))
+            }
+            class="metronome-slider"
           />
-          <div className="metronome-slider-labels">
-            <span>{t.slow}</span>
-            <span>{t.fast}</span>
+          <div class="metronome-slider-labels">
+            <span>{t().slow}</span>
+            <span>{t().fast}</span>
           </div>
         </div>
 
-        <div className="metronome-slider-group">
+        <div class="metronome-slider-group">
           <input
             type="range"
             min={VOLUME_RANGE.MIN}
             max={VOLUME_RANGE.MAX}
-            value={volume}
-            onChange={(e) => setVolume(parseInt(e.target.value))}
-            className="metronome-slider"
+            value={store.volume}
+            onInput={(e) =>
+              store.setVolume(parseInt((e.target as HTMLInputElement).value))
+            }
+            class="metronome-slider"
           />
-          <div className="metronome-slider-labels">
-            <span>{t.quiet}</span>
-            <span>{t.loud}</span>
+          <div class="metronome-slider-labels">
+            <span>{t().quiet}</span>
+            <span>{t().loud}</span>
           </div>
         </div>
       </div>
 
       {/* Beat visualization */}
-      <div className="metronome-beats">
-        {[...Array(beatsPerMeasure)].map((_, i) => (
-          <div key={i} className="metronome-beat">
-            <NoteIcon
-              unit={beatUnit}
-              isActive={isPlaying && i === beat}
-              isFirstBeat={i === 0}
-            />
-          </div>
-        ))}
+      <div class="metronome-beats">
+        <For each={[...Array(store.beatsPerMeasure).keys()]}>
+          {(i) => (
+            <div class="metronome-beat">
+              <NoteIcon
+                unit={store.beatUnit}
+                isActive={store.isPlaying && i === store.beat}
+                isFirstBeat={i === 0}
+              />
+            </div>
+          )}
+        </For>
       </div>
 
       {/* Info display */}
-      <div className="metronome-info">
-        <div className="metronome-info-item">
-          <div className="metronome-info-label">{t.measure}</div>
-          <div className="metronome-info-value">{measureCount}</div>
+      <div class="metronome-info">
+        <div class="metronome-info-item">
+          <div class="metronome-info-label">{t().measure}</div>
+          <div class="metronome-info-value">{store.measureCount}</div>
         </div>
-        <div className="metronome-info-item">
-          <div className="metronome-info-label">{t.elapsed}</div>
-          <div className="metronome-info-value metronome-info-value--mono">
-            {formatTime(elapsedTime)}
+        <div class="metronome-info-item">
+          <div class="metronome-info-label">{t().elapsed}</div>
+          <div class="metronome-info-value metronome-info-value--mono">
+            {formatTime(store.elapsedTime)}
           </div>
-          <div className="metronome-info-precision">{t.precision}</div>
+          <div class="metronome-info-precision">{t().precision}</div>
         </div>
       </div>
 
       {/* Action buttons */}
-      <div className="metronome-actions">
+      <div class="metronome-actions">
         <button
           onClick={handleStart}
-          className="metronome-btn metronome-btn--primary"
+          class="metronome-btn metronome-btn--primary"
         >
-          {isPlaying ? (
+          {store.isPlaying ? (
             <>
               <svg
                 width="18"
@@ -664,7 +670,7 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
                 <rect x="6" y="4" width="4" height="16" />
                 <rect x="14" y="4" width="4" height="16" />
               </svg>
-              <span>{t.stop}</span>
+              <span>{t().stop}</span>
             </>
           ) : (
             <>
@@ -676,21 +682,18 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
               >
                 <path d="M8 5v14l11-7z" />
               </svg>
-              <span>{t.start}</span>
+              <span>{t().start}</span>
             </>
           )}
         </button>
-        <button
-          onClick={reset}
-          className="metronome-btn metronome-btn--secondary"
-        >
+        <button onClick={reset} class="metronome-btn metronome-btn--secondary">
           <svg
             width="18"
             height="18"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth="2"
+            stroke-width="2"
           >
             <path d="M1 4v6h6" />
             <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
@@ -699,14 +702,12 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       </div>
 
       {/* Sync info */}
-      <div className="metronome-sync">
-        <div className="metronome-sync-title">{t.perfectSync}</div>
-        <div className="metronome-sync-desc">{t.syncDescription}</div>
+      <div class="metronome-sync">
+        <div class="metronome-sync-title">{t().perfectSync}</div>
+        <div class="metronome-sync-desc">{t().syncDescription}</div>
       </div>
     </div>
   );
-});
-
-MetronomePlayer.displayName = 'MetronomePlayer';
+};
 
 export { MetronomePlayer };

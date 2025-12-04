@@ -1,13 +1,13 @@
 import {
   createContext,
   useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  memo,
-} from 'react';
-import type { ReactNode } from 'react';
+  createSignal,
+  createEffect,
+  onMount,
+  type ParentComponent,
+  type Accessor,
+} from 'solid-js';
+import { isServer } from 'solid-js/web';
 import {
   getStorageItem,
   setStorageItem,
@@ -22,78 +22,94 @@ const THEME_STORAGE_KEY = 'theme-preference';
 
 interface ThemeContextValue {
   /** Current theme setting */
-  theme: Theme;
+  theme: Accessor<Theme>;
   /** Set theme preference */
   setTheme: (theme: Theme) => void;
   /** Toggle between light and dark */
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+const ThemeContext = createContext<ThemeContextValue>();
+
+/**
+ * Default theme context value for SSR/prerender fallback
+ */
+const defaultThemeContext: ThemeContextValue = {
+  theme: () => 'dark' as Theme,
+  setTheme: () => {},
+  toggleTheme: () => {},
+};
 
 /**
  * Hook to access theme context
+ * Returns default values during SSR prerendering when provider is not available
  */
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext);
+  // Return default context during SSR prerendering
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    return defaultThemeContext;
   }
   return context;
-}
-
-interface ThemeProviderProps {
-  children: ReactNode;
 }
 
 /**
  * Theme provider component
  * Manages theme state and applies to document
+ *
+ * Hydration-safe: Uses consistent initial value, applies theme after mount
  */
-export const ThemeProvider = memo(function ThemeProvider({
-  children,
-}: ThemeProviderProps) {
-  const isTheme = createEnumValidator(THEMES);
+export const ThemeProvider: ParentComponent = (props) => {
+  // Always use 'dark' as initial value for consistent hydration
+  const [theme, setThemeState] = createSignal<Theme>('dark');
 
-  // Get initial theme from storage or detect system preference
-  const [theme, setThemeState] = useState<Theme>(() => {
+  // Client-side: detect and apply actual theme after mount
+  onMount(() => {
+    const isTheme = createEnumValidator(THEMES);
     const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
       validator: (v): v is Theme => isTheme(v),
     });
-    if (stored) return stored;
-    // Default to system preference on first visit
-    if (typeof window !== 'undefined') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
+
+    let actualTheme: Theme = 'dark';
+    if (stored) {
+      actualTheme = stored;
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      actualTheme = 'light';
     }
-    return 'light';
+
+    setThemeState(actualTheme);
+    document.documentElement.dataset.theme = actualTheme;
   });
 
-  // Apply theme to document
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+  // Apply theme to document when it changes (after initial mount)
+  createEffect(() => {
+    if (!isServer) {
+      document.documentElement.dataset.theme = theme();
+    }
+  });
 
   // Set theme and persist
-  const setTheme = useCallback((newTheme: Theme) => {
+  const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    setStorageItem(THEME_STORAGE_KEY, newTheme);
-  }, []);
+    if (!isServer) {
+      setStorageItem(THEME_STORAGE_KEY, newTheme);
+    }
+  };
 
   // Toggle between light and dark
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }, [theme, setTheme]);
+  const toggleTheme = () => {
+    setTheme(theme() === 'light' ? 'dark' : 'light');
+  };
 
-  const value = useMemo(
-    () => ({ theme, setTheme, toggleTheme }),
-    [theme, setTheme, toggleTheme]
-  );
+  const value: ThemeContextValue = {
+    theme,
+    setTheme,
+    toggleTheme,
+  };
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      {props.children}
+    </ThemeContext.Provider>
   );
-});
-
-ThemeProvider.displayName = 'ThemeProvider';
+};

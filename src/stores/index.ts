@@ -1,6 +1,6 @@
 /**
  * Stores barrel export
- * Central export for all Zustand stores
+ * Central export for all Solid.js stores
  */
 
 // Drum Machine Store

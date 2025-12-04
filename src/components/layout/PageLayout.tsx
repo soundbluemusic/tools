@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from 'react';
+import { type ParentComponent, type JSX, Show } from 'solid-js';
 import { cn } from '../../utils';
 import { Breadcrumb } from '../Breadcrumb';
 import '../../styles/tool-page.css';
@@ -15,12 +15,10 @@ interface PageLayoutProps {
   description?: string;
   /** Breadcrumb items */
   breadcrumb?: BreadcrumbItem[];
-  /** Children content */
-  children: ReactNode;
   /** Additional class names */
-  className?: string;
+  class?: string;
   /** Header actions */
-  actions?: ReactNode;
+  actions?: JSX.Element;
 }
 
 /**
@@ -28,30 +26,27 @@ interface PageLayoutProps {
  * - Includes breadcrumb navigation for better UX
  * - GPU accelerated animations via CSS
  */
-export const PageLayout = memo<PageLayoutProps>(function PageLayout({
-  title,
-  description,
-  breadcrumb,
-  children,
-  className,
-  actions,
-}) {
+export const PageLayout: ParentComponent<PageLayoutProps> = (props) => {
   return (
-    <div className={cn('tool-page', className)}>
+    <div class={cn('tool-page', props.class)}>
       {/* Breadcrumb Navigation */}
-      {breadcrumb && breadcrumb.length > 0 && <Breadcrumb items={breadcrumb} />}
+      <Show when={props.breadcrumb && props.breadcrumb.length > 0}>
+        <Breadcrumb items={props.breadcrumb!} />
+      </Show>
 
-      <header className="tool-header">
-        <div className="tool-header-content">
-          <h1 className="tool-title">{title}</h1>
-          {description && <p className="tool-desc">{description}</p>}
+      <header class="tool-header">
+        <div class="tool-header-content">
+          <h1 class="tool-title">{props.title}</h1>
+          <Show when={props.description}>
+            <p class="tool-desc">{props.description}</p>
+          </Show>
         </div>
-        {actions && <div className="tool-actions">{actions}</div>}
+        <Show when={props.actions}>
+          <div class="tool-actions">{props.actions}</div>
+        </Show>
       </header>
 
-      <div className="tool-content">{children}</div>
+      <div class="tool-content">{props.children}</div>
     </div>
   );
-});
-
-PageLayout.displayName = 'PageLayout';
+};

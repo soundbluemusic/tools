@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { createEffect, onCleanup } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { BRAND } from '../constants';
 
 interface SEOConfig {
@@ -24,6 +25,8 @@ function updateMetaTag(
   key: string,
   content: string
 ): void {
+  if (isServer || typeof document === 'undefined') return;
+
   let element = document.querySelector(
     `meta[${attribute}="${key}"]`
   ) as HTMLMetaElement | null;
@@ -41,6 +44,8 @@ function updateMetaTag(
  * Update canonical link
  */
 function updateCanonicalLink(url: string): void {
+  if (isServer || typeof document === 'undefined') return;
+
   let link = document.querySelector(
     'link[rel="canonical"]'
   ) as HTMLLinkElement | null;
@@ -57,20 +62,25 @@ function updateCanonicalLink(url: string): void {
 /**
  * Custom hook for SEO optimization
  * Updates document title and meta tags dynamically for each page
+ *
+ * Hydration-safe: Only runs on client
  */
 export function useSEO(config: SEOConfig): void {
-  const {
-    title,
-    description,
-    keywords,
-    canonicalPath = '',
-    ogImage = DEFAULT_OG_IMAGE,
-    ogType = 'website',
-    noindex = false,
-    isHomePage = false,
-  } = config;
+  createEffect(() => {
+    // Skip during SSR
+    if (isServer || typeof document === 'undefined') return;
 
-  useEffect(() => {
+    const {
+      title,
+      description,
+      keywords,
+      canonicalPath = '',
+      ogImage = DEFAULT_OG_IMAGE,
+      ogType = 'website',
+      noindex = false,
+      isHomePage = false,
+    } = config;
+
     const fullTitle = isHomePage ? SITE_NAME : `${title} | ${SITE_NAME}`;
     const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
@@ -109,16 +119,7 @@ export function useSEO(config: SEOConfig): void {
     updateMetaTag('name', 'twitter:description', description);
     updateMetaTag('name', 'twitter:url', canonicalUrl);
     updateMetaTag('name', 'twitter:image', ogImage);
-  }, [
-    title,
-    description,
-    keywords,
-    canonicalPath,
-    ogImage,
-    ogType,
-    noindex,
-    isHomePage,
-  ]);
+  });
 }
 
 export default useSEO;

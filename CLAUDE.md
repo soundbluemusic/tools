@@ -27,7 +27,7 @@
 | Routing      | React Router DOM               | ^7.9.6  |
 | Language     | TypeScript                     | ^5.5.3  |
 | Build Tool   | Vite                           | ^7.2.6  |
-| WASM         | AssemblyScript                 | ^0.27.36 |
+| WASM         | AssemblyScript                 | ^0.28.9 |
 | Unit Testing | Vitest + React Testing Library | ^4.0.14 |
 | E2E Testing  | Playwright                     | ^1.48.0 |
 | Linting      | ESLint                         | ^9.9.0  |
