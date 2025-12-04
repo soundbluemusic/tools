@@ -1,6 +1,5 @@
-import { createMemo, type Accessor } from 'solid-js';
+import { createMemo, createSignal, onMount } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { useLocation } from '@solidjs/router';
 import { getBasePath } from './useLocalizedPath';
 
 /**
@@ -12,28 +11,31 @@ const KOREAN_PREFIX = '/ko';
  * Hook for checking if a path is active in navigation
  * Handles both base paths and Korean prefixed paths (/ko/*)
  * Consolidates duplicate isActive logic from Sidebar and BottomNav
- * SSR-safe: returns default values during prerendering
+ *
+ * Hydration-safe: returns consistent default values, updates after mount
  */
 export function useIsActive() {
-  // SSR fallback
-  if (isServer) {
-    return {
-      isActive: () => false,
-      pathname: () => '/',
-      basePath: () => '/',
-    };
-  }
+  // Use consistent default values for SSR and initial client render
+  const [pathname, setPathname] = createSignal('/');
 
-  const location = useLocation();
+  // Update pathname after mount (client-only)
+  onMount(() => {
+    setPathname(window.location.pathname);
+  });
 
   // Get base path without language prefix
-  const basePath = createMemo(() => getBasePath(location.pathname));
+  const basePath = createMemo(() => getBasePath(pathname()));
 
   const isActive = (path: string): boolean => {
+    // On server, always return false for consistent hydration
+    if (isServer) return false;
+
     const currentBasePath = basePath();
+    const currentPathname = pathname();
+
     // Compare against base path (without language prefix)
     if (path === '/') {
-      return currentBasePath === '/' || location.pathname === KOREAN_PREFIX;
+      return currentBasePath === '/' || currentPathname === KOREAN_PREFIX;
     }
     // Exact match or match with trailing content that starts with /
     // This prevents /drum from matching /drum-synth
@@ -42,7 +44,7 @@ export function useIsActive() {
 
   return {
     isActive,
-    pathname: () => location.pathname,
+    pathname,
     basePath,
   };
 }

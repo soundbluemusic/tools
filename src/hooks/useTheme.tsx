@@ -3,10 +3,11 @@ import {
   useContext,
   createSignal,
   createEffect,
-  createMemo,
+  onMount,
   type ParentComponent,
   type Accessor,
 } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import {
   getStorageItem,
   setStorageItem,
@@ -53,40 +54,46 @@ export function useTheme(): ThemeContextValue {
 }
 
 /**
- * Get initial theme from storage or system preference
- */
-function getInitialTheme(): Theme {
-  const isTheme = createEnumValidator(THEMES);
-  const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
-    validator: (v): v is Theme => isTheme(v),
-  });
-  if (stored) return stored;
-
-  // Default to system preference on first visit
-  if (typeof window !== 'undefined') {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
-  }
-  return 'light';
-}
-
-/**
  * Theme provider component
  * Manages theme state and applies to document
+ *
+ * Hydration-safe: Uses consistent initial value, applies theme after mount
  */
 export const ThemeProvider: ParentComponent = (props) => {
-  const [theme, setThemeState] = createSignal<Theme>(getInitialTheme());
+  // Always use 'dark' as initial value for consistent hydration
+  const [theme, setThemeState] = createSignal<Theme>('dark');
 
-  // Apply theme to document
+  // Client-side: detect and apply actual theme after mount
+  onMount(() => {
+    const isTheme = createEnumValidator(THEMES);
+    const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
+      validator: (v): v is Theme => isTheme(v),
+    });
+
+    let actualTheme: Theme = 'dark';
+    if (stored) {
+      actualTheme = stored;
+    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+      actualTheme = 'light';
+    }
+
+    setThemeState(actualTheme);
+    document.documentElement.dataset.theme = actualTheme;
+  });
+
+  // Apply theme to document when it changes (after initial mount)
   createEffect(() => {
-    document.documentElement.dataset.theme = theme();
+    if (!isServer) {
+      document.documentElement.dataset.theme = theme();
+    }
   });
 
   // Set theme and persist
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    setStorageItem(THEME_STORAGE_KEY, newTheme);
+    if (!isServer) {
+      setStorageItem(THEME_STORAGE_KEY, newTheme);
+    }
   };
 
   // Toggle between light and dark
@@ -94,14 +101,14 @@ export const ThemeProvider: ParentComponent = (props) => {
     setTheme(theme() === 'light' ? 'dark' : 'light');
   };
 
-  const value = createMemo(() => ({
+  const value: ThemeContextValue = {
     theme,
     setTheme,
     toggleTheme,
-  }));
+  };
 
   return (
-    <ThemeContext.Provider value={value()}>
+    <ThemeContext.Provider value={value}>
       {props.children}
     </ThemeContext.Provider>
   );
