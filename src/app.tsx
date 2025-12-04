@@ -27,25 +27,6 @@ const structuredData = {
 };
 
 /**
- * App Content with Navigation
- */
-function AppContent() {
-  const { apps } = useApps();
-
-  return (
-    <NavigationLayout apps={apps}>
-      <SkipLink />
-      <main id="main-content" class="main-content" role="main">
-        <Suspense fallback={<div class="page-loader"><Loader /></div>}>
-          <FileRoutes />
-        </Suspense>
-      </main>
-      <Footer />
-    </NavigationLayout>
-  );
-}
-
-/**
  * Error Fallback Component
  */
 function ErrorFallback(err: Error, reset: () => void) {
@@ -64,7 +45,7 @@ function ErrorFallback(err: Error, reset: () => void) {
         <button onClick={reset} class="error-link">
           다시 시도
         </button>
-        <a href="/" class="error-link" style={{ "margin-left": "1rem" }}>
+        <a href="/" class="error-link" style={{ 'margin-left': '1rem' }}>
           홈으로 돌아가기
         </a>
       </div>
@@ -76,6 +57,8 @@ function ErrorFallback(err: Error, reset: () => void) {
  * Root App Component
  */
 export default function App() {
+  const { apps } = useApps();
+
   return (
     <Router
       root={(props) => (
@@ -108,7 +91,10 @@ export default function App() {
           />
           <Meta property="og:type" content="website" />
           <Meta property="og:url" content="https://tools.soundbluemusic.com/" />
-          <Meta property="og:title" content="Tools - Open Source Productivity Tools" />
+          <Meta
+            property="og:title"
+            content="Tools - Open Source Productivity Tools"
+          />
           <Meta
             property="og:description"
             content="무료 온라인 도구 모음. QR 코드 생성기, 정밀 메트로놈 등 유용한 도구를 무료로 사용하세요."
@@ -118,7 +104,10 @@ export default function App() {
             content="https://tools.soundbluemusic.com/og-image.png"
           />
           <Meta name="twitter:card" content="summary_large_image" />
-          <Meta name="twitter:title" content="Tools - Open Source Productivity Tools" />
+          <Meta
+            name="twitter:title"
+            content="Tools - Open Source Productivity Tools"
+          />
           <Meta
             name="twitter:description"
             content="무료 온라인 도구 모음. QR 코드 생성기, 정밀 메트로놈 등 유용한 도구를 무료로 사용하세요."
@@ -154,14 +143,28 @@ export default function App() {
           <ThemeProvider>
             <LanguageProvider>
               <ErrorBoundary fallback={ErrorFallback}>
-                {props.children}
+                <NavigationLayout apps={apps}>
+                  <SkipLink />
+                  <main id="main-content" class="main-content" role="main">
+                    <Suspense
+                      fallback={
+                        <div class="page-loader">
+                          <Loader />
+                        </div>
+                      }
+                    >
+                      {props.children}
+                    </Suspense>
+                  </main>
+                  <Footer />
+                </NavigationLayout>
               </ErrorBoundary>
             </LanguageProvider>
           </ThemeProvider>
         </MetaProvider>
       )}
     >
-      <AppContent />
+      <FileRoutes />
     </Router>
   );
 }

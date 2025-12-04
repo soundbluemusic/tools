@@ -107,9 +107,6 @@ export const LanguageProvider: ParentComponent = (props) => {
   // Client will update after mount based on URL
   const [language, setLanguageState] = createSignal<Language>('ko');
 
-  // Get navigate function only on client (for use in callbacks)
-  const navigate = isServer ? null : useNavigate();
-
   // Client-side: sync language with URL after mount
   onMount(() => {
     const urlLanguage = getLanguageFromPath(window.location.pathname);
@@ -134,7 +131,15 @@ export const LanguageProvider: ParentComponent = (props) => {
           ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` ||
             KOREAN_PREFIX
           : basePath;
-      navigate?.(newPath, { replace: true });
+
+      // Get navigate function only when needed (inside callback)
+      try {
+        const navigate = useNavigate();
+        navigate(newPath, { replace: true });
+      } catch {
+        // Fallback: use window.location if Router context not available
+        window.location.href = newPath;
+      }
     }
   };
 
