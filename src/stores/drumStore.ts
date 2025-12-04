@@ -1,10 +1,9 @@
 /**
  * Drum Machine Store
- * Zustand store for drum machine state management
+ * Solid.js store for drum machine state management
  */
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { devtools } from './middleware';
+import { createStore, produce } from 'solid-js/store';
+import { createRoot } from 'solid-js';
 import type {
   Instrument,
   InstrumentVolumes,
@@ -93,6 +92,12 @@ interface DrumActions {
 export type DrumStore = DrumState & DrumActions;
 
 // ============================================
+// Constants
+// ============================================
+
+const STORAGE_KEY = 'drum-machine-storage';
+
+// ============================================
 // Initial State
 // ============================================
 
@@ -112,235 +117,262 @@ const initialState: DrumState = {
 };
 
 // ============================================
-// Store
+// Persistence Helpers
 // ============================================
 
-export const useDrumStore = create<DrumStore>()(
-  devtools(
-    persist(
-      (set) => ({
-        ...initialState,
+function loadPersistedState(): Partial<DrumState> {
+  if (typeof window === 'undefined') return {};
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return {
+        loops: parsed.loops ?? initialState.loops,
+        loopIds: parsed.loopIds ?? initialState.loopIds,
+        nextLoopId: parsed.nextLoopId ?? initialState.nextLoopId,
+        tempo: parsed.tempo ?? initialState.tempo,
+        volumes: parsed.volumes ?? initialState.volumes,
+      };
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return {};
+}
 
-        // Pattern actions
-        setLoops: (loops) => set({ loops }, false, 'setLoops'),
+function persistState(state: DrumState): void {
+  if (typeof window === 'undefined') return;
+  try {
+    const toStore = {
+      loops: state.loops,
+      loopIds: state.loopIds,
+      nextLoopId: state.nextLoopId,
+      tempo: state.tempo,
+      volumes: state.volumes,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(toStore));
+  } catch {
+    // Ignore storage errors
+  }
+}
 
-        updatePattern: (loopIndex, pattern) =>
-          set(
-            (state) => {
-              const newLoops = [...state.loops];
-              newLoops[loopIndex] = pattern;
-              return { loops: newLoops };
-            },
-            false,
-            'updatePattern'
-          ),
+// ============================================
+// Store Creation
+// ============================================
 
-        toggleStep: (loopIndex, instrument, step) =>
-          set(
-            (state) => {
-              const newLoops = [...state.loops];
-              const pattern = copyPattern(newLoops[loopIndex]);
-              pattern[instrument][step] =
-                pattern[instrument][step] > 0 ? 0 : 100;
-              newLoops[loopIndex] = pattern;
-              return { loops: newLoops };
-            },
-            false,
-            'toggleStep'
-          ),
+function createDrumStore(): DrumStore {
+  const persistedState = loadPersistedState();
+  const [state, setState] = createStore<DrumState>({
+    ...initialState,
+    ...persistedState,
+  });
 
-        setStepVelocity: (loopIndex, instrument, step, velocity) =>
-          set(
-            (state) => {
-              const newLoops = [...state.loops];
-              const pattern = copyPattern(newLoops[loopIndex]);
-              pattern[instrument][step] = velocity;
-              newLoops[loopIndex] = pattern;
-              return { loops: newLoops };
-            },
-            false,
-            'setStepVelocity'
-          ),
+  let statusTimeout: ReturnType<typeof setTimeout> | null = null;
 
-        addLoop: () =>
-          set(
-            (state) => {
-              if (state.loops.length >= 8) return state;
-              return {
-                loops: [...state.loops, createEmptyPattern()],
-                loopIds: [...state.loopIds, state.nextLoopId],
-                nextLoopId: state.nextLoopId + 1,
-              };
-            },
-            false,
-            'addLoop'
-          ),
+  const actions: DrumActions = {
+    // Pattern actions
+    setLoops: (loops) => {
+      setState('loops', loops);
+      persistState(state);
+    },
 
-        removeLoop: (index) =>
-          set(
-            (state) => {
-              if (state.loops.length <= 1) return state;
-              const newLoops = state.loops.filter((_, i) => i !== index);
-              const newLoopIds = state.loopIds.filter((_, i) => i !== index);
-              const newCurrentIndex = Math.min(
-                state.currentLoopIndex,
-                newLoops.length - 1
-              );
-              const newPlayingIndex = Math.min(
-                state.playingLoopIndex,
-                newLoops.length - 1
-              );
-              return {
-                loops: newLoops,
-                loopIds: newLoopIds,
-                currentLoopIndex: newCurrentIndex,
-                playingLoopIndex: newPlayingIndex,
-              };
-            },
-            false,
-            'removeLoop'
-          ),
+    updatePattern: (loopIndex, pattern) => {
+      setState('loops', loopIndex, pattern);
+      persistState(state);
+    },
 
-        copyLoop: (sourceIndex) =>
-          set(
-            (state) => {
-              if (state.loops.length >= 8) return state;
-              const copiedPattern = copyPattern(state.loops[sourceIndex]);
-              return {
-                loops: [...state.loops, copiedPattern],
-                loopIds: [...state.loopIds, state.nextLoopId],
-                nextLoopId: state.nextLoopId + 1,
-              };
-            },
-            false,
-            'copyLoop'
-          ),
+    toggleStep: (loopIndex, instrument, step) => {
+      setState(
+        produce((s) => {
+          const pattern = copyPattern(s.loops[loopIndex]);
+          pattern[instrument][step] = pattern[instrument][step] > 0 ? 0 : 100;
+          s.loops[loopIndex] = pattern;
+        })
+      );
+      persistState(state);
+    },
 
-        clearPattern: (loopIndex) =>
-          set(
-            (state) => {
-              const newLoops = [...state.loops];
-              newLoops[loopIndex] = createEmptyPattern();
-              return { loops: newLoops };
-            },
-            false,
-            'clearPattern'
-          ),
+    setStepVelocity: (loopIndex, instrument, step, velocity) => {
+      setState(
+        produce((s) => {
+          const pattern = copyPattern(s.loops[loopIndex]);
+          pattern[instrument][step] = velocity;
+          s.loops[loopIndex] = pattern;
+        })
+      );
+      persistState(state);
+    },
 
-        loadPreset: (loopIndex, preset) =>
-          set(
-            (state) => {
-              const newLoops = [...state.loops];
-              newLoops[loopIndex] = copyPattern(preset);
-              return { loops: newLoops };
-            },
-            false,
-            'loadPreset'
-          ),
+    addLoop: () => {
+      setState(
+        produce((s) => {
+          if (s.loops.length >= 8) return;
+          s.loops.push(createEmptyPattern());
+          s.loopIds.push(s.nextLoopId);
+          s.nextLoopId += 1;
+        })
+      );
+      persistState(state);
+    },
 
-        reorderLoops: (fromIndex, toIndex) =>
-          set(
-            (state) => {
-              const newLoops = [...state.loops];
-              const newLoopIds = [...state.loopIds];
-              const [movedLoop] = newLoops.splice(fromIndex, 1);
-              const [movedId] = newLoopIds.splice(fromIndex, 1);
-              newLoops.splice(toIndex, 0, movedLoop);
-              newLoopIds.splice(toIndex, 0, movedId);
+    removeLoop: (index) => {
+      setState(
+        produce((s) => {
+          if (s.loops.length <= 1) return;
+          s.loops.splice(index, 1);
+          s.loopIds.splice(index, 1);
+          s.currentLoopIndex = Math.min(s.currentLoopIndex, s.loops.length - 1);
+          s.playingLoopIndex = Math.min(s.playingLoopIndex, s.loops.length - 1);
+        })
+      );
+      persistState(state);
+    },
 
-              let newCurrentIndex = state.currentLoopIndex;
-              if (state.currentLoopIndex === fromIndex) {
-                newCurrentIndex = toIndex;
-              } else if (
-                fromIndex < state.currentLoopIndex &&
-                toIndex >= state.currentLoopIndex
-              ) {
-                newCurrentIndex = state.currentLoopIndex - 1;
-              } else if (
-                fromIndex > state.currentLoopIndex &&
-                toIndex <= state.currentLoopIndex
-              ) {
-                newCurrentIndex = state.currentLoopIndex + 1;
-              }
+    copyLoop: (sourceIndex) => {
+      setState(
+        produce((s) => {
+          if (s.loops.length >= 8) return;
+          const copiedPattern = copyPattern(s.loops[sourceIndex]);
+          s.loops.push(copiedPattern);
+          s.loopIds.push(s.nextLoopId);
+          s.nextLoopId += 1;
+        })
+      );
+      persistState(state);
+    },
 
-              return {
-                loops: newLoops,
-                loopIds: newLoopIds,
-                currentLoopIndex: newCurrentIndex,
-              };
-            },
-            false,
-            'reorderLoops'
-          ),
+    clearPattern: (loopIndex) => {
+      setState('loops', loopIndex, createEmptyPattern());
+      persistState(state);
+    },
 
-        // Playback actions
-        setIsPlaying: (isPlaying) => set({ isPlaying }, false, 'setIsPlaying'),
+    loadPreset: (loopIndex, preset) => {
+      setState('loops', loopIndex, copyPattern(preset));
+      persistState(state);
+    },
 
-        setCurrentStep: (step) =>
-          set({ currentStep: step }, false, 'setCurrentStep'),
+    reorderLoops: (fromIndex, toIndex) => {
+      setState(
+        produce((s) => {
+          const [movedLoop] = s.loops.splice(fromIndex, 1);
+          const [movedId] = s.loopIds.splice(fromIndex, 1);
+          s.loops.splice(toIndex, 0, movedLoop);
+          s.loopIds.splice(toIndex, 0, movedId);
 
-        setPlayingLoopIndex: (index) =>
-          set({ playingLoopIndex: index }, false, 'setPlayingLoopIndex'),
+          if (s.currentLoopIndex === fromIndex) {
+            s.currentLoopIndex = toIndex;
+          } else if (
+            fromIndex < s.currentLoopIndex &&
+            toIndex >= s.currentLoopIndex
+          ) {
+            s.currentLoopIndex -= 1;
+          } else if (
+            fromIndex > s.currentLoopIndex &&
+            toIndex <= s.currentLoopIndex
+          ) {
+            s.currentLoopIndex += 1;
+          }
+        })
+      );
+      persistState(state);
+    },
 
-        setCurrentLoopIndex: (index) =>
-          set({ currentLoopIndex: index }, false, 'setCurrentLoopIndex'),
+    // Playback actions
+    setIsPlaying: (isPlaying) => {
+      setState('isPlaying', isPlaying);
+    },
 
-        setTempo: (tempo) => set({ tempo }, false, 'setTempo'),
+    setCurrentStep: (step) => {
+      setState('currentStep', step);
+    },
 
-        stop: () =>
-          set(
-            { isPlaying: false, currentStep: 0, playingLoopIndex: 0 },
-            false,
-            'stop'
-          ),
+    setPlayingLoopIndex: (index) => {
+      setState('playingLoopIndex', index);
+    },
 
-        // Audio actions
-        setVolume: (instrument, volume) =>
-          set(
-            (state) => ({
-              volumes: { ...state.volumes, [instrument]: volume },
-            }),
-            false,
-            'setVolume'
-          ),
+    setCurrentLoopIndex: (index) => {
+      setState('currentLoopIndex', index);
+    },
 
-        setVolumes: (volumes) => set({ volumes }, false, 'setVolumes'),
+    setTempo: (tempo) => {
+      setState('tempo', tempo);
+      persistState(state);
+    },
 
-        // UI actions
-        setStatusMessage: (message) =>
-          set({ statusMessage: message }, false, 'setStatusMessage'),
+    stop: () => {
+      setState(
+        produce((s) => {
+          s.isPlaying = false;
+          s.currentStep = 0;
+          s.playingLoopIndex = 0;
+        })
+      );
+    },
 
-        showStatus: (text, type) => {
-          set({ statusMessage: { text, type } }, false, 'showStatus');
-          setTimeout(() => {
-            set({ statusMessage: null }, false, 'clearStatus');
-          }, 3000);
-        },
+    // Audio actions
+    setVolume: (instrument, volume) => {
+      setState('volumes', instrument, volume);
+      persistState(state);
+    },
 
-        setDragLoopIndex: (index) =>
-          set({ dragLoopIndex: index }, false, 'setDragLoopIndex'),
+    setVolumes: (volumes) => {
+      setState('volumes', volumes);
+      persistState(state);
+    },
 
-        setDragOverLoopIndex: (index) =>
-          set({ dragOverLoopIndex: index }, false, 'setDragOverLoopIndex'),
+    // UI actions
+    setStatusMessage: (message) => {
+      setState('statusMessage', message);
+    },
 
-        // Reset
-        reset: () => set(initialState, false, 'reset'),
-      }),
-      {
-        name: 'drum-machine-storage',
-        partialize: (state) => ({
-          // Only persist these fields
-          loops: state.loops,
-          loopIds: state.loopIds,
-          nextLoopId: state.nextLoopId,
-          tempo: state.tempo,
-          volumes: state.volumes,
-        }),
+    showStatus: (text, type) => {
+      if (statusTimeout) {
+        clearTimeout(statusTimeout);
       }
-    ),
-    { name: 'DrumStore' }
-  )
-);
+      setState('statusMessage', { text, type });
+      statusTimeout = setTimeout(() => {
+        setState('statusMessage', null);
+      }, 3000);
+    },
+
+    setDragLoopIndex: (index) => {
+      setState('dragLoopIndex', index);
+    },
+
+    setDragOverLoopIndex: (index) => {
+      setState('dragOverLoopIndex', index);
+    },
+
+    // Reset
+    reset: () => {
+      setState({ ...initialState, loops: [createEmptyPattern()] });
+      persistState(state);
+    },
+  };
+
+  // Return merged state and actions
+  return new Proxy({} as DrumStore, {
+    get(_, prop: string) {
+      if (prop in actions) {
+        return actions[prop as keyof DrumActions];
+      }
+      return state[prop as keyof DrumState];
+    },
+  });
+}
+
+// ============================================
+// Singleton Store
+// ============================================
+
+let storeInstance: DrumStore | null = null;
+
+export function useDrumStore(): DrumStore {
+  if (!storeInstance) {
+    storeInstance = createRoot(() => createDrumStore());
+  }
+  return storeInstance;
+}
 
 // ============================================
 // Selectors (for optimized re-renders)

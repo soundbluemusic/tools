@@ -1,9 +1,9 @@
 /**
  * Audio Store
- * Shared audio context and settings management
+ * Solid.js store for shared audio context and settings management
  */
-import { create } from 'zustand';
-import { devtools } from './middleware';
+import { createStore, produce } from 'solid-js/store';
+import { createRoot } from 'solid-js';
 
 // ============================================
 // Types
@@ -46,34 +46,62 @@ const initialState: AudioState = {
 };
 
 // ============================================
-// Store
+// Store Creation
 // ============================================
 
-export const useAudioStore = create<AudioStore>()(
-  devtools(
-    (set) => ({
-      ...initialState,
+function createAudioStore(): AudioStore {
+  const [state, setState] = createStore<AudioState>({ ...initialState });
 
-      setMasterVolume: (volume) =>
-        set({ masterVolume: volume }, false, 'setMasterVolume'),
+  const actions: AudioActions = {
+    setMasterVolume: (volume) => {
+      setState('masterVolume', volume);
+    },
 
-      toggleMute: () =>
-        set((state) => ({ isMuted: !state.isMuted }), false, 'toggleMute'),
+    toggleMute: () => {
+      setState('isMuted', (prev) => !prev);
+    },
 
-      setMuted: (muted) => set({ isMuted: muted }, false, 'setMuted'),
+    setMuted: (muted) => {
+      setState('isMuted', muted);
+    },
 
-      setAudioContextReady: (ready, sampleRate) =>
-        set(
-          { isAudioContextReady: ready, sampleRate: sampleRate ?? null },
-          false,
-          'setAudioContextReady'
-        ),
+    setAudioContextReady: (ready, sampleRate) => {
+      setState(
+        produce((s) => {
+          s.isAudioContextReady = ready;
+          s.sampleRate = sampleRate ?? null;
+        })
+      );
+    },
 
-      reset: () => set(initialState, false, 'reset'),
-    }),
-    { name: 'AudioStore' }
-  )
-);
+    reset: () => {
+      setState(initialState);
+    },
+  };
+
+  // Return merged state and actions
+  return new Proxy({} as AudioStore, {
+    get(_, prop: string) {
+      if (prop in actions) {
+        return actions[prop as keyof AudioActions];
+      }
+      return state[prop as keyof AudioState];
+    },
+  });
+}
+
+// ============================================
+// Singleton Store
+// ============================================
+
+let storeInstance: AudioStore | null = null;
+
+export function useAudioStore(): AudioStore {
+  if (!storeInstance) {
+    storeInstance = createRoot(() => createAudioStore());
+  }
+  return storeInstance;
+}
 
 // ============================================
 // Selectors
