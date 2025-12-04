@@ -31,12 +31,23 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue>();
 
 /**
+ * Default theme context value for SSR/prerender fallback
+ */
+const defaultThemeContext: ThemeContextValue = {
+  theme: () => 'dark' as Theme,
+  setTheme: () => {},
+  toggleTheme: () => {},
+};
+
+/**
  * Hook to access theme context
+ * Returns default values during SSR prerendering when provider is not available
  */
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext);
+  // Return default context during SSR prerendering
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    return defaultThemeContext;
   }
   return context;
 }

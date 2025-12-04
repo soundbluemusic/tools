@@ -1,5 +1,5 @@
 import { Show, type Component } from 'solid-js';
-import { A } from '@solidjs/router';
+import { Link } from '../../components/ui';
 import { useLanguage } from '../../i18n';
 import { useIsActive, useLocalizedPath } from '../../hooks';
 import { MUSIC_APP_PATHS } from '../../constants/apps';
@@ -25,7 +25,8 @@ export const BottomNav: Component<BottomNavProps> = (props) => {
   const isOpen = () => props.isOpen ?? true;
   const getPath = (path: string) => toLocalizedPath(path);
 
-  const isMusicActive = () => MUSIC_APP_PATHS.some((p) => basePath().startsWith(p));
+  const isMusicActive = () =>
+    MUSIC_APP_PATHS.some((p) => basePath().startsWith(p));
 
   return (
     <nav class={`bottom-nav${isOpen() ? '' : ' collapsed'}`}>
@@ -64,17 +65,25 @@ export const BottomNav: Component<BottomNavProps> = (props) => {
             <Show
               when={isOpen()}
               fallback={
-                <path stroke-width="2" stroke-linecap="round" d="M5 15l7-7 7 7" />
+                <path
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  d="M5 15l7-7 7 7"
+                />
               }
             >
-              <path stroke-width="2" stroke-linecap="round" d="M19 9l-7 7-7-7" />
+              <path
+                stroke-width="2"
+                stroke-linecap="round"
+                d="M19 9l-7 7-7-7"
+              />
             </Show>
           </svg>
         </button>
       </Show>
 
       {/* Home */}
-      <A
+      <Link
         href={getPath('/')}
         class={`bottom-nav-item ${isActive('/') ? 'active' : ''}`}
       >
@@ -91,10 +100,10 @@ export const BottomNav: Component<BottomNavProps> = (props) => {
         <span class="bottom-nav-label">
           {language() === 'ko' ? '홈' : 'Home'}
         </span>
-      </A>
+      </Link>
 
       {/* Music Tools */}
-      <A
+      <Link
         href={getPath('/metronome')}
         class={`bottom-nav-item ${isMusicActive() ? 'active' : ''}`}
       >
@@ -111,10 +120,10 @@ export const BottomNav: Component<BottomNavProps> = (props) => {
         <span class="bottom-nav-label">
           {language() === 'ko' ? '음악' : 'Music'}
         </span>
-      </A>
+      </Link>
 
       {/* QR Code */}
-      <A
+      <Link
         href={getPath('/qr')}
         class={`bottom-nav-item ${isActive('/qr') ? 'active' : ''}`}
       >
@@ -122,10 +131,10 @@ export const BottomNav: Component<BottomNavProps> = (props) => {
           <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13 2h-2v2h2v2h-4v-4h2v-2h-2v-2h4v4zm0 4h2v-2h-2v2zm-4-4h2v-2h-2v2z" />
         </svg>
         <span class="bottom-nav-label">QR</span>
-      </A>
+      </Link>
 
       {/* More / Menu */}
-      <A
+      <Link
         href={getPath('/sitemap')}
         class={`bottom-nav-item ${isActive('/sitemap') ? 'active' : ''}`}
       >
@@ -135,7 +144,7 @@ export const BottomNav: Component<BottomNavProps> = (props) => {
         <span class="bottom-nav-label">
           {language() === 'ko' ? '메뉴' : 'Menu'}
         </span>
-      </A>
+      </Link>
     </nav>
   );
 };

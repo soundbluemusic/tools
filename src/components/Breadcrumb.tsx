@@ -1,5 +1,5 @@
 import { type Component, For, Show } from 'solid-js';
-import { A } from '@solidjs/router';
+import { Link } from './ui';
 import { useLanguage } from '../i18n';
 import { useLocalizedPath } from '../hooks';
 import './Breadcrumb.css';
@@ -41,7 +41,7 @@ export const Breadcrumb: Component<BreadcrumbProps> = (props) => {
                     </span>
                   }
                 >
-                  <A href={getPath(item.href!)} class="breadcrumb-link">
+                  <Link href={getPath(item.href!)} class="breadcrumb-link">
                     <Show when={index() === 0}>
                       <svg
                         class="breadcrumb-home-icon"
@@ -54,7 +54,7 @@ export const Breadcrumb: Component<BreadcrumbProps> = (props) => {
                       </svg>
                     </Show>
                     <span>{label()}</span>
-                  </A>
+                  </Link>
                   <svg
                     class="breadcrumb-separator"
                     fill="none"

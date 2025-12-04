@@ -4,9 +4,11 @@ import {
   createSignal,
   createEffect,
   createMemo,
+  onMount,
   type ParentComponent,
   type Accessor,
 } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { useLocation, useNavigate } from '@solidjs/router';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
@@ -136,48 +138,71 @@ const getInitialLanguage = (): Language => {
  * Syncs language with URL path for SEO
  */
 export const LanguageProvider: ParentComponent = (props) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [language, setLanguageState] = createSignal<Language>(getInitialLanguage());
+  const [language, setLanguageState] = createSignal<Language>(
+    isServer ? 'ko' : getInitialLanguage()
+  );
 
-  // Sync language state with URL on navigation
-  createEffect(() => {
-    const urlLanguage = getLanguageFromPath(location.pathname);
-    if (urlLanguage !== language()) {
-      setLanguageState(urlLanguage);
-      setStorageItem(LANGUAGE_STORAGE_KEY, urlLanguage);
-    }
-  });
+  // Client-side only: use router hooks
+  if (!isServer) {
+    const location = useLocation();
+    const navigate = useNavigate();
 
-  // Save language preference to localStorage and navigate to new URL
-  const setLanguage = (lang: Language) => {
-    if (lang === language()) return;
+    // Sync language state with URL on navigation
+    createEffect(() => {
+      const urlLanguage = getLanguageFromPath(location.pathname);
+      if (urlLanguage !== language()) {
+        setLanguageState(urlLanguage);
+        setStorageItem(LANGUAGE_STORAGE_KEY, urlLanguage);
+      }
+    });
 
-    setLanguageState(lang);
-    setStorageItem(LANGUAGE_STORAGE_KEY, lang);
+    // Save language preference to localStorage and navigate to new URL
+    const setLanguage = (lang: Language) => {
+      if (lang === language()) return;
 
-    // Navigate to the same page with new language prefix
-    const basePath = getBasePath(location.pathname);
-    const newPath =
-      lang === 'ko'
-        ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` || KOREAN_PREFIX
-        : basePath;
-    navigate(newPath, { replace: true });
-  };
+      setLanguageState(lang);
+      setStorageItem(LANGUAGE_STORAGE_KEY, lang);
 
-  // Toggle between languages with URL update
-  const toggleLanguage = () => {
-    const newLang = language() === 'ko' ? 'en' : 'ko';
-    setLanguage(newLang);
-  };
+      // Navigate to the same page with new language prefix
+      const basePath = getBasePath(location.pathname);
+      const newPath =
+        lang === 'ko'
+          ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` ||
+            KOREAN_PREFIX
+          : basePath;
+      navigate(newPath, { replace: true });
+    };
 
-  // Current translations based on language
+    // Toggle between languages with URL update
+    const toggleLanguage = () => {
+      const newLang = language() === 'ko' ? 'en' : 'ko';
+      setLanguage(newLang);
+    };
+
+    // Current translations based on language
+    const t = createMemo(() => allTranslations[language()]);
+
+    const value = createMemo<LanguageContextValue>(() => ({
+      language,
+      setLanguage,
+      toggleLanguage,
+      t,
+    }));
+
+    return (
+      <LanguageContext.Provider value={value()}>
+        {props.children}
+      </LanguageContext.Provider>
+    );
+  }
+
+  // SSR fallback: provide static context without router hooks
   const t = createMemo(() => allTranslations[language()]);
 
   const value = createMemo<LanguageContextValue>(() => ({
     language,
-    setLanguage,
-    toggleLanguage,
+    setLanguage: () => {},
+    toggleLanguage: () => {},
     t,
   }));
 
@@ -189,13 +214,29 @@ export const LanguageProvider: ParentComponent = (props) => {
 };
 
 /**
+ * Default translations for SSR/prerender fallback
+ */
+const defaultTranslations = allTranslations.ko;
+
+/**
+ * Default language context value for SSR/prerender fallback
+ */
+const defaultLanguageContext: LanguageContextValue = {
+  language: () => 'ko' as Language,
+  setLanguage: () => {},
+  toggleLanguage: () => {},
+  t: () => defaultTranslations,
+};
+
+/**
  * Hook to use language context
- * @throws Error if used outside LanguageProvider
+ * Returns default values during SSR prerendering when provider is not available
  */
 export function useLanguage(): LanguageContextValue {
   const context = useContext(LanguageContext);
+  // Return default context during SSR prerendering
   if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    return defaultLanguageContext;
   }
   return context;
 }

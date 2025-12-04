@@ -1,5 +1,5 @@
 import { type Component, createMemo } from 'solid-js';
-import { A } from '@solidjs/router';
+import { Link } from './ui';
 import { useViewTransition, useLocalizedPath } from '../hooks';
 import type { App } from '../types';
 import type { Language } from '../i18n/types';
@@ -24,7 +24,7 @@ const AppItem: Component<AppItemProps> = (props) => {
   const handleClick = createMemo(() => createClickHandler(localizedUrl()));
 
   return (
-    <A
+    <Link
       href={localizedUrl()}
       class="app-card-item"
       aria-label={`${name()} - ${desc()}`}
@@ -38,7 +38,7 @@ const AppItem: Component<AppItemProps> = (props) => {
         <h3 class="app-card-title">{name()}</h3>
         <p class="app-card-desc">{desc()}</p>
       </div>
-    </A>
+    </Link>
   );
 };
 

@@ -1,4 +1,5 @@
 import { createMemo, type Accessor } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { useLocation, useNavigate as useRouterNavigate } from '@solidjs/router';
 import { useLanguage } from '../i18n';
 import type { Language } from '../i18n/types';
@@ -51,9 +52,20 @@ export function getLanguageFromPath(pathname: string): Language {
 /**
  * Hook for generating localized paths
  * Returns a function that adds language prefix to paths
+ * SSR-safe: returns default values during prerendering
  */
 export function useLocalizedPath() {
   const { language } = useLanguage();
+
+  // SSR fallback
+  if (isServer) {
+    return {
+      toLocalizedPath: (path: string) => localizedPath(path, language()),
+      basePath: () => '/',
+      language,
+    };
+  }
+
   const location = useLocation();
 
   /**
@@ -85,10 +97,17 @@ interface NavigateOptions {
 
 /**
  * Custom navigate hook that adds language prefix
+ * SSR-safe: returns no-op function during prerendering
  */
 export function useLocalizedNavigate() {
-  const navigate = useRouterNavigate();
   const { language } = useLanguage();
+
+  // SSR fallback
+  if (isServer) {
+    return () => {};
+  }
+
+  const navigate = useRouterNavigate();
 
   return (path: string, options?: NavigateOptions) => {
     const localPath = localizedPath(path, language());

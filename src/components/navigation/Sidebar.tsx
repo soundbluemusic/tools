@@ -1,5 +1,5 @@
 import { createMemo, For, type Component } from 'solid-js';
-import { A } from '@solidjs/router';
+import { Link } from '../../components/ui';
 import { useLanguage } from '../../i18n';
 import { useIsActive, useLocalizedPath } from '../../hooks';
 import { MUSIC_APP_PATHS, COMBINED_APP_PATHS } from '../../constants/apps';
@@ -51,7 +51,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
     <aside class={`sidebar${isOpen() ? '' : ' collapsed'}`}>
       <nav class="sidebar-nav">
         {/* Home */}
-        <A
+        <Link
           href={getPath('/')}
           class={`sidebar-item ${isActive('/') ? 'active' : ''}`}
         >
@@ -65,7 +65,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           <span class="sidebar-label">
             {language() === 'ko' ? '홈' : 'Home'}
           </span>
-        </A>
+        </Link>
 
         <div class="sidebar-divider" />
 
@@ -76,7 +76,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 
         <For each={musicApps()}>
           {(app) => (
-            <A
+            <Link
               href={getPath(app.url)}
               class={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
             >
@@ -84,7 +84,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
               <span class="sidebar-label">
                 {language() === 'ko' ? app.name.ko : app.name.en}
               </span>
-            </A>
+            </Link>
           )}
         </For>
 
@@ -97,7 +97,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 
         <For each={combinedApps()}>
           {(app) => (
-            <A
+            <Link
               href={getPath(app.url)}
               class={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
             >
@@ -105,7 +105,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
               <span class="sidebar-label">
                 {language() === 'ko' ? app.name.ko : app.name.en}
               </span>
-            </A>
+            </Link>
           )}
         </For>
 
@@ -118,7 +118,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
 
         <For each={otherApps()}>
           {(app) => (
-            <A
+            <Link
               href={getPath(app.url)}
               class={`sidebar-item ${isActive(app.url) ? 'active' : ''}`}
             >
@@ -126,14 +126,14 @@ export const Sidebar: Component<SidebarProps> = (props) => {
               <span class="sidebar-label">
                 {language() === 'ko' ? app.name.ko : app.name.en}
               </span>
-            </A>
+            </Link>
           )}
         </For>
 
         <div class="sidebar-divider" />
 
         {/* Downloads */}
-        <A
+        <Link
           href={getPath('/downloads')}
           class={`sidebar-item ${isActive('/downloads') ? 'active' : ''}`}
         >
@@ -143,10 +143,10 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           <span class="sidebar-label">
             {language() === 'ko' ? '다운로드' : 'Downloads'}
           </span>
-        </A>
+        </Link>
 
         {/* Menu / Settings */}
-        <A
+        <Link
           href={getPath('/sitemap')}
           class={`sidebar-item ${isActive('/sitemap') ? 'active' : ''}`}
         >
@@ -156,7 +156,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           <span class="sidebar-label">
             {language() === 'ko' ? '메뉴' : 'Menu'}
           </span>
-        </A>
+        </Link>
       </nav>
     </aside>
   );

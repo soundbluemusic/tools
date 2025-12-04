@@ -1,10 +1,9 @@
 import { type Component, Show } from 'solid-js';
-import { A } from '@solidjs/router';
 import { useLanguage } from '../i18n';
 import { useTheme } from '../hooks/useTheme';
 import { useLocalizedPath } from '../hooks';
 import type { Theme } from '../hooks/useTheme';
-import { ThemeIcon } from './ui';
+import { Link, ThemeIcon } from './ui';
 import './Header.css';
 
 interface HeaderProps {
@@ -110,10 +109,10 @@ export const Header: Component<HeaderProps> = (props) => {
 
       <div class="header-inner">
         {/* Logo */}
-        <A href={toLocalizedPath('/')} class="header-logo">
+        <Link href={toLocalizedPath('/')} class="header-logo">
           <span class="header-logo-text">tools</span>
           <span class="header-logo-badge">beta</span>
-        </A>
+        </Link>
 
         {/* Search Button */}
         <button

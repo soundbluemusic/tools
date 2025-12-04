@@ -1,6 +1,6 @@
 import { type Component, For, Show } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
-import { A } from '@solidjs/router';
+import { Link } from '../components/ui';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
 import { useSEO, useLocalizedPath } from '../hooks';
@@ -190,11 +190,11 @@ const Sitemap: Component = () => {
                             </a>
                           }
                         >
-                          <A href={getPath(item.url)} class="sitemap-link">
+                          <Link href={getPath(item.url)} class="sitemap-link">
                             <span class="sitemap-link-name">
                               {item.name[language()]}
                             </span>
-                          </A>
+                          </Link>
                         </Show>
                         <p class="sitemap-item-desc">
                           {item.description[language()]}

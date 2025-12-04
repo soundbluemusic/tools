@@ -1,12 +1,22 @@
+import { isServer } from 'solid-js/web';
 import { useNavigate } from '@solidjs/router';
 
 /**
  * Custom hook for navigation with View Transitions API support
  * Consolidates duplicate View Transitions logic across components
+ * SSR-safe: returns no-op functions during prerendering
  *
  * @returns Object containing navigation handler and click handler factory
  */
 export function useViewTransition() {
+  // SSR fallback
+  if (isServer) {
+    return {
+      navigateWithTransition: () => {},
+      createClickHandler: () => () => {},
+    };
+  }
+
   const navigate = useNavigate();
 
   /**

@@ -1,4 +1,5 @@
 import { createMemo, type Accessor } from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { useLocation } from '@solidjs/router';
 import { getBasePath } from './useLocalizedPath';
 
@@ -11,8 +12,18 @@ const KOREAN_PREFIX = '/ko';
  * Hook for checking if a path is active in navigation
  * Handles both base paths and Korean prefixed paths (/ko/*)
  * Consolidates duplicate isActive logic from Sidebar and BottomNav
+ * SSR-safe: returns default values during prerendering
  */
 export function useIsActive() {
+  // SSR fallback
+  if (isServer) {
+    return {
+      isActive: () => false,
+      pathname: () => '/',
+      basePath: () => '/',
+    };
+  }
+
   const location = useLocation();
 
   // Get base path without language prefix

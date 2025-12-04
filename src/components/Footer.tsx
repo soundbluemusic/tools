@@ -1,5 +1,5 @@
 import { type Component, lazy, Suspense, Show } from 'solid-js';
-import { A } from '@solidjs/router';
+import { Link } from './ui';
 import { useTranslations, useLanguage } from '../i18n';
 import { useLocalizedPath } from '../hooks';
 import { BRAND } from '../constants';
@@ -35,12 +35,12 @@ export const Footer: Component = () => {
 
       {/* Footer Menu */}
       <nav class="footer-menu" aria-label="Footer navigation">
-        <A href={getPath('/privacy')} class="footer-link">
+        <Link href={getPath('/privacy')} class="footer-link">
           {t().common.footer.privacy}
-        </A>
-        <A href={getPath('/terms')} class="footer-link">
+        </Link>
+        <Link href={getPath('/terms')} class="footer-link">
           {t().common.footer.terms}
-        </A>
+        </Link>
         <Show when={BRAND.githubUrl}>
           <a
             href={BRAND.githubUrl}
@@ -51,15 +51,15 @@ export const Footer: Component = () => {
             {t().common.footer.github}
           </a>
         </Show>
-        <A href={getPath('/sitemap')} class="footer-link">
+        <Link href={getPath('/sitemap')} class="footer-link">
           {t().common.footer.sitemap}
-        </A>
-        <A href={getPath('/opensource')} class="footer-link">
+        </Link>
+        <Link href={getPath('/opensource')} class="footer-link">
           {t().common.footer.opensource}
-        </A>
-        <A href={getPath('/tools-used')} class="footer-link">
+        </Link>
+        <Link href={getPath('/tools-used')} class="footer-link">
           {t().common.footer.toolsUsed}
-        </A>
+        </Link>
       </nav>
 
       {/* Copyright */}
