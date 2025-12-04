@@ -54,15 +54,8 @@ Noise Source → Gain (Mix) ──────────↑
 
 ## WASM 최적화
 
-계산 집약적 작업에 WebAssembly를 활용하여 성능을 향상시킵니다:
-
-| 기능 | 용도 | 성능 향상 |
-|:-----|:-----|:---------|
-| `generateNoiseBuffer` | 노이즈 버퍼 생성 (XorShift128+ PRNG) | 3-5x |
-| `makeDistortionCurve` | 디스토션 웨이브셰이퍼 커브 | 5-10x |
-| `floatToInt16` | WAV 인코딩 (Float32 → Int16) | 2-4x |
-
-**JS 폴백:** WASM 미지원 환경에서는 자동으로 JavaScript 구현이 사용됩니다.
+노이즈 생성, 디스토션 커브, WAV 인코딩에 WASM을 활용합니다.
+자세한 내용은 [아키텍처 문서](../architecture.md#5-wasm-통합)를 참조하세요.
 
 ## 관련 링크
 
