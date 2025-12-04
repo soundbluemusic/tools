@@ -3,8 +3,13 @@
  * Zustand store for drum machine state management
  */
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
-import type { Instrument, InstrumentVolumes, Pattern } from '../apps/drum/constants-shared';
+import { persist } from 'zustand/middleware';
+import { devtools } from './middleware';
+import type {
+  Instrument,
+  InstrumentVolumes,
+  Pattern,
+} from '../apps/drum/constants-shared';
 import {
   TEMPO_RANGE,
   DEFAULT_VOLUMES,
@@ -269,8 +274,7 @@ export const useDrumStore = create<DrumStore>()(
           ),
 
         // Playback actions
-        setIsPlaying: (isPlaying) =>
-          set({ isPlaying }, false, 'setIsPlaying'),
+        setIsPlaying: (isPlaying) => set({ isPlaying }, false, 'setIsPlaying'),
 
         setCurrentStep: (step) =>
           set({ currentStep: step }, false, 'setCurrentStep'),
@@ -344,7 +348,9 @@ export const useDrumStore = create<DrumStore>()(
 
 export const selectLoops = (state: DrumStore) => state.loops;
 export const selectCurrentPattern = (state: DrumStore) =>
-  state.loops[state.isPlaying ? state.playingLoopIndex : state.currentLoopIndex];
+  state.loops[
+    state.isPlaying ? state.playingLoopIndex : state.currentLoopIndex
+  ];
 export const selectIsPlaying = (state: DrumStore) => state.isPlaying;
 export const selectCurrentStep = (state: DrumStore) => state.currentStep;
 export const selectTempo = (state: DrumStore) => state.tempo;

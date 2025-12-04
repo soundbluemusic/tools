@@ -4,54 +4,54 @@ import { type RouteConfig, index, route } from '@react-router/dev/routes';
  * Route Configuration
  * React Router v7 Framework Mode (SPA)
  *
- * 옵션 언어 세그먼트: /:lang? 형태로 처리
- * 영어(기본) + 한국어(/ko) 지원
+ * 동일 컴포넌트를 영어/한국어 URL에서 재사용
+ * 각 라우트에 고유 id 지정으로 중복 방지
  */
 export default [
   // 홈페이지
-  index('routes/home.tsx'),
+  index('routes/home.tsx', { id: 'home' }),
+  route('ko', 'routes/home.tsx', { id: 'ko-home' }),
 
   // 카테고리 페이지
-  route('music-tools', 'routes/music-tools.tsx'),
-  route('other-tools', 'routes/other-tools.tsx'),
-  route('combined-tools', 'routes/combined-tools.tsx'),
+  route('music-tools', 'routes/music-tools.tsx', { id: 'music-tools' }),
+  route('ko/music-tools', 'routes/music-tools.tsx', { id: 'ko-music-tools' }),
+  route('other-tools', 'routes/other-tools.tsx', { id: 'other-tools' }),
+  route('ko/other-tools', 'routes/other-tools.tsx', { id: 'ko-other-tools' }),
+  route('combined-tools', 'routes/combined-tools.tsx', {
+    id: 'combined-tools',
+  }),
+  route('ko/combined-tools', 'routes/combined-tools.tsx', {
+    id: 'ko-combined-tools',
+  }),
 
   // 도구 페이지
-  route('metronome', 'routes/metronome.tsx'),
-  route('drum', 'routes/drum.tsx'),
-  route('drum-synth', 'routes/drum-synth.tsx'),
-  route('drum-tool', 'routes/drum-tool.tsx'),
-  route('qr', 'routes/qr.tsx'),
+  route('metronome', 'routes/metronome.tsx', { id: 'metronome' }),
+  route('ko/metronome', 'routes/metronome.tsx', { id: 'ko-metronome' }),
+  route('drum', 'routes/drum.tsx', { id: 'drum' }),
+  route('ko/drum', 'routes/drum.tsx', { id: 'ko-drum' }),
+  route('drum-synth', 'routes/drum-synth.tsx', { id: 'drum-synth' }),
+  route('ko/drum-synth', 'routes/drum-synth.tsx', { id: 'ko-drum-synth' }),
+  route('drum-tool', 'routes/drum-tool.tsx', { id: 'drum-tool' }),
+  route('ko/drum-tool', 'routes/drum-tool.tsx', { id: 'ko-drum-tool' }),
+  route('qr', 'routes/qr.tsx', { id: 'qr' }),
+  route('ko/qr', 'routes/qr.tsx', { id: 'ko-qr' }),
 
   // 정보 페이지
-  route('sitemap', 'routes/sitemap.tsx'),
-  route('opensource', 'routes/opensource.tsx'),
-  route('tools-used', 'routes/tools-used.tsx'),
-  route('downloads', 'routes/downloads.tsx'),
+  route('sitemap', 'routes/sitemap.tsx', { id: 'sitemap' }),
+  route('ko/sitemap', 'routes/sitemap.tsx', { id: 'ko-sitemap' }),
+  route('opensource', 'routes/opensource.tsx', { id: 'opensource' }),
+  route('ko/opensource', 'routes/opensource.tsx', { id: 'ko-opensource' }),
+  route('tools-used', 'routes/tools-used.tsx', { id: 'tools-used' }),
+  route('ko/tools-used', 'routes/tools-used.tsx', { id: 'ko-tools-used' }),
+  route('downloads', 'routes/downloads.tsx', { id: 'downloads' }),
+  route('ko/downloads', 'routes/downloads.tsx', { id: 'ko-downloads' }),
 
   // 법적 페이지
-  route('privacy', 'routes/privacy.tsx'),
-  route('terms', 'routes/terms.tsx'),
-
-  // 한국어 홈페이지 (/ko)
-  route('ko', 'routes/ko.home.tsx'),
-
-  // 한국어 페이지들 (/ko/*)
-  route('ko/music-tools', 'routes/ko.music-tools.tsx'),
-  route('ko/other-tools', 'routes/ko.other-tools.tsx'),
-  route('ko/combined-tools', 'routes/ko.combined-tools.tsx'),
-  route('ko/metronome', 'routes/ko.metronome.tsx'),
-  route('ko/drum', 'routes/ko.drum.tsx'),
-  route('ko/drum-synth', 'routes/ko.drum-synth.tsx'),
-  route('ko/drum-tool', 'routes/ko.drum-tool.tsx'),
-  route('ko/qr', 'routes/ko.qr.tsx'),
-  route('ko/sitemap', 'routes/ko.sitemap.tsx'),
-  route('ko/opensource', 'routes/ko.opensource.tsx'),
-  route('ko/tools-used', 'routes/ko.tools-used.tsx'),
-  route('ko/downloads', 'routes/ko.downloads.tsx'),
-  route('ko/privacy', 'routes/ko.privacy.tsx'),
-  route('ko/terms', 'routes/ko.terms.tsx'),
+  route('privacy', 'routes/privacy.tsx', { id: 'privacy' }),
+  route('ko/privacy', 'routes/privacy.tsx', { id: 'ko-privacy' }),
+  route('terms', 'routes/terms.tsx', { id: 'terms' }),
+  route('ko/terms', 'routes/terms.tsx', { id: 'ko-terms' }),
 
   // 404 페이지 (catch-all)
-  route('*', 'routes/not-found.tsx'),
+  route('*', 'routes/not-found.tsx', { id: 'not-found' }),
 ] satisfies RouteConfig;
