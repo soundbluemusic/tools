@@ -1,0 +1,353 @@
+@import "tailwindcss";
+
+/* ============================================
+ * Custom CSS Variables (Design Tokens)
+ * Tailwind CSS v4 uses CSS-first configuration
+ * ============================================ */
+
+@theme {
+  /* Colors - Light Mode (Warm Minimal) */
+  --color-bg-primary: #faf9f7;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f5f4f1;
+  --color-bg-elevated: #ffffff;
+
+  --color-text-primary: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-tertiary: #a8a29e;
+
+  --color-border-primary: #e7e5e4;
+  --color-border-secondary: #f5f5f4;
+  --color-border-focus: #1c1917;
+
+  --color-interactive-hover: rgba(28, 25, 23, 0.04);
+  --color-interactive-active: rgba(28, 25, 23, 0.08);
+
+  /* Semantic Colors */
+  --color-error: #dc2626;
+  --color-success: #059669;
+  --color-warning: #d97706;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 72px;
+  --bottom-nav-height: 56px;
+  --container-max: 1440px;
+
+  /* Transitions */
+  --transition-fast: 150ms;
+  --transition-normal: 250ms;
+
+  /* Z-Index Scale */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
+  --shadow-md: 0 2px 4px rgba(28, 25, 23, 0.04), 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-lg: 0 4px 12px rgba(28, 25, 23, 0.06);
+  --shadow-xl: 0 8px 24px rgba(28, 25, 23, 0.08);
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Font */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+}
+
+/* ============================================
+ * Dark Mode Variables
+ * ============================================ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg-primary: #1a1918;
+    --color-bg-secondary: #212120;
+    --color-bg-tertiary: #292827;
+    --color-bg-elevated: #2f2e2d;
+
+    --color-text-primary: #ececec;
+    --color-text-secondary: #a8a8a8;
+    --color-text-tertiary: #737373;
+
+    --color-border-primary: #333231;
+    --color-border-secondary: #292827;
+    --color-border-focus: #ececec;
+
+    --color-interactive-hover: rgba(236, 236, 236, 0.06);
+    --color-interactive-active: rgba(236, 236, 236, 0.1);
+
+    --color-error: #f87171;
+    --color-success: #4ade80;
+    --color-warning: #fbbf24;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
+    --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Manual dark mode override */
+:root[data-theme='dark'] {
+  --color-bg-primary: #1a1918;
+  --color-bg-secondary: #212120;
+  --color-bg-tertiary: #292827;
+  --color-bg-elevated: #2f2e2d;
+
+  --color-text-primary: #ececec;
+  --color-text-secondary: #a8a8a8;
+  --color-text-tertiary: #737373;
+
+  --color-border-primary: #333231;
+  --color-border-secondary: #292827;
+  --color-border-focus: #ececec;
+
+  --color-interactive-hover: rgba(236, 236, 236, 0.06);
+  --color-interactive-active: rgba(236, 236, 236, 0.1);
+
+  --color-error: #f87171;
+  --color-success: #4ade80;
+  --color-warning: #fbbf24;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+ * Base Styles
+ * ============================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+/* Focus styles */
+:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ============================================
+ * Layout Components
+ * ============================================ */
+.navigation-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .navigation-layout {
+    flex-direction: row;
+    padding-left: var(--sidebar-width);
+  }
+
+  .navigation-layout.sidebar-collapsed {
+    padding-left: var(--sidebar-collapsed-width);
+  }
+}
+
+.navigation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: var(--bottom-nav-height);
+}
+
+@media (min-width: 768px) {
+  .navigation-content {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+}
+
+.content-wrapper {
+  flex: 1;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================================
+ * Error Page Styles
+ * ============================================ */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-bg-primary);
+}
+
+.error-content {
+  text-align: center;
+  max-width: 32rem;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.error-details {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.error-stack {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background-color: var(--color-bg-tertiary);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.error-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity var(--transition-fast);
+}
+
+.error-link:hover {
+  opacity: 0.9;
+}
+
+/* ============================================
+ * Skip Link (Accessibility)
+ * ============================================ */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  padding: 1rem;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  z-index: var(--z-tooltip);
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+ * Footer Styles
+ * ============================================ */
+.footer {
+  padding: 1.5rem 1rem;
+  border-top: 1px solid var(--color-border-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+.footer-share {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color var(--transition-fast);
+}
+
+.footer-link:hover {
+  color: var(--color-text-primary);
+}
+
+.footer-copyright {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* ============================================
+ * Loader Styles
+ * ============================================ */
+.page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+/* ============================================
+ * Import existing component styles
+ * These will be migrated to Tailwind gradually
+ * ============================================ */
+@import '../src/components/navigation/NavigationLayout.css';
+@import '../src/styles/components.css';
+@import '../src/styles/tool-page.css';
+@import '../src/styles/qr-page.css';
+@import '../src/styles/not-found.css';
