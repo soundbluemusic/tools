@@ -10,8 +10,12 @@
 @import '../src/styles/not-found.css';
 
 /* ============================================
- * Tailwind CSS v4 - Utilities Only (No Preflight)
- * Preflight is disabled to avoid conflicts with existing styles
+ * Tailwind CSS v4 - Architecture Pattern
+ *
+ * 정적 스타일: Tailwind CSS 유틸리티 클래스
+ * 동적 스타일: style 속성 (좌표/크기/애니메이션)
+ *
+ * 기존 CSS와의 호환성을 위해 utilities 레이어만 사용
  * ============================================ */
 @import "tailwindcss/utilities";
 

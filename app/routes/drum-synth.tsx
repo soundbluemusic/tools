@@ -8,6 +8,9 @@ import { FullscreenButton } from '../../src/components/FullscreenButton';
 import { useTranslations } from '../../src/i18n/context';
 import { useSEO } from '../../src/hooks';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 export const meta: Route.MetaFunction = () => [
   { title: 'Drum Sound Synth - Web Audio Drum Synthesizer | Tools' },
   { name: 'description', content: 'Web Audio 드럼 사운드 신디사이저. 상세한 파라미터 컨트롤로 드럼 사운드를 만들어보세요.' },

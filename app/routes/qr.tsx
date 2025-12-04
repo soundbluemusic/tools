@@ -8,6 +8,9 @@ import { FullscreenButton } from '../../src/components/FullscreenButton';
 import { useTranslations } from '../../src/i18n';
 import { useSEO } from '../../src/hooks';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 export const meta: Route.MetaFunction = () => [
   { title: 'QR Code Generator - Free High-Resolution QR Codes | Tools' },
   { name: 'description', content: '무료 QR 코드 생성기. 고해상도, 투명 배경 QR코드를 만들어보세요.' },

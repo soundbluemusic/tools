@@ -6,6 +6,9 @@ import { useLanguage } from '../../src/i18n/context';
 import { useSEO, useLocalizedPath } from '../../src/hooks';
 import { APPS, BRAND } from '../../src/constants';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 interface SitemapItem {
   name: { ko: string; en: string };
   description: { ko: string; en: string };

@@ -8,6 +8,9 @@ import { FullscreenButton } from '../../src/components/FullscreenButton';
 import { useTranslations } from '../../src/i18n/context';
 import { useSEO } from '../../src/hooks';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 export const meta: Route.MetaFunction = () => [
   { title: 'Metronome - Online Precision Metronome | Tools' },
   { name: 'description', content: '온라인 정밀 메트로놈. BPM 20-400, 다양한 박자 설정 지원. 무료로 사용하세요.' },

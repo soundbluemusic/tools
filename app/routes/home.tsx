@@ -6,6 +6,9 @@ import AppList from '../../src/components/AppList';
 import type { App, SortOption } from '../../src/types';
 import type { Language } from '../../src/i18n/types';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 const homeSEO = {
   ko: {
     description:
