@@ -258,16 +258,9 @@ function ThemeExample() {
 
 ### 5. WASM Integration
 
-AssemblyScript-based WebAssembly modules for compute-intensive operations:
+AssemblyScript-based WebAssembly modules for compute-intensive operations.
 
-**WASM-optimized functions:**
-
-| Function | Purpose | Speedup |
-| -------- | ------- | ------- |
-| `makeTransparent` | QR code transparent background | 10-25x |
-| `generateNoiseBuffer` | Drum synth noise generation | 3-5x |
-| `makeDistortionCurve` | Distortion waveshaper curve | 5-10x |
-| `floatToInt16` | WAV encoding conversion | 2-4x |
+**WASM 함수 및 성능 정보:** [`src/wasm/wasmProcessor.ts`](https://github.com/soundbluemusic/tools/blob/main/src/wasm/wasmProcessor.ts) 참조
 
 **Usage pattern with JS fallback:**
 

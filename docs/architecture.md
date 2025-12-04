@@ -106,16 +106,9 @@ function ThemeExample() {
 
 ### 5. WASM 통합
 
-AssemblyScript 기반 WASM 모듈로 계산 집약적 작업 최적화:
+AssemblyScript 기반 WASM 모듈로 계산 집약적 작업 최적화.
 
-**적용 영역:**
-
-| 기능 | 용도 | 성능 향상 |
-|:-----|:-----|:---------|
-| `makeTransparent` | QR 투명 배경 | 10-25x |
-| `generateNoiseBuffer` | 노이즈 생성 | 3-5x |
-| `makeDistortionCurve` | 디스토션 커브 | 5-10x |
-| `floatToInt16` | WAV 인코딩 | 2-4x |
+**WASM 함수 및 성능 정보:** [`src/wasm/wasmProcessor.ts`](https://github.com/soundbluemusic/tools/blob/main/src/wasm/wasmProcessor.ts) 참조
 
 **사용 패턴:**
 
