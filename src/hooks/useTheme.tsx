@@ -5,6 +5,7 @@ import {
   useEffect,
   useCallback,
   useMemo,
+  memo,
 } from 'react';
 import type { ReactNode } from 'react';
 import {
@@ -49,7 +50,9 @@ interface ThemeProviderProps {
  * Theme provider component
  * Manages theme state and applies to document
  */
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export const ThemeProvider = memo(function ThemeProvider({
+  children,
+}: ThemeProviderProps) {
   const isTheme = createEnumValidator(THEMES);
 
   // Get initial theme from storage or detect system preference
@@ -91,4 +94,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
-}
+});
+
+ThemeProvider.displayName = 'ThemeProvider';
