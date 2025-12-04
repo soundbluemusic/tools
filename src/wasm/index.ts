@@ -3,6 +3,20 @@
  * High-performance media processing using WebAssembly
  */
 
+// Core WASM Processor - Custom AssemblyScript module
+export {
+  loadWasmProcessor,
+  isWasmLoaded,
+  getWasm,
+  makeTransparentWasm,
+  generateNoiseBufferWasm,
+  generateEnvelopedNoiseWasm,
+  makeDistortionCurveWasm,
+  floatToInt16Wasm,
+  generateExpDecayEnvelopeWasm,
+  type WasmExports,
+} from './wasmProcessor';
+
 // FFmpeg - Audio/Video processing
 export {
   loadFFmpeg,

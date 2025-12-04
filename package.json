@@ -27,7 +27,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "prebuild": "npm run generate-sitemap",
+    "prebuild": "npm run asbuild:release && npm run copy-wasm && npm run generate-sitemap",
+    "copy-wasm": "cp build/release.wasm src/wasm/processing.wasm",
     "build": "tsc -b && vite build && npm run build:standalone:all",
     "preview": "vite preview",
     "lint": "eslint . --ext .ts,.tsx",
@@ -56,7 +57,11 @@
     "build:standalone:drum:prod": "STANDALONE_APP=drum vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/drum/index.html dist/standalone/drum.html && rm -rf dist/standalone/src",
     "build:standalone:drum-synth:prod": "STANDALONE_APP=drum-synth vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/drum-synth/index.html dist/standalone/drum-synth.html && rm -rf dist/standalone/src",
     "build:standalone:qr:prod": "STANDALONE_APP=qr vite build --config vite.standalone.config.ts --outDir dist/standalone && mv dist/standalone/src/standalone/qr/index.html dist/standalone/qr.html && rm -rf dist/standalone/src",
-    "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
+    "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html",
+    "asbuild:debug": "asc assembly/index.ts --target debug",
+    "asbuild:release": "asc assembly/index.ts --target release",
+    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
+    "start": "npx serve ."
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",
@@ -81,6 +86,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "@vitest/coverage-v8": "^4.0.14",
     "@vitest/ui": "^4.0.14",
+    "assemblyscript": "^0.28.9",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.9.0",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
@@ -124,5 +130,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "exports": {
+    ".": {
+      "import": "./build/release.js",
+      "types": "./build/release.d.ts"
+    }
   }
 }

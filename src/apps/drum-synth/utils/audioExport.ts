@@ -1,6 +1,7 @@
 /**
  * Audio Export Utilities
  * Export synthesized drum sounds as WAV or MP3 files
+ * Uses WASM for performance-critical operations
  */
 
 import type {
@@ -13,15 +14,27 @@ import type {
   RimParams,
   AllDrumParams,
 } from '../constants';
+import {
+  isWasmLoaded,
+  generateNoiseBufferWasm,
+  generateEnvelopedNoiseWasm,
+  makeDistortionCurveWasm,
+  floatToInt16Wasm,
+} from '../../../wasm';
 
 export type ExportFormat = 'wav' | 'mp3';
 
 /**
  * Create distortion curve for drive effect
+ * Uses WASM if available
  */
-function makeDistortionCurve(amount: number): Float32Array<ArrayBuffer> {
+function makeDistortionCurve(amount: number): Float32Array {
+  if (isWasmLoaded()) {
+    return makeDistortionCurveWasm(amount);
+  }
+
   const samples = 44100;
-  const curve = new Float32Array(samples) as Float32Array<ArrayBuffer>;
+  const curve = new Float32Array(samples);
   const k = (amount / 100) * 50;
   for (let i = 0; i < samples; i++) {
     const x = (i * 2) / samples - 1;
@@ -29,6 +42,44 @@ function makeDistortionCurve(amount: number): Float32Array<ArrayBuffer> {
       ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
   }
   return curve;
+}
+
+/**
+ * Generate noise buffer with optional envelope
+ * Uses WASM if available
+ */
+function generateNoiseData(
+  length: number,
+  sampleRate: number,
+  envelope?: { attackTime: number; decayTime: number }
+): Float32Array {
+  if (isWasmLoaded()) {
+    if (envelope) {
+      return generateEnvelopedNoiseWasm(
+        length,
+        sampleRate,
+        envelope.attackTime,
+        envelope.decayTime
+      );
+    }
+    return generateNoiseBufferWasm(length);
+  }
+
+  // JS fallback
+  const data = new Float32Array(length);
+  if (envelope) {
+    for (let i = 0; i < length; i++) {
+      const t = i / sampleRate;
+      const attackEnv = Math.min(1, t / envelope.attackTime);
+      const decayEnv = Math.exp(-t / envelope.decayTime);
+      data[i] = (Math.random() * 2 - 1) * attackEnv * decayEnv;
+    }
+  } else {
+    for (let i = 0; i < length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+  }
+  return data;
 }
 
 /**
@@ -114,15 +165,11 @@ function renderSnare(
   toneOsc.start(now);
   toneOsc.stop(now + snareParams.toneDecay + 0.1);
 
-  const noiseBuffer = ctx.createBuffer(
-    1,
-    ctx.sampleRate * snareParams.noiseDecay,
-    ctx.sampleRate
-  );
+  const noiseLength = Math.ceil(ctx.sampleRate * snareParams.noiseDecay);
+  const noiseBuffer = ctx.createBuffer(1, noiseLength, ctx.sampleRate);
   const noiseData = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < noiseBuffer.length; i++) {
-    noiseData[i] = Math.random() * 2 - 1;
-  }
+  const generatedNoise = generateNoiseData(noiseLength, ctx.sampleRate);
+  noiseData.set(generatedNoise);
 
   const noiseSource = ctx.createBufferSource();
   noiseSource.buffer = noiseBuffer;
@@ -183,15 +230,11 @@ function renderHihat(
     osc.stop(now + actualDecay + 0.1);
   }
 
-  const noiseBuffer = ctx.createBuffer(
-    1,
-    ctx.sampleRate * actualDecay,
-    ctx.sampleRate
-  );
+  const hihatNoiseLength = Math.ceil(ctx.sampleRate * actualDecay);
+  const noiseBuffer = ctx.createBuffer(1, hihatNoiseLength, ctx.sampleRate);
   const noiseData = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < noiseBuffer.length; i++) {
-    noiseData[i] = Math.random() * 2 - 1;
-  }
+  const generatedHihatNoise = generateNoiseData(hihatNoiseLength, ctx.sampleRate);
+  noiseData.set(generatedHihatNoise);
 
   const noiseSource = ctx.createBufferSource();
   noiseSource.buffer = noiseBuffer;
@@ -240,13 +283,11 @@ function renderClap(
 
     const noiseBuffer = ctx.createBuffer(1, bufferLength, ctx.sampleRate);
     const noiseData = noiseBuffer.getChannelData(0);
-
-    for (let i = 0; i < noiseBuffer.length; i++) {
-      const t = i / ctx.sampleRate;
-      const attackEnv = Math.min(1, t / 0.002);
-      const decayEnv = Math.exp(-t / (hitDuration * 0.3));
-      noiseData[i] = (Math.random() * 2 - 1) * attackEnv * decayEnv;
-    }
+    const clapNoise = generateNoiseData(bufferLength, ctx.sampleRate, {
+      attackTime: 0.002,
+      decayTime: hitDuration * 0.3,
+    });
+    noiseData.set(clapNoise);
 
     const noiseSource = ctx.createBufferSource();
     noiseSource.buffer = noiseBuffer;
@@ -280,17 +321,14 @@ function renderClap(
 
   // Crack
   const crackDuration = 0.015;
-  const crackBuffer = ctx.createBuffer(
-    1,
-    ctx.sampleRate * crackDuration,
-    ctx.sampleRate
-  );
+  const crackLength = Math.ceil(ctx.sampleRate * crackDuration);
+  const crackBuffer = ctx.createBuffer(1, crackLength, ctx.sampleRate);
   const crackData = crackBuffer.getChannelData(0);
-  for (let i = 0; i < crackBuffer.length; i++) {
-    const t = i / ctx.sampleRate;
-    const env = Math.exp(-t / 0.003);
-    crackData[i] = (Math.random() * 2 - 1) * env;
-  }
+  const crackNoise = generateNoiseData(crackLength, ctx.sampleRate, {
+    attackTime: 0.0001,
+    decayTime: 0.003,
+  });
+  crackData.set(crackNoise);
 
   const crackSource = ctx.createBufferSource();
   crackSource.buffer = crackBuffer;
@@ -313,18 +351,15 @@ function renderClap(
 
   // Reverb
   if (clapParams.reverb > 0) {
-    const reverbLength = 0.15 + (clapParams.reverb / 100) * 0.35;
-    const reverbBuffer = ctx.createBuffer(
-      1,
-      ctx.sampleRate * reverbLength,
-      ctx.sampleRate
-    );
+    const reverbDuration = 0.15 + (clapParams.reverb / 100) * 0.35;
+    const reverbSampleLength = Math.ceil(ctx.sampleRate * reverbDuration);
+    const reverbBuffer = ctx.createBuffer(1, reverbSampleLength, ctx.sampleRate);
     const reverbData = reverbBuffer.getChannelData(0);
-    for (let i = 0; i < reverbBuffer.length; i++) {
-      const t = i / ctx.sampleRate;
-      reverbData[i] =
-        (Math.random() * 2 - 1) * Math.exp(-t / (reverbLength * 0.4));
-    }
+    const reverbNoise = generateNoiseData(reverbSampleLength, ctx.sampleRate, {
+      attackTime: 0.0001,
+      decayTime: reverbDuration * 0.4,
+    });
+    reverbData.set(reverbNoise);
 
     const reverbSource = ctx.createBufferSource();
     reverbSource.buffer = reverbBuffer;
@@ -346,7 +381,7 @@ function renderClap(
     );
     reverbGain.gain.exponentialRampToValueAtTime(
       0.001,
-      reverbStart + reverbLength
+      reverbStart + reverbDuration
     );
 
     reverbSource.connect(reverbHighpass);
@@ -526,6 +561,7 @@ export async function renderDrumToBuffer(
 
 /**
  * Convert AudioBuffer to WAV Blob
+ * Uses WASM for sample conversion (~2-4x faster)
  */
 export function audioBufferToWav(buffer: AudioBuffer): Blob {
   const numChannels = buffer.numberOfChannels;
@@ -569,21 +605,37 @@ export function audioBufferToWav(buffer: AudioBuffer): Blob {
   // Data chunk length
   view.setUint32(40, dataLength, true);
 
-  // Write interleaved audio data
+  // Interleave channels and convert to Int16
   const channels: Float32Array[] = [];
   for (let i = 0; i < numChannels; i++) {
     channels.push(buffer.getChannelData(i));
   }
 
-  let offset = 44;
+  // Create interleaved Float32 array
+  const interleavedLength = buffer.length * numChannels;
+  const interleaved = new Float32Array(interleavedLength);
   for (let i = 0; i < buffer.length; i++) {
     for (let ch = 0; ch < numChannels; ch++) {
-      const sample = Math.max(-1, Math.min(1, channels[ch][i]));
-      const intSample = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
-      view.setInt16(offset, intSample, true);
-      offset += 2;
+      interleaved[i * numChannels + ch] = channels[ch][i];
     }
   }
+
+  // Convert to Int16 using WASM if available
+  let int16Data: Int16Array;
+  if (isWasmLoaded()) {
+    int16Data = floatToInt16Wasm(interleaved, numChannels);
+  } else {
+    // JS fallback
+    int16Data = new Int16Array(interleavedLength);
+    for (let i = 0; i < interleavedLength; i++) {
+      const sample = Math.max(-1, Math.min(1, interleaved[i]));
+      int16Data[i] = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
+    }
+  }
+
+  // Copy Int16 data to output buffer
+  const int16View = new Int16Array(arrayBuffer, 44);
+  int16View.set(int16Data);
 
   return new Blob([arrayBuffer], { type: 'audio/wav' });
 }

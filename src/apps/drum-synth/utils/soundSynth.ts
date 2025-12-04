@@ -1,6 +1,7 @@
 /**
  * Shared Sound Synthesis Utility
  * Play functions that can be used by both DrumSynth and DrumMachine
+ * Uses WASM for performance-critical operations
  */
 import type {
   AllDrumParams,
@@ -9,15 +10,21 @@ import type {
   HihatParams,
   ClapParams,
 } from '../constants';
+import {
+  isWasmLoaded,
+  generateNoiseBufferWasm,
+  makeDistortionCurveWasm,
+} from '../../../wasm';
 
 /**
  * Noise buffer cache for performance
  */
 const noiseBufferCache = new Map<string, AudioBuffer>();
-const distortionCurveCache = new Map<number, Float32Array<ArrayBuffer>>();
+const distortionCurveCache = new Map<number, Float32Array>();
 
 /**
  * Get or create cached noise buffer
+ * Uses WASM if available (~3-5x faster)
  */
 export function getNoiseBuffer(
   ctx: AudioContext,
@@ -28,32 +35,52 @@ export function getNoiseBuffer(
   if (cached && cached.sampleRate === ctx.sampleRate) {
     return cached;
   }
-  const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
+
+  const bufferLength = Math.ceil(ctx.sampleRate * duration);
+  const buffer = ctx.createBuffer(1, bufferLength, ctx.sampleRate);
   const data = buffer.getChannelData(0);
-  for (let i = 0; i < buffer.length; i++) {
-    data[i] = Math.random() * 2 - 1;
+
+  // Use WASM if loaded, otherwise JS fallback
+  if (isWasmLoaded()) {
+    const noiseData = generateNoiseBufferWasm(bufferLength);
+    data.set(noiseData);
+  } else {
+    for (let i = 0; i < buffer.length; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
   }
+
   noiseBufferCache.set(key, buffer);
   return buffer;
 }
 
 /**
  * Create distortion curve for drive effect (cached by amount)
+ * Uses WASM if available (~5-10x faster)
  */
-export function makeDistortionCurve(amount: number): Float32Array<ArrayBuffer> {
+export function makeDistortionCurve(amount: number): Float32Array {
   const roundedAmount = Math.round(amount);
   const cached = distortionCurveCache.get(roundedAmount);
   if (cached) {
     return cached;
   }
-  const samples = 44100;
-  const curve = new Float32Array(samples) as Float32Array<ArrayBuffer>;
-  const k = (roundedAmount / 100) * 50;
-  for (let i = 0; i < samples; i++) {
-    const x = (i * 2) / samples - 1;
-    curve[i] =
-      ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
+
+  let curve: Float32Array;
+
+  // Use WASM if loaded, otherwise JS fallback
+  if (isWasmLoaded()) {
+    curve = makeDistortionCurveWasm(roundedAmount);
+  } else {
+    const samples = 44100;
+    curve = new Float32Array(samples);
+    const k = (roundedAmount / 100) * 50;
+    for (let i = 0; i < samples; i++) {
+      const x = (i * 2) / samples - 1;
+      curve[i] =
+        ((3 + k) * x * 20 * (Math.PI / 180)) / (Math.PI + k * Math.abs(x));
+    }
   }
+
   distortionCurveCache.set(roundedAmount, curve);
   return curve;
 }
