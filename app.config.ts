@@ -9,43 +9,9 @@ export default defineConfig({
   server: {
     preset: 'static',
     prerender: {
-      routes: [
-        // 메인 페이지
-        '/',
-        '/ko',
-        // 카테고리 페이지
-        '/music-tools',
-        '/ko/music-tools',
-        '/other-tools',
-        '/ko/other-tools',
-        '/combined-tools',
-        '/ko/combined-tools',
-        // 도구 페이지
-        '/metronome',
-        '/ko/metronome',
-        '/drum',
-        '/ko/drum',
-        '/drum-synth',
-        '/ko/drum-synth',
-        '/drum-tool',
-        '/ko/drum-tool',
-        '/qr',
-        '/ko/qr',
-        // 정보 페이지
-        '/sitemap',
-        '/ko/sitemap',
-        '/opensource',
-        '/ko/opensource',
-        '/tools-used',
-        '/ko/tools-used',
-        '/downloads',
-        '/ko/downloads',
-        // 법적 페이지
-        '/privacy',
-        '/ko/privacy',
-        '/terms',
-        '/ko/terms',
-      ],
+      // 프리렌더링 비활성화 - SPA는 클라이언트 사이드 라우팅 사용
+      routes: [],
+      crawlLinks: false,
     },
   },
 
