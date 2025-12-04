@@ -1,5 +1,5 @@
-import { memo, lazy, Suspense, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { type Component, lazy, Suspense, Show } from 'solid-js';
+import { A } from '@solidjs/router';
 import { useTranslations, useLanguage } from '../i18n';
 import { useLocalizedPath } from '../hooks';
 import { BRAND } from '../constants';
@@ -12,64 +12,58 @@ const ShareButton = lazy(() =>
 /**
  * Footer component with menu links and copyright
  */
-export const Footer = memo(function Footer() {
+export const Footer: Component = () => {
   const t = useTranslations();
   const { language } = useLanguage();
   const { toLocalizedPath } = useLocalizedPath();
 
-  // Memoize localized path function
-  const getPath = useCallback(
-    (path: string) => toLocalizedPath(path),
-    [toLocalizedPath]
-  );
+  const getPath = (path: string) => toLocalizedPath(path);
 
   return (
-    <footer className="footer">
+    <footer class="footer">
       {/* Share Button - lazy loaded (always shares homepage) */}
-      <div className="footer-share">
+      <div class="footer-share">
         <Suspense fallback={null}>
           <ShareButton
             variant="footer"
             url={BRAND.siteUrl}
-            title={BRAND.shareTitle[language]}
-            description={BRAND.description[language]}
+            title={BRAND.shareTitle[language()]}
+            description={BRAND.description[language()]}
           />
         </Suspense>
       </div>
 
       {/* Footer Menu */}
-      <nav className="footer-menu" aria-label="Footer navigation">
-        <Link to={getPath('/privacy')} className="footer-link">
-          {t.common.footer.privacy}
-        </Link>
-        <Link to={getPath('/terms')} className="footer-link">
-          {t.common.footer.terms}
-        </Link>
-        {BRAND.githubUrl && (
+      <nav class="footer-menu" aria-label="Footer navigation">
+        <A href={getPath('/privacy')} class="footer-link">
+          {t().common.footer.privacy}
+        </A>
+        <A href={getPath('/terms')} class="footer-link">
+          {t().common.footer.terms}
+        </A>
+        <Show when={BRAND.githubUrl}>
           <a
             href={BRAND.githubUrl}
-            className="footer-link"
+            class="footer-link"
             target="_blank"
             rel="noopener noreferrer"
           >
-            {t.common.footer.github}
+            {t().common.footer.github}
           </a>
-        )}
-        <Link to={getPath('/sitemap')} className="footer-link">
-          {t.common.footer.sitemap}
-        </Link>
-        <Link to={getPath('/opensource')} className="footer-link">
-          {t.common.footer.opensource}
-        </Link>
-        <Link to={getPath('/tools-used')} className="footer-link">
-          {t.common.footer.toolsUsed}
-        </Link>
+        </Show>
+        <A href={getPath('/sitemap')} class="footer-link">
+          {t().common.footer.sitemap}
+        </A>
+        <A href={getPath('/opensource')} class="footer-link">
+          {t().common.footer.opensource}
+        </A>
+        <A href={getPath('/tools-used')} class="footer-link">
+          {t().common.footer.toolsUsed}
+        </A>
       </nav>
 
       {/* Copyright */}
-      <p className="footer-copyright">© {BRAND.copyrightHolder}. MIT License</p>
+      <p class="footer-copyright">© {BRAND.copyrightHolder}. MIT License</p>
     </footer>
   );
-});
-
-Footer.displayName = 'Footer';
+};

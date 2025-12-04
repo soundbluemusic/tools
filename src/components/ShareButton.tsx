@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useRef } from 'react';
+import { type Component, createSignal, createMemo, Show, For } from 'solid-js';
 import { useTranslations } from '../i18n/context';
 import { cn, copyToClipboard } from '../utils';
 import { useDropdown, useDropdownToggle } from '../hooks';
@@ -11,7 +11,7 @@ interface ShareButtonProps {
   /** Description for sharing */
   description?: string;
   /** Additional class names */
-  className?: string;
+  class?: string;
   /** Compact mode - show only icon */
   compact?: boolean;
   /** Button variant: default (pill style) or footer (text link style) */
@@ -22,210 +22,208 @@ interface ShareButtonProps {
  * Share button component with social media sharing options
  * Uses standard web share URLs - no trademarked logos
  */
-export const ShareButton = memo<ShareButtonProps>(function ShareButton({
-  url,
-  title,
-  description,
-  className,
-  compact = false,
-  variant = 'default',
-}) {
+export const ShareButton: Component<ShareButtonProps> = (props) => {
   const t = useTranslations();
-  const [isOpen, setIsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = createSignal(false);
+  const [copied, setCopied] = createSignal(false);
+  let buttonRef: HTMLButtonElement | undefined;
+  let containerRef: HTMLDivElement | undefined;
 
-  const shareUrl =
-    url || (typeof window !== 'undefined' ? window.location.href : '');
-  const shareTitle =
-    title || (typeof document !== 'undefined' ? document.title : '');
-  const shareText = description || shareTitle;
+  const shareUrl = () =>
+    props.url || (typeof window !== 'undefined' ? window.location.href : '');
+  const shareTitle = () =>
+    props.title || (typeof document !== 'undefined' ? document.title : '');
+  const shareText = () => props.description || shareTitle();
 
-  const handleClose = useCallback(() => setIsOpen(false), []);
-  useDropdown({ containerRef, buttonRef, isOpen, onClose: handleClose });
+  const handleClose = () => setIsOpen(false);
+  useDropdown({
+    containerRef: () => containerRef,
+    buttonRef: () => buttonRef,
+    isOpen,
+    onClose: handleClose,
+  });
 
   const handleToggle = useDropdownToggle(setIsOpen, setCopied);
 
-  const handleCopyLink = useCallback(async () => {
-    await copyToClipboard(shareUrl);
+  const handleCopyLink = async () => {
+    await copyToClipboard(shareUrl());
     setCopied(true);
     setTimeout(() => {
       setCopied(false);
       setIsOpen(false);
     }, 1500);
-  }, [shareUrl]);
+  };
 
-  const handleNativeShare = useCallback(async () => {
+  const handleNativeShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: shareTitle,
-          text: shareText,
-          url: shareUrl,
+          title: shareTitle(),
+          text: shareText(),
+          url: shareUrl(),
         });
         setIsOpen(false);
       } catch {
         // User cancelled or error
       }
     }
-  }, [shareTitle, shareText, shareUrl]);
+  };
 
   // Social share URLs with icons (using official share APIs - no copyright issues)
-  const shareLinks = [
+  const shareLinks = createMemo(() => [
     {
       name: 'X',
-      label: t.common.share.twitter,
+      label: t().common.share.twitter,
       icon: '𝕏',
-      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`,
+      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl())}&text=${encodeURIComponent(shareTitle())}`,
     },
     {
       name: 'Facebook',
-      label: t.common.share.facebook,
+      label: t().common.share.facebook,
       icon: 'f',
-      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl())}`,
     },
     {
       name: 'LinkedIn',
-      label: t.common.share.linkedin,
+      label: t().common.share.linkedin,
       icon: 'in',
-      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+      url: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl())}`,
     },
     {
       name: 'WhatsApp',
-      label: t.common.share.whatsapp,
+      label: t().common.share.whatsapp,
       icon: '💬',
-      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareTitle} ${shareUrl}`)}`,
+      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareTitle()} ${shareUrl()}`)}`,
     },
     {
       name: 'Telegram',
-      label: t.common.share.telegram,
+      label: t().common.share.telegram,
       icon: '✈',
-      url: `https://t.me/share/url?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(shareTitle)}`,
+      url: `https://t.me/share/url?url=${encodeURIComponent(shareUrl())}&text=${encodeURIComponent(shareTitle())}`,
     },
-  ];
+  ]);
 
-  const handleShareClick = useCallback((shareLink: string) => {
+  const handleShareClick = (shareLink: string) => {
     window.open(
       shareLink,
       '_blank',
       'noopener,noreferrer,width=600,height=400'
     );
     setIsOpen(false);
-  }, []);
+  };
 
   const hasNativeShare =
     typeof navigator !== 'undefined' && 'share' in navigator;
 
   return (
-    <div ref={containerRef} className={cn('share-button-container', className)}>
+    <div ref={containerRef} class={cn('share-button-container', props.class)}>
       <button
         ref={buttonRef}
         type="button"
-        className={cn(
+        class={cn(
           'share-button',
-          compact && 'share-button--compact',
-          variant === 'footer' && 'share-button--footer'
+          props.compact && 'share-button--compact',
+          props.variant === 'footer' && 'share-button--footer'
         )}
         onClick={handleToggle}
-        aria-expanded={isOpen}
+        aria-expanded={isOpen()}
         aria-haspopup="true"
-        aria-label={t.common.share.button}
+        aria-label={t().common.share.button}
       >
-        {variant === 'footer' ? (
-          <>
-            <svg
-              className="share-button-icon-svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
-            <span className="share-button-text">{t.common.share.button}</span>
-          </>
-        ) : (
-          <>
-            <span className="share-button-icon" aria-hidden="true">
-              ↗
-            </span>
-            {!compact && (
-              <span className="share-button-text">{t.common.share.button}</span>
-            )}
-          </>
-        )}
+        <Show
+          when={props.variant === 'footer'}
+          fallback={
+            <>
+              <span class="share-button-icon" aria-hidden="true">
+                ↗
+              </span>
+              <Show when={!props.compact}>
+                <span class="share-button-text">{t().common.share.button}</span>
+              </Show>
+            </>
+          }
+        >
+          <svg
+            class="share-button-icon-svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg>
+          <span class="share-button-text">{t().common.share.button}</span>
+        </Show>
       </button>
 
-      {isOpen && (
+      <Show when={isOpen()}>
         <div
-          className="share-dropdown"
+          class="share-dropdown"
           role="menu"
-          aria-label={t.common.share.button}
+          aria-label={t().common.share.button}
         >
           {/* Copy Link */}
           <button
             type="button"
-            className={cn(
+            class={cn(
               'share-dropdown-item',
-              copied && 'share-dropdown-item--success'
+              copied() && 'share-dropdown-item--success'
             )}
             onClick={handleCopyLink}
             role="menuitem"
           >
-            <span className="share-item-icon" aria-hidden="true">
-              {copied ? '✓' : '🔗'}
+            <span class="share-item-icon" aria-hidden="true">
+              {copied() ? '✓' : '🔗'}
             </span>
-            <span className="share-item-label">
-              {copied ? t.common.share.copied : t.common.share.copyLink}
+            <span class="share-item-label">
+              {copied() ? t().common.share.copied : t().common.share.copyLink}
             </span>
           </button>
 
           {/* Native Share (mobile) */}
-          {hasNativeShare && (
+          <Show when={hasNativeShare}>
             <button
               type="button"
-              className="share-dropdown-item"
+              class="share-dropdown-item"
               onClick={handleNativeShare}
               role="menuitem"
             >
-              <span className="share-item-icon" aria-hidden="true">
+              <span class="share-item-icon" aria-hidden="true">
                 📤
               </span>
-              <span className="share-item-label">{t.common.share.more}</span>
+              <span class="share-item-label">{t().common.share.more}</span>
             </button>
-          )}
+          </Show>
 
-          <div className="share-dropdown-divider" role="separator" />
+          <div class="share-dropdown-divider" role="separator" />
 
           {/* Social Share Links */}
-          {shareLinks.map((link) => (
-            <button
-              key={link.name}
-              type="button"
-              className="share-dropdown-item"
-              onClick={() => handleShareClick(link.url)}
-              role="menuitem"
-            >
-              <span className="share-item-icon" aria-hidden="true">
-                {link.icon}
-              </span>
-              <span className="share-item-label">{link.label}</span>
-            </button>
-          ))}
+          <For each={shareLinks()}>
+            {(link) => (
+              <button
+                type="button"
+                class="share-dropdown-item"
+                onClick={() => handleShareClick(link.url)}
+                role="menuitem"
+              >
+                <span class="share-item-icon" aria-hidden="true">
+                  {link.icon}
+                </span>
+                <span class="share-item-label">{link.label}</span>
+              </button>
+            )}
+          </For>
         </div>
-      )}
+      </Show>
     </div>
   );
-});
-
-ShareButton.displayName = 'ShareButton';
+};
