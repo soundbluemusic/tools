@@ -10,8 +10,12 @@
 @import '../src/styles/not-found.css';
 
 /* ============================================
- * Tailwind CSS v4 - Utilities Only (No Preflight)
- * Preflight is disabled to avoid conflicts with existing styles
+ * Tailwind CSS v4 - Architecture Pattern
+ *
+ * 정적 스타일: Tailwind CSS 유틸리티 클래스
+ * 동적 스타일: style 속성 (좌표/크기/애니메이션)
+ *
+ * 기존 CSS와의 호환성을 위해 utilities 레이어만 사용
  * ============================================ */
 @import "tailwindcss/utilities";
 
@@ -147,42 +151,72 @@
 
 /* ============================================
  * Footer Styles
+ * Full-width footer that extends under sidebar
+ * Improved spacing and visual hierarchy
  * ============================================ */
 .footer {
-  padding: 1.5rem 1rem;
+  padding: var(--spacing-8) var(--spacing-4);
   border-top: 1px solid var(--color-border-primary);
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-primary);
+}
+
+/* Desktop: Extend footer to full width (under sidebar) */
+@media (min-width: 1024px) {
+  .footer {
+    margin-left: -240px; /* Sidebar width */
+    width: calc(100% + 240px);
+    padding: var(--spacing-10) var(--spacing-8);
+    padding-left: calc(240px + var(--spacing-8));
+  }
+
+  /* When sidebar is collapsed, reset to normal */
+  .sidebar-collapsed .footer {
+    margin-left: 0;
+    width: 100%;
+    padding-left: var(--spacing-8);
+  }
 }
 
 .footer-share {
   display: flex;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-6);
 }
 
 .footer-menu {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem 1rem;
-  margin-bottom: 1rem;
+  gap: var(--spacing-2) var(--spacing-6);
+  margin-bottom: var(--spacing-6);
 }
 
 .footer-link {
   color: var(--color-text-secondary);
   text-decoration: none;
-  font-size: 0.875rem;
-  transition: color var(--transition-fast);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--transition-fast) var(--ease-default),
+    background-color var(--transition-fast) var(--ease-default);
 }
 
 .footer-link:hover {
   color: var(--color-text-primary);
+  background-color: var(--color-interactive-hover);
+}
+
+.footer-link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
 }
 
 .footer-copyright {
   text-align: center;
   color: var(--color-text-tertiary);
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   margin: 0;
 }
 

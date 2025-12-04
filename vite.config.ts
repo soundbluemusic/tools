@@ -3,9 +3,15 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import wasm from 'vite-plugin-wasm';
 import topLevelAwait from 'vite-plugin-top-level-await';
+import { VitePWA } from 'vite-plugin-pwa';
+
+// React Compiler configuration
+const ReactCompilerConfig = {
+  target: '19',
+};
 
 // https://vitejs.dev/config/
-// React Router v7 Framework Mode + Tailwind CSS v4 + WASM
+// React Router v7 Framework Mode + Tailwind CSS v4 + WASM + PWA + React Compiler
 export default defineConfig(({ mode }) => ({
   plugins: [
     // WASM support for audio/video/image processing
@@ -13,8 +19,162 @@ export default defineConfig(({ mode }) => ({
     topLevelAwait(),
     // Tailwind CSS v4
     tailwindcss(),
-    // React Router v7 Framework Mode
-    reactRouter(),
+    // React Router v7 Framework Mode with React Compiler
+    reactRouter({
+      babel: {
+        plugins: [['babel-plugin-react-compiler', ReactCompilerConfig]],
+      },
+    }),
+    // PWA Support
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['icons/*.png', 'og-image.png', 'robots.txt'],
+      manifest: {
+        name: 'Tools - Open Source Productivity Tools',
+        short_name: 'Tools',
+        description: '무료 온라인 도구 모음. QR 코드 생성기, 메트로놈, 드럼 머신 등 유용한 도구를 무료로 사용하세요.',
+        theme_color: '#242424',
+        background_color: '#1a1a1a',
+        display: 'standalone',
+        orientation: 'portrait-primary',
+        scope: '/',
+        start_url: '/',
+        categories: ['utilities', 'music', 'productivity'],
+        icons: [
+          {
+            src: '/icons/icon-72.png',
+            sizes: '72x72',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-96.png',
+            sizes: '96x96',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-128.png',
+            sizes: '128x128',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-144.png',
+            sizes: '144x144',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-152.png',
+            sizes: '152x152',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-384.png',
+            sizes: '384x384',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-maskable-192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+          {
+            src: '/icons/icon-maskable-512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
+        screenshots: [
+          {
+            src: '/icons/screenshot-wide.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Tools Dashboard',
+          },
+          {
+            src: '/icons/screenshot-narrow.png',
+            sizes: '640x1136',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Tools Mobile',
+          },
+        ],
+      },
+      workbox: {
+        // Cache strategies
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'gstatic-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'images-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+          {
+            urlPattern: /\.(?:wasm)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'wasm-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+            },
+          },
+        ],
+        // Skip waiting for faster updates
+        skipWaiting: true,
+        clientsClaim: true,
+        // Clean old caches
+        cleanupOutdatedCaches: true,
+      },
+      devOptions: {
+        enabled: false,
+      },
+    }),
   ],
   build: {
     // Target modern browsers for smaller bundles (Cloudflare Edge 호환)

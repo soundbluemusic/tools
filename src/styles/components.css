@@ -27,13 +27,36 @@
 }
 
 /* ============================================
- * Home Page
+ * Home Page - Full Width Layout
+ *
+ * Fills available space beside sidebar
+ * Uses design tokens for consistent spacing
+ *
+ * Breakpoints (Mobile First):
+ * - 0-639px: Mobile
+ * - 640-767px: Large mobile
+ * - 768-1023px: Tablet
+ * - 1024+: Desktop (with sidebar)
  * ============================================ */
 
 .home-page {
-  padding: var(--spacing-6) var(--spacing-4);
-  max-width: var(--container-xl);
-  margin: 0 auto;
+  /* Fill available space - no max-width constraint */
+  width: 100%;
+
+  /* Consistent spacing using design tokens */
+  padding: var(--spacing-4); /* 16px */
+}
+
+@media (min-width: 768px) {
+  .home-page {
+    padding: var(--spacing-6); /* 24px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-page {
+    padding: var(--spacing-8); /* 32px */
+  }
 }
 
 .home-header {
@@ -41,8 +64,20 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-4);
-  margin-bottom: var(--spacing-6);
+  margin-bottom: var(--spacing-4);
   flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .home-header {
+    margin-bottom: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-header {
+    margin-bottom: var(--spacing-8);
+  }
 }
 
 .home-title {
@@ -59,10 +94,6 @@
 }
 
 @media (max-width: 480px) {
-  .home-page {
-    padding: var(--spacing-4) var(--spacing-3);
-  }
-
   .home-header {
     flex-direction: column;
     align-items: flex-start;
@@ -204,7 +235,192 @@
 }
 
 /* ============================================
- * App List
+ * App Grid - Responsive Card Layout
+ *
+ * Uses consistent design tokens for spacing
+ * Breakpoints aligned with sidebar behavior
+ * ============================================ */
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-4);
+}
+
+@media (min-width: 640px) {
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .app-grid {
+    gap: var(--spacing-5);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+  }
+}
+
+@media (min-width: 1280px) {
+  .app-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1536px) {
+  .app-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.app-grid--pending {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ============================================
+ * App Card Item - Minimal Modern Design (Anthropic style)
+ * Subtle hover with scale transform
+ * ============================================ */
+
+.app-card-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: var(--spacing-5);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    transform var(--transition-normal) var(--ease-out),
+    box-shadow var(--transition-normal) var(--ease-out),
+    border-color var(--transition-normal) var(--ease-out);
+}
+
+@media (min-width: 1024px) {
+  .app-card-item {
+    padding: var(--spacing-6);
+  }
+}
+
+/* Minimal hover - scale instead of translateY */
+.app-card-item:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-border-primary);
+}
+
+.app-card-item:active {
+  transform: scale(0.99);
+}
+
+/* Focus visible for accessibility */
+.app-card-item:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+/* Touch device - no hover transform */
+@media (hover: none) {
+  .app-card-item:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .app-card-item {
+    transition: none;
+  }
+  .app-card-item:hover {
+    transform: none;
+  }
+}
+
+/* Icon Container */
+.app-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-bottom: var(--spacing-4);
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+  transition: transform var(--transition-normal) var(--ease-out);
+}
+
+@media (min-width: 1024px) {
+  .app-card-icon {
+    width: 4rem;
+    height: 4rem;
+    border-radius: var(--radius-lg);
+  }
+}
+
+.app-card-item:hover .app-card-icon {
+  transform: scale(1.05);
+}
+
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .app-card-item:hover .app-card-icon {
+    transform: none;
+  }
+}
+
+.app-card-emoji {
+  font-size: 1.75rem;
+  line-height: var(--line-height-none);
+}
+
+@media (min-width: 1024px) {
+  .app-card-emoji {
+    font-size: 2rem;
+  }
+}
+
+/* Content - Enhanced visual hierarchy */
+.app-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.app-card-title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-snug);
+  letter-spacing: var(--letter-spacing-tight);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.app-card-desc {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-relaxed);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ============================================
+ * Legacy App List (deprecated - use app-grid)
  * ============================================ */
 
 .app-list {
@@ -250,7 +466,7 @@
 }
 
 /* ============================================
- * App Card (Grid View)
+ * App Card (Legacy - for backward compatibility)
  * ============================================ */
 
 .app-card {
@@ -263,6 +479,7 @@
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--color-text-primary);
+  transition: all 0.2s ease;
 }
 
 .app-card:hover {

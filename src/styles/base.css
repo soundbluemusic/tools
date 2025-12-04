@@ -39,7 +39,7 @@ body {
   min-height: 100vh;
 }
 
-/* Headings */
+/* Headings - Enhanced typography */
 h1,
 h2,
 h3,
@@ -48,6 +48,7 @@ h5,
 h6 {
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 /* Links */
@@ -134,14 +135,15 @@ table {
   border: 0;
 }
 
-/* Focus visible for keyboard navigation */
+/* Focus visible for keyboard navigation - Enhanced accessibility */
 :focus:not(:focus-visible) {
   outline: none;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-border-focus);
+  outline: 2px solid var(--color-accent-primary);
   outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* Selection */

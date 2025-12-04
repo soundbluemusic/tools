@@ -56,7 +56,8 @@
   --color-gradient-end: #44403c;
 
   /* ============================================
-   * Typography
+   * Typography - Fluid Scale (Anthropic/OpenAI style)
+   * Using clamp() for responsive typography
    * ============================================ */
   --font-family-base:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
@@ -64,26 +65,34 @@
   --font-family-mono:
     'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
 
-  --font-size-xs: 0.75rem; /* 12px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-base: 1rem; /* 16px */
-  --font-size-lg: 1.125rem; /* 18px */
-  --font-size-xl: 1.25rem; /* 20px */
-  --font-size-2xl: 1.5rem; /* 24px */
-  --font-size-3xl: 1.875rem; /* 30px */
+  /* Fluid font sizes: clamp(min, preferred, max) */
+  --font-size-xs: 0.75rem; /* 12px - static for small text */
+  --font-size-sm: 0.875rem; /* 14px - static for labels */
+  --font-size-base: 1rem; /* 16px - body text */
+  --font-size-lg: clamp(1.0625rem, 1rem + 0.25vw, 1.125rem); /* 17-18px */
+  --font-size-xl: clamp(1.125rem, 1rem + 0.5vw, 1.25rem); /* 18-20px */
+  --font-size-2xl: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem); /* 20-24px */
+  --font-size-3xl: clamp(1.5rem, 1.25rem + 1.25vw, 2rem); /* 24-32px */
+  --font-size-4xl: clamp(1.875rem, 1.5rem + 1.875vw, 2.5rem); /* 30-40px */
+  --font-size-5xl: clamp(2.25rem, 1.75rem + 2.5vw, 3rem); /* 36-48px */
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --line-height-tight: 1.25;
+  --line-height-none: 1;
+  --line-height-tight: 1.2;
+  --line-height-snug: 1.35;
   --line-height-base: 1.5;
-  --line-height-relaxed: 1.75;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 1.75;
 
+  --letter-spacing-tighter: -0.03em;
   --letter-spacing-tight: -0.02em;
   --letter-spacing-normal: 0;
   --letter-spacing-wide: 0.02em;
+  --letter-spacing-wider: 0.05em;
 
   /* ============================================
    * Spacing
@@ -111,22 +120,21 @@
   --radius-full: 9999px;
 
   /* ============================================
-   * Shadows - Subtle & Warm
+   * Shadows - Minimal & Modern (Anthropic style)
+   * Subtle shadows for depth without distraction
    * ============================================ */
-  --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.03);
-  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
-  --shadow-md:
-    0 2px 4px rgba(28, 25, 23, 0.04), 0 1px 2px rgba(28, 25, 23, 0.02);
-  --shadow-lg: 0 4px 12px rgba(28, 25, 23, 0.06);
-  --shadow-xl: 0 8px 24px rgba(28, 25, 23, 0.08);
-  --shadow-2xl: 0 16px 48px rgba(28, 25, 23, 0.12);
-  --shadow-focus: 0 0 0 2px var(--color-interactive-focus);
-  --shadow-focus-ring:
-    0 0 0 2px var(--color-bg-secondary), 0 0 0 4px rgba(28, 25, 23, 0.15);
-  --shadow-card: 0 1px 2px rgba(28, 25, 23, 0.02);
-  --shadow-card-hover: 0 4px 12px rgba(28, 25, 23, 0.06);
+  --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-sm: 0 1px 3px rgba(28, 25, 23, 0.03), 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-md: 0 4px 6px rgba(28, 25, 23, 0.04), 0 2px 4px rgba(28, 25, 23, 0.02);
+  --shadow-lg: 0 8px 16px rgba(28, 25, 23, 0.05), 0 4px 8px rgba(28, 25, 23, 0.03);
+  --shadow-xl: 0 12px 24px rgba(28, 25, 23, 0.06), 0 6px 12px rgba(28, 25, 23, 0.04);
+  --shadow-2xl: 0 20px 40px rgba(28, 25, 23, 0.08), 0 8px 16px rgba(28, 25, 23, 0.04);
+  --shadow-focus: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-accent-primary);
+  --shadow-focus-ring: 0 0 0 2px var(--color-bg-secondary), 0 0 0 4px rgba(28, 25, 23, 0.12);
+  --shadow-card: 0 1px 3px rgba(28, 25, 23, 0.02);
+  --shadow-card-hover: 0 6px 12px rgba(28, 25, 23, 0.05), 0 2px 4px rgba(28, 25, 23, 0.02);
   --shadow-glow: 0 0 0 transparent;
-  --shadow-inner: inset 0 1px 2px rgba(28, 25, 23, 0.03);
+  --shadow-inner: inset 0 1px 2px rgba(28, 25, 23, 0.02);
 
   /* ============================================
    * Transitions
@@ -221,17 +229,18 @@
  * ============================================ */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --color-bg-primary: #1a1918;
-    --color-bg-secondary: #212120;
-    --color-bg-tertiary: #292827;
-    --color-bg-elevated: #2f2e2d;
-    --color-bg-overlay: rgba(0, 0, 0, 0.5);
+    --color-bg-primary: #171717;
+    --color-bg-secondary: #1f1f1f;
+    --color-bg-tertiary: #262626;
+    --color-bg-elevated: #2a2a2a;
+    --color-bg-overlay: rgba(0, 0, 0, 0.6);
 
-    --color-text-primary: #ececec;
-    --color-text-secondary: #a8a8a8;
-    --color-text-tertiary: #737373;
-    --color-text-inverse: #1a1918;
-    --color-text-brand: #ececec;
+    /* Improved contrast for accessibility */
+    --color-text-primary: #f5f5f5;
+    --color-text-secondary: #b3b3b3;
+    --color-text-tertiary: #808080;
+    --color-text-inverse: #171717;
+    --color-text-brand: #f5f5f5;
 
     --color-border-primary: #333231;
     --color-border-secondary: #292827;
@@ -284,17 +293,18 @@
 
 /* Manual dark mode override via data-theme attribute */
 :root[data-theme='dark'] {
-  --color-bg-primary: #1a1918;
-  --color-bg-secondary: #212120;
-  --color-bg-tertiary: #292827;
-  --color-bg-elevated: #2f2e2d;
-  --color-bg-overlay: rgba(0, 0, 0, 0.5);
+  --color-bg-primary: #171717;
+  --color-bg-secondary: #1f1f1f;
+  --color-bg-tertiary: #262626;
+  --color-bg-elevated: #2a2a2a;
+  --color-bg-overlay: rgba(0, 0, 0, 0.6);
 
-  --color-text-primary: #ececec;
-  --color-text-secondary: #a8a8a8;
-  --color-text-tertiary: #737373;
-  --color-text-inverse: #1a1918;
-  --color-text-brand: #ececec;
+  /* Improved contrast for accessibility */
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #b3b3b3;
+  --color-text-tertiary: #808080;
+  --color-text-inverse: #171717;
+  --color-text-brand: #f5f5f5;
 
   --color-border-primary: #333231;
   --color-border-secondary: #292827;

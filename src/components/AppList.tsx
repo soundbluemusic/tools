@@ -11,15 +11,14 @@ interface AppListProps {
 }
 
 /**
- * AppList Component - Optimized list layout
- * - Direct iteration without useMemo (small list overhead)
- * - CSS containment handles repaint isolation
+ * AppList Component - Responsive Grid Layout
+ * CSS Grid로 반응형 카드 그리드 구현
  */
 const AppList = memo<AppListProps>(
   function AppList({ apps, isPending = false, language, ariaLabel }) {
     return (
       <nav
-        className={`app-list${isPending ? ' pending' : ''}`}
+        className={`app-grid${isPending ? ' app-grid--pending' : ''}`}
         role="list"
         aria-label={ariaLabel}
         aria-busy={isPending}
@@ -30,7 +29,6 @@ const AppList = memo<AppListProps>(
       </nav>
     );
   },
-  // Custom comparison - re-render if apps, pending, or language changes
   (prevProps, nextProps) =>
     prevProps.apps === nextProps.apps &&
     prevProps.isPending === nextProps.isPending &&

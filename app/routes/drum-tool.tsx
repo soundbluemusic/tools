@@ -8,6 +8,9 @@ import { FullscreenButton } from '../../src/components/FullscreenButton';
 import { useLanguage } from '../../src/i18n';
 import { useSEO } from '../../src/hooks';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 const drumToolSEO = {
   ko: {
     title: '드럼 툴 - 드럼 머신 + 사운드 합성기',

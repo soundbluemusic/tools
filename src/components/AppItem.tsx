@@ -10,27 +10,22 @@ interface AppItemProps {
 }
 
 /**
- * AppItem Component - Single app card item
- * - Shows icon, name, and description
- * - GPU accelerated hover via CSS
- * - View Transitions API support for smooth navigation
+ * AppItem Component - Clean Card Design
+ * YouTube/App Store 스타일의 깔끔한 카드 그리드
  */
 const AppItem = memo<AppItemProps>(
   function AppItem({ app, language }) {
     const { createClickHandler } = useViewTransition();
     const { toLocalizedPath } = useLocalizedPath();
 
-    // Get localized name and description
     const name = app.name[language];
     const desc = app.desc[language];
 
-    // Get localized URL
     const localizedUrl = useMemo(
       () => toLocalizedPath(app.url),
       [toLocalizedPath, app.url]
     );
 
-    // Memoized click handler using shared View Transition hook
     const handleClick = useMemo(
       () => createClickHandler(localizedUrl),
       [createClickHandler, localizedUrl]
@@ -39,20 +34,21 @@ const AppItem = memo<AppItemProps>(
     return (
       <Link
         to={localizedUrl}
-        className="app-card"
+        className="app-card-item"
         aria-label={`${name} - ${desc}`}
         role="listitem"
         onClick={handleClick}
       >
-        <span className="icon">{app.icon}</span>
-        <div className="app-info">
-          <span className="name">{name}</span>
-          <span className="desc">{desc}</span>
+        <div className="app-card-icon">
+          <span className="app-card-emoji">{app.icon}</span>
+        </div>
+        <div className="app-card-content">
+          <h3 className="app-card-title">{name}</h3>
+          <p className="app-card-desc">{desc}</p>
         </div>
       </Link>
     );
   },
-  // Re-render if app.id or language changes
   (prevProps, nextProps) =>
     prevProps.app.id === nextProps.app.id &&
     prevProps.language === nextProps.language

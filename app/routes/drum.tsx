@@ -8,6 +8,9 @@ import { FullscreenButton } from '../../src/components/FullscreenButton';
 import { useTranslations } from '../../src/i18n/context';
 import { useSEO } from '../../src/hooks';
 
+// Route-level Error Boundary
+export { RouteErrorBoundary as ErrorBoundary } from '../components/RouteErrorBoundary';
+
 export const meta: Route.MetaFunction = () => [
   { title: 'Drum Machine - Online Drum Pattern Sequencer | Tools' },
   { name: 'description', content: '온라인 드럼 머신. 드럼 패턴을 만들고 연습하세요. MIDI 가져오기/내보내기 지원.' },
