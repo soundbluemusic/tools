@@ -3,7 +3,7 @@ import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
-import '../pages/Legal.css';
+import '../styles/pages/Legal.css';
 
 /**
  * Privacy Policy Page

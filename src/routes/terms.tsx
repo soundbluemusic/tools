@@ -4,7 +4,7 @@ import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n';
 import { useSEO } from '../hooks';
 import { BRAND } from '../constants';
-import '../pages/Legal.css';
+import '../styles/pages/Legal.css';
 
 /**
  * Terms of Service Page

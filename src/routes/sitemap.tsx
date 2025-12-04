@@ -5,7 +5,7 @@ import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
 import { useSEO, useLocalizedPath } from '../hooks';
 import { APPS, BRAND } from '../constants';
-import '../pages/Sitemap.css';
+import '../styles/pages/Sitemap.css';
 
 interface SitemapSection {
   title: { ko: string; en: string };
