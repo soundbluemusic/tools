@@ -1,8 +1,13 @@
 /* ============================================
- * Import Design System (Variables + Base Reset)
+ * CSS Imports (MUST be at the top)
  * ============================================ */
 @import '../src/styles/variables.css';
 @import '../src/styles/base.css';
+@import '../src/components/navigation/NavigationLayout.css';
+@import '../src/styles/components.css';
+@import '../src/styles/tool-page.css';
+@import '../src/styles/qr-page.css';
+@import '../src/styles/not-found.css';
 
 /* ============================================
  * Tailwind CSS v4 - Utilities Only (No Preflight)
@@ -190,12 +195,3 @@
   justify-content: center;
   min-height: 50vh;
 }
-
-/* ============================================
- * Import existing component styles
- * ============================================ */
-@import '../src/components/navigation/NavigationLayout.css';
-@import '../src/styles/components.css';
-@import '../src/styles/tool-page.css';
-@import '../src/styles/qr-page.css';
-@import '../src/styles/not-found.css';
