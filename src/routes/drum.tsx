@@ -1,0 +1,61 @@
+import { createMemo, type Component } from 'solid-js';
+import { Title, Meta } from '@solidjs/meta';
+import { PageLayout } from '../components/layout';
+import { DrumMachine } from '../apps/drum/components/DrumMachine';
+import { ShareButton } from '../components/ShareButton';
+import { EmbedButton } from '../components/EmbedButton';
+import { FullscreenButton } from '../components/FullscreenButton';
+import { useTranslations } from '../i18n/context';
+import { useSEO } from '../hooks';
+
+/**
+ * Drum Machine Tool Page
+ */
+const Drum: Component = () => {
+  const t = useTranslations();
+  const drum = () => t().drum;
+
+  useSEO({
+    title: drum().seo.title,
+    description: drum().seo.description,
+    keywords: drum().seo.keywords,
+    canonicalPath: '/drum',
+  });
+
+  const breadcrumb = createMemo(() => [
+    { label: { ko: '홈', en: 'Home' }, href: '/' },
+    { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/music-tools' },
+    { label: { ko: drum().title, en: drum().title } },
+  ]);
+
+  return (
+    <>
+      <Title>{drum().seo.title} | Tools</Title>
+      <Meta name="description" content={drum().seo.description} />
+
+      <PageLayout
+        title={drum().title}
+        description={drum().description}
+        breadcrumb={breadcrumb()}
+        actions={
+          <>
+            <EmbedButton
+              title={drum().title}
+              defaultWidth={500}
+              defaultHeight={600}
+            />
+            <FullscreenButton />
+            <ShareButton
+              title={drum().title}
+              description={drum().description}
+            />
+          </>
+        }
+      >
+        <DrumMachine />
+      </PageLayout>
+    </>
+  );
+};
+
+export default Drum;
