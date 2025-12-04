@@ -2,19 +2,19 @@
  * useSEO hook tests
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { renderHook } from '@testing-library/react';
-import { type ReactNode } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { renderHook } from '@solidjs/testing-library';
+import { type JSX } from 'solid-js';
+import { Router } from '@solidjs/router';
 import { useSEO } from './useSEO';
 import { BRAND } from '../constants';
 import { LanguageProvider } from '../i18n';
 
 // Wrapper component for hooks that need LanguageProvider
-// BrowserRouter must wrap LanguageProvider because LanguageProvider uses useLocation
-const wrapper = ({ children }: { children: ReactNode }) => (
-  <BrowserRouter>
-    <LanguageProvider>{children}</LanguageProvider>
-  </BrowserRouter>
+// Router must wrap LanguageProvider because LanguageProvider uses useLocation
+const wrapper = (props: { children: JSX.Element }) => (
+  <Router>
+    <LanguageProvider>{props.children}</LanguageProvider>
+  </Router>
 );
 
 describe('useSEO', () => {
@@ -146,18 +146,17 @@ describe('useSEO', () => {
   });
 
   it('updates meta tags when config changes', () => {
-    const { rerender } = renderHook(({ config }) => useSEO(config), {
-      initialProps: {
-        config: { title: 'Initial', description: 'Initial desc' },
-      },
-      wrapper,
-    });
+    const { rerender } = renderHook(
+      (config: { title: string; description: string }) => useSEO(config),
+      {
+        initialProps: { title: 'Initial', description: 'Initial desc' },
+        wrapper,
+      }
+    );
 
     expect(document.title).toBe('Initial | Tools');
 
-    rerender({
-      config: { title: 'Updated', description: 'Updated desc' },
-    });
+    rerender({ title: 'Updated', description: 'Updated desc' });
 
     expect(document.title).toBe('Updated | Tools');
   });

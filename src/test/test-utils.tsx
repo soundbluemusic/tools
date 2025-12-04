@@ -1,36 +1,33 @@
 /**
  * Test Utilities
- * Custom render function with providers
+ * Custom render function with providers for Solid.js
  */
-import { type ReactElement, type ReactNode } from 'react';
-import { render, type RenderOptions } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { type JSX } from 'solid-js';
+import { render, type RenderResult } from '@solidjs/testing-library';
+import { Router } from '@solidjs/router';
 import { LanguageProvider } from '../i18n';
 
 /**
  * All providers wrapper for testing
- * BrowserRouter must wrap LanguageProvider because LanguageProvider uses useLocation
+ * Router must wrap LanguageProvider because LanguageProvider uses useLocation
  */
-function AllProviders({ children }: { children: ReactNode }) {
+function AllProviders(props: { children: JSX.Element }) {
   return (
-    <BrowserRouter>
-      <LanguageProvider>{children}</LanguageProvider>
-    </BrowserRouter>
+    <Router>
+      <LanguageProvider>{props.children}</LanguageProvider>
+    </Router>
   );
 }
 
 /**
  * Custom render function with all providers
  */
-function customRender(
-  ui: ReactElement,
-  options?: Omit<RenderOptions, 'wrapper'>
-) {
-  return render(ui, { wrapper: AllProviders, ...options });
+function customRender(ui: () => JSX.Element): RenderResult {
+  return render(() => <AllProviders>{ui()}</AllProviders>);
 }
 
 // Re-export everything from testing-library
-export * from '@testing-library/react';
+export * from '@solidjs/testing-library';
 export { userEvent } from '@testing-library/user-event';
 
 // Override render with custom render

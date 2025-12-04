@@ -1,8 +1,8 @@
 /**
  * useImageProcessor Hook
- * React hook for image processing utilities
+ * Solid.js hook for image processing utilities
  */
-import { useState, useCallback } from 'react';
+import { createSignal } from 'solid-js';
 import {
   resizeImage,
   cropImage,
@@ -28,7 +28,7 @@ export interface ProcessingState {
  * Hook return type
  */
 export interface UseImageProcessorReturn {
-  state: ProcessingState;
+  state: () => ProcessingState;
   resize: (
     source: File | Blob,
     options: ImageProcessOptions
@@ -69,113 +69,87 @@ export interface UseImageProcessorReturn {
 }
 
 /**
- * Hook for image processing in React components
+ * Hook for image processing in Solid.js components
  */
 export function useImageProcessor(): UseImageProcessorReturn {
-  const [state, setState] = useState<ProcessingState>({
+  const [state, setState] = createSignal<ProcessingState>({
     isProcessing: false,
     error: null,
   });
 
-  const wrapOperation = useCallback(
+  const wrapOperation =
     <T>(operation: () => Promise<T>) =>
-      async (): Promise<T | null> => {
-        setState({ isProcessing: true, error: null });
-        try {
-          const result = await operation();
-          setState({ isProcessing: false, error: null });
-          return result;
-        } catch (error) {
-          setState({
-            isProcessing: false,
-            error:
-              error instanceof Error ? error : new Error('Processing failed'),
-          });
-          return null;
-        }
-      },
-    []
-  );
+    async (): Promise<T | null> => {
+      setState({ isProcessing: true, error: null });
+      try {
+        const result = await operation();
+        setState({ isProcessing: false, error: null });
+        return result;
+      } catch (error) {
+        setState({
+          isProcessing: false,
+          error:
+            error instanceof Error ? error : new Error('Processing failed'),
+        });
+        return null;
+      }
+    };
 
-  const resize = useCallback(
-    async (source: File | Blob, options: ImageProcessOptions) => {
-      return wrapOperation(() => resizeImage(source, options))();
-    },
-    [wrapOperation]
-  );
+  const resize = async (source: File | Blob, options: ImageProcessOptions) => {
+    return wrapOperation(() => resizeImage(source, options))();
+  };
 
-  const crop = useCallback(
-    async (
-      source: File | Blob,
-      cropArea: { x: number; y: number; width: number; height: number },
-      options?: Omit<ImageProcessOptions, 'width' | 'height'>
-    ) => {
-      return wrapOperation(() => cropImage(source, cropArea, options))();
-    },
-    [wrapOperation]
-  );
+  const crop = async (
+    source: File | Blob,
+    cropArea: { x: number; y: number; width: number; height: number },
+    options?: Omit<ImageProcessOptions, 'width' | 'height'>
+  ) => {
+    return wrapOperation(() => cropImage(source, cropArea, options))();
+  };
 
-  const applyFiltersWrapped = useCallback(
-    async (
-      source: File | Blob,
-      filters: FilterOptions,
-      options?: Omit<ImageProcessOptions, 'width' | 'height'>
-    ) => {
-      return wrapOperation(() => applyFilters(source, filters, options))();
-    },
-    [wrapOperation]
-  );
+  const applyFiltersWrapped = async (
+    source: File | Blob,
+    filters: FilterOptions,
+    options?: Omit<ImageProcessOptions, 'width' | 'height'>
+  ) => {
+    return wrapOperation(() => applyFilters(source, filters, options))();
+  };
 
-  const rotate = useCallback(
-    async (
-      source: File | Blob,
-      degrees: number,
-      options?: Omit<ImageProcessOptions, 'width' | 'height'>
-    ) => {
-      return wrapOperation(() => rotateImage(source, degrees, options))();
-    },
-    [wrapOperation]
-  );
+  const rotate = async (
+    source: File | Blob,
+    degrees: number,
+    options?: Omit<ImageProcessOptions, 'width' | 'height'>
+  ) => {
+    return wrapOperation(() => rotateImage(source, degrees, options))();
+  };
 
-  const flip = useCallback(
-    async (
-      source: File | Blob,
-      direction: 'horizontal' | 'vertical',
-      options?: Omit<ImageProcessOptions, 'width' | 'height'>
-    ) => {
-      return wrapOperation(() => flipImage(source, direction, options))();
-    },
-    [wrapOperation]
-  );
+  const flip = async (
+    source: File | Blob,
+    direction: 'horizontal' | 'vertical',
+    options?: Omit<ImageProcessOptions, 'width' | 'height'>
+  ) => {
+    return wrapOperation(() => flipImage(source, direction, options))();
+  };
 
-  const convert = useCallback(
-    async (
-      source: File | Blob,
-      format: 'jpeg' | 'png' | 'webp',
-      quality?: number
-    ) => {
-      return wrapOperation(() => convertImage(source, format, quality))();
-    },
-    [wrapOperation]
-  );
+  const convert = async (
+    source: File | Blob,
+    format: 'jpeg' | 'png' | 'webp',
+    quality?: number
+  ) => {
+    return wrapOperation(() => convertImage(source, format, quality))();
+  };
 
-  const getDimensions = useCallback(
-    async (source: File | Blob) => {
-      return wrapOperation(() => getImageDimensions(source))();
-    },
-    [wrapOperation]
-  );
+  const getDimensions = async (source: File | Blob) => {
+    return wrapOperation(() => getImageDimensions(source))();
+  };
 
-  const thumbnail = useCallback(
-    async (
-      source: File | Blob,
-      maxSize: number,
-      options?: Omit<ImageProcessOptions, 'width' | 'height'>
-    ) => {
-      return wrapOperation(() => createThumbnail(source, maxSize, options))();
-    },
-    [wrapOperation]
-  );
+  const thumbnail = async (
+    source: File | Blob,
+    maxSize: number,
+    options?: Omit<ImageProcessOptions, 'width' | 'height'>
+  ) => {
+    return wrapOperation(() => createThumbnail(source, maxSize, options))();
+  };
 
   return {
     state,
