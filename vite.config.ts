@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import wasm from 'vite-plugin-wasm';
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 // React Compiler configuration
 // https://react.dev/learn/react-compiler
@@ -12,6 +14,9 @@ const ReactCompilerConfig = {
 // Cloudflare Pages 최적화 설정 + React Compiler (자동 메모이제이션)
 export default defineConfig(({ mode }) => ({
   plugins: [
+    // WASM support for audio/video/image processing
+    wasm(),
+    topLevelAwait(),
     react({
       // Use automatic JSX runtime for smaller bundles
       jsxRuntime: 'automatic',
@@ -118,8 +123,8 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
-        // Cache strategies
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
+        // Cache strategies (including WASM files)
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,wasm}'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
