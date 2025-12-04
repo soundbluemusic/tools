@@ -22,7 +22,7 @@ export const Footer: Component = () => {
   return (
     <footer class="footer">
       {/* Share Button - lazy loaded (always shares homepage) */}
-      <div class="footer-share">
+      <div class="flex justify-center mb-6">
         <Suspense fallback={null}>
           <ShareButton
             variant="footer"
@@ -34,36 +34,56 @@ export const Footer: Component = () => {
       </div>
 
       {/* Footer Menu */}
-      <nav class="footer-menu" aria-label="Footer navigation">
-        <Link href={getPath('/privacy')} class="footer-link">
+      <nav
+        class="flex flex-wrap justify-center gap-y-2 gap-x-6 mb-6"
+        aria-label="Footer navigation"
+      >
+        <Link
+          href={getPath('/privacy')}
+          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+        >
           {t().common.footer.privacy}
         </Link>
-        <Link href={getPath('/terms')} class="footer-link">
+        <Link
+          href={getPath('/terms')}
+          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+        >
           {t().common.footer.terms}
         </Link>
         <Show when={BRAND.githubUrl}>
           <a
             href={BRAND.githubUrl}
-            class="footer-link"
+            class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
             target="_blank"
             rel="noopener noreferrer"
           >
             {t().common.footer.github}
           </a>
         </Show>
-        <Link href={getPath('/sitemap')} class="footer-link">
+        <Link
+          href={getPath('/sitemap')}
+          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+        >
           {t().common.footer.sitemap}
         </Link>
-        <Link href={getPath('/opensource')} class="footer-link">
+        <Link
+          href={getPath('/opensource')}
+          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+        >
           {t().common.footer.opensource}
         </Link>
-        <Link href={getPath('/tools-used')} class="footer-link">
+        <Link
+          href={getPath('/tools-used')}
+          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+        >
           {t().common.footer.toolsUsed}
         </Link>
       </nav>
 
       {/* Copyright */}
-      <p class="footer-copyright">© {BRAND.copyrightHolder}. MIT License</p>
+      <p class="text-center text-[var(--color-text-tertiary)] text-xs m-0">
+        © {BRAND.copyrightHolder}. MIT License
+      </p>
     </footer>
   );
 };
