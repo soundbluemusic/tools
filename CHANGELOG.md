@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_향후 변경사항이 여기에 기록됩니다._
+### Added
+
+- WASM 모듈 추가로 계산 집약적 작업 성능 대폭 향상
+  - QR 코드 투명 배경 처리 (10-25x 속도 향상)
+  - 드럼 신스 노이즈 버퍼 생성 (XorShift128+ PRNG)
+  - 디스토션 커브 계산
+  - WAV 인코딩 (Float32 → Int16 변환)
+- AssemblyScript 기반 WASM 빌드 시스템 (`npm run wasm:build`)
+- JS 폴백 지원으로 WASM 미지원 환경 호환
 
 ---
 

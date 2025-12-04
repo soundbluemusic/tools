@@ -44,7 +44,8 @@ npm run dev
 | 프레임워크 | React               | 19   |
 | 라우팅     | React Router        | 7    |
 | 언어       | TypeScript          | 5    |
-| 빌드       | Vite                | 6    |
+| 빌드       | Vite                | 7    |
+| WASM       | AssemblyScript      | -    |
 | 테스트     | Vitest + Playwright | -    |
 | 배포       | Cloudflare Pages    | -    |
 

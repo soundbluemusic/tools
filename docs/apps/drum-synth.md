@@ -52,6 +52,18 @@ Noise Source → Gain (Mix) ──────────↑
 - `AudioBufferSourceNode`: 노이즈 생성
 - `WaveShaperNode`: 디스토션 효과
 
+## WASM 최적화
+
+계산 집약적 작업에 WebAssembly를 활용하여 성능을 향상시킵니다:
+
+| 기능 | 용도 | 성능 향상 |
+|:-----|:-----|:---------|
+| `generateNoiseBuffer` | 노이즈 버퍼 생성 (XorShift128+ PRNG) | 5-10x |
+| `makeDistortionCurve` | 디스토션 웨이브셰이퍼 커브 | 3-5x |
+| `floatToInt16` | WAV 인코딩 (Float32 → Int16) | 5-10x |
+
+**JS 폴백:** WASM 미지원 환경에서는 자동으로 JavaScript 구현이 사용됩니다.
+
 ## 관련 링크
 
 - [드럼머신](./drum.md) - 생성한 사운드로 패턴 만들기

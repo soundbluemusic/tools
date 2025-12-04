@@ -182,7 +182,14 @@ const CLAUDE_MD_VERSION_MAPPINGS: ClaudeMdVersionMapping[] = [
     name: 'React',
     dependency: 'react',
     source: 'dependencies',
-    pattern: /(\| Framework \| React \| )\^[\d.]+/g,
+    pattern: /(\| Framework\s+\| React\s+\| )\^[\d.]+/g,
+    replacement: (version) => `$1${version}`,
+  },
+  {
+    name: 'AssemblyScript',
+    dependency: 'assemblyscript',
+    source: 'devDependencies',
+    pattern: /(\| WASM\s+\| AssemblyScript\s+\| )\^[\d.]+/g,
     replacement: (version) => `$1${version}`,
   },
   {
@@ -252,6 +259,7 @@ interface OpenSourceVersionMapping {
 }
 
 const OPENSOURCE_VERSION_MAPPINGS: OpenSourceVersionMapping[] = [
+  { name: 'AssemblyScript', dependency: 'assemblyscript', source: 'devDependencies', libraryName: 'AssemblyScript' },
   { name: 'React', dependency: 'react', source: 'dependencies', libraryName: 'React' },
   { name: 'React DOM', dependency: 'react-dom', source: 'dependencies', libraryName: 'React DOM' },
   { name: 'React Router DOM', dependency: 'react-router-dom', source: 'dependencies', libraryName: 'React Router DOM' },
