@@ -27,6 +27,54 @@
 }
 
 /* ============================================
+ * Home Page
+ * ============================================ */
+
+.home-page {
+  padding: var(--spacing-6) var(--spacing-4);
+  max-width: var(--container-xl);
+  margin: 0 auto;
+}
+
+.home-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+  flex-wrap: wrap;
+}
+
+.home-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.home-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: var(--spacing-4) var(--spacing-3);
+  }
+
+  .home-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+  }
+
+  .home-title {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* ============================================
  * Header & Controls
  * ============================================ */
 
