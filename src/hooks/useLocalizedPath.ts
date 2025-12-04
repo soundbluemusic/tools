@@ -1,8 +1,5 @@
-import { useCallback, useMemo } from 'react';
-import {
-  useLocation,
-  useNavigate as useRouterNavigate,
-} from 'react-router-dom';
+import { createMemo, type Accessor } from 'solid-js';
+import { useLocation, useNavigate as useRouterNavigate } from '@solidjs/router';
 import { useLanguage } from '../i18n';
 import type { Language } from '../i18n/types';
 
@@ -57,25 +54,19 @@ export function getLanguageFromPath(pathname: string): Language {
  */
 export function useLocalizedPath() {
   const { language } = useLanguage();
+  const location = useLocation();
 
   /**
    * Convert a base path to a localized path
    */
-  const toLocalizedPath = useCallback(
-    (path: string): string => {
-      return localizedPath(path, language);
-    },
-    [language]
-  );
+  const toLocalizedPath = (path: string): string => {
+    return localizedPath(path, language());
+  };
 
   /**
    * Get the current base path (without language prefix)
    */
-  const location = useLocation();
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
-    [location.pathname]
-  );
+  const basePath = createMemo(() => getBasePath(location.pathname));
 
   return {
     toLocalizedPath,
@@ -99,11 +90,8 @@ export function useLocalizedNavigate() {
   const navigate = useRouterNavigate();
   const { language } = useLanguage();
 
-  return useCallback(
-    (path: string, options?: NavigateOptions) => {
-      const localPath = localizedPath(path, language);
-      navigate(localPath, options);
-    },
-    [navigate, language]
-  );
+  return (path: string, options?: NavigateOptions) => {
+    const localPath = localizedPath(path, language());
+    navigate(localPath, options);
+  };
 }

@@ -1,9 +1,4 @@
-import {
-  memo,
-  forwardRef,
-  type ButtonHTMLAttributes,
-  type ReactNode,
-} from 'react';
+import { type JSX, type ParentComponent, Show, splitProps } from 'solid-js';
 import { cn } from '../../utils';
 import { SIZE_CLASSES } from '../../utils/sizeClass';
 
@@ -15,7 +10,7 @@ const VARIANT_CLASSES = {
   outline: 'btn--outline',
 } as const;
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   /** Button variant */
   variant?: 'primary' | 'secondary' | 'ghost' | 'outline';
   /** Button size */
@@ -25,60 +20,64 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Loading state */
   loading?: boolean;
   /** Start icon */
-  startIcon?: ReactNode;
+  startIcon?: JSX.Element;
   /** End icon */
-  endIcon?: ReactNode;
+  endIcon?: JSX.Element;
+  /** Reference to button element */
+  ref?: HTMLButtonElement | ((el: HTMLButtonElement) => void);
 }
 
 /**
  * Button component with variants and loading state
  */
-export const Button = memo(
-  forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-    {
-      variant = 'primary',
-      size = 'md',
-      fullWidth = false,
-      loading = false,
-      startIcon,
-      endIcon,
-      disabled,
-      className,
-      children,
-      ...props
-    },
-    ref
-  ) {
-    const variantClass = VARIANT_CLASSES[variant];
-    const sizeClass = SIZE_CLASSES.btn[size];
+export const Button: ParentComponent<ButtonProps> = (props) => {
+  const [local, others] = splitProps(props, [
+    'variant',
+    'size',
+    'fullWidth',
+    'loading',
+    'startIcon',
+    'endIcon',
+    'disabled',
+    'class',
+    'children',
+    'ref',
+  ]);
 
-    return (
-      <button
-        ref={ref}
-        className={cn(
-          'btn',
-          variantClass,
-          sizeClass,
-          fullWidth && 'btn--full-width',
-          loading && 'btn--loading',
-          className
-        )}
-        disabled={disabled || loading}
-        aria-busy={loading || undefined}
-        aria-disabled={disabled || loading || undefined}
-        {...props}
-      >
-        {loading && <span className="btn-spinner" aria-hidden="true" />}
-        {!loading && startIcon && (
-          <span className="btn-icon btn-icon--start">{startIcon}</span>
-        )}
-        <span className="btn-content">{children}</span>
-        {!loading && endIcon && (
-          <span className="btn-icon btn-icon--end">{endIcon}</span>
-        )}
-      </button>
-    );
-  })
-);
+  const variant = () => local.variant ?? 'primary';
+  const size = () => local.size ?? 'md';
+  const fullWidth = () => local.fullWidth ?? false;
+  const loading = () => local.loading ?? false;
 
-Button.displayName = 'Button';
+  const variantClass = () => VARIANT_CLASSES[variant()];
+  const sizeClass = () => SIZE_CLASSES.btn[size()];
+
+  return (
+    <button
+      ref={local.ref}
+      class={cn(
+        'btn',
+        variantClass(),
+        sizeClass(),
+        fullWidth() && 'btn--full-width',
+        loading() && 'btn--loading',
+        local.class
+      )}
+      disabled={local.disabled || loading()}
+      aria-busy={loading() || undefined}
+      aria-disabled={local.disabled || loading() || undefined}
+      {...others}
+    >
+      <Show when={loading()}>
+        <span class="btn-spinner" aria-hidden="true" />
+      </Show>
+      <Show when={!loading() && local.startIcon}>
+        <span class="btn-icon btn-icon--start">{local.startIcon}</span>
+      </Show>
+      <span class="btn-content">{local.children}</span>
+      <Show when={!loading() && local.endIcon}>
+        <span class="btn-icon btn-icon--end">{local.endIcon}</span>
+      </Show>
+    </button>
+  );
+};

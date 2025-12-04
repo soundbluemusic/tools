@@ -1,23 +1,22 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { createSignal, createEffect, onCleanup, type Accessor } from 'solid-js';
 
 /**
  * Custom hook that debounces a value
- * @param value - Value to debounce
+ * @param value - Value accessor to debounce
  * @param delay - Delay in milliseconds (default: 300)
- * @returns Debounced value
+ * @returns Debounced value accessor
  */
-export function useDebounce<T>(value: T, delay = 300): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+export function useDebounce<T>(value: Accessor<T>, delay = 300): Accessor<T> {
+  const [debouncedValue, setDebouncedValue] = createSignal<T>(value());
 
-  useEffect(() => {
+  createEffect(() => {
+    const currentValue = value();
     const timer = setTimeout(() => {
-      setDebouncedValue(value);
+      setDebouncedValue(() => currentValue);
     }, delay);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
+    onCleanup(() => clearTimeout(timer));
+  });
 
   return debouncedValue;
 }
@@ -32,33 +31,22 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay = 300
 ): (...args: Parameters<T>) => void {
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const callbackRef = useRef(callback);
-
-  // Update callback ref on each render
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+  onCleanup(() => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+  });
 
-  return useCallback(
-    (...args: Parameters<T>) => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+  return (...args: Parameters<T>) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
 
-      timeoutRef.current = setTimeout(() => {
-        callbackRef.current(...args);
-      }, delay);
-    },
-    [delay]
-  );
+    timeoutId = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
 }

@@ -1,4 +1,5 @@
-import { memo } from 'react';
+import type { Component } from 'solid-js';
+import { For } from 'solid-js';
 import { cn } from '../../utils';
 
 interface SkeletonProps {
@@ -11,42 +12,39 @@ interface SkeletonProps {
   /** Animation type */
   animation?: 'pulse' | 'wave' | 'none';
   /** Additional class names */
-  className?: string;
+  class?: string;
 }
+
+const VARIANT_CLASSES = {
+  text: 'skeleton--text',
+  circular: 'skeleton--circular',
+  rectangular: 'skeleton--rectangular',
+  rounded: 'skeleton--rounded',
+} as const;
+
+const ANIMATION_CLASSES = {
+  pulse: 'skeleton--pulse',
+  wave: 'skeleton--wave',
+  none: '',
+} as const;
 
 /**
  * Skeleton loading placeholder component
  */
-export const Skeleton = memo<SkeletonProps>(function Skeleton({
-  width,
-  height,
-  variant = 'text',
-  animation = 'pulse',
-  className,
-}) {
-  const variantClass = {
-    text: 'skeleton--text',
-    circular: 'skeleton--circular',
-    rectangular: 'skeleton--rectangular',
-    rounded: 'skeleton--rounded',
-  }[variant];
-
-  const animationClass = {
-    pulse: 'skeleton--pulse',
-    wave: 'skeleton--wave',
-    none: '',
-  }[animation];
+export const Skeleton: Component<SkeletonProps> = (props) => {
+  const variant = () => props.variant ?? 'text';
+  const animation = () => props.animation ?? 'pulse';
+  const variantClass = () => VARIANT_CLASSES[variant()];
+  const animationClass = () => ANIMATION_CLASSES[animation()];
 
   return (
     <div
-      className={cn('skeleton', variantClass, animationClass, className)}
-      style={{ width, height }}
+      class={cn('skeleton', variantClass(), animationClass(), props.class)}
+      style={{ width: props.width, height: props.height }}
       aria-hidden="true"
     />
   );
-});
-
-Skeleton.displayName = 'Skeleton';
+};
 
 interface SkeletonListProps {
   /** Number of skeleton items */
@@ -58,24 +56,24 @@ interface SkeletonListProps {
 /**
  * Skeleton list for loading states
  */
-export const SkeletonList = memo<SkeletonListProps>(function SkeletonList({
-  count = 5,
-  itemHeight = '3.5rem',
-}) {
+export const SkeletonList: Component<SkeletonListProps> = (props) => {
+  const count = () => props.count ?? 5;
+  const itemHeight = () => props.itemHeight ?? '3.5rem';
+
   return (
     <div
-      className="skeleton-list"
+      class="skeleton-list"
       role="status"
       aria-busy="true"
       aria-label="Loading applications"
     >
-      {Array.from({ length: count }, (_, i) => (
-        <div key={i} className="skeleton-item" style={{ height: itemHeight }}>
-          <Skeleton width="60%" height="1.2rem" />
-        </div>
-      ))}
+      <For each={Array.from({ length: count() })}>
+        {(_, i) => (
+          <div class="skeleton-item" style={{ height: itemHeight() }}>
+            <Skeleton width="60%" height="1.2rem" />
+          </div>
+        )}
+      </For>
     </div>
   );
-});
-
-SkeletonList.displayName = 'SkeletonList';
+};

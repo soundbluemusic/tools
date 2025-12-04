@@ -1,5 +1,6 @@
 import { APPS } from '../constants/apps';
 import type { App } from '../types';
+import type { JSX } from 'solid-js';
 
 interface AppsContextValue {
   apps: readonly App[];
@@ -29,6 +30,6 @@ export function useApps(): AppsContextValue {
  * @deprecated AppsProvider는 더 이상 필요하지 않음 (정적 데이터)
  * 하위 호환성을 위해 유지하지만, children만 렌더링
  */
-export function AppsProvider({ children }: { children: React.ReactNode }) {
-  return children;
+export function AppsProvider(props: { children: JSX.Element }) {
+  return props.children;
 }

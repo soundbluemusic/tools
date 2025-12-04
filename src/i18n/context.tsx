@@ -1,13 +1,13 @@
 import {
   createContext,
   useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  type ReactNode,
-} from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+  createSignal,
+  createEffect,
+  createMemo,
+  type ParentComponent,
+  type Accessor,
+} from 'solid-js';
+import { useLocation, useNavigate } from '@solidjs/router';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
@@ -49,18 +49,16 @@ const allTranslations: AllTranslations = {
  * Language context value type
  */
 interface LanguageContextValue {
-  language: Language;
+  language: Accessor<Language>;
   setLanguage: (lang: Language) => void;
   toggleLanguage: () => void;
-  t: Translations;
+  t: Accessor<Translations>;
 }
 
 /**
  * Language context with default values
  */
-const LanguageContext = createContext<LanguageContextValue | undefined>(
-  undefined
-);
+const LanguageContext = createContext<LanguageContextValue>();
 
 /**
  * Local storage key for language preference
@@ -137,61 +135,58 @@ const getInitialLanguage = (): Language => {
  * Wraps the app to provide language context to all components
  * Syncs language with URL path for SEO
  */
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export const LanguageProvider: ParentComponent = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
+  const [language, setLanguageState] = createSignal<Language>(getInitialLanguage());
 
   // Sync language state with URL on navigation
-  useEffect(() => {
+  createEffect(() => {
     const urlLanguage = getLanguageFromPath(location.pathname);
-    if (urlLanguage !== language) {
+    if (urlLanguage !== language()) {
       setLanguageState(urlLanguage);
       setStorageItem(LANGUAGE_STORAGE_KEY, urlLanguage);
     }
-  }, [location.pathname, language]);
+  });
 
   // Save language preference to localStorage and navigate to new URL
-  const setLanguage = useCallback(
-    (lang: Language) => {
-      if (lang === language) return;
+  const setLanguage = (lang: Language) => {
+    if (lang === language()) return;
 
-      setLanguageState(lang);
-      setStorageItem(LANGUAGE_STORAGE_KEY, lang);
+    setLanguageState(lang);
+    setStorageItem(LANGUAGE_STORAGE_KEY, lang);
 
-      // Navigate to the same page with new language prefix
-      const basePath = getBasePath(location.pathname);
-      const newPath =
-        lang === 'ko'
-          ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` ||
-            KOREAN_PREFIX
-          : basePath;
-      navigate(newPath, { replace: true });
-    },
-    [language, location.pathname, navigate]
-  );
+    // Navigate to the same page with new language prefix
+    const basePath = getBasePath(location.pathname);
+    const newPath =
+      lang === 'ko'
+        ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` || KOREAN_PREFIX
+        : basePath;
+    navigate(newPath, { replace: true });
+  };
 
   // Toggle between languages with URL update
-  const toggleLanguage = useCallback(() => {
-    const newLang = language === 'ko' ? 'en' : 'ko';
+  const toggleLanguage = () => {
+    const newLang = language() === 'ko' ? 'en' : 'ko';
     setLanguage(newLang);
-  }, [language, setLanguage]);
+  };
 
   // Current translations based on language
-  const t = allTranslations[language];
+  const t = createMemo(() => allTranslations[language()]);
 
-  // Memoize context value to prevent unnecessary re-renders of consumers
-  const contextValue = useMemo<LanguageContextValue>(
-    () => ({ language, setLanguage, toggleLanguage, t }),
-    [language, setLanguage, toggleLanguage, t]
-  );
+  const value = createMemo<LanguageContextValue>(() => ({
+    language,
+    setLanguage,
+    toggleLanguage,
+    t,
+  }));
 
   return (
-    <LanguageContext.Provider value={contextValue}>
-      {children}
+    <LanguageContext.Provider value={value()}>
+      {props.children}
     </LanguageContext.Provider>
   );
-}
+};
 
 /**
  * Hook to use language context
@@ -209,6 +204,6 @@ export function useLanguage(): LanguageContextValue {
  * Hook to get translations directly
  * Shorthand for useLanguage().t
  */
-export function useTranslations(): Translations {
+export function useTranslations(): Accessor<Translations> {
   return useLanguage().t;
 }

@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect } from 'react';
+import { createSignal, createEffect, onCleanup, type ParentComponent } from 'solid-js';
 import { Header } from '../Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
@@ -8,7 +8,6 @@ import './NavigationLayout.css';
 
 interface NavigationLayoutProps {
   apps: App[];
-  children: React.ReactNode;
 }
 
 /**
@@ -23,36 +22,33 @@ interface NavigationLayoutProps {
  * CSS handles visibility based on viewport size.
  * This prevents hydration mismatches and flickering.
  */
-export const NavigationLayout = memo(function NavigationLayout({
-  apps,
-  children,
-}: NavigationLayoutProps) {
-  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isBottomNavOpen, setIsBottomNavOpen] = useState(true);
+export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (props) => {
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = createSignal(false);
+  const [isSidebarOpen, setIsSidebarOpen] = createSignal(true);
+  const [isBottomNavOpen, setIsBottomNavOpen] = createSignal(true);
 
   // Toggle sidebar
-  const toggleSidebar = useCallback(() => {
+  const toggleSidebar = () => {
     setIsSidebarOpen((prev) => !prev);
-  }, []);
+  };
 
   // Toggle bottom nav
-  const toggleBottomNav = useCallback(() => {
+  const toggleBottomNav = () => {
     setIsBottomNavOpen((prev) => !prev);
-  }, []);
+  };
 
   // Open command palette
-  const openCommandPalette = useCallback(() => {
+  const openCommandPalette = () => {
     setIsCommandPaletteOpen(true);
-  }, []);
+  };
 
   // Close command palette
-  const closeCommandPalette = useCallback(() => {
+  const closeCommandPalette = () => {
     setIsCommandPaletteOpen(false);
-  }, []);
+  };
 
   // Global keyboard shortcut for Cmd+K / Ctrl+K
-  useEffect(() => {
+  createEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Cmd+K (Mac) or Ctrl+K (Windows/Linux)
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -73,39 +69,37 @@ export const NavigationLayout = memo(function NavigationLayout({
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+    onCleanup(() => document.removeEventListener('keydown', handleKeyDown));
+  });
 
   return (
     <div
-      className={`navigation-layout${isSidebarOpen ? '' : ' sidebar-collapsed'}`}
+      class={`navigation-layout${isSidebarOpen() ? '' : ' sidebar-collapsed'}`}
     >
       {/* Fixed Header */}
       <Header
         onSearchClick={openCommandPalette}
         onSidebarToggle={toggleSidebar}
-        isSidebarOpen={isSidebarOpen}
+        isSidebarOpen={isSidebarOpen()}
       />
 
       {/* Desktop Sidebar - CSS controls visibility */}
-      <Sidebar apps={apps} isOpen={isSidebarOpen} />
+      <Sidebar apps={props.apps} isOpen={isSidebarOpen()} />
 
       {/* Main Content Wrapper */}
-      <div className="navigation-content">
-        <div className="content-wrapper">{children}</div>
+      <div class="navigation-content">
+        <div class="content-wrapper">{props.children}</div>
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}
-      <BottomNav onToggle={toggleBottomNav} isOpen={isBottomNavOpen} />
+      <BottomNav onToggle={toggleBottomNav} isOpen={isBottomNavOpen()} />
 
       {/* Command Palette (Universal) */}
       <CommandPalette
-        isOpen={isCommandPaletteOpen}
+        isOpen={isCommandPaletteOpen()}
         onClose={closeCommandPalette}
-        apps={apps}
+        apps={props.apps}
       />
     </div>
   );
-});
-
-NavigationLayout.displayName = 'NavigationLayout';
+};

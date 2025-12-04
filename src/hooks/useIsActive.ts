@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { createMemo, type Accessor } from 'solid-js';
+import { useLocation } from '@solidjs/router';
 import { getBasePath } from './useLocalizedPath';
 
 /**
@@ -16,22 +16,22 @@ export function useIsActive() {
   const location = useLocation();
 
   // Get base path without language prefix
-  const basePath = useMemo(
-    () => getBasePath(location.pathname),
-    [location.pathname]
-  );
+  const basePath = createMemo(() => getBasePath(location.pathname));
 
-  const isActive = useCallback(
-    (path: string) => {
-      // Compare against base path (without language prefix)
-      if (path === '/')
-        return basePath === '/' || location.pathname === KOREAN_PREFIX;
-      // Exact match or match with trailing content that starts with /
-      // This prevents /drum from matching /drum-synth
-      return basePath === path || basePath.startsWith(path + '/');
-    },
-    [basePath, location.pathname]
-  );
+  const isActive = (path: string): boolean => {
+    const currentBasePath = basePath();
+    // Compare against base path (without language prefix)
+    if (path === '/') {
+      return currentBasePath === '/' || location.pathname === KOREAN_PREFIX;
+    }
+    // Exact match or match with trailing content that starts with /
+    // This prevents /drum from matching /drum-synth
+    return currentBasePath === path || currentBasePath.startsWith(path + '/');
+  };
 
-  return { isActive, pathname: location.pathname, basePath };
+  return {
+    isActive,
+    pathname: () => location.pathname,
+    basePath,
+  };
 }

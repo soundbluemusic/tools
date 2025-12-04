@@ -1,13 +1,12 @@
 import {
   createContext,
   useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  memo,
-} from 'react';
-import type { ReactNode } from 'react';
+  createSignal,
+  createEffect,
+  createMemo,
+  type ParentComponent,
+  type Accessor,
+} from 'solid-js';
 import {
   getStorageItem,
   setStorageItem,
@@ -22,14 +21,14 @@ const THEME_STORAGE_KEY = 'theme-preference';
 
 interface ThemeContextValue {
   /** Current theme setting */
-  theme: Theme;
+  theme: Accessor<Theme>;
   /** Set theme preference */
   setTheme: (theme: Theme) => void;
   /** Toggle between light and dark */
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+const ThemeContext = createContext<ThemeContextValue>();
 
 /**
  * Hook to access theme context
@@ -42,58 +41,57 @@ export function useTheme(): ThemeContextValue {
   return context;
 }
 
-interface ThemeProviderProps {
-  children: ReactNode;
+/**
+ * Get initial theme from storage or system preference
+ */
+function getInitialTheme(): Theme {
+  const isTheme = createEnumValidator(THEMES);
+  const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
+    validator: (v): v is Theme => isTheme(v),
+  });
+  if (stored) return stored;
+
+  // Default to system preference on first visit
+  if (typeof window !== 'undefined') {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  }
+  return 'light';
 }
 
 /**
  * Theme provider component
  * Manages theme state and applies to document
  */
-export const ThemeProvider = memo(function ThemeProvider({
-  children,
-}: ThemeProviderProps) {
-  const isTheme = createEnumValidator(THEMES);
-
-  // Get initial theme from storage or detect system preference
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = getStorageItem<Theme | null>(THEME_STORAGE_KEY, null, {
-      validator: (v): v is Theme => isTheme(v),
-    });
-    if (stored) return stored;
-    // Default to system preference on first visit
-    if (typeof window !== 'undefined') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-    }
-    return 'light';
-  });
+export const ThemeProvider: ParentComponent = (props) => {
+  const [theme, setThemeState] = createSignal<Theme>(getInitialTheme());
 
   // Apply theme to document
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-  }, [theme]);
+  createEffect(() => {
+    document.documentElement.dataset.theme = theme();
+  });
 
   // Set theme and persist
-  const setTheme = useCallback((newTheme: Theme) => {
+  const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
     setStorageItem(THEME_STORAGE_KEY, newTheme);
-  }, []);
+  };
 
   // Toggle between light and dark
-  const toggleTheme = useCallback(() => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  }, [theme, setTheme]);
+  const toggleTheme = () => {
+    setTheme(theme() === 'light' ? 'dark' : 'light');
+  };
 
-  const value = useMemo(
-    () => ({ theme, setTheme, toggleTheme }),
-    [theme, setTheme, toggleTheme]
-  );
+  const value = createMemo(() => ({
+    theme,
+    setTheme,
+    toggleTheme,
+  }));
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value()}>
+      {props.children}
+    </ThemeContext.Provider>
   );
-});
-
-ThemeProvider.displayName = 'ThemeProvider';
+};

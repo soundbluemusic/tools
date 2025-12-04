@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@solidjs/router';
 
 /**
  * Custom hook for navigation with View Transitions API support
@@ -13,36 +12,30 @@ export function useViewTransition() {
   /**
    * Navigate to a URL with View Transitions API support
    */
-  const navigateWithTransition = useCallback(
-    (to: string) => {
-      if (document.startViewTransition) {
-        document.startViewTransition(() => {
-          navigate(to);
-        });
-      } else {
+  const navigateWithTransition = (to: string) => {
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
         navigate(to);
-      }
-    },
-    [navigate]
-  );
+      });
+    } else {
+      navigate(to);
+    }
+  };
 
   /**
    * Create a click handler for Link components that uses View Transitions
    * @param to - Target URL
    * @returns Click event handler
    */
-  const createClickHandler = useCallback(
-    (to: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-      if (document.startViewTransition) {
-        e.preventDefault();
-        document.startViewTransition(() => {
-          navigate(to);
-        });
-      }
-      // If View Transitions not supported, let Link handle navigation normally
-    },
-    [navigate]
-  );
+  const createClickHandler = (to: string) => (e: MouseEvent) => {
+    if (document.startViewTransition) {
+      e.preventDefault();
+      document.startViewTransition(() => {
+        navigate(to);
+      });
+    }
+    // If View Transitions not supported, let Link handle navigation normally
+  };
 
   return {
     navigateWithTransition,

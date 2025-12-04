@@ -1,4 +1,4 @@
-import { memo, forwardRef, type SelectHTMLAttributes } from 'react';
+import { type JSX, type Component, Show, For, splitProps } from 'solid-js';
 import { cn } from '../../utils';
 import { SIZE_CLASSES } from '../../utils/sizeClass';
 
@@ -8,10 +8,8 @@ export interface SelectOption<T extends string = string> {
   disabled?: boolean;
 }
 
-export interface SelectProps<T extends string = string> extends Omit<
-  SelectHTMLAttributes<HTMLSelectElement>,
-  'size'
-> {
+export interface SelectProps<T extends string = string>
+  extends Omit<JSX.SelectHTMLAttributes<HTMLSelectElement>, 'size'> {
   /** Select options */
   options: readonly SelectOption<T>[];
   /** Placeholder text */
@@ -22,62 +20,56 @@ export interface SelectProps<T extends string = string> extends Omit<
   fullWidth?: boolean;
   /** Error state */
   error?: boolean;
+  /** Reference to select element */
+  ref?: HTMLSelectElement | ((el: HTMLSelectElement) => void);
 }
 
 /**
  * Select component with variants
  */
-function SelectInner<T extends string = string>(
-  {
-    options,
-    placeholder,
-    size = 'md',
-    fullWidth = false,
-    error = false,
-    className,
-    disabled,
-    ...props
-  }: SelectProps<T>,
-  ref: React.Ref<HTMLSelectElement>
-) {
-  const sizeClass = SIZE_CLASSES.select[size];
+export const Select: Component<SelectProps> = (props) => {
+  const [local, others] = splitProps(props, [
+    'options',
+    'placeholder',
+    'size',
+    'fullWidth',
+    'error',
+    'class',
+    'disabled',
+    'ref',
+  ]);
+
+  const size = () => local.size ?? 'md';
+  const fullWidth = () => local.fullWidth ?? false;
+  const error = () => local.error ?? false;
+  const sizeClass = () => SIZE_CLASSES.select[size()];
 
   return (
     <select
-      ref={ref}
-      className={cn(
+      ref={local.ref}
+      class={cn(
         'select',
-        sizeClass,
-        fullWidth && 'select--full-width',
-        error && 'select--error',
-        disabled && 'select--disabled',
-        className
+        sizeClass(),
+        fullWidth() && 'select--full-width',
+        error() && 'select--error',
+        local.disabled && 'select--disabled',
+        local.class
       )}
-      disabled={disabled}
-      {...props}
+      disabled={local.disabled}
+      {...others}
     >
-      {placeholder && (
+      <Show when={local.placeholder}>
         <option value="" disabled>
-          {placeholder}
+          {local.placeholder}
         </option>
-      )}
-      {options.map((option) => (
-        <option
-          key={option.value}
-          value={option.value}
-          disabled={option.disabled}
-        >
-          {option.label}
-        </option>
-      ))}
+      </Show>
+      <For each={local.options}>
+        {(option) => (
+          <option value={option.value} disabled={option.disabled}>
+            {option.label}
+          </option>
+        )}
+      </For>
     </select>
   );
-}
-
-export const Select = memo(forwardRef(SelectInner)) as <
-  T extends string = string,
->(
-  props: SelectProps<T> & { ref?: React.Ref<HTMLSelectElement> }
-) => React.ReactElement;
-
-(Select as { displayName?: string }).displayName = 'Select';
+};
