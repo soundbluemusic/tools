@@ -3,7 +3,7 @@
  * Shared audio context and settings management
  */
 import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import { devtools } from './middleware';
 
 // ============================================
 // Types

@@ -3,7 +3,8 @@
  * Zustand store for metronome state management
  */
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { persist } from 'zustand/middleware';
+import { devtools } from './middleware';
 
 // ============================================
 // Types
@@ -42,7 +43,11 @@ interface MetronomeActions {
   setBeat: (beat: number) => void;
   setMeasureCount: (count: number) => void;
   setPendulumAngle: (angle: number) => void;
-  updateVisuals: (beat: number, measureCount: number, pendulumAngle: number) => void;
+  updateVisuals: (
+    beat: number,
+    measureCount: number,
+    pendulumAngle: number
+  ) => void;
   resetPlayback: () => void;
 
   // Timer actions
@@ -115,8 +120,7 @@ export const useMetronomeStore = create<MetronomeStore>()(
         setBeatUnit: (unit) => set({ beatUnit: unit }, false, 'setBeatUnit'),
 
         // Playback actions
-        setIsPlaying: (isPlaying) =>
-          set({ isPlaying }, false, 'setIsPlaying'),
+        setIsPlaying: (isPlaying) => set({ isPlaying }, false, 'setIsPlaying'),
 
         setBeat: (beat) => set({ beat }, false, 'setBeat'),
 
