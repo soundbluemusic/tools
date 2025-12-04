@@ -1,12 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  memo,
-  useMemo,
-} from 'react';
-import { loadApps } from '../constants/apps';
+import { createContext, useContext, memo, useMemo } from 'react';
+import { APPS } from '../constants/apps';
 import type { App } from '../types';
 
 interface AppsContextValue {
@@ -21,32 +14,15 @@ interface AppsProviderProps {
 }
 
 /**
- * Provider component that loads and caches the apps list
- * Shares apps data across the application
+ * Provider component that provides the apps list
+ * Apps are loaded synchronously via eager import.meta.glob
+ * This ensures apps are available during pre-rendering
  */
 export const AppsProvider = memo(function AppsProvider({
   children,
 }: AppsProviderProps) {
-  const [apps, setApps] = useState<App[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Load apps on mount
-  useEffect(() => {
-    let mounted = true;
-
-    loadApps().then((loadedApps) => {
-      if (mounted) {
-        setApps(loadedApps);
-        setIsLoading(false);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  const value = useMemo(() => ({ apps, isLoading }), [apps, isLoading]);
+  // Apps are loaded synchronously - always available
+  const value = useMemo(() => ({ apps: APPS, isLoading: false }), []);
 
   return <AppsContext.Provider value={value}>{children}</AppsContext.Provider>;
 });
