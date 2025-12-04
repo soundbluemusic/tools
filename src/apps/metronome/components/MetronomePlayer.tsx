@@ -1,13 +1,7 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  memo,
-  useCallback,
-  useReducer,
-} from 'react';
+import { useEffect, useRef, memo, useCallback } from 'react';
 import { useTranslations } from '../../../i18n';
 import type { MetronomeTranslation } from '../../../i18n/types';
+import { useMetronomeStore } from '../../../stores';
 import {
   DEFAULTS,
   BPM_RANGE,
@@ -28,122 +22,6 @@ export interface MetronomePlayerProps {
   translations?: MetronomeTranslation;
 }
 
-// ============================================
-// Timer State Management
-// ============================================
-
-interface TimerState {
-  timerMinutes: string;
-  timerSeconds: string;
-  countdownTime: number;
-  countdownElapsed: number;
-  elapsedTime: number;
-}
-
-type TimerAction =
-  | { type: 'SET_TIMER_MINUTES'; payload: string }
-  | { type: 'SET_TIMER_SECONDS'; payload: string }
-  | { type: 'SET_COUNTDOWN_TIME'; payload: number }
-  | { type: 'SET_COUNTDOWN_ELAPSED'; payload: number }
-  | { type: 'SET_ELAPSED_TIME'; payload: number }
-  | { type: 'START_COUNTDOWN'; payload: number }
-  | {
-      type: 'UPDATE_ELAPSED';
-      payload: { elapsed: number; countdownElapsed?: number };
-    }
-  | { type: 'RESET' };
-
-const initialTimerState: TimerState = {
-  timerMinutes: '',
-  timerSeconds: '',
-  countdownTime: 0,
-  countdownElapsed: 0,
-  elapsedTime: 0,
-};
-
-function timerReducer(state: TimerState, action: TimerAction): TimerState {
-  switch (action.type) {
-    case 'SET_TIMER_MINUTES':
-      return { ...state, timerMinutes: action.payload };
-    case 'SET_TIMER_SECONDS':
-      return { ...state, timerSeconds: action.payload };
-    case 'SET_COUNTDOWN_TIME':
-      return { ...state, countdownTime: action.payload };
-    case 'SET_COUNTDOWN_ELAPSED':
-      return { ...state, countdownElapsed: action.payload };
-    case 'SET_ELAPSED_TIME':
-      return { ...state, elapsedTime: action.payload };
-    case 'START_COUNTDOWN':
-      return { ...state, countdownTime: action.payload, countdownElapsed: 0 };
-    case 'UPDATE_ELAPSED':
-      return {
-        ...state,
-        elapsedTime: action.payload.elapsed,
-        countdownElapsed:
-          action.payload.countdownElapsed ?? state.countdownElapsed,
-      };
-    case 'RESET':
-      return initialTimerState;
-    default:
-      return state;
-  }
-}
-
-// ============================================
-// Playback State Management
-// ============================================
-
-interface PlaybackState {
-  isPlaying: boolean;
-  beat: number;
-  measureCount: number;
-  pendulumAngle: number;
-}
-
-type PlaybackAction =
-  | { type: 'SET_PLAYING'; payload: boolean }
-  | { type: 'SET_BEAT'; payload: number }
-  | { type: 'SET_MEASURE_COUNT'; payload: number }
-  | { type: 'SET_PENDULUM_ANGLE'; payload: number }
-  | {
-      type: 'UPDATE_VISUALS';
-      payload: { beat: number; measureCount: number; pendulumAngle: number };
-    }
-  | { type: 'RESET' };
-
-const initialPlaybackState: PlaybackState = {
-  isPlaying: false,
-  beat: 0,
-  measureCount: 0,
-  pendulumAngle: 0,
-};
-
-function playbackReducer(
-  state: PlaybackState,
-  action: PlaybackAction
-): PlaybackState {
-  switch (action.type) {
-    case 'SET_PLAYING':
-      return { ...state, isPlaying: action.payload };
-    case 'SET_BEAT':
-      return { ...state, beat: action.payload };
-    case 'SET_MEASURE_COUNT':
-      return { ...state, measureCount: action.payload };
-    case 'SET_PENDULUM_ANGLE':
-      return { ...state, pendulumAngle: action.payload };
-    case 'UPDATE_VISUALS':
-      return {
-        ...state,
-        beat: action.payload.beat,
-        measureCount: action.payload.measureCount,
-        pendulumAngle: action.payload.pendulumAngle,
-      };
-    case 'RESET':
-      return initialPlaybackState;
-    default:
-      return state;
-  }
-}
 
 /**
  * Note icon component for beat visualization
@@ -245,30 +123,35 @@ NoteIcon.displayName = 'NoteIcon';
 const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
   translations,
 }) {
-  // Settings state (simple values, rarely change together)
-  const [bpm, setBpm] = useState<number>(DEFAULTS.BPM);
-  const [volume, setVolume] = useState<number>(DEFAULTS.VOLUME);
-  const [beatsPerMeasure, setBeatsPerMeasure] = useState<number>(
-    DEFAULTS.BEATS_PER_MEASURE
-  );
-  const [beatUnit, setBeatUnit] = useState<number>(DEFAULTS.BEAT_UNIT);
-
-  // Playback state (frequently updated together during animation)
-  const [playback, dispatchPlayback] = useReducer(
-    playbackReducer,
-    initialPlaybackState
-  );
-  const { isPlaying, beat, measureCount, pendulumAngle } = playback;
-
-  // Timer state (interrelated values for countdown/elapsed tracking)
-  const [timer, dispatchTimer] = useReducer(timerReducer, initialTimerState);
+  // Zustand store state
   const {
+    bpm,
+    setBpm,
+    volume,
+    setVolume,
+    beatsPerMeasure,
+    setBeatsPerMeasure,
+    beatUnit,
+    setBeatUnit,
+    isPlaying,
+    setIsPlaying,
+    beat,
+    measureCount,
+    pendulumAngle,
+    updateVisuals,
+    setPendulumAngle,
+    resetPlayback,
     timerMinutes,
+    setTimerMinutes,
     timerSeconds,
+    setTimerSeconds,
     countdownTime,
     countdownElapsed,
     elapsedTime,
-  } = timer;
+    startCountdown,
+    updateElapsed,
+    resetTimer,
+  } = useMetronomeStore();
 
   // Use provided translations (standalone) or i18n context (main site)
   const contextTranslations = useTranslations();
@@ -335,33 +218,20 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
             : PENDULUM.MAX_ANGLE - (swingCycle - 1) * PENDULUM.SWING_RANGE;
 
         // Batch visual updates
-        dispatchPlayback({
-          type: 'UPDATE_VISUALS',
-          payload: {
-            beat: currentBeatIndex,
-            measureCount: currentMeasure,
-            pendulumAngle: angle,
-          },
-        });
+        updateVisuals(currentBeatIndex, currentMeasure, angle);
 
         const elapsedMs = elapsed * 1000;
 
         if (countdownTime > 0) {
           const remaining = countdownTime - elapsedMs;
           if (remaining <= 0) {
-            dispatchTimer({
-              type: 'SET_COUNTDOWN_ELAPSED',
-              payload: countdownTime,
-            });
-            dispatchPlayback({ type: 'SET_PLAYING', payload: false });
+            updateElapsed(elapsedMs, countdownTime);
+            setIsPlaying(false);
             return;
           }
-          dispatchTimer({
-            type: 'UPDATE_ELAPSED',
-            payload: { elapsed: elapsedMs, countdownElapsed: elapsedMs },
-          });
+          updateElapsed(elapsedMs, elapsedMs);
         } else {
-          dispatchTimer({ type: 'SET_ELAPSED_TIME', payload: elapsedMs });
+          updateElapsed(elapsedMs);
         }
 
         animationRef.current = requestAnimationFrame(animate);
@@ -370,14 +240,13 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       animationRef.current = requestAnimationFrame(animate);
     } else {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
-      if (!isPlaying)
-        dispatchPlayback({ type: 'SET_PENDULUM_ANGLE', payload: 0 });
+      if (!isPlaying) setPendulumAngle(0);
     }
 
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
     };
-  }, [isPlaying, countdownTime]);
+  }, [isPlaying, countdownTime, updateVisuals, updateElapsed, setIsPlaying, setPendulumAngle]);
 
   // Initialize AudioContext
   useEffect(() => {
@@ -506,26 +375,17 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
           const totalMs = (totalMinutes * 60 + totalSeconds) * 1000;
 
           if (totalMs > 0) {
-            dispatchTimer({ type: 'START_COUNTDOWN', payload: totalMs });
+            startCountdown(totalMs);
           }
           // Fresh start
           startAudioTimeRef.current = currentTime;
           nextNoteTimeRef.current = currentTime;
           schedulerBeatRef.current = 0;
-          dispatchPlayback({
-            type: 'UPDATE_VISUALS',
-            payload: { beat: 0, measureCount: 0, pendulumAngle: 0 },
-          });
+          updateVisuals(0, 0, 0);
         } else if (timerEnded) {
           // Timer ended, restart fresh
-          dispatchTimer({
-            type: 'UPDATE_ELAPSED',
-            payload: { elapsed: 0, countdownElapsed: 0 },
-          });
-          dispatchPlayback({
-            type: 'UPDATE_VISUALS',
-            payload: { beat: 0, measureCount: 0, pendulumAngle: 0 },
-          });
+          updateElapsed(0, 0);
+          updateVisuals(0, 0, 0);
           schedulerBeatRef.current = 0;
           startAudioTimeRef.current = currentTime;
           nextNoteTimeRef.current = currentTime;
@@ -550,9 +410,9 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
         }
       }
 
-      dispatchPlayback({ type: 'SET_PLAYING', payload: true });
+      setIsPlaying(true);
     } else {
-      dispatchPlayback({ type: 'SET_PLAYING', payload: false });
+      setIsPlaying(false);
     }
   }, [
     isPlaying,
@@ -561,11 +421,15 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
     elapsedTime,
     timerMinutes,
     timerSeconds,
+    startCountdown,
+    updateVisuals,
+    updateElapsed,
+    setIsPlaying,
   ]);
 
   const reset = useCallback(() => {
-    dispatchPlayback({ type: 'RESET' });
-    dispatchTimer({ type: 'RESET' });
+    resetPlayback();
+    resetTimer();
     schedulerBeatRef.current = 0;
     startAudioTimeRef.current = 0;
 
@@ -577,7 +441,7 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
       cancelAnimationFrame(animationRef.current);
       animationRef.current = null;
     }
-  }, []);
+  }, [resetPlayback, resetTimer]);
 
   // Format time as MM:SS.cc (centiseconds)
   const formatTime = useCallback((ms: number) => {
@@ -634,12 +498,7 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
             min="0"
             max="99"
             value={timerMinutes}
-            onChange={(e) =>
-              dispatchTimer({
-                type: 'SET_TIMER_MINUTES',
-                payload: e.target.value,
-              })
-            }
+            onChange={(e) => setTimerMinutes(e.target.value)}
             placeholder="0"
             className="metronome-input metronome-input--small"
             disabled={isPlaying || elapsedTime > 0}
@@ -650,12 +509,7 @@ const MetronomePlayer = memo<MetronomePlayerProps>(function MetronomePlayer({
             min="0"
             max="59"
             value={timerSeconds}
-            onChange={(e) =>
-              dispatchTimer({
-                type: 'SET_TIMER_SECONDS',
-                payload: e.target.value,
-              })
-            }
+            onChange={(e) => setTimerSeconds(e.target.value)}
             placeholder="0"
             className="metronome-input metronome-input--small"
             disabled={isPlaying || elapsedTime > 0}
