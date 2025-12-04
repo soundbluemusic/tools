@@ -151,11 +151,29 @@
 
 /* ============================================
  * Footer Styles
+ * Full-width footer that extends under sidebar
  * ============================================ */
 .footer {
   padding: 1.5rem 1rem;
   border-top: 1px solid var(--color-border-primary);
   background-color: var(--color-bg-secondary);
+}
+
+/* Desktop: Extend footer to full width (under sidebar) */
+@media (min-width: 1024px) {
+  .footer {
+    margin-left: -240px; /* Sidebar width */
+    width: calc(100% + 240px);
+    padding-left: calc(240px + 2rem); /* Sidebar width + normal padding */
+    padding-right: 2rem;
+  }
+
+  /* When sidebar is collapsed, reset to normal */
+  .sidebar-collapsed .footer {
+    margin-left: 0;
+    width: 100%;
+    padding-left: 2rem;
+  }
 }
 
 .footer-share {
