@@ -22,14 +22,117 @@
 
 /* ============================================
  * Layout Components
- * Note: These layouts have specific responsive requirements
- * that are easier to maintain as custom CSS
  * ============================================ */
+.navigation-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .navigation-layout {
+    flex-direction: row;
+    padding-left: var(--sidebar-width);
+  }
+
+  .navigation-layout.sidebar-collapsed {
+    padding-left: var(--sidebar-collapsed-width);
+  }
+}
+
+.navigation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: var(--bottom-nav-height);
+}
+
+@media (min-width: 768px) {
+  .navigation-content {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+}
+
+.content-wrapper {
+  flex: 1;
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .content-wrapper {
+    padding: 1.5rem 2rem;
+  }
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 /* ============================================
- * Error Page Styles - Use Tailwind utilities in components
- * Keep only complex/specific styles here
+ * Error Page Styles
  * ============================================ */
+.error-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-bg-primary);
+}
+
+.error-content {
+  text-align: center;
+  max-width: 32rem;
+}
+
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.error-details {
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.error-stack {
+  text-align: left;
+  font-family: var(--font-family-mono);
+  font-size: 0.75rem;
+  background-color: var(--color-bg-tertiary);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.error-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-text-primary);
+  color: var(--color-bg-primary);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity var(--transition-fast);
+  border: none;
+  cursor: pointer;
+}
+
+.error-link:hover {
+  opacity: 0.9;
+}
 
 /* ============================================
  * Skip Link (Accessibility)
@@ -52,7 +155,7 @@
 
 /* ============================================
  * Footer Styles
- * Complex full-width layout that extends under sidebar
+ * Full-width footer that extends under sidebar
  * ============================================ */
 .footer {
   padding: var(--spacing-8) var(--spacing-4);
@@ -77,6 +180,55 @@
   }
 }
 
+.footer-share {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-6);
+}
+
+.footer-menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-2) var(--spacing-6);
+  margin-bottom: var(--spacing-6);
+}
+
+.footer-link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--transition-fast) var(--ease-default),
+    background-color var(--transition-fast) var(--ease-default);
+}
+
+.footer-link:hover {
+  color: var(--color-text-primary);
+  background-color: var(--color-interactive-hover);
+}
+
+.footer-link:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.footer-copyright {
+  text-align: center;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+  margin: 0;
+}
+
 /* ============================================
- * Page Loader - Use Tailwind utilities in component
+ * Page Loader
  * ============================================ */
+.page-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
