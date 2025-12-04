@@ -59,10 +59,14 @@
     "dev:standalone:metronome": "vite --config vite.standalone.config.ts src/standalone/metronome/index.html"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "qrious": "^4.0.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0",
     "zustand": "^5.0.9"
   },
   "devDependencies": {

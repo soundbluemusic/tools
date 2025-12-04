@@ -79,7 +79,7 @@ describe('useSEO', () => {
         useSEO({
           title: 'Test',
           description: 'Description',
-          basePath: '/test-page',
+          canonicalPath: '/test-page',
         }),
       { wrapper }
     );
