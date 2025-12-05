@@ -1,4 +1,5 @@
 import { createMemo, lazy, Suspense, type Component } from 'solid-js';
+import type { RouteDefinition } from '@solidjs/router';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
 import { ShareButton } from '../components/ShareButton';
@@ -16,6 +17,15 @@ const QRGenerator = lazy(() =>
     default: m.QRGenerator,
   }))
 );
+
+/**
+ * Route preload function - prefetches component on hover intent
+ */
+export const route: RouteDefinition = {
+  preload: () => {
+    import('../apps/qr/components/QRGenerator');
+  },
+};
 
 /**
  * QR Code Generator Tool Page
