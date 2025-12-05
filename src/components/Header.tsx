@@ -21,6 +21,11 @@ export const Header: Component<HeaderProps> = (props) => {
   const { theme, toggleTheme } = useTheme();
   const { toLocalizedPath } = useLocalizedPath();
 
+  // Detect OS for keyboard shortcut hint
+  const isMac = () =>
+    typeof navigator !== 'undefined' && /Mac/i.test(navigator.userAgent);
+  const shortcutKey = () => (isMac() ? '⌘K' : 'Ctrl+K');
+
   const nextTheme = (): Theme => (theme() === 'light' ? 'dark' : 'light');
   const nextLabel = () =>
     nextTheme() === 'light'
@@ -91,6 +96,27 @@ export const Header: Component<HeaderProps> = (props) => {
 
         {/* Right: Controls */}
         <div class="flex items-center gap-1">
+          {/* Search Button */}
+          <button
+            onClick={() => props.onSearchClick?.()}
+            class="inline-flex items-center gap-2 h-9 px-3 bg-[var(--color-bg-tertiary)] border border-[var(--color-border-secondary)] rounded-lg cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-primary)] transition-colors duration-150 max-[480px]:hidden"
+            aria-label={language() === 'ko' ? '검색' : 'Search'}
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="7" stroke-width="2" />
+              <path
+                stroke-width="2"
+                stroke-linecap="round"
+                d="M21 21l-4.35-4.35"
+              />
+            </svg>
+            <span class="text-sm">{shortcutKey()}</span>
+          </button>
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
