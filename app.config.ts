@@ -226,7 +226,7 @@ export default defineConfig({
           entryFileNames: 'assets/js/[name]-[hash].js',
           assetFileNames: (assetInfo) => {
             const ext = assetInfo.name?.split('.').pop() || '';
-            if (/png|jpe?g|svg|gif|webp|ico/i.test(ext)) {
+            if (/png|jpe?g|svg|gif|webp|avif|ico/i.test(ext)) {
               return 'assets/img/[name]-[hash][extname]';
             }
             if (/css/i.test(ext)) {
