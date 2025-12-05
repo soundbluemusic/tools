@@ -83,9 +83,7 @@ export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
   });
 
   return (
-    <div
-      class={`navigation-layout${isSidebarOpen() ? '' : ' sidebar-collapsed'}`}
-    >
+    <div class="nav-layout">
       {/* Fixed Header */}
       <Header
         onSearchClick={openCommandPalette}
@@ -96,8 +94,10 @@ export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
       {/* Desktop Sidebar - CSS controls visibility */}
       <Sidebar apps={props.apps} isOpen={isSidebarOpen()} />
 
-      {/* Main Content Wrapper */}
-      <div class="navigation-content">
+      {/* Main Content Wrapper - margin-left animation based on sidebar state */}
+      <div
+        class={`nav-layout-content${isSidebarOpen() ? ' nav-layout-content--sidebar-open' : ''}`}
+      >
         <div class="content-wrapper">{props.children}</div>
       </div>
 

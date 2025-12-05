@@ -26,24 +26,26 @@
 
 ## Technology Stack
 
-| Category       | Technology                      | Version  |
-| -------------- | ------------------------------- | -------- |
-| Framework      | SolidJS                         | ^1.9.5   |
-| Meta-Framework | SolidStart                      | ^1.1.0   |
-| Routing        | @solidjs/router                 | ^0.15.3  |
-| Language       | TypeScript                      | ^5.5.3   |
-| Build Tool     | Vinxi + Vite                    | ^0.5.3   |
-| CSS Framework  | Tailwind CSS                    | ^4.1.17  |
-| WASM           | AssemblyScript                  | ^0.28.9  |
-| Unit Testing   | Vitest + Solid Testing Library  | ^4.0.14  |
-| E2E Testing    | Playwright                      | ^1.48.0  |
-| Linting        | ESLint                          | ^9.9.0   |
-| Formatting     | Prettier                        | ^3.4.2   |
-| Git Hooks      | Husky + lint-staged             | ^9.1.7   |
-| PWA            | vite-plugin-pwa                 | ^1.2.0   |
-| Deployment     | Cloudflare Pages                | -        |
+| Category        | Technology                     | Version |
+| --------------- | ------------------------------ | ------- |
+| Framework       | SolidJS                        | ^1.9.5  |
+| Meta-Framework  | SolidStart                     | ^1.1.0  |
+| Routing         | @solidjs/router                | ^0.15.3 |
+| Language        | TypeScript                     | ^5.5.3  |
+| Build Tool      | Vinxi + Vite                   | ^0.5.3  |
+| Package Manager | pnpm                           | ^10.0.0 |
+| CSS Framework   | Tailwind CSS                   | ^4.1.17 |
+| WASM            | AssemblyScript                 | ^0.28.9 |
+| Unit Testing    | Vitest + Solid Testing Library | ^4.0.14 |
+| E2E Testing     | Playwright                     | ^1.48.0 |
+| Linting         | ESLint                         | ^9.9.0  |
+| Formatting      | Prettier                       | ^3.4.2  |
+| Git Hooks       | Husky + lint-staged            | ^9.1.7  |
+| PWA             | vite-plugin-pwa                | ^1.2.0  |
+| Deployment      | Cloudflare Pages               | -       |
 
 **Node.js Requirement:** >=18.0.0
+**Package Manager:** pnpm (required)
 
 ## Directory Structure
 
@@ -279,10 +281,11 @@ import { FileRoutes } from '@solidjs/start/router';
 
 <Router>
   <FileRoutes />
-</Router>
+</Router>;
 ```
 
 **Route file naming:**
+
 - `src/routes/index.tsx` → `/`
 - `src/routes/metronome.tsx` → `/metronome`
 - `src/routes/ko/metronome.tsx` → `/ko/metronome`
@@ -396,6 +399,7 @@ vite: {
 ```
 
 **Usage:**
+
 - Tailwind classes work alongside CSS custom properties
 - CSS variables defined in `src/styles/variables.css` integrate with Tailwind
 - Use `@apply` sparingly; prefer utility classes directly
@@ -436,7 +440,7 @@ if (isWasmLoaded()) {
 **Building WASM modules:**
 
 ```bash
-npm run wasm:build    # Compile AssemblyScript → WASM
+pnpm wasm:build       # Compile AssemblyScript → WASM
 ```
 
 **Note:** The compiled `processing.wasm` is committed to the repo for deployment environments without AssemblyScript.
@@ -518,6 +522,7 @@ export const useMyStore = () => ({
 ```
 
 **Existing stores:**
+
 - `audioStore.ts` - Shared AudioContext and audio state
 - `drumStore.ts` - Drum machine patterns and settings
 - `metronomeStore.ts` - Metronome tempo and beat state
@@ -541,6 +546,7 @@ src/standalone/
 ```
 
 **Usage:**
+
 ```html
 <iframe src="https://tools.soundbluemusic.com/standalone/metronome" />
 ```
@@ -548,6 +554,7 @@ src/standalone/
 ### 12. Data Persistence
 
 **IndexedDB (via `src/storage/db.ts` using Dexie):**
+
 ```typescript
 import { db } from '../storage';
 
@@ -556,6 +563,7 @@ const patterns = await db.patterns.toArray();
 ```
 
 **Origin Private File System (via `src/storage/opfs.ts`):**
+
 ```typescript
 import { saveToOPFS, loadFromOPFS } from '../storage';
 
@@ -586,45 +594,45 @@ export const BRAND = {
 
 ```bash
 # Development
-npm run dev              # Start dev server (port 5173)
+pnpm dev              # Start dev server (port 5173)
 
 # Building
-npm run build            # Production build with type checking
-npm run preview          # Preview production build
+pnpm build            # Production build with type checking
+pnpm preview          # Preview production build
 
 # Code Quality
-npm run lint             # Check code quality
-npm run lint:fix         # Auto-fix linting issues
-npm run format           # Format code with Prettier
-npm run format:check     # Check formatting
-npm run typecheck        # TypeScript type checking only
+pnpm lint             # Check code quality
+pnpm lint:fix         # Auto-fix linting issues
+pnpm format           # Format code with Prettier
+pnpm format:check     # Check formatting
+pnpm typecheck        # TypeScript type checking only
 
 # Unit Testing
-npm run test             # Run tests in watch mode
-npm run test:run         # Run tests once
-npm run test:coverage    # Generate coverage report
-npm run test:ui          # Interactive test UI
+pnpm test             # Run tests in watch mode
+pnpm test:run         # Run tests once
+pnpm test:coverage    # Generate coverage report
+pnpm test:ui          # Interactive test UI
 
 # E2E Testing
-npm run test:e2e         # Run Playwright tests
-npm run test:e2e:ui      # Playwright interactive UI
-npm run test:e2e:headed  # Run with visible browser
+pnpm test:e2e         # Run Playwright tests
+pnpm test:e2e:ui      # Playwright interactive UI
+pnpm test:e2e:headed  # Run with visible browser
 
 # Full Validation
-npm run validate         # typecheck + lint + test:run
+pnpm validate         # typecheck + lint + test:run
 
 # WASM
-npm run wasm:build       # Build AssemblyScript to WASM
+pnpm wasm:build       # Build AssemblyScript to WASM
 
 # Asset Generation
-npm run generate-icons   # Generate PWA icons from source
-npm run generate-og-image # Generate OpenGraph images
-npm run generate-sitemap # Generate XML sitemap
-npm run convert-webp     # Convert images to WebP format
-npm run sync-docs        # Sync documentation
+pnpm generate-icons   # Generate PWA icons from source
+pnpm generate-og-image # Generate OpenGraph images
+pnpm generate-sitemap # Generate XML sitemap
+pnpm convert-webp     # Convert images to WebP format
+pnpm sync-docs        # Sync documentation
 
 # Git hooks (via Husky)
-npm run prepare          # Install Husky hooks
+pnpm prepare          # Install Husky hooks
 ```
 
 ## Code Conventions
@@ -670,6 +678,7 @@ npm run prepare          # Install Husky hooks
 ### Git Hooks (Husky + lint-staged)
 
 Pre-commit hooks automatically run:
+
 - ESLint fix on `.ts/.tsx` files
 - Prettier on `.ts/.tsx/.css/.json/.md` files
 
@@ -779,7 +788,7 @@ describe('MyComponent', () => {
 3. **Fine-grained reactivity**: SolidJS doesn't need memoization like React
 4. **Maintain i18n**: Add translations for both KO and EN with bilingual config
 5. **Follow existing patterns**: Check similar files for conventions
-6. **Run validation before commits**: `npm run validate`
+6. **Run validation before commits**: `pnpm validate`
 7. **Keep chunks small**: Monitor bundle size (250KB warning threshold)
 8. **Test browser APIs**: Mock in `src/test/setup.ts` if needed
 9. **Use file-based routing**: Create routes in `src/routes/` directory
