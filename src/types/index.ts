@@ -3,6 +3,8 @@
  * Using readonly for immutability optimization
  */
 
+import type { Component, JSX } from 'solid-js';
+
 // ============================================
 // App Types
 // ============================================
@@ -78,7 +80,7 @@ export type DeepReadonly<T> = T extends object
   : T;
 
 /** Extract props type from a component */
-export type PropsOf<C> = C extends React.ComponentType<infer P> ? P : never;
+export type PropsOf<C> = C extends Component<infer P> ? P : never;
 
 /** Make all properties nullable */
 export type Nullable<T> = { [P in keyof T]: T[P] | null };
@@ -97,12 +99,12 @@ export interface BaseComponentProps {
 
 /** Props with children */
 export interface WithChildren {
-  children: React.ReactNode;
+  children: JSX.Element;
 }
 
 /** Props with optional children */
 export interface WithOptionalChildren {
-  children?: React.ReactNode;
+  children?: JSX.Element;
 }
 
 // ============================================
@@ -165,18 +167,16 @@ export function createAsyncState<T>(): AsyncState<T> {
 // ============================================
 
 /** Mouse event handler */
-export type MouseEventHandler<T = HTMLElement> = React.MouseEventHandler<T>;
+export type MouseEventHandler<T = HTMLElement> = JSX.EventHandler<T, MouseEvent>;
 
 /** Keyboard event handler */
-export type KeyboardEventHandler<T = HTMLElement> =
-  React.KeyboardEventHandler<T>;
+export type KeyboardEventHandler<T = HTMLElement> = JSX.EventHandler<T, KeyboardEvent>;
 
 /** Change event handler */
-export type ChangeEventHandler<T = HTMLInputElement> =
-  React.ChangeEventHandler<T>;
+export type ChangeEventHandler<T = HTMLInputElement> = JSX.ChangeEventHandler<T, Event>;
 
 /** Focus event handler */
-export type FocusEventHandler<T = HTMLElement> = React.FocusEventHandler<T>;
+export type FocusEventHandler<T = HTMLElement> = JSX.EventHandler<T, FocusEvent>;
 
 /** Form event handler */
-export type FormEventHandler<T = HTMLFormElement> = React.FormEventHandler<T>;
+export type FormEventHandler<T = HTMLFormElement> = JSX.EventHandler<T, Event>;

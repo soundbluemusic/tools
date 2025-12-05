@@ -159,10 +159,10 @@ git push -u origin feature/my-feature
 
 ### 디버깅
 
-React DevTools와 브라우저 개발자 도구를 사용하여 디버깅하세요.
+SolidJS DevTools와 브라우저 개발자 도구를 사용하여 디버깅하세요.
 
 ```bash
-# 개발 서버 실행 후 브라우저에서 React DevTools 사용
+# 개발 서버 실행 후 브라우저에서 SolidJS DevTools 사용
 npm run dev
 ```
 

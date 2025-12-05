@@ -55,7 +55,7 @@ Instead, please send an email to **soundbluemusic@gmail.com** with the following
                                    - 1. **Dependencies**: Keep dependencies up to date and audit them regularly
                                      2. 2. **Secrets**: Never commit secrets, API keys, or credentials
                                         3. 3. **Input Validation**: Always validate and sanitize user input
-                                           4. 4. **XSS Prevention**: Use React's built-in XSS protection, avoid `dangerouslySetInnerHTML`
+                                           4. 4. **XSS Prevention**: Use SolidJS's built-in XSS protection, avoid `innerHTML`
                                               5. 5. **HTTPS**: Always use HTTPS for external requests
                                                 
                                                  6. ## Security Updates

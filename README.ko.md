@@ -44,12 +44,13 @@
 >
 > | 분류 | 기술 |
 > | --- | --- |
-> | 프레임워크 | React 19 |
-> | 라우팅 | React Router 7 |
+> | 프레임워크 | SolidJS 1.9 |
+> | 메타 프레임워크 | SolidStart 1.1 |
+> | 라우팅 | @solidjs/router |
 > | 언어 | TypeScript 5 |
-> | 빌드 | Vite 7 |
+> | 빌드 | Vinxi + Vite |
 > | WASM | AssemblyScript |
-> | 테스트 | Vitest + React Testing Library |
+> | 테스트 | Vitest + Solid Testing Library |
 > | 배포 | Cloudflare Pages |
 >
 > ## 왜 무료인가요?

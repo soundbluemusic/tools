@@ -139,17 +139,10 @@ interface VersionMapping {
 
 const VERSION_MAPPINGS: VersionMapping[] = [
   {
-    name: 'React',
-    dependency: 'react',
+    name: 'SolidJS',
+    dependency: 'solid-js',
     source: 'dependencies',
-    patterns: [/(\| 프레임워크 \| React )\d+/g],
-    replacement: (major) => `$1${major}`,
-  },
-  {
-    name: 'React Router',
-    dependency: 'react-router-dom',
-    source: 'dependencies',
-    patterns: [/(\| 라우팅 \| React Router )\d+/g],
+    patterns: [/(\| 프레임워크 \| SolidJS )\d+\.\d+/g],
     replacement: (major) => `$1${major}`,
   },
   {
@@ -157,13 +150,6 @@ const VERSION_MAPPINGS: VersionMapping[] = [
     dependency: 'typescript',
     source: 'devDependencies',
     patterns: [/(\| 언어 \| TypeScript )\d+/g],
-    replacement: (major) => `$1${major}`,
-  },
-  {
-    name: 'Vite',
-    dependency: 'vite',
-    source: 'devDependencies',
-    patterns: [/(\| 빌드 \| Vite )\d+/g],
     replacement: (major) => `$1${major}`,
   },
 ];
@@ -179,10 +165,24 @@ interface ClaudeMdVersionMapping {
 
 const CLAUDE_MD_VERSION_MAPPINGS: ClaudeMdVersionMapping[] = [
   {
-    name: 'React',
-    dependency: 'react',
+    name: 'SolidJS',
+    dependency: 'solid-js',
     source: 'dependencies',
-    pattern: /(\| Framework\s+\| React\s+\| )\^[\d.]+/g,
+    pattern: /(\| Framework\s+\| SolidJS\s+\| )\^[\d.]+/g,
+    replacement: (version) => `$1${version}`,
+  },
+  {
+    name: 'SolidStart',
+    dependency: '@solidjs/start',
+    source: 'dependencies',
+    pattern: /(\| Meta-Framework\s+\| SolidStart\s+\| )\^[\d.]+/g,
+    replacement: (version) => `$1${version}`,
+  },
+  {
+    name: '@solidjs/router',
+    dependency: '@solidjs/router',
+    source: 'dependencies',
+    pattern: /(\| Routing\s+\| @solidjs\/router\s+\| )\^[\d.]+/g,
     replacement: (version) => `$1${version}`,
   },
   {
@@ -193,13 +193,6 @@ const CLAUDE_MD_VERSION_MAPPINGS: ClaudeMdVersionMapping[] = [
     replacement: (version) => `$1${version}`,
   },
   {
-    name: 'React Router DOM',
-    dependency: 'react-router-dom',
-    source: 'dependencies',
-    pattern: /(\| Routing \| React Router DOM \| )\^[\d.]+/g,
-    replacement: (version) => `$1${version}`,
-  },
-  {
     name: 'TypeScript',
     dependency: 'typescript',
     source: 'devDependencies',
@@ -207,17 +200,10 @@ const CLAUDE_MD_VERSION_MAPPINGS: ClaudeMdVersionMapping[] = [
     replacement: (version) => `$1${version}`,
   },
   {
-    name: 'Vite',
-    dependency: 'vite',
-    source: 'devDependencies',
-    pattern: /(\| Build Tool \| Vite \| )\^[\d.]+/g,
-    replacement: (version) => `$1${version}`,
-  },
-  {
     name: 'Vitest',
     dependency: 'vitest',
     source: 'devDependencies',
-    pattern: /(\| Unit Testing \| Vitest \+ React Testing Library \| )\^[\d.]+/g,
+    pattern: /(\| Unit Testing \| Vitest \+ Solid Testing Library \| )\^[\d.]+/g,
     replacement: (version) => `$1${version}`,
   },
   {
@@ -260,17 +246,18 @@ interface OpenSourceVersionMapping {
 
 const OPENSOURCE_VERSION_MAPPINGS: OpenSourceVersionMapping[] = [
   { name: 'AssemblyScript', dependency: 'assemblyscript', source: 'devDependencies', libraryName: 'AssemblyScript' },
-  { name: 'React', dependency: 'react', source: 'dependencies', libraryName: 'React' },
-  { name: 'React DOM', dependency: 'react-dom', source: 'dependencies', libraryName: 'React DOM' },
-  { name: 'React Router DOM', dependency: 'react-router-dom', source: 'dependencies', libraryName: 'React Router DOM' },
+  { name: 'SolidJS', dependency: 'solid-js', source: 'dependencies', libraryName: 'SolidJS' },
+  { name: 'SolidStart', dependency: '@solidjs/start', source: 'dependencies', libraryName: 'SolidStart' },
+  { name: '@solidjs/router', dependency: '@solidjs/router', source: 'dependencies', libraryName: '@solidjs/router' },
   { name: 'QRious', dependency: 'qrious', source: 'dependencies', libraryName: 'QRious' },
+  { name: 'Vinxi', dependency: 'vinxi', source: 'devDependencies', libraryName: 'Vinxi' },
   { name: 'Vite', dependency: 'vite', source: 'devDependencies', libraryName: 'Vite' },
   { name: 'Vite Plugin PWA', dependency: 'vite-plugin-pwa', source: 'devDependencies', libraryName: 'Vite Plugin PWA' },
-  { name: '@vitejs/plugin-react', dependency: '@vitejs/plugin-react', source: 'devDependencies', libraryName: '@vitejs/plugin-react' },
+  { name: 'vite-plugin-solid', dependency: 'vite-plugin-solid', source: 'devDependencies', libraryName: 'vite-plugin-solid' },
   { name: 'TypeScript', dependency: 'typescript', source: 'devDependencies', libraryName: 'TypeScript' },
   { name: 'Vitest', dependency: 'vitest', source: 'devDependencies', libraryName: 'Vitest' },
   { name: 'Playwright', dependency: '@playwright/test', source: 'devDependencies', libraryName: 'Playwright' },
-  { name: 'Testing Library React', dependency: '@testing-library/react', source: 'devDependencies', libraryName: 'Testing Library React' },
+  { name: '@solidjs/testing-library', dependency: '@solidjs/testing-library', source: 'devDependencies', libraryName: '@solidjs/testing-library' },
   { name: 'Testing Library Jest DOM', dependency: '@testing-library/jest-dom', source: 'devDependencies', libraryName: 'Testing Library Jest DOM' },
   { name: 'jsdom', dependency: 'jsdom', source: 'devDependencies', libraryName: 'jsdom' },
   { name: 'ESLint', dependency: 'eslint', source: 'devDependencies', libraryName: 'ESLint' },
