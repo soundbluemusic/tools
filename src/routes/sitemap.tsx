@@ -108,12 +108,12 @@ function buildSitemapSections(): SitemapSection[] {
         lastModified: today,
       },
       {
-        name: { ko: '오픈소스 라이브러리', en: 'Open Source Libraries' },
+        name: { ko: '소개', en: 'About' },
         description: {
-          ko: '프로젝트에 사용된 오픈소스 라이브러리 목록',
-          en: 'List of open source libraries used in this project',
+          ko: '모든 창작자를 위한 무료 도구 — 우리의 철학',
+          en: 'Free tools for every creator — our philosophy',
         },
-        url: '/opensource',
+        url: '/about',
         lastModified: today,
       },
       {

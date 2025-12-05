@@ -2,19 +2,21 @@
 
 ## Project Overview
 
-**Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
+**Tools** is a free creative tools platform for every creator — musicians, writers, designers, filmmakers, and anyone starting their creative journey. Built with SolidJS + TypeScript + Vite, it provides free online tools with no signup, no ads, and no hidden costs.
+
+**Philosophy:** "모든 창작자를 위한 무료 도구" (Free Tools for Every Creator) — not just open source for developers, but accessible tools for all creators.
 
 **Current Tools:**
 
-- Metronome (`/metronome`) - Music tempo tool
-- Drum Machine (`/drum`) - Drum pattern practice sequencer with MIDI import/export
-- Drum Sound Synth (`/drum-synth`) - Web Audio drum sound synthesizer with detailed parameter control
-- QR Code Generator (`/qr`) - Generate QR codes with customization
+- Metronome (`/metronome`) - Precision metronome for musicians and dancers
+- Drum Machine (`/drum`) - Drum pattern sequencer for composers and producers
+- Drum Sound Synth (`/drum-synth`) - Web Audio drum synthesizer with detailed parameter control
+- QR Code Generator (`/qr`) - High-resolution QR codes for designers and marketers
 
 **Additional Pages:**
 
 - Sitemap (`/sitemap`) - Site navigation
-- Open Source (`/opensource`) - Open source information
+- About (`/about`) - Our philosophy: free tools for every creator
 - Tools Used (`/tools-used`) - Technologies used
 - Privacy (`/privacy`) - Privacy policy
 - Terms (`/terms`) - Terms of service
@@ -79,18 +81,17 @@ src/
 │   ├── ShareButton.tsx      # Social sharing button
 │   └── EmbedButton.tsx      # Embed code generator
 │
-├── pages/                   # Route page components
-│   ├── Home.tsx             # Main dashboard with search/sort
-│   ├── Metronome.tsx
-│   ├── Drum.tsx
-│   ├── DrumSynth.tsx
-│   ├── QR.tsx
-│   ├── Sitemap.tsx
-│   ├── OpenSource.tsx
-│   ├── ToolsUsed.tsx
-│   ├── Privacy.tsx
-│   ├── Terms.tsx
-│   └── NotFound.tsx
+├── routes/                  # File-based routing (SolidStart)
+│   ├── index.tsx            # Home page with search/sort
+│   ├── metronome.tsx
+│   ├── drum.tsx
+│   ├── qr.tsx
+│   ├── sitemap.tsx
+│   ├── about.tsx            # Philosophy: free tools for creators
+│   ├── privacy.tsx
+│   ├── terms.tsx
+│   ├── [...404].tsx         # 404 page
+│   └── ko/                   # Korean locale routes
 │
 ├── hooks/                   # Custom React hooks
 │   ├── useSearch.ts         # Searchable lists with deferred value

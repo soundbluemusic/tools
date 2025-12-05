@@ -13,7 +13,7 @@ export interface CommonTranslation {
     terms: string;
     github: string;
     sitemap: string;
-    opensource: string;
+    about: string;
     toolsUsed: string;
     downloads: string;
   };

@@ -2,25 +2,25 @@
 
 # Tools
 
-**Open Source Productivity Tools**
+**Free Tools for Every Creator**
 
 [![CI](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml/badge.svg)](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
+[![SolidJS](https://img.shields.io/badge/SolidJS-1.9-2c4f7c.svg)](https://www.solidjs.com/)
 
-A collection of open source productivity tools built with React + TypeScript + Vite.
+Free online tools for musicians, writers, designers, filmmakers — every creator. No signup, no ads, completely free.
 
 🌐 **[한국어 README](./README.ko.md)**
 
-## Apps
+## For Every Creator
 
-| App | Description | Path |
+| Tool | Who It's For | Path |
 | --- | ----------- | ---- |
-| 🎵 Metronome | Precision metronome for musicians | `/metronome` |
-| 🥁 Drum Machine | Drum pattern sequencer for practice | `/drum` |
-| 📱 QR Generator | High-resolution QR code generator with transparent background | `/qr` |
-| 🎛️ Drum Sound Synth | Drum sound synthesizer with detailed parameter control | `/drum-synth` |
+| 🎵 Metronome | Musicians, dancers, anyone who needs precise tempo | `/metronome` |
+| 🥁 Drum Machine | Composers, producers experimenting with patterns | `/drum` |
+| 🎛️ Drum Synth | Sound designers crafting unique drum sounds | `/drum-synth` |
+| 📱 QR Generator | Designers, marketers who need quick QR codes | `/qr` |
 
 > 📖 For detailed documentation, see [/docs](./docs/README.md).
 >
@@ -52,14 +52,16 @@ A collection of open source productivity tools built with React + TypeScript + V
 > | Testing | Vitest + React Testing Library |
 > | Deployment | Cloudflare Pages |
 >
-> ## Features
+> ## Why Free?
 >
-> - 🎯 **PWA Support** - Works offline as a Progressive Web App
-> - 🌙 **Dark Mode** - Clean dark theme interface
-> - 📱 **Responsive** - Optimized for various screen sizes
+> Good tools shouldn't be expensive or complicated. They should be available instantly, to anyone, when needed.
+>
+> - 💸 **Completely Free** - No hidden costs, no premium tiers
+> - 🚫 **No Signup** - Use immediately without creating an account
+> - 📵 **No Ads** - Clean interface, no distractions
+> - 🌐 **Works Offline** - PWA support for use anywhere
+> - 🌙 **Dark Mode** - Easy on the eyes
 > - ♿ **Accessible** - Built with accessibility in mind
-> - 🚀 **Fast** - WASM-powered for compute-intensive tasks
-> - ⚡ **Performance** - Optimized bundle size with JS fallback
 >        
 >         - ## Fork & Deploy Guide
 >        

@@ -19,7 +19,10 @@ export const BRAND = {
    * 태그라인 (Tagline)
    * 사이트 제목 옆에 표시되는 짧은 설명
    */
-  tagline: 'Open Source Productivity Tools',
+  tagline: {
+    ko: '모든 창작자를 위한 무료 도구',
+    en: 'Free Tools for Every Creator',
+  },
 
   /**
    * 저작권 표시 이름 (Copyright holder name)
@@ -48,8 +51,8 @@ export const BRAND = {
    * SEO 및 공유 기능에 사용됩니다
    */
   description: {
-    ko: 'QR 코드 생성기, 메트로놈, 드럼머신 등 무료 온라인 도구',
-    en: 'QR Code Generator, Metronome, Drum Machine and more free tools',
+    ko: '음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 온라인 도구. 회원가입 없이, 광고 없이, 완전히 무료.',
+    en: 'Free online tools for musicians, writers, designers, filmmakers — every creator. No signup, no ads, completely free.',
   },
 
   /**
@@ -57,8 +60,8 @@ export const BRAND = {
    * 소셜 미디어 공유 시 표시되는 제목
    */
   shareTitle: {
-    ko: 'Tools - 무료 온라인 도구 모음',
-    en: 'Tools - Free Online Tools',
+    ko: 'Tools - 창작자를 위한 무료 도구',
+    en: 'Tools - Free Tools for Creators',
   },
 } as const;
 
