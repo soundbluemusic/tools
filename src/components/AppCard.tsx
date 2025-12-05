@@ -24,7 +24,8 @@ const AppCard: Component<AppCardProps> = (props) => {
   const isCompact = () => props.variant === 'compact';
 
   const localizedUrl = createMemo(() => toLocalizedPath(props.app.url));
-  const handleClick = createMemo(() => createClickHandler(localizedUrl()));
+  // Direct function - no need for createMemo as createClickHandler returns a new function
+  const handleClick = () => createClickHandler(localizedUrl());
 
   return (
     <Show

@@ -1,12 +1,19 @@
-import { createMemo, type Component } from 'solid-js';
+import { createMemo, lazy, Suspense, type Component } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
-import { QRGenerator } from '../apps/qr/components/QRGenerator';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
 import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n';
 import { useSEO } from '../hooks';
+import { Loader } from '../components/ui';
+
+// Lazy load the heavy QR generator component
+const QRGenerator = lazy(() =>
+  import('../apps/qr/components/QRGenerator').then((m) => ({
+    default: m.QRGenerator,
+  }))
+);
 
 /**
  * QR Code Generator Tool Page
@@ -49,7 +56,9 @@ const QR: Component = () => {
           </>
         }
       >
-        <QRGenerator />
+        <Suspense fallback={<Loader />}>
+          <QRGenerator />
+        </Suspense>
       </PageLayout>
     </>
   );

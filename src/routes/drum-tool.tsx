@@ -1,12 +1,19 @@
-import { createMemo, type Component } from 'solid-js';
+import { createMemo, lazy, Suspense, type Component } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
-import { DrumTool } from '../apps/drum-tool/components/DrumTool';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
 import { FullscreenButton } from '../components/FullscreenButton';
 import { useLanguage } from '../i18n/context';
 import { useSEO } from '../hooks';
+import { Loader } from '../components/ui';
+
+// Lazy load the drum tool component
+const DrumTool = lazy(() =>
+  import('../apps/drum-tool/components/DrumTool').then((m) => ({
+    default: m.DrumTool,
+  }))
+);
 
 /**
  * Drum Tool Page - Combined Drum Machine + Synth
@@ -66,7 +73,9 @@ const DrumToolPage: Component = () => {
           </>
         }
       >
-        <DrumTool />
+        <Suspense fallback={<Loader />}>
+          <DrumTool />
+        </Suspense>
       </PageLayout>
     </>
   );
