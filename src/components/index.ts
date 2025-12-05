@@ -12,6 +12,9 @@ export { default as AppGrid } from './AppGrid';
 export { default as ThemeToggle } from './ThemeToggle';
 export { default as LanguageToggle } from './LanguageToggle';
 
+// PWA components
+export { default as PWAPrompt } from './PWAPrompt';
+
 // Error handling
 export { ErrorBoundary, withErrorBoundary } from './ErrorBoundary';
 

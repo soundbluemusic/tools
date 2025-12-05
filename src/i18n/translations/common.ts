@@ -36,6 +36,9 @@ export const commonKo: CommonTranslation = {
     success: '성공!',
     backButton: '← 돌아가기',
   },
+  actions: {
+    later: '나중에',
+  },
   share: {
     button: '공유',
     copyLink: '링크 복사',
@@ -75,6 +78,7 @@ export const commonKo: CommonTranslation = {
     updateButton: '업데이트',
     offlineTitle: '오프라인',
     offlineMessage: '인터넷 연결이 없습니다. 일부 기능이 제한될 수 있습니다.',
+    offlineReady: '앱이 오프라인에서 사용 가능합니다.',
   },
 };
 
@@ -113,6 +117,9 @@ export const commonEn: CommonTranslation = {
     error: 'An error occurred',
     success: 'Success!',
     backButton: '← Back',
+  },
+  actions: {
+    later: 'Later',
   },
   share: {
     button: 'Share',
@@ -153,5 +160,6 @@ export const commonEn: CommonTranslation = {
     updateButton: 'Update',
     offlineTitle: 'Offline',
     offlineMessage: 'No internet connection. Some features may be limited.',
+    offlineReady: 'App is ready to work offline.',
   },
 };

@@ -140,6 +140,15 @@ export default defineConfig({
           ],
         },
         workbox: {
+          // Precache all built assets (HTML, JS, CSS)
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2,wasm}'],
+          // Navigation fallback for SPA - serves index.html for all navigation requests
+          navigateFallback: '/index.html',
+          navigateFallbackDenylist: [
+            // Don't fallback for API calls or static files
+            /^\/api\//,
+            /\.[a-zA-Z]{2,4}$/,
+          ],
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -185,6 +194,18 @@ export default defineConfig({
               handler: 'CacheFirst',
               options: {
                 cacheName: 'wasm-cache',
+                expiration: {
+                  maxEntries: 10,
+                  maxAgeSeconds: 60 * 60 * 24 * 30,
+                },
+              },
+            },
+            // Cache audio worklet files
+            {
+              urlPattern: /\/audio-worklet\/.*/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'audio-worklet-cache',
                 expiration: {
                   maxEntries: 10,
                   maxAgeSeconds: 60 * 60 * 24 * 30,
