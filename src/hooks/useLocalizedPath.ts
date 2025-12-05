@@ -1,6 +1,6 @@
-import { createMemo, createSignal, onMount } from 'solid-js';
+import { createMemo } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { useNavigate as useRouterNavigate } from '@solidjs/router';
+import { useNavigate as useRouterNavigate, useLocation } from '@solidjs/router';
 import { useLanguage } from '../i18n';
 import type { Language } from '../i18n/types';
 
@@ -53,18 +53,11 @@ export function getLanguageFromPath(pathname: string): Language {
  * Hook for generating localized paths
  * Returns a function that adds language prefix to paths
  *
- * Hydration-safe: uses consistent values, updates after mount
+ * Hydration-safe: Uses useLocation() which works for both SSR and client
  */
 export function useLocalizedPath() {
   const { language } = useLanguage();
-
-  // Use consistent default value for SSR and initial client render
-  const [pathname, setPathname] = createSignal('/');
-
-  // Update pathname after mount (client-only)
-  onMount(() => {
-    setPathname(window.location.pathname);
-  });
+  const location = useLocation();
 
   /**
    * Convert a base path to a localized path
@@ -76,7 +69,7 @@ export function useLocalizedPath() {
   /**
    * Get the current base path (without language prefix)
    */
-  const basePath = createMemo(() => getBasePath(pathname()));
+  const basePath = createMemo(() => getBasePath(location.pathname));
 
   return {
     toLocalizedPath,

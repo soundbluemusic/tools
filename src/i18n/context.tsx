@@ -1,26 +1,19 @@
 import {
   createContext,
   useContext,
-  createSignal,
-  createEffect,
   createMemo,
-  onMount,
   type ParentComponent,
   type Accessor,
 } from 'solid-js';
 import { isServer } from 'solid-js/web';
-import { useNavigate } from '@solidjs/router';
+import { useNavigate, useLocation } from '@solidjs/router';
 import type { Language, Translations, AllTranslations } from './types';
 import { commonKo, commonEn } from './translations/common';
 import { qrKo, qrEn } from './translations/qr';
 import { metronomeKo, metronomeEn } from './translations/metronome';
 import { drumKo, drumEn } from './translations/drum';
 import { drumSynthKo, drumSynthEn } from './translations/drum-synth';
-import {
-  getStorageItem,
-  setStorageItem,
-  createEnumValidator,
-} from '../utils/storage';
+import { setStorageItem } from '../utils/storage';
 
 /**
  * Korean language URL prefix for SEO
@@ -68,16 +61,6 @@ const LanguageContext = createContext<LanguageContextValue>();
 const LANGUAGE_STORAGE_KEY = 'preferred-language';
 
 /**
- * Supported languages for validation
- */
-const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
-
-/**
- * Type-safe validator for language values
- */
-const isLanguage = createEnumValidator(SUPPORTED_LANGUAGES);
-
-/**
  * Get language from URL path
  */
 const getLanguageFromPath = (pathname: string): Language => {
@@ -100,14 +83,16 @@ const getBasePath = (pathname: string): string => {
  * Wraps the app to provide language context to all components
  * Syncs language with URL path for SEO
  *
- * Hydration-safe: Uses same render path for SSR and client
+ * Hydration-safe: Uses useLocation() which works for both SSR and client
  */
 export const LanguageProvider: ParentComponent = (props) => {
-  // Always use 'en' as initial value for consistent hydration
-  // Client will update after mount based on URL
-  const [language, setLanguageState] = createSignal<Language>('en');
+  // Use router's location to get pathname (works for both SSR and client)
+  const location = useLocation();
 
-  // Get navigate function at component level (not inside callbacks)
+  // Derive language from URL pathname - reactive to route changes
+  const language = createMemo(() => getLanguageFromPath(location.pathname));
+
+  // Get navigate function (client-only)
   let navigate: ReturnType<typeof useNavigate> | null = null;
   if (!isServer) {
     try {
@@ -117,25 +102,15 @@ export const LanguageProvider: ParentComponent = (props) => {
     }
   }
 
-  // Client-side: sync language with URL after mount
-  onMount(() => {
-    const urlLanguage = getLanguageFromPath(window.location.pathname);
-    if (urlLanguage !== language()) {
-      setLanguageState(urlLanguage);
-    }
-  });
-
   // Set language and navigate to new URL (client-only)
   const setLanguage = (lang: Language) => {
     if (lang === language()) return;
-
-    setLanguageState(lang);
 
     if (!isServer) {
       setStorageItem(LANGUAGE_STORAGE_KEY, lang);
 
       // Navigate to the same page with new language prefix
-      const basePath = getBasePath(window.location.pathname);
+      const basePath = getBasePath(location.pathname);
       const newPath =
         lang === 'ko'
           ? `${KOREAN_PREFIX}${basePath === '/' ? '' : basePath}` ||
