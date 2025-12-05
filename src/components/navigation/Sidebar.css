@@ -16,9 +16,14 @@
   overflow-y: auto;
   overflow-x: hidden;
   z-index: var(--z-sidebar, 200);
-  /* Core animation: transform-based slide (GPU accelerated, no reflow) */
-  transition: transform var(--transition-normal, 250ms)
-    var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1));
+
+  /* GPU 가속 힌트 - 부드러운 애니메이션 보장 */
+  will-change: transform;
+  transform: translateX(0);
+
+  /* 트랜지션 - 250ms Material Design 이징 */
+  -webkit-transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================
@@ -28,11 +33,13 @@
 /* Closed state - Slide out to left */
 .sidebar--closed {
   transform: translateX(-100%);
+  visibility: visible; /* 애니메이션 중 보이도록 */
 }
 
 /* Open state - Fully visible */
 .sidebar--open {
   transform: translateX(0);
+  visibility: visible;
 }
 
 /* ============================================
