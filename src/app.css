@@ -27,6 +27,10 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* ============================================
@@ -109,28 +113,21 @@
 
 /* ============================================
  * Footer Styles
- * Full-width footer that extends under sidebar
+ * Responsive footer within content area
  * ============================================ */
 .footer {
+  width: 100%;
+  max-width: 100%;
   padding: var(--spacing-8) var(--spacing-4);
   border-top: 1px solid var(--color-border-primary);
   background-color: var(--color-bg-primary);
+  box-sizing: border-box;
 }
 
-/* Desktop: Extend footer to full width (under sidebar) */
-@media (min-width: 1024px) {
+/* Desktop (≥768px) */
+@media (min-width: 768px) {
   .footer {
-    margin-left: -240px; /* Sidebar width */
-    width: calc(100% + 240px);
     padding: var(--spacing-10) var(--spacing-8);
-    padding-left: calc(240px + var(--spacing-8));
-  }
-
-  /* When sidebar is collapsed, reset to normal */
-  .sidebar-collapsed .footer {
-    margin-left: 0;
-    width: 100%;
-    padding-left: var(--spacing-8);
   }
 }
 

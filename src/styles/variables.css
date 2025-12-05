@@ -124,15 +124,23 @@
    * Subtle shadows for depth without distraction
    * ============================================ */
   --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.02);
-  --shadow-sm: 0 1px 3px rgba(28, 25, 23, 0.03), 0 1px 2px rgba(28, 25, 23, 0.02);
-  --shadow-md: 0 4px 6px rgba(28, 25, 23, 0.04), 0 2px 4px rgba(28, 25, 23, 0.02);
-  --shadow-lg: 0 8px 16px rgba(28, 25, 23, 0.05), 0 4px 8px rgba(28, 25, 23, 0.03);
-  --shadow-xl: 0 12px 24px rgba(28, 25, 23, 0.06), 0 6px 12px rgba(28, 25, 23, 0.04);
-  --shadow-2xl: 0 20px 40px rgba(28, 25, 23, 0.08), 0 8px 16px rgba(28, 25, 23, 0.04);
-  --shadow-focus: 0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-accent-primary);
-  --shadow-focus-ring: 0 0 0 2px var(--color-bg-secondary), 0 0 0 4px rgba(28, 25, 23, 0.12);
+  --shadow-sm:
+    0 1px 3px rgba(28, 25, 23, 0.03), 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-md:
+    0 4px 6px rgba(28, 25, 23, 0.04), 0 2px 4px rgba(28, 25, 23, 0.02);
+  --shadow-lg:
+    0 8px 16px rgba(28, 25, 23, 0.05), 0 4px 8px rgba(28, 25, 23, 0.03);
+  --shadow-xl:
+    0 12px 24px rgba(28, 25, 23, 0.06), 0 6px 12px rgba(28, 25, 23, 0.04);
+  --shadow-2xl:
+    0 20px 40px rgba(28, 25, 23, 0.08), 0 8px 16px rgba(28, 25, 23, 0.04);
+  --shadow-focus:
+    0 0 0 2px var(--color-bg-primary), 0 0 0 4px var(--color-accent-primary);
+  --shadow-focus-ring:
+    0 0 0 2px var(--color-bg-secondary), 0 0 0 4px rgba(28, 25, 23, 0.12);
   --shadow-card: 0 1px 3px rgba(28, 25, 23, 0.02);
-  --shadow-card-hover: 0 6px 12px rgba(28, 25, 23, 0.05), 0 2px 4px rgba(28, 25, 23, 0.02);
+  --shadow-card-hover:
+    0 6px 12px rgba(28, 25, 23, 0.05), 0 2px 4px rgba(28, 25, 23, 0.02);
   --shadow-glow: 0 0 0 transparent;
   --shadow-inner: inset 0 1px 2px rgba(28, 25, 23, 0.02);
 
@@ -170,6 +178,10 @@
   /* ============================================
    * Navigation Layout
    * ============================================ */
+  /* Header */
+  --header-height: 56px;
+  --header-height-mobile: 52px;
+
   /* Desktop Sidebar */
   --sidebar-width: 240px;
   --sidebar-collapsed-width: 72px;
@@ -179,6 +191,11 @@
   --bottom-nav-height: 56px;
   --bottom-nav-icon-size: 24px;
   --bottom-nav-label-size: 12px;
+
+  /* Z-Index - Navigation specific */
+  --z-header: 100;
+  --z-sidebar: 200;
+  --z-bottom-nav: 300;
 
   /* Command Palette */
   --command-palette-width: 560px;

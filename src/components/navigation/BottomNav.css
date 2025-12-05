@@ -1,31 +1,36 @@
 /**
  * Bottom Navigation - Mobile Only
  * Fixed at bottom with safe area support
- * Uses CSS variables for theme support
+ * Visible only on mobile (<768px)
  */
 
+/* Base - Hidden by default (desktop) */
 .bottom-nav {
   display: none;
 }
 
-/* Mobile: Show bottom nav */
-@media (max-width: 1023px) {
+/* ============================================
+ * Mobile: Show Bottom Nav (<768px)
+ * ============================================ */
+@media (max-width: 767px) {
   .bottom-nav {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: var(--z-bottom-nav, 300);
     display: flex;
     align-items: center;
     justify-content: space-around;
-    height: calc(56px + env(safe-area-inset-bottom, 0px));
+    height: calc(
+      var(--bottom-nav-height, 56px) + env(safe-area-inset-bottom, 0px)
+    );
     padding-bottom: env(safe-area-inset-bottom, 0px);
-    background: var(--color-bg-primary);
+    background: var(--color-bg-secondary);
     border-top: 1px solid var(--color-border-primary);
   }
 
-  /* Collapsed state - completely hidden, only toggle visible */
+  /* Collapsed state */
   .bottom-nav.collapsed {
     height: auto;
     background: transparent;
@@ -38,7 +43,9 @@
   }
 }
 
-/* Toggle Button */
+/* ============================================
+ * Toggle Button
+ * ============================================ */
 .bottom-nav-toggle {
   position: absolute;
   top: -28px;
@@ -48,19 +55,20 @@
   justify-content: center;
   width: 32px;
   height: 20px;
-  background: var(--color-bg-primary);
+  background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-primary);
   border-bottom: none;
   border-radius: 8px 8px 0 0;
   cursor: pointer;
   color: var(--color-text-secondary);
+  transition: background-color 150ms ease;
 }
 
 .bottom-nav-toggle:active {
   background: var(--color-interactive-hover);
 }
 
-/* When collapsed, toggle becomes a floating button at bottom-right */
+/* Collapsed toggle becomes floating button */
 .bottom-nav.collapsed .bottom-nav-toggle {
   position: fixed;
   bottom: calc(12px + env(safe-area-inset-bottom, 0px));
@@ -73,32 +81,36 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Navigation Item */
+/* ============================================
+ * Navigation Items
+ * ============================================ */
 .bottom-nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   flex: 1;
-  height: 56px;
-  color: var(--color-text-secondary);
+  height: var(--bottom-nav-height, 56px);
+  gap: 4px;
+  color: var(--color-text-tertiary);
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  transition: color 150ms ease;
 }
 
 .bottom-nav-item.active {
   color: var(--color-text-primary);
 }
 
-/* Icon */
+/* ============================================
+ * Icon & Label
+ * ============================================ */
 .bottom-nav-icon {
-  width: 24px;
-  height: 24px;
-  margin-bottom: 2px;
+  width: var(--bottom-nav-icon-size, 24px);
+  height: var(--bottom-nav-icon-size, 24px);
 }
 
-/* Label */
 .bottom-nav-label {
-  font-size: 10px;
+  font-size: var(--bottom-nav-label-size, 10px);
   font-weight: 500;
 }

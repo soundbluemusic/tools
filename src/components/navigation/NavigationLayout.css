@@ -1,70 +1,113 @@
 /**
- * Navigation Layout - True Full Width
- * No constraints, edge-to-edge layout
+ * Navigation Layout - Responsive System
+ * Reference: YouTube, GitHub, OpenAI style layouts
+ * Desktop (≥768px): Fixed sidebar + flexible content
+ * Mobile (<768px): Full-width content + bottom nav
  */
 
+/* ============================================
+ * Main Layout Container
+ * ============================================ */
 .navigation-layout {
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ============================================
+ * Main Content Area
+ * Uses padding-left instead of margin-left for better containment
+ * ============================================ */
+.navigation-content {
   position: relative;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  padding-top: var(--header-height, 56px);
+  box-sizing: border-box;
+  /* Smooth transition for sidebar toggle */
+  transition: padding-left var(--transition-normal, 250ms)
+    var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
-/* Main Content Area - Full width */
-.navigation-content {
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding-top: 56px; /* Header height */
-}
-
-/* Content Wrapper - Full width, no constraints */
+/* Content Wrapper - Contains page content */
 .content-wrapper {
   width: 100%;
-  min-height: calc(100vh - 56px);
-  min-height: calc(100dvh - 56px);
+  max-width: 100%;
+  min-height: calc(100vh - var(--header-height, 56px));
+  min-height: calc(100dvh - var(--header-height, 56px));
+  box-sizing: border-box;
 }
 
-/* Mobile: Space for bottom nav */
-@media (max-width: 1023px) {
+/* ============================================
+ * Desktop Layout (≥768px)
+ * Content uses padding to make room for fixed sidebar
+ * ============================================ */
+@media (min-width: 768px) {
   .navigation-content {
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
-  }
-}
-
-/* Desktop: Offset for sidebar */
-@media (min-width: 1024px) {
-  .navigation-content {
-    padding-left: 256px; /* Sidebar width + extra gap */
+    padding-left: var(--sidebar-width, 240px);
   }
 
-  /* Sidebar collapsed - no offset */
-  .sidebar-collapsed .navigation-content {
+  /* Sidebar collapsed - content fills full width */
+  .navigation-layout.sidebar-collapsed .navigation-content {
     padding-left: 0;
   }
 }
 
-/* Small mobile header */
-@media (max-width: 480px) {
+/* ============================================
+ * Mobile & Tablet Layout (<768px)
+ * Full-width content with bottom nav space
+ * ============================================ */
+@media (max-width: 767px) {
   .navigation-content {
-    padding-top: 52px;
+    padding-left: 0;
+    /* Space for bottom navigation + iOS safe area */
+    padding-bottom: calc(
+      var(--bottom-nav-height, 56px) + env(safe-area-inset-bottom, 0px)
+    );
   }
 
   .content-wrapper {
-    min-height: calc(100vh - 52px);
-    min-height: calc(100dvh - 52px);
+    min-height: calc(
+      100vh - var(--header-height, 56px) - var(--bottom-nav-height, 56px)
+    );
+    min-height: calc(
+      100dvh - var(--header-height, 56px) - var(--bottom-nav-height, 56px)
+    );
   }
 }
 
-/* Safe area */
+/* ============================================
+ * Small Mobile (≤480px)
+ * Compact header height
+ * ============================================ */
+@media (max-width: 480px) {
+  .navigation-content {
+    padding-top: var(--header-height-mobile, 52px);
+  }
+
+  .content-wrapper {
+    min-height: calc(100vh - var(--header-height-mobile, 52px));
+    min-height: calc(100dvh - var(--header-height-mobile, 52px));
+  }
+}
+
+/* ============================================
+ * Safe Area Support (iOS notch/home indicator)
+ * ============================================ */
 @supports (padding-top: env(safe-area-inset-top)) {
   .navigation-content {
-    padding-top: calc(56px + env(safe-area-inset-top));
+    padding-top: calc(var(--header-height, 56px) + env(safe-area-inset-top));
   }
 
   @media (max-width: 480px) {
     .navigation-content {
-      padding-top: calc(52px + env(safe-area-inset-top));
+      padding-top: calc(
+        var(--header-height-mobile, 52px) + env(safe-area-inset-top)
+      );
     }
   }
 }
