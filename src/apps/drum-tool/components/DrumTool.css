@@ -1,80 +1,79 @@
 /* ==========================================================================
-   DrumTool - Combined Drum Machine + Synth Component
+   DrumTool - Unified Drum Machine + Synth Component
    ========================================================================== */
 
-.drum-tool {
+.drum-tool-unified {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
 }
 
-/* Tab Navigation */
-.drum-tool-tabs {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.25rem;
+/* Drum Machine Section */
+.drum-tool-machine {
+  width: 100%;
+}
+
+/* ==========================================================================
+   Synth Control Panel
+   ========================================================================== */
+
+.drum-tool-synth-panel {
   background: var(--color-bg-secondary, #f5f5f5);
-  border-radius: 12px;
   border: 1px solid var(--color-border-primary, #e0e0e0);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-.drum-tool-tab {
-  flex: 1;
+.drum-tool-synth-panel--collapsed {
+  border-radius: 12px;
+}
+
+/* Panel Header (Collapsible Toggle) */
+.drum-tool-synth-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.875rem 1rem;
   border: none;
-  background: transparent;
-  border-radius: 10px;
+  background: var(--color-bg-tertiary, #eee);
   cursor: pointer;
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--color-text-primary, #333);
+  transition: background-color 0.15s ease;
+}
+
+.drum-tool-synth-header:hover {
+  background: var(--color-bg-secondary, #e5e5e5);
+}
+
+.drum-tool-synth-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.drum-tool-synth-toggle {
+  font-size: 0.75rem;
   color: var(--color-text-secondary, #666);
-  transition:
-    background-color 0.15s ease,
-    color 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: transform 0.2s ease;
 }
 
-.drum-tool-tab:hover {
-  background: var(--color-bg-tertiary, #fff);
-  color: var(--color-text-primary, #333);
+/* Panel Content */
+.drum-tool-synth-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: slideDown 0.2s ease-out;
 }
 
-.drum-tool-tab--active {
-  background: var(--color-bg-primary, #fff);
-  color: var(--color-text-primary, #333);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-.drum-tool-tab-icon {
-  font-size: 1.1rem;
-}
-
-.drum-tool-tab-label {
-  font-weight: 500;
-}
-
-/* Tab Content */
-.drum-tool-content {
-  min-height: 400px;
-}
-
-.drum-tool-panel {
-  display: none;
-}
-
-.drum-tool-panel--active {
-  display: block;
-  animation: fadeIn 0.2s ease-out;
-}
-
-@keyframes fadeIn {
+@keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(4px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
@@ -82,84 +81,286 @@
   }
 }
 
-/* Dark mode */
-[data-theme='dark'] .drum-tool-tabs {
-  background: var(--color-bg-secondary, #1e1e1e);
-  border-color: var(--color-border-primary, #333);
+/* ==========================================================================
+   Drum Type Selector
+   ========================================================================== */
+
+.drum-tool-drum-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-[data-theme='dark'] .drum-tool-tab:hover {
-  background: var(--color-bg-tertiary, #2a2a2a);
-}
-
-[data-theme='dark'] .drum-tool-tab--active {
-  background: var(--color-bg-elevated, #2d2d2d);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-@media (prefers-color-scheme: dark) {
-  .drum-tool-tabs {
-    background: var(--color-bg-secondary, #1e1e1e);
-    border-color: var(--color-border-primary, #333);
-  }
-
-  .drum-tool-tab:hover {
-    background: var(--color-bg-tertiary, #2a2a2a);
-  }
-
-  .drum-tool-tab--active {
-    background: var(--color-bg-elevated, #2d2d2d);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .drum-tool-tabs {
-    gap: 0.25rem;
-    padding: 0.25rem;
-  }
-
-  .drum-tool-tab {
-    padding: 0.625rem 0.75rem;
-    font-size: 0.875rem;
-  }
-
-  .drum-tool-tab-icon {
-    font-size: 1rem;
-  }
-}
-
-/* Integration info */
-.drum-tool-integration-info {
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, #666);
-  text-align: center;
-  background: var(--color-bg-secondary, #f5f5f5);
-  border-radius: 8px;
+.drum-tool-drum-btn {
+  flex: 1;
+  min-width: 60px;
+  padding: 0.5rem 0.75rem;
   border: 1px solid var(--color-border-primary, #e0e0e0);
+  background: var(--color-bg-primary, #fff);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-secondary, #666);
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
 }
 
-[data-theme='dark'] .drum-tool-integration-info {
+.drum-tool-drum-btn:hover {
+  background: var(--color-bg-tertiary, #f5f5f5);
+  border-color: var(--color-border-secondary, #ccc);
+  color: var(--color-text-primary, #333);
+}
+
+.drum-tool-drum-btn--selected {
+  background: var(--color-interactive-active, #2563eb);
+  border-color: var(--color-interactive-active, #2563eb);
+  color: #fff;
+}
+
+.drum-tool-drum-btn--selected:hover {
+  background: var(--color-interactive-hover, #1d4ed8);
+  border-color: var(--color-interactive-hover, #1d4ed8);
+  color: #fff;
+}
+
+/* ==========================================================================
+   Parameter Controls
+   ========================================================================== */
+
+.drum-tool-params {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+/* Compact Parameter Slider */
+.synth-compact-param {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.synth-compact-param-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.synth-compact-param-label {
+  color: var(--color-text-secondary, #666);
+  font-weight: 500;
+}
+
+.synth-compact-param-value {
+  color: var(--color-text-primary, #333);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.synth-compact-slider {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-bg-tertiary, #e0e0e0);
+  appearance: none;
+  cursor: pointer;
+}
+
+.synth-compact-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-interactive-active, #2563eb);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.synth-compact-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
+
+.synth-compact-slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+.synth-compact-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-interactive-active, #2563eb);
+  cursor: pointer;
+}
+
+.synth-compact-slider::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-bg-tertiary, #e0e0e0);
+}
+
+/* Master Volume Section */
+.drum-tool-master {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-primary, #e0e0e0);
+}
+
+/* ==========================================================================
+   Dark Mode
+   ========================================================================== */
+
+[data-theme='dark'] .drum-tool-synth-panel {
   background: var(--color-bg-secondary, #1e1e1e);
   border-color: var(--color-border-primary, #333);
 }
 
+[data-theme='dark'] .drum-tool-synth-header {
+  background: var(--color-bg-tertiary, #2a2a2a);
+  color: var(--color-text-primary, #fff);
+}
+
+[data-theme='dark'] .drum-tool-synth-header:hover {
+  background: var(--color-bg-elevated, #333);
+}
+
+[data-theme='dark'] .drum-tool-drum-btn {
+  background: var(--color-bg-tertiary, #2a2a2a);
+  border-color: var(--color-border-primary, #444);
+  color: var(--color-text-secondary, #aaa);
+}
+
+[data-theme='dark'] .drum-tool-drum-btn:hover {
+  background: var(--color-bg-elevated, #333);
+  border-color: var(--color-border-secondary, #555);
+  color: var(--color-text-primary, #fff);
+}
+
+[data-theme='dark'] .synth-compact-param-label {
+  color: var(--color-text-secondary, #aaa);
+}
+
+[data-theme='dark'] .synth-compact-param-value {
+  color: var(--color-text-primary, #fff);
+}
+
+[data-theme='dark'] .synth-compact-slider {
+  background: var(--color-bg-tertiary, #333);
+}
+
+[data-theme='dark'] .drum-tool-master {
+  border-color: var(--color-border-primary, #444);
+}
+
+/* System dark mode preference */
 @media (prefers-color-scheme: dark) {
-  .drum-tool-integration-info {
+  .drum-tool-synth-panel {
     background: var(--color-bg-secondary, #1e1e1e);
     border-color: var(--color-border-primary, #333);
   }
+
+  .drum-tool-synth-header {
+    background: var(--color-bg-tertiary, #2a2a2a);
+    color: var(--color-text-primary, #fff);
+  }
+
+  .drum-tool-synth-header:hover {
+    background: var(--color-bg-elevated, #333);
+  }
+
+  .drum-tool-drum-btn {
+    background: var(--color-bg-tertiary, #2a2a2a);
+    border-color: var(--color-border-primary, #444);
+    color: var(--color-text-secondary, #aaa);
+  }
+
+  .drum-tool-drum-btn:hover {
+    background: var(--color-bg-elevated, #333);
+    border-color: var(--color-border-secondary, #555);
+    color: var(--color-text-primary, #fff);
+  }
+
+  .synth-compact-param-label {
+    color: var(--color-text-secondary, #aaa);
+  }
+
+  .synth-compact-param-value {
+    color: var(--color-text-primary, #fff);
+  }
+
+  .synth-compact-slider {
+    background: var(--color-bg-tertiary, #333);
+  }
+
+  .drum-tool-master {
+    border-color: var(--color-border-primary, #444);
+  }
 }
 
-/* Reduced motion */
+/* ==========================================================================
+   Mobile Responsive
+   ========================================================================== */
+
+@media (max-width: 640px) {
+  .drum-tool-synth-header {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .drum-tool-synth-content {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  .drum-tool-drum-selector {
+    gap: 0.375rem;
+  }
+
+  .drum-tool-drum-btn {
+    min-width: 50px;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .drum-tool-params {
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  .synth-compact-param-header {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .drum-tool-drum-btn {
+    min-width: 45px;
+    padding: 0.375rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* ==========================================================================
+   Reduced Motion
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
-  .drum-tool-panel--active {
+  .drum-tool-synth-content {
     animation: none;
   }
 
-  .drum-tool-tab {
+  .drum-tool-synth-toggle {
+    transition: none;
+  }
+
+  .drum-tool-drum-btn {
+    transition: none;
+  }
+
+  .synth-compact-slider::-webkit-slider-thumb {
     transition: none;
   }
 }
