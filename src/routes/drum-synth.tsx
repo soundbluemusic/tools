@@ -1,4 +1,5 @@
 import { createMemo, lazy, Suspense, type Component } from 'solid-js';
+import type { RouteDefinition } from '@solidjs/router';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
 import { ShareButton } from '../components/ShareButton';
@@ -16,6 +17,15 @@ const DrumSynth = lazy(() =>
     default: m.DrumSynth,
   }))
 );
+
+/**
+ * Route preload function - prefetches component on hover intent
+ */
+export const route: RouteDefinition = {
+  preload: () => {
+    import('../apps/drum-synth/components/DrumSynth');
+  },
+};
 
 /**
  * Drum Sound Synthesizer Tool Page

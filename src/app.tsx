@@ -2,7 +2,9 @@
 import { MetaProvider, Meta, Link } from '@solidjs/meta';
 import { Router } from '@solidjs/router';
 import { FileRoutes } from '@solidjs/start/router';
-import { Suspense, ErrorBoundary } from 'solid-js';
+import { Suspense, ErrorBoundary, createSignal, onMount } from 'solid-js';
+import { isServer } from 'solid-js/web';
+import { useLocation } from '@solidjs/router';
 import { ThemeProvider } from './hooks/useTheme';
 import { LanguageProvider } from './i18n/context';
 import { useApps } from './hooks/useApps';
@@ -26,6 +28,39 @@ const structuredData = {
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
 };
+
+/**
+ * Page Transition Loader - Shows during route changes
+ * Uses skeleton UI pattern for smooth transitions
+ */
+function PageTransitionLoader() {
+  return (
+    <div
+      class="page-transition-loader"
+      aria-busy="true"
+      aria-label="Loading page..."
+    >
+      <div class="page-transition-skeleton">
+        <div class="skeleton-header">
+          <div
+            class="skeleton skeleton--rounded"
+            style={{ width: '60%', height: '2rem' }}
+          />
+          <div
+            class="skeleton skeleton--rounded"
+            style={{ width: '80%', height: '1rem', 'margin-top': '0.75rem' }}
+          />
+        </div>
+        <div class="skeleton-content">
+          <div
+            class="skeleton skeleton--rounded"
+            style={{ width: '100%', height: '300px' }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Error Fallback Component
@@ -153,7 +188,9 @@ export default function App() {
                 <NavigationLayout apps={apps}>
                   <SkipLink />
                   <main id="main-content" class="main-content" role="main">
-                    <Suspense>{props.children}</Suspense>
+                    <Suspense fallback={<PageTransitionLoader />}>
+                      <div class="page-content">{props.children}</div>
+                    </Suspense>
                   </main>
                   <Footer />
                   <PWAPrompt />

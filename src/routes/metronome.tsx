@@ -1,4 +1,5 @@
 import { createMemo, lazy, Suspense, type Component } from 'solid-js';
+import type { RouteDefinition } from '@solidjs/router';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
 import { ShareButton } from '../components/ShareButton';
@@ -16,6 +17,17 @@ const MetronomePlayer = lazy(() =>
     default: m.MetronomePlayer,
   }))
 );
+
+/**
+ * Route preload function - prefetches component on hover intent
+ * This runs before navigation, enabling instant page transitions
+ */
+export const route: RouteDefinition = {
+  preload: () => {
+    // Preload the component module
+    import('../apps/metronome/components/MetronomePlayer');
+  },
+};
 
 /**
  * Metronome Tool Page
