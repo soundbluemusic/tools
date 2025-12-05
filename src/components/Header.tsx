@@ -98,7 +98,7 @@ export const Header: Component<HeaderProps> = (props) => {
         <div class="flex-1 flex justify-center max-[480px]:hidden">
           <button
             onClick={() => props.onSearchClick?.()}
-            class="inline-flex items-center gap-4 w-full max-w-md h-11 px-5 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-full cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-hover)] hover:shadow-sm transition-all duration-150"
+            class="inline-flex items-center gap-4 w-full max-w-md h-11 pl-5 pr-2.5 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-full cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-hover)] hover:shadow-sm transition-all duration-150"
             aria-label={language() === 'ko' ? '검색' : 'Search'}
           >
             <svg
@@ -117,9 +117,9 @@ export const Header: Component<HeaderProps> = (props) => {
             <span class="flex-1 text-left text-sm">
               {language() === 'ko' ? '검색...' : 'Search...'}
             </span>
-            <span class="text-xs text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] px-2.5 py-1 rounded border border-[var(--color-border-secondary)]">
+            <kbd class="text-[11px] font-medium text-[var(--color-text-secondary)] bg-[var(--color-bg-primary)] px-2.5 py-1.5 rounded-md border border-[var(--color-border-primary)] shadow-[inset_0_-2px_0_var(--color-border-secondary)]">
               {shortcutKey()}
-            </span>
+            </kbd>
           </button>
         </div>
 
