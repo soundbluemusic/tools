@@ -265,7 +265,7 @@ const Sitemap: Component = () => {
 
           <div class="sitemap-xml-section">
             <a
-              href="/sitemap.xml"
+              href="/sitemap_index.xml"
               target="_blank"
               rel="noopener noreferrer"
               class="sitemap-xml-link"
