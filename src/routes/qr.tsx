@@ -7,6 +7,8 @@ import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n';
 import { useSEO } from '../hooks';
 import { Loader } from '../components/ui';
+// Route-level CSS for code splitting
+import '../styles/qr-page.css';
 
 // Lazy load the heavy QR generator component
 const QRGenerator = lazy(() =>

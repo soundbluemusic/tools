@@ -12,9 +12,8 @@
 @import './styles/base.css';
 @import './components/navigation/NavigationLayout.css';
 @import './styles/components.css';
-@import './styles/tool-page.css';
-@import './styles/qr-page.css';
 @import './styles/not-found.css';
+/* Note: tool-page.css and qr-page.css are loaded at route level for better code splitting */
 
 /* ============================================
  * Layout Components

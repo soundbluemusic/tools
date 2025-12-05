@@ -7,6 +7,8 @@ import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
 import { Loader } from '../components/ui';
+// Route-level CSS for code splitting
+import '../styles/tool-page.css';
 
 // Lazy load the drum machine component
 const DrumMachine = lazy(() =>
