@@ -44,9 +44,9 @@ const pageContent = {
       ko: '열기',
       en: 'Open',
     },
-    standalone: {
-      ko: '독립 실행',
-      en: 'Standalone',
+    newWindow: {
+      ko: '새 창',
+      en: 'New Window',
     },
     embed: {
       ko: '임베드 코드',
@@ -186,25 +186,11 @@ const pageContent = {
   },
 };
 
-// Standalone apps mapping (not all apps have standalone versions)
-const STANDALONE_APPS = ['metronome', 'drum', 'drum-synth', 'qr'];
-
-function hasStandalone(app: App): boolean {
-  const slug = app.url.replace('/', '');
-  return STANDALONE_APPS.includes(slug);
-}
-
-function getStandaloneUrl(app: App): string {
-  const slug = app.url.replace('/', '');
-  return `/standalone/${slug}/`;
-}
-
 function getEmbedCode(app: App, baseUrl: string): string {
-  const slug = app.url.replace('/', '');
   return `<iframe
-  src="${baseUrl}/standalone/${slug}/"
+  src="${baseUrl}${app.url}"
   width="100%"
-  height="500"
+  height="600"
   style="border: none; border-radius: 8px;"
   title="${app.name.en}"
   allow="autoplay; microphone"
@@ -346,22 +332,20 @@ const Downloads: Component = () => {
                       >
                         {pageContent.buttons.open[language()]}
                       </a>
-                      <Show when={hasStandalone(app)}>
-                        <a
-                          href={getStandaloneUrl(app)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="downloads-btn downloads-btn-secondary"
-                        >
-                          {pageContent.buttons.standalone[language()]}
-                        </a>
-                        <button
-                          class="downloads-btn downloads-btn-tertiary"
-                          onClick={() => openEmbedModal(app)}
-                        >
-                          {pageContent.buttons.embed[language()]}
-                        </button>
-                      </Show>
+                      <a
+                        href={app.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="downloads-btn downloads-btn-secondary"
+                      >
+                        {pageContent.buttons.newWindow[language()]}
+                      </a>
+                      <button
+                        class="downloads-btn downloads-btn-tertiary"
+                        onClick={() => openEmbedModal(app)}
+                      >
+                        {pageContent.buttons.embed[language()]}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -438,40 +422,40 @@ const Downloads: Component = () => {
             </div>
           </section>
         </div>
+      </PageLayout>
 
-        {/* Embed Code Modal */}
-        <Show when={embedModalApp()}>
-          <div class="downloads-modal-overlay" onClick={closeEmbedModal}>
-            <div class="downloads-modal" onClick={(e) => e.stopPropagation()}>
-              <h3 class="downloads-modal-title">
-                {pageContent.embedModal.title[language()]}
-              </h3>
-              <p class="downloads-modal-desc">
-                {pageContent.embedModal.description[language()]}
-              </p>
-              <pre class="downloads-modal-code">
-                <code>{getEmbedCode(embedModalApp()!, baseUrl())}</code>
-              </pre>
-              <div class="downloads-modal-actions">
-                <button
-                  class="downloads-btn downloads-btn-primary"
-                  onClick={copyEmbedCode}
-                >
-                  {copied()
-                    ? pageContent.embedModal.copied[language()]
-                    : pageContent.embedModal.copy[language()]}
-                </button>
-                <button
-                  class="downloads-btn downloads-btn-secondary"
-                  onClick={closeEmbedModal}
-                >
-                  {pageContent.embedModal.close[language()]}
-                </button>
-              </div>
+      {/* Embed Code Modal - Outside PageLayout for proper fixed positioning */}
+      <Show when={embedModalApp()}>
+        <div class="downloads-modal-overlay" onClick={closeEmbedModal}>
+          <div class="downloads-modal" onClick={(e) => e.stopPropagation()}>
+            <h3 class="downloads-modal-title">
+              {pageContent.embedModal.title[language()]}
+            </h3>
+            <p class="downloads-modal-desc">
+              {pageContent.embedModal.description[language()]}
+            </p>
+            <pre class="downloads-modal-code">
+              <code>{getEmbedCode(embedModalApp()!, baseUrl())}</code>
+            </pre>
+            <div class="downloads-modal-actions">
+              <button
+                class="downloads-btn downloads-btn-primary"
+                onClick={copyEmbedCode}
+              >
+                {copied()
+                  ? pageContent.embedModal.copied[language()]
+                  : pageContent.embedModal.copy[language()]}
+              </button>
+              <button
+                class="downloads-btn downloads-btn-secondary"
+                onClick={closeEmbedModal}
+              >
+                {pageContent.embedModal.close[language()]}
+              </button>
             </div>
           </div>
-        </Show>
-      </PageLayout>
+        </div>
+      </Show>
     </>
   );
 };
