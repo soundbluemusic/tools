@@ -135,7 +135,7 @@ export default function App() {
             sizes="180x180"
             href="/icons/apple-touch-icon.png"
           />
-          <Link rel="manifest" href="/manifest.webmanifest" />
+          <Link rel="manifest" href="/_build/manifest.webmanifest" />
           <script
             type="application/ld+json"
             innerHTML={JSON.stringify(structuredData)}
