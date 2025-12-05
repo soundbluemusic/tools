@@ -18,3 +18,29 @@ export {
   getLanguageFromPath,
   getLanguagePrefix,
 } from './useLocalizedPath';
+
+// Search and sort
+export { useSearch, useStringSearch } from './useSearch';
+export { useSort } from './useSort';
+
+// Media queries
+export {
+  useMediaQuery,
+  useDarkMode,
+  useLightMode,
+  useIsMobile,
+  useIsTablet,
+  useIsDesktop,
+  useReducedMotion,
+  useHighContrast,
+  useBreakpoint,
+} from './useMediaQuery';
+
+// Accessibility
+export {
+  useFocusTrap,
+  useArrowNavigation,
+  useAnnounce,
+  useRouteAnnouncer,
+  useKeyboardNavigation,
+} from './useA11y';
