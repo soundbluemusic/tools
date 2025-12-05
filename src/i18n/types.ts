@@ -46,6 +46,10 @@ export interface CommonTranslation {
     success: string;
     backButton: string;
   };
+  // Common actions
+  actions: {
+    later: string;
+  };
   // Share functionality
   share: {
     button: string;
@@ -89,6 +93,7 @@ export interface CommonTranslation {
     updateButton: string;
     offlineTitle: string;
     offlineMessage: string;
+    offlineReady: string;
   };
 }
 

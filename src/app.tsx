@@ -9,6 +9,7 @@ import { useApps } from './hooks/useApps';
 import { NavigationLayout } from './components/navigation';
 import { Footer } from './components/Footer';
 import { SkipLink } from './components/SkipLink';
+import PWAPrompt from './components/PWAPrompt';
 import './app.css';
 
 /**
@@ -155,6 +156,7 @@ export default function App() {
                     <Suspense>{props.children}</Suspense>
                   </main>
                   <Footer />
+                  <PWAPrompt />
                 </NavigationLayout>
               </ErrorBoundary>
             </LanguageProvider>
