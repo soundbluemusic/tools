@@ -11,32 +11,37 @@
 - Metronome (`/metronome`) - Precision metronome for musicians and dancers
 - Drum Machine (`/drum`) - Drum pattern sequencer for composers and producers
 - Drum Sound Synth (`/drum-synth`) - Web Audio drum synthesizer with detailed parameter control
+- Drum Tool (`/drum-tool`) - All-in-one drum tool combining drum machine and sound synthesizer
 - QR Code Generator (`/qr`) - High-resolution QR codes for designers and marketers
 
 **Additional Pages:**
 
+- Home (`/`) - Main landing with app grid
 - Sitemap (`/sitemap`) - Site navigation
-- About (`/about`) - Our philosophy: free tools for every creator
+- About/Opensource (`/opensource`) - Philosophy: free tools for every creator
 - Tools Used (`/tools-used`) - Technologies used
 - Privacy (`/privacy`) - Privacy policy
 - Terms (`/terms`) - Terms of service
+- Downloads (`/downloads`) - Download options
 
 ## Technology Stack
 
-| Category     | Technology                      | Version |
-| ------------ | ------------------------------- | ------- |
-| Framework    | SolidJS                         | ^1.9.5  |
-| Meta-Framework | SolidStart                    | ^1.1.0  |
-| Routing      | @solidjs/router                 | ^0.15.3 |
-| Language     | TypeScript                      | ^5.5.3  |
-| Build Tool   | Vinxi + Vite                    | ^0.5.3  |
-| WASM         | AssemblyScript                  | ^0.28.9 |
-| Unit Testing | Vitest + Solid Testing Library  | ^4.0.14 |
-| E2E Testing  | Playwright                      | ^1.48.0 |
-| Linting      | ESLint                          | ^9.9.0  |
-| Formatting   | Prettier                        | ^3.4.2  |
-| PWA          | vite-plugin-pwa                 | ^1.2.0  |
-| Deployment   | Cloudflare Pages                | -       |
+| Category       | Technology                      | Version  |
+| -------------- | ------------------------------- | -------- |
+| Framework      | SolidJS                         | ^1.9.5   |
+| Meta-Framework | SolidStart                      | ^1.1.0   |
+| Routing        | @solidjs/router                 | ^0.15.3  |
+| Language       | TypeScript                      | ^5.5.3   |
+| Build Tool     | Vinxi + Vite                    | ^0.5.3   |
+| CSS Framework  | Tailwind CSS                    | ^4.1.17  |
+| WASM           | AssemblyScript                  | ^0.28.9  |
+| Unit Testing   | Vitest + Solid Testing Library  | ^4.0.14  |
+| E2E Testing    | Playwright                      | ^1.48.0  |
+| Linting        | ESLint                          | ^9.9.0   |
+| Formatting     | Prettier                        | ^3.4.2   |
+| Git Hooks      | Husky + lint-staged             | ^9.1.7   |
+| PWA            | vite-plugin-pwa                 | ^1.2.0   |
+| Deployment     | Cloudflare Pages                | -        |
 
 **Node.js Requirement:** >=18.0.0
 
@@ -49,18 +54,27 @@ assembly/                    # AssemblyScript WASM source
 
 src/
 ├── apps/                    # Feature modules (auto-loaded via glob)
+│   ├── metronome/           # Metronome app
+│   ├── drum/                # Drum machine app
+│   ├── drum-synth/          # Drum sound synthesizer
+│   ├── drum-tool/           # Combined drum tool (machine + synth)
+│   ├── qr/                  # QR code generator
 │   └── [app-name]/
 │       ├── config.ts        # App metadata (bilingual name/desc, icon, size, order)
 │       ├── constants.ts     # App-specific constants
 │       ├── components/      # App-specific components
 │       └── utils/           # App-specific utilities
 │
+├── assets/                  # Static assets (images, SVGs)
+│   └── react.svg            # React logo (legacy)
+│
 ├── audio/                   # Web Audio utilities
 │   ├── worklet.ts           # Audio Worklet processor
 │   └── index.ts             # Barrel export
 │
 ├── components/              # Shared SolidJS components
-│   ├── layout/              # Layout components (Container, Layout, PageLayout)
+│   ├── layout/              # Layout components
+│   │   └── PageLayout.tsx   # Standard page layout wrapper
 │   ├── navigation/          # Navigation system
 │   │   ├── Sidebar.tsx      # Desktop sidebar navigation
 │   │   ├── BottomNav.tsx    # Mobile bottom navigation
@@ -89,36 +103,40 @@ src/
 │   ├── EmbedButton.tsx      # Embed code generator
 │   └── FullscreenButton.tsx # Fullscreen toggle button
 │
-├── routes/                  # File-based routing (SolidStart)
-│   ├── index.tsx            # Home page with search/sort
-│   ├── metronome.tsx
-│   ├── drum.tsx
-│   ├── qr.tsx
-│   ├── sitemap.tsx
-│   ├── about.tsx            # Philosophy: free tools for creators
-│   ├── privacy.tsx
-│   ├── terms.tsx
-│   ├── [...404].tsx         # 404 page
-│   └── ko/                   # Korean locale routes
+├── routes/                  # File-based routing (SolidStart FileRoutes)
+│   ├── index.tsx            # Home page (/)
+│   ├── metronome.tsx        # Metronome page
+│   ├── drum.tsx             # Drum machine page
+│   ├── qr.tsx               # QR generator page
+│   ├── sitemap.tsx          # Sitemap page
+│   ├── about.tsx            # About page
+│   ├── privacy.tsx          # Privacy policy
+│   ├── terms.tsx            # Terms of service
+│   ├── [...404].tsx         # 404 catch-all page
+│   └── ko/                  # Korean locale routes (duplicated structure)
+│       ├── index.tsx
+│       ├── metronome.tsx
+│       ├── drum.tsx
+│       └── ...
 │
 ├── hooks/                   # Custom SolidJS hooks
-│   ├── useA11y.ts           # Accessibility hooks (useFocusTrap, useArrowNavigation, useAnnounce)
+│   ├── useA11y.ts           # Accessibility (useFocusTrap, useArrowNavigation, useAnnounce, useRouteAnnouncer, useKeyboardNavigation)
 │   ├── useApps.tsx          # Apps context (AppsProvider) for lazy-loaded apps
-│   ├── useDebounce.ts       # Debounce utility
-│   ├── useDropdown.ts       # Dropdown menu logic
+│   ├── useDebounce.ts       # Debounce utility (useDebounce, useDebouncedCallback)
+│   ├── useDropdown.ts       # Dropdown menu logic (useDropdown, useDropdownToggle)
 │   ├── useIsActive.ts       # Route active state detection
 │   ├── useLocalStorage.ts   # localStorage persistence + cross-tab sync
-│   ├── useLocalizedPath.ts  # Localized URL path utilities
-│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useIsMobile, useReducedMotion)
-│   ├── useSearch.ts         # Searchable lists with deferred value
+│   ├── useLocalizedPath.ts  # Localized URL utilities (useLocalizedPath, useLocalizedNavigate, localizedPath, getBasePath, getLanguageFromPath, getLanguagePrefix)
+│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useLightMode, useIsMobile, useIsTablet, useIsDesktop, useReducedMotion, useHighContrast, useBreakpoint)
+│   ├── useSearch.ts         # Searchable lists (useSearch, useStringSearch)
 │   ├── useSEO.ts            # SEO meta tags management
 │   ├── useSort.ts           # Sorting logic
-│   ├── useTheme.tsx         # Theme context (ThemeProvider)
+│   ├── useTheme.tsx         # Theme context (ThemeProvider, useTheme)
 │   ├── useViewTransition.ts # View Transitions API support
 │   └── index.ts             # Barrel export
 │
 ├── i18n/                    # Internationalization
-│   ├── context.tsx          # Language context provider
+│   ├── context.tsx          # Language context provider (LanguageProvider, useLanguage, useTranslations)
 │   ├── types.ts             # Translation type definitions
 │   ├── index.ts             # Barrel export
 │   └── translations/        # Translation files
@@ -130,7 +148,7 @@ src/
 │
 ├── constants/               # App metadata and constants
 │   ├── apps.ts              # Auto-loaded app list (uses import.meta.glob)
-│   ├── brand.ts             # Brand configuration
+│   ├── brand.ts             # Brand configuration (for forking)
 │   ├── sortOptions.ts       # Sort options for app list
 │   └── index.ts             # Barrel export
 │
@@ -141,7 +159,7 @@ src/
 │   └── index.ts             # Barrel export
 │
 ├── storage/                 # Data persistence utilities
-│   ├── db.ts                # IndexedDB wrapper
+│   ├── db.ts                # IndexedDB wrapper (Dexie)
 │   ├── opfs.ts              # Origin Private File System
 │   └── index.ts             # Barrel export
 │
@@ -156,9 +174,11 @@ src/
 │
 ├── utils/                   # Utility functions
 │   ├── cn.ts                # ClassNames utility
+│   ├── clipboard.ts         # Clipboard utilities
 │   ├── format.ts            # Formatting utilities
 │   ├── storage.ts           # localStorage helpers
-│   └── sizeClass.ts         # Size class utilities
+│   ├── sizeClass.ts         # Size class utilities
+│   └── index.ts             # Barrel export
 │
 ├── wasm/                    # WebAssembly modules
 │   ├── wasmProcessor.ts     # WASM loader & TypeScript wrapper
@@ -175,7 +195,7 @@ src/
 │   └── qrious.d.ts          # QRious library types
 │
 ├── styles/                  # Global stylesheets
-│   ├── index.css            # Main entry (imports others)
+│   ├── index.css            # Main entry (imports others + Tailwind)
 │   ├── variables.css        # CSS custom properties (design tokens)
 │   ├── base.css             # Base/reset styles
 │   ├── components.css       # Component styles
@@ -183,23 +203,37 @@ src/
 │   ├── qr-page.css          # QR page specific styles
 │   ├── not-found.css        # 404 page styles
 │   └── pages/               # Page-specific styles
+│       ├── About.css
+│       ├── Sitemap.css
+│       └── Legal.css
 │
 ├── test/                    # Testing utilities
 │   ├── setup.ts             # Vitest setup (mocks browser APIs)
 │   └── test-utils.tsx       # Custom render functions
 │
-├── app.tsx                  # Root component with routing
+├── app.tsx                  # Root component with Router, MetaProvider
 ├── app.css                  # App-level styles
 ├── App.css                  # Additional app styles
+├── index.css                # Entry CSS (imports styles/index.css)
 ├── entry-client.tsx         # SolidStart client entry
 └── entry-server.tsx         # SolidStart server entry
 
 scripts/                     # Build utilities
-├── generate-icons.ts        # Generate PWA icons
+├── generate-icons.ts        # Generate PWA icons from source
 ├── generate-og-image.ts     # Generate OpenGraph images
 ├── generate-sitemap.ts      # Generate XML sitemap
 ├── convert-to-webp.ts       # Convert images to WebP format
 └── sync-docs.ts             # Documentation sync utility
+
+docs/                        # Documentation
+├── README.md                # Docs index
+├── development.md           # Development guide
+├── architecture.md          # Architecture overview
+└── apps/                    # Per-app documentation
+    ├── metronome.md
+    ├── drum.md
+    ├── drum-synth.md
+    └── qr.md
 ```
 
 ## Key Architecture Patterns
@@ -231,18 +265,49 @@ const config: AppConfig = {
 export default config;
 ```
 
-3. Create page component in `src/pages/[AppName].tsx`
-4. Add lazy import and route in `src/App.tsx`:
+3. Create route file in `src/routes/[app-name].tsx` (file-based routing)
+4. Create Korean locale route in `src/routes/ko/[app-name].tsx`
+5. Add route to prerender list in `app.config.ts`
+6. Add translations in `src/i18n/translations/[app-name].ts`
+
+### 2. File-Based Routing (SolidStart)
+
+This project uses SolidStart's `FileRoutes` for automatic routing based on the file system:
 
 ```tsx
-const MyApp = lazy(() => import('./pages/MyApp'));
-// In ROUTES array:
-{ path: '/my-app', element: <MyApp />, lazy: true },
+// src/app.tsx
+import { FileRoutes } from '@solidjs/start/router';
+
+<Router>
+  <FileRoutes />
+</Router>
 ```
 
-5. Add translations in `src/i18n/translations/my-app.ts`
+**Route file naming:**
+- `src/routes/index.tsx` → `/`
+- `src/routes/metronome.tsx` → `/metronome`
+- `src/routes/ko/metronome.tsx` → `/ko/metronome`
+- `src/routes/[...404].tsx` → Catch-all 404 page
 
-### 2. Navigation System
+**Prerendering:** Routes must be added to `app.config.ts` for static generation:
+
+```typescript
+// app.config.ts
+server: {
+  preset: 'static',
+  prerender: {
+    routes: [
+      '/',
+      '/ko',
+      '/metronome',
+      '/ko/metronome',
+      // ... add new routes here
+    ],
+  },
+},
+```
+
+### 3. Navigation System
 
 The app uses a responsive navigation system:
 
@@ -257,20 +322,30 @@ The app uses a responsive navigation system:
 </NavigationLayout>
 ```
 
-### 3. Internationalization (i18n)
+### 4. Internationalization (i18n)
 
 - Context-based system with localStorage persistence
 - Supports Korean (ko) and English (en)
+- URL-based language switching (`/ko/...` for Korean)
 - Auto-detects browser language on first visit
-- Language toggle button in header
 
 **Adding translations:**
 
 ```typescript
 // src/i18n/translations/[module].ts
-export const translations = {
-  ko: { key: '한국어 텍스트' },
-  en: { key: 'English text' },
+export const myAppKo = { key: '한국어 텍스트' };
+export const myAppEn = { key: 'English text' };
+```
+
+**Register in context:**
+
+```typescript
+// src/i18n/context.tsx
+import { myAppKo, myAppEn } from './translations/my-app';
+
+const allTranslations: AllTranslations = {
+  ko: { ..., myApp: myAppKo },
+  en: { ..., myApp: myAppEn },
 };
 ```
 
@@ -281,11 +356,11 @@ import { useLanguage } from '../i18n';
 
 function MyComponent() {
   const { language, t } = useLanguage();
-  return <span>{t.common.myKey}</span>;
+  return <span>{t().common.myKey}</span>;
 }
 ```
 
-### 4. Theme System
+### 5. Theme System
 
 - Two theme modes: `light`, `dark`
 - Uses `data-theme` attribute on `<html>` element
@@ -308,7 +383,33 @@ function MyComponent() {
 }
 ```
 
-### 5. WASM Integration
+### 6. Tailwind CSS v4 Integration
+
+This project uses Tailwind CSS v4 with the Vite plugin:
+
+```typescript
+// app.config.ts
+import tailwindcss from '@tailwindcss/vite';
+
+vite: {
+  plugins: [tailwindcss()],
+}
+```
+
+**Usage:**
+- Tailwind classes work alongside CSS custom properties
+- CSS variables defined in `src/styles/variables.css` integrate with Tailwind
+- Use `@apply` sparingly; prefer utility classes directly
+
+```tsx
+// Prefer Tailwind utilities
+<div class="flex items-center gap-4 p-4">
+
+// CSS variables still available
+<div style={{ color: 'var(--color-text-primary)' }}>
+```
+
+### 7. WASM Integration
 
 AssemblyScript-based WebAssembly modules for compute-intensive operations.
 
@@ -320,9 +421,9 @@ AssemblyScript-based WebAssembly modules for compute-intensive operations.
 import { loadWasmProcessor, isWasmLoaded, makeTransparentWasm } from '../wasm';
 
 // Load WASM on component mount
-useEffect(() => {
+onMount(() => {
   loadWasmProcessor().catch(console.warn);
-}, []);
+});
 
 // Use WASM if available, fallback to JS
 if (isWasmLoaded()) {
@@ -341,17 +442,17 @@ npm run wasm:build    # Compile AssemblyScript → WASM
 
 **Note:** The compiled `processing.wasm` is committed to the repo for deployment environments without AssemblyScript.
 
-### 6. Component Patterns
+### 8. Component Patterns
 
 - **Fine-grained Reactivity**: SolidJS tracks dependencies automatically, use `createMemo` for derived values
-- **Error Boundaries**: Wrap feature components with `withErrorBoundary` HOC
+- **Error Boundaries**: Wrap feature components with `ErrorBoundary`
 - **UI Components**: Use primitives from `src/components/ui/`
-- **Lazy Loading**: Tool pages are lazy-loaded for code splitting with `lazy()`
+- **Lazy Loading**: Tool components are lazy-loaded via file-based routing
 - **Stores**: Use `createStore` from `solid-js/store` for complex state (see `src/stores/`)
 
-### 7. Styling
+### 9. Styling
 
-- CSS Modules + CSS Custom Properties (Design Tokens)
+- Tailwind CSS v4 + CSS Custom Properties (Design Tokens)
 - Dark/Light mode via `prefers-color-scheme` and `data-theme` attribute
 - GPU-optimized animations (transform/opacity only)
 - Respects `prefers-reduced-motion`
@@ -392,7 +493,7 @@ npm run wasm:build    # Compile AssemblyScript → WASM
 --breakpoint-xl: 1280px
 ```
 
-### 8. State Management (Stores)
+### 10. State Management (Stores)
 
 For complex state that needs to be shared across components, use Solid stores:
 
@@ -422,7 +523,7 @@ export const useMyStore = () => ({
 - `drumStore.ts` - Drum machine patterns and settings
 - `metronomeStore.ts` - Metronome tempo and beat state
 
-### 9. Standalone Apps
+### 11. Standalone Apps
 
 Embeddable versions of tools for iframe integration:
 
@@ -435,6 +536,7 @@ src/standalone/
 │   ├── main.tsx         # Entry point
 │   ├── App.tsx          # Standalone app component
 │   ├── styles.css       # Scoped styles
+│   ├── index.html       # Standalone HTML
 │   └── i18n.ts          # Standalone translations
 └── ...
 ```
@@ -444,9 +546,9 @@ src/standalone/
 <iframe src="https://tools.soundbluemusic.com/standalone/metronome" />
 ```
 
-### 10. Data Persistence
+### 12. Data Persistence
 
-**IndexedDB (via `src/storage/db.ts`):**
+**IndexedDB (via `src/storage/db.ts` using Dexie):**
 ```typescript
 import { db } from '../storage';
 
@@ -460,6 +562,25 @@ import { saveToOPFS, loadFromOPFS } from '../storage';
 
 await saveToOPFS('recording.wav', audioBlob);
 const blob = await loadFromOPFS('recording.wav');
+```
+
+### 13. Brand Configuration (Forking)
+
+When forking this project, update `src/constants/brand.ts`:
+
+```typescript
+export const BRAND = {
+  name: 'Your Tools',
+  tagline: {
+    ko: '당신의 태그라인',
+    en: 'Your Tagline',
+  },
+  copyrightHolder: 'Your Name',
+  siteUrl: 'https://your-domain.com',
+  githubUrl: 'https://github.com/your-org/your-repo',
+  description: { ko: '...', en: '...' },
+  shareTitle: { ko: '...', en: '...' },
+};
 ```
 
 ## Development Commands
@@ -493,10 +614,18 @@ npm run test:e2e:headed  # Run with visible browser
 # Full Validation
 npm run validate         # typecheck + lint + test:run
 
+# WASM
+npm run wasm:build       # Build AssemblyScript to WASM
+
 # Asset Generation
 npm run generate-icons   # Generate PWA icons from source
 npm run generate-og-image # Generate OpenGraph images
+npm run generate-sitemap # Generate XML sitemap
 npm run convert-webp     # Convert images to WebP format
+npm run sync-docs        # Sync documentation
+
+# Git hooks (via Husky)
+npm run prepare          # Install Husky hooks
 ```
 
 ## Code Conventions
@@ -515,15 +644,16 @@ npm run convert-webp     # Convert images to WebP format
 - Use `createEffect` for side effects, `onMount`/`onCleanup` for lifecycle
 - Use `Show`, `For`, `Switch`/`Match` for conditional/list rendering
 - Use `createMemo` for derived/computed values
-- Use `lazy()` and `Suspense` for code splitting
+- Use file-based routing (`src/routes/`) for pages
 
 ### File Naming
 
 - Components: `PascalCase.tsx`
-- Hooks: `useCamelCase.ts`
+- Hooks: `useCamelCase.ts` or `useCamelCase.tsx`
 - Utilities: `camelCase.ts`
 - Tests: `*.test.ts` or `*.test.tsx`
 - CSS: `ComponentName.css` (co-located with component)
+- Routes: `lowercase.tsx` (matches URL path)
 
 ### Imports
 
@@ -537,6 +667,12 @@ npm run convert-webp     # Convert images to WebP format
 - Single quotes for JS, double quotes for JSX
 - Trailing commas (ES5)
 - Semicolons required
+
+### Git Hooks (Husky + lint-staged)
+
+Pre-commit hooks automatically run:
+- ESLint fix on `.ts/.tsx` files
+- Prettier on `.ts/.tsx/.css/.json/.md` files
 
 ## Testing Guidelines
 
@@ -567,26 +703,29 @@ describe('MyComponent', () => {
 
 ## Performance Considerations
 
-1. **Code Splitting**: Tool pages are lazy-loaded with `lazy()`
+1. **Code Splitting**: Routes are automatically code-split via file-based routing
 2. **Fine-grained Reactivity**: SolidJS updates only what changes
 3. **Prefetching**: App cards prefetch on hover
 4. **CSS Containment**: Use `contain: layout style` for isolation
 5. **Memoization**: Use `createMemo` for computed values
 6. **Stores**: Use Solid stores for complex state (`createStore`)
 7. **PWA Caching**: Service Worker caches assets for offline use
+8. **Static Prerendering**: Pages are prerendered for fast initial load
 
 ## Build Configuration
 
 **SolidStart settings** (`app.config.ts`):
 
+- Preset: Static (SPA mode with prerendering)
 - Target: ESNext (modern browsers)
 - Minification: esbuild with identifier minification
 - Chunk size warning: 250KB
 - Console/debugger dropped in production
 - PWA manifest with icons and screenshots
-- Service Worker with caching strategies
+- Service Worker with caching strategies (fonts, images, WASM)
+- Manual chunks for solid-js, router, and qrious
 
-**TypeScript settings** (`tsconfig.app.json`):
+**TypeScript settings** (`tsconfig.json`):
 
 - Target: ES2020
 - Module: ESNext
@@ -598,6 +737,7 @@ describe('MyComponent', () => {
 - **Config**: `wrangler.jsonc`
 - **Build output**: `dist/` directory
 - **PWA**: Auto-updating Service Worker
+- **Static**: All routes prerendered to HTML
 
 ## Common Tasks
 
@@ -606,9 +746,11 @@ describe('MyComponent', () => {
 1. Create app folder: `src/apps/my-tool/`
 2. Add `config.ts` with bilingual metadata (including `order` for positioning)
 3. Create components in `src/apps/my-tool/components/`
-4. Create page: `src/pages/MyTool.tsx`
-5. Add lazy import and route in `src/App.tsx`
-6. Add translations in `src/i18n/translations/my-tool.ts`
+4. Create route: `src/routes/my-tool.tsx`
+5. Create Korean route: `src/routes/ko/my-tool.tsx`
+6. Add to prerender routes in `app.config.ts`
+7. Add translations in `src/i18n/translations/my-tool.ts`
+8. Register translations in `src/i18n/context.tsx`
 
 ### Adding a New UI Component
 
@@ -620,9 +762,10 @@ describe('MyComponent', () => {
 ### Adding Translations
 
 1. Create/update file in `src/i18n/translations/`
-2. Define both `ko` and `en` keys
-3. Import and merge in `src/i18n/context.tsx` if new file
-4. Use via `useLanguage()` hook
+2. Define both `ko` and `en` exports
+3. Import and add to `allTranslations` in `src/i18n/context.tsx`
+4. Update types in `src/i18n/types.ts`
+5. Use via `useLanguage()` hook
 
 ### Updating Theme Colors
 
@@ -640,7 +783,10 @@ describe('MyComponent', () => {
 6. **Run validation before commits**: `npm run validate`
 7. **Keep chunks small**: Monitor bundle size (250KB warning threshold)
 8. **Test browser APIs**: Mock in `src/test/setup.ts` if needed
-9. **Use lazy loading**: New tool pages should use `lazy()` from solid-js
+9. **Use file-based routing**: Create routes in `src/routes/` directory
 10. **Respect theme system**: Use CSS variables, not hard-coded colors
 11. **PWA awareness**: App works offline; test Service Worker behavior
 12. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation
+13. **Add to prerender**: New routes must be added to `app.config.ts`
+14. **Tailwind + CSS vars**: Use both Tailwind utilities and CSS custom properties
+15. **Brand-aware**: Check `src/constants/brand.ts` for configurable values
