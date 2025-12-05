@@ -2,38 +2,41 @@
 
 ## Project Overview
 
-**Tools** is a React + TypeScript + Vite single-page application (SPA) dashboard providing multiple utility tools in one unified interface. It features a responsive navigation system with desktop sidebar, mobile bottom nav, and command palette (Cmd/Ctrl+K).
+**Tools** is a free creative tools platform for every creator — musicians, writers, designers, filmmakers, and anyone starting their creative journey. Built with SolidJS + TypeScript + Vite, it provides free online tools with no signup, no ads, and no hidden costs.
+
+**Philosophy:** "모든 창작자를 위한 무료 도구" (Free Tools for Every Creator) — not just open source for developers, but accessible tools for all creators.
 
 **Current Tools:**
 
-- Metronome (`/metronome`) - Music tempo tool
-- Drum Machine (`/drum`) - Drum pattern practice sequencer with MIDI import/export
-- Drum Sound Synth (`/drum-synth`) - Web Audio drum sound synthesizer with detailed parameter control
-- QR Code Generator (`/qr`) - Generate QR codes with customization
+- Metronome (`/metronome`) - Precision metronome for musicians and dancers
+- Drum Machine (`/drum`) - Drum pattern sequencer for composers and producers
+- Drum Sound Synth (`/drum-synth`) - Web Audio drum synthesizer with detailed parameter control
+- QR Code Generator (`/qr`) - High-resolution QR codes for designers and marketers
 
 **Additional Pages:**
 
 - Sitemap (`/sitemap`) - Site navigation
-- Open Source (`/opensource`) - Open source information
+- About (`/about`) - Our philosophy: free tools for every creator
 - Tools Used (`/tools-used`) - Technologies used
 - Privacy (`/privacy`) - Privacy policy
 - Terms (`/terms`) - Terms of service
 
 ## Technology Stack
 
-| Category     | Technology                     | Version |
-| ------------ | ------------------------------ | ------- |
-| Framework    | React                          | ^19.2.0 |
-| Routing      | React Router DOM               | ^7.9.6  |
-| Language     | TypeScript                     | ^5.5.3  |
-| Build Tool   | Vite                           | ^7.2.6  |
-| WASM         | AssemblyScript                 | ^0.28.9 |
-| Unit Testing | Vitest + React Testing Library | ^4.0.14 |
-| E2E Testing  | Playwright                     | ^1.48.0 |
-| Linting      | ESLint                         | ^9.9.0  |
-| Formatting   | Prettier                       | ^3.4.2  |
-| PWA          | vite-plugin-pwa                | ^1.2.0  |
-| Deployment   | Cloudflare Pages               | -       |
+| Category     | Technology                      | Version |
+| ------------ | ------------------------------- | ------- |
+| Framework    | SolidJS                         | ^1.9.5  |
+| Meta-Framework | SolidStart                    | ^1.1.0  |
+| Routing      | @solidjs/router                 | ^0.15.3 |
+| Language     | TypeScript                      | ^5.5.3  |
+| Build Tool   | Vinxi + Vite                    | ^0.5.3  |
+| WASM         | AssemblyScript                  | ^0.28.9 |
+| Unit Testing | Vitest + Solid Testing Library  | ^4.0.14 |
+| E2E Testing  | Playwright                      | ^1.48.0 |
+| Linting      | ESLint                          | ^9.9.0  |
+| Formatting   | Prettier                        | ^3.4.2  |
+| PWA          | vite-plugin-pwa                 | ^1.2.0  |
+| Deployment   | Cloudflare Pages                | -       |
 
 **Node.js Requirement:** >=18.0.0
 
@@ -52,7 +55,7 @@ src/
 │       ├── components/      # App-specific components
 │       └── utils/           # App-specific utilities
 │
-├── components/              # Shared React components
+├── components/              # Shared SolidJS components
 │   ├── layout/              # Layout components (Container, Layout, PageLayout)
 │   ├── navigation/          # Navigation system
 │   │   ├── Sidebar.tsx      # Desktop sidebar navigation
@@ -79,20 +82,19 @@ src/
 │   ├── ShareButton.tsx      # Social sharing button
 │   └── EmbedButton.tsx      # Embed code generator
 │
-├── pages/                   # Route page components
-│   ├── Home.tsx             # Main dashboard with search/sort
-│   ├── Metronome.tsx
-│   ├── Drum.tsx
-│   ├── DrumSynth.tsx
-│   ├── QR.tsx
-│   ├── Sitemap.tsx
-│   ├── OpenSource.tsx
-│   ├── ToolsUsed.tsx
-│   ├── Privacy.tsx
-│   ├── Terms.tsx
-│   └── NotFound.tsx
+├── routes/                  # File-based routing (SolidStart)
+│   ├── index.tsx            # Home page with search/sort
+│   ├── metronome.tsx
+│   ├── drum.tsx
+│   ├── qr.tsx
+│   ├── sitemap.tsx
+│   ├── about.tsx            # Philosophy: free tools for creators
+│   ├── privacy.tsx
+│   ├── terms.tsx
+│   ├── [...404].tsx         # 404 page
+│   └── ko/                   # Korean locale routes
 │
-├── hooks/                   # Custom React hooks
+├── hooks/                   # Custom SolidJS hooks
 │   ├── useSearch.ts         # Searchable lists with deferred value
 │   ├── useSort.ts           # Sorting logic
 │   ├── useDebounce.ts       # Debounce utility
@@ -146,9 +148,10 @@ src/
 │   ├── setup.ts             # Vitest setup (mocks browser APIs)
 │   └── test-utils.tsx       # Custom render functions
 │
-├── App.tsx                  # Root component with routing
-├── App.css                  # App-level styles
-└── main.tsx                 # React app entry point
+├── app.tsx                  # Root component with routing
+├── app.css                  # App-level styles
+├── entry-client.tsx         # SolidStart client entry
+└── entry-server.tsx         # SolidStart server entry
 
 scripts/                     # Build utilities
 ├── generate-icons.mjs       # Generate PWA icons
@@ -385,13 +388,14 @@ npm run convert-webp     # Convert images to WebP format
 - Export types from `src/types/index.ts`
 - Use `type` imports: `import type { App } from '../types'`
 
-### React
+### SolidJS
 
-- Functional components only (no class components)
-- Automatic JSX runtime (no `import React` needed)
-- Prefer `memo()` for components receiving stable props
-- Use custom hooks for reusable logic
-- Wrap pages in `Suspense` for lazy loading
+- Functional components with `Component` type
+- Use `createSignal` for reactive state
+- Use `createEffect` for side effects, `onMount`/`onCleanup` for lifecycle
+- Use `Show`, `For`, `Switch`/`Match` for conditional/list rendering
+- Use `createMemo` for derived/computed values
+- Use `lazy()` and `Suspense` for code splitting
 
 ### File Naming
 
@@ -404,7 +408,7 @@ npm run convert-webp     # Convert images to WebP format
 ### Imports
 
 - Use relative imports within modules
-- Group imports: React > Third-party > Local components > Local utils/hooks > Types > CSS
+- Group imports: SolidJS > Third-party > Local components > Local utils/hooks > Types > CSS
 
 ### Formatting (Prettier)
 
@@ -418,18 +422,18 @@ npm run convert-webp     # Convert images to WebP format
 
 ### Unit Tests (Vitest)
 
-- **Framework**: Vitest + React Testing Library
+- **Framework**: Vitest + Solid Testing Library
 - **Test location**: Co-locate with source files (`*.test.ts`)
 - **Setup file**: `src/test/setup.ts` (mocks matchMedia, ResizeObserver, IntersectionObserver)
 
 ```typescript
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@solidjs/testing-library';
 import { describe, it, expect } from 'vitest';
 import { MyComponent } from './MyComponent';
 
 describe('MyComponent', () => {
   it('renders correctly', () => {
-    render(<MyComponent />);
+    render(() => <MyComponent />);
     expect(screen.getByText('Expected text')).toBeInTheDocument();
   });
 });
@@ -443,17 +447,17 @@ describe('MyComponent', () => {
 
 ## Performance Considerations
 
-1. **Code Splitting**: Tool pages are lazy-loaded with `React.lazy()`
-2. **Vendor Chunks**: React, React Router, and QRious separated
+1. **Code Splitting**: Tool pages are lazy-loaded with `lazy()`
+2. **Fine-grained Reactivity**: SolidJS updates only what changes
 3. **Prefetching**: App cards prefetch on hover
 4. **CSS Containment**: Use `contain: layout style` for isolation
-5. **Memoization**: Prevent unnecessary re-renders with `memo()`, `useMemo()`, `useCallback()`
-6. **Deferred Values**: Use `useDeferredValue` for search inputs
+5. **Memoization**: Use `createMemo` for computed values
+6. **Stores**: Use Solid stores for complex state (`createStore`)
 7. **PWA Caching**: Service Worker caches assets for offline use
 
 ## Build Configuration
 
-**Vite settings** (`vite.config.ts`):
+**SolidStart settings** (`app.config.ts`):
 
 - Target: ESNext (modern browsers)
 - Minification: esbuild with identifier minification
@@ -508,15 +512,15 @@ describe('MyComponent', () => {
 
 ## Important Notes for AI Assistants
 
-1. **No React import needed**: JSX runtime is automatic
+1. **Use SolidJS patterns**: `createSignal`, `createEffect`, `Show`, `For` instead of React patterns
 2. **Use existing UI components**: Check `src/components/ui/` before creating new ones
-3. **Memoize appropriately**: Performance is prioritized
+3. **Fine-grained reactivity**: SolidJS doesn't need memoization like React
 4. **Maintain i18n**: Add translations for both KO and EN with bilingual config
 5. **Follow existing patterns**: Check similar files for conventions
 6. **Run validation before commits**: `npm run validate`
 7. **Keep chunks small**: Monitor bundle size (250KB warning threshold)
 8. **Test browser APIs**: Mock in `src/test/setup.ts` if needed
-9. **Use lazy loading**: New tool pages should be lazy-loaded
+9. **Use lazy loading**: New tool pages should use `lazy()` from solid-js
 10. **Respect theme system**: Use CSS variables, not hard-coded colors
 11. **PWA awareness**: App works offline; test Service Worker behavior
 12. **Accessibility**: Use semantic HTML, ARIA labels, and keyboard navigation

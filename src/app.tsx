@@ -18,10 +18,11 @@ import './app.css';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'Tools - Open Source Productivity Tools',
-  description: '무료 온라인 도구 모음',
+  name: 'Tools - 모든 창작자를 위한 무료 도구',
+  description:
+    '음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 온라인 도구. 회원가입 없이, 광고 없이, 완전히 무료.',
   url: 'https://tools.soundbluemusic.com/',
-  applicationCategory: 'UtilitiesApplication',
+  applicationCategory: 'CreativeApplication',
   operatingSystem: 'Any',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
 };
@@ -63,7 +64,7 @@ export default function App() {
     <Router
       root={(props) => (
         <MetaProvider>
-          <Title>Tools - Open Source Productivity Tools</Title>
+          <Title>Tools - 모든 창작자를 위한 무료 도구</Title>
           <Meta charset="utf-8" />
           <Meta
             name="viewport"
@@ -71,11 +72,11 @@ export default function App() {
           />
           <Meta
             name="description"
-            content="무료 온라인 도구 모음. QR 코드 생성기로 고해상도 QR코드를 만들고, 정밀 메트로놈으로 음악 연습을 하세요. 모든 도구 100% 무료, 회원가입 불필요!"
+            content="음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 온라인 도구. 메트로놈, 드럼머신, QR 코드 생성기 등. 회원가입 없이, 광고 없이, 완전히 무료!"
           />
           <Meta
             name="keywords"
-            content="QR코드 생성기, 무료 QR코드, QR코드 만들기, 메트로놈 온라인, 무료 메트로놈, 온라인 도구, 무료 도구"
+            content="무료 창작 도구, 음악가 도구, 메트로놈, 드럼머신, QR코드 생성기, 무료 온라인 도구, 창작자 도구, free creative tools"
           />
           <Meta name="author" content="SoundBlueMusic" />
           <Meta name="robots" content="index, follow" />
@@ -93,11 +94,11 @@ export default function App() {
           <Meta property="og:url" content="https://tools.soundbluemusic.com/" />
           <Meta
             property="og:title"
-            content="Tools - Open Source Productivity Tools"
+            content="Tools - 모든 창작자를 위한 무료 도구"
           />
           <Meta
             property="og:description"
-            content="무료 온라인 도구 모음. QR 코드 생성기, 정밀 메트로놈 등 유용한 도구를 무료로 사용하세요."
+            content="음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 도구. 회원가입 없이 바로 사용하세요."
           />
           <Meta
             property="og:image"
@@ -106,11 +107,11 @@ export default function App() {
           <Meta name="twitter:card" content="summary_large_image" />
           <Meta
             name="twitter:title"
-            content="Tools - Open Source Productivity Tools"
+            content="Tools - 모든 창작자를 위한 무료 도구"
           />
           <Meta
             name="twitter:description"
-            content="무료 온라인 도구 모음. QR 코드 생성기, 정밀 메트로놈 등 유용한 도구를 무료로 사용하세요."
+            content="음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 도구. 회원가입 없이 바로 사용하세요."
           />
           <Link rel="preconnect" href="https://fonts.googleapis.com" />
           <Link

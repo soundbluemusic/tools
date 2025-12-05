@@ -9,15 +9,15 @@ import type { Language } from '../i18n/types';
 const homeSEO = {
   ko: {
     description:
-      '무료 온라인 도구 모음. QR 코드 생성기로 고해상도 QR코드를 만들고, 정밀 메트로놈으로 음악 연습을 하세요. 모든 도구 100% 무료, 회원가입 불필요!',
+      '음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 온라인 도구. 메트로놈, 드럼머신, QR 코드 생성기 등. 회원가입 없이, 광고 없이, 완전히 무료!',
     keywords:
-      'QR코드 생성기, 무료 QR코드, 메트로놈 온라인, 무료 메트로놈, 온라인 도구, 무료 도구, free tools',
+      '무료 창작 도구, 음악가 도구, 메트로놈, 드럼머신, QR코드 생성기, 창작자 도구, free creative tools',
   },
   en: {
     description:
-      'Free online tools. Create high-resolution QR codes and practice music with precision metronome. All tools 100% free, no signup required!',
+      'Free online tools for musicians, writers, designers, filmmakers — every creator. Metronome, drum machine, QR code generator and more. No signup, no ads, completely free!',
     keywords:
-      'QR code generator, free QR code, online metronome, free metronome, online tools, free tools',
+      'free creative tools, musician tools, metronome, drum machine, QR code generator, creator tools, free online tools',
   },
 };
 
@@ -99,14 +99,14 @@ const Home: Component = () => {
 
   return (
     <>
-      <Title>Tools - Open Source Productivity Tools</Title>
+      <Title>Tools - {language() === 'ko' ? '모든 창작자를 위한 무료 도구' : 'Free Tools for Every Creator'}</Title>
       <Meta name="description" content={homeSEO[language()].description} />
       <Meta name="keywords" content={homeSEO[language()].keywords} />
 
       <div class="w-full p-4 md:p-6 lg:p-8">
         <div class="flex items-center justify-between gap-4 mb-4 md:mb-6 lg:mb-8 flex-wrap max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-3">
           <h1 class="text-2xl font-semibold text-[var(--color-text-primary)] m-0 max-[480px]:text-xl">
-            {language() === 'ko' ? '모든 도구' : 'All Tools'}
+            {language() === 'ko' ? '창작을 시작하세요' : 'Start Creating'}
           </h1>
           <div class="flex items-center gap-3">
             <select

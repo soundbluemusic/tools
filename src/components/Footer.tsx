@@ -67,10 +67,10 @@ export const Footer: Component = () => {
           {t().common.footer.sitemap}
         </Link>
         <Link
-          href={getPath('/opensource')}
+          href={getPath('/about')}
           class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
         >
-          {t().common.footer.opensource}
+          {t().common.footer.about}
         </Link>
         <Link
           href={getPath('/tools-used')}
