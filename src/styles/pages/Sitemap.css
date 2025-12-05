@@ -1,14 +1,25 @@
 /**
  * Sitemap Page Styles
- * Clean, structured layout following major AI site standards
+ * Clean, structured layout with multilingual URL display
  */
 
 .sitemap-container {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  gap: 1.5rem;
   max-width: 800px;
   margin: 0 auto;
+}
+
+/* URL Count Banner */
+.sitemap-count-banner {
+  text-align: center;
+  padding: 0.875rem 1.5rem;
+  background: var(--item-hover-bg);
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 
 /* Section Styles */
@@ -46,7 +57,7 @@
 }
 
 .sitemap-item {
-  padding: 1rem;
+  padding: 1rem 1.25rem;
   background: var(--bg-color);
   border-radius: 8px;
   border: 1px solid var(--border-color);
@@ -66,67 +77,78 @@
   }
 }
 
-/* Link Styles */
-.sitemap-link {
-  display: inline-flex;
+/* Item Name */
+.sitemap-item-name {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.75rem;
+}
+
+/* URL Container */
+.sitemap-urls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* URL Row */
+.sitemap-url-row {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-color);
+  flex-wrap: wrap;
+}
+
+/* URL Link */
+.sitemap-url-link {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: color var(--transition-fast);
-}
-
-.sitemap-link:hover {
-  color: var(--accent-color, #0066cc);
-}
-
-.sitemap-link-name {
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--transition-fast);
-}
-
-.sitemap-link:hover .sitemap-link-name {
-  border-bottom-color: currentColor;
-}
-
-.sitemap-link-external {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.sitemap-link-external-icon,
-.sitemap-xml-icon {
-  font-size: 0.75rem;
-  opacity: 0.6;
-  transition: opacity var(--transition-fast);
-}
-
-.sitemap-link:hover .sitemap-link-external-icon,
-.sitemap-xml-link:hover .sitemap-xml-icon {
-  opacity: 1;
-}
-
-/* Item Description */
-.sitemap-item-desc {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  margin: 0.5rem 0 0.75rem 0;
-  line-height: 1.5;
-}
-
-/* Item URL */
-.sitemap-item-url {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  opacity: 0.6;
   font-family:
     ui-monospace, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono',
     'Droid Sans Mono', 'Source Code Pro', monospace;
   word-break: break-all;
+  transition: color var(--transition-fast);
+}
+
+.sitemap-url-link:hover {
+  color: var(--accent-color, #0066cc);
+  text-decoration: underline;
+}
+
+/* URL Arrow */
+.sitemap-url-arrow {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Language Badge */
+.sitemap-lang-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--item-hover-bg);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  flex-shrink: 0;
+}
+
+.sitemap-lang-en {
+  background: var(--bg-color);
+}
+
+.sitemap-lang-ko {
+  background: var(--bg-color);
 }
 
 /* XML Sitemap Section */
@@ -158,10 +180,25 @@
   background: var(--bg-color);
 }
 
+.sitemap-xml-icon {
+  font-size: 0.75rem;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.sitemap-xml-link:hover .sitemap-xml-icon {
+  opacity: 1;
+}
+
 /* Responsive Design */
 @media (max-width: 640px) {
   .sitemap-container {
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  .sitemap-count-banner {
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
   }
 
   .sitemap-section {
@@ -173,28 +210,27 @@
   }
 
   .sitemap-item {
-    padding: 0.875rem;
+    padding: 0.875rem 1rem;
   }
 
-  .sitemap-link {
+  .sitemap-item-name {
     font-size: 0.9375rem;
   }
 
-  .sitemap-item-desc {
-    font-size: 0.8125rem;
+  .sitemap-url-link {
+    font-size: 0.75rem;
   }
 
-  .sitemap-item-url {
-    font-size: 0.6875rem;
+  .sitemap-lang-badge {
+    font-size: 0.625rem;
+    padding: 0.125rem 0.375rem;
   }
 }
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   .sitemap-item,
-  .sitemap-link,
-  .sitemap-link-name,
-  .sitemap-link-external-icon,
+  .sitemap-url-link,
   .sitemap-xml-icon,
   .sitemap-xml-link {
     transition: none;

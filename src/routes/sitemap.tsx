@@ -1,24 +1,21 @@
-import { type Component, For, Show } from 'solid-js';
+import { type Component, For, createMemo } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
-import { Link } from '../components/ui';
 import { PageLayout } from '../components/layout';
 import { useLanguage } from '../i18n/context';
-import { useSEO, useLocalizedPath } from '../hooks';
+import { useSEO } from '../hooks';
 import { APPS, BRAND } from '../constants';
 import '../styles/pages/Sitemap.css';
+
+interface MultilingualUrl {
+  name: { ko: string; en: string };
+  enUrl: string;
+  koUrl: string;
+}
 
 interface SitemapSection {
   title: { ko: string; en: string };
   description: { ko: string; en: string };
-  items: SitemapItem[];
-}
-
-interface SitemapItem {
-  name: { ko: string; en: string };
-  description: { ko: string; en: string };
-  url: string;
-  isExternal?: boolean;
-  lastModified: string;
+  items: MultilingualUrl[];
 }
 
 const pageContent = {
@@ -46,8 +43,14 @@ const pageContent = {
   },
   sections: {
     main: { ko: '메인', en: 'Main' },
+    categories: { ko: '카테고리', en: 'Categories' },
     tools: { ko: '도구', en: 'Tools' },
     information: { ko: '정보', en: 'Information' },
+    legal: { ko: '법적 고지', en: 'Legal' },
+  },
+  urlCount: {
+    ko: (count: number) => `이 사이트맵에는 ${count}개의 URL이 있습니다.`,
+    en: (count: number) => `This sitemap contains ${count} URLs.`,
   },
   xmlSitemap: {
     ko: 'XML 사이트맵 보기',
@@ -56,8 +59,6 @@ const pageContent = {
 };
 
 function buildSitemapSections(): SitemapSection[] {
-  const today = '2025-12-04';
-
   const mainSection: SitemapSection = {
     title: pageContent.sections.main,
     description: {
@@ -67,12 +68,33 @@ function buildSitemapSections(): SitemapSection[] {
     items: [
       {
         name: { ko: '홈', en: 'Home' },
-        description: {
-          ko: '무료 온라인 도구 모음 - 모든 도구를 한 곳에서',
-          en: 'Free online tools - All tools in one place',
-        },
-        url: '/',
-        lastModified: today,
+        enUrl: `${BRAND.siteUrl}/`,
+        koUrl: `${BRAND.siteUrl}/ko/`,
+      },
+    ],
+  };
+
+  const categoriesSection: SitemapSection = {
+    title: pageContent.sections.categories,
+    description: {
+      ko: '도구 카테고리 페이지입니다.',
+      en: 'Tool category pages.',
+    },
+    items: [
+      {
+        name: { ko: '음악 도구', en: 'Music Tools' },
+        enUrl: `${BRAND.siteUrl}/music-tools`,
+        koUrl: `${BRAND.siteUrl}/ko/music-tools`,
+      },
+      {
+        name: { ko: '기타 도구', en: 'Other Tools' },
+        enUrl: `${BRAND.siteUrl}/other-tools`,
+        koUrl: `${BRAND.siteUrl}/ko/other-tools`,
+      },
+      {
+        name: { ko: '통합 도구', en: 'Combined Tools' },
+        enUrl: `${BRAND.siteUrl}/combined-tools`,
+        koUrl: `${BRAND.siteUrl}/ko/combined-tools`,
       },
     ],
   };
@@ -85,9 +107,8 @@ function buildSitemapSections(): SitemapSection[] {
     },
     items: APPS.map((app) => ({
       name: app.name,
-      description: app.desc,
-      url: app.url,
-      lastModified: today,
+      enUrl: `${BRAND.siteUrl}${app.url}`,
+      koUrl: `${BRAND.siteUrl}/ko${app.url}`,
     })),
   };
 
@@ -100,46 +121,68 @@ function buildSitemapSections(): SitemapSection[] {
     items: [
       {
         name: { ko: '사이트맵', en: 'Sitemap' },
-        description: {
-          ko: '사이트의 모든 페이지 목록',
-          en: 'Complete list of all site pages',
-        },
-        url: '/sitemap',
-        lastModified: today,
+        enUrl: `${BRAND.siteUrl}/sitemap`,
+        koUrl: `${BRAND.siteUrl}/ko/sitemap`,
       },
       {
-        name: { ko: '소개', en: 'About' },
-        description: {
-          ko: '모든 창작자를 위한 무료 도구 — 우리의 철학',
-          en: 'Free tools for every creator — our philosophy',
-        },
-        url: '/about',
-        lastModified: today,
+        name: { ko: '오픈소스', en: 'Open Source' },
+        enUrl: `${BRAND.siteUrl}/opensource`,
+        koUrl: `${BRAND.siteUrl}/ko/opensource`,
       },
       {
         name: { ko: '사용된 도구', en: 'Tools Used' },
-        description: {
-          ko: '이 프로젝트 개발에 사용된 도구',
-          en: 'Tools used to build this project',
-        },
-        url: '/tools-used',
-        lastModified: today,
+        enUrl: `${BRAND.siteUrl}/tools-used`,
+        koUrl: `${BRAND.siteUrl}/ko/tools-used`,
+      },
+      {
+        name: { ko: '다운로드', en: 'Downloads' },
+        enUrl: `${BRAND.siteUrl}/downloads`,
+        koUrl: `${BRAND.siteUrl}/ko/downloads`,
       },
     ],
   };
 
-  return [mainSection, toolsSection, infoSection];
+  const legalSection: SitemapSection = {
+    title: pageContent.sections.legal,
+    description: {
+      ko: '법적 고지 페이지입니다.',
+      en: 'Legal notice pages.',
+    },
+    items: [
+      {
+        name: { ko: '개인정보처리방침', en: 'Privacy Policy' },
+        enUrl: `${BRAND.siteUrl}/privacy`,
+        koUrl: `${BRAND.siteUrl}/ko/privacy`,
+      },
+      {
+        name: { ko: '이용약관', en: 'Terms of Service' },
+        enUrl: `${BRAND.siteUrl}/terms`,
+        koUrl: `${BRAND.siteUrl}/ko/terms`,
+      },
+    ],
+  };
+
+  return [
+    mainSection,
+    categoriesSection,
+    toolsSection,
+    infoSection,
+    legalSection,
+  ];
 }
 
 /**
  * Sitemap Page Component
+ * Displays all site URLs with multilingual support (EN/KO grouped together)
  */
 const Sitemap: Component = () => {
   const { language } = useLanguage();
-  const { toLocalizedPath } = useLocalizedPath();
   const sections = buildSitemapSections();
 
-  const getPath = (path: string) => toLocalizedPath(path);
+  // Calculate total URL count (EN + KO for each item)
+  const totalUrlCount = createMemo(() => {
+    return sections.reduce((acc, section) => acc + section.items.length * 2, 0);
+  });
 
   useSEO({
     title: pageContent.title[language()],
@@ -161,6 +204,11 @@ const Sitemap: Component = () => {
         description={pageContent.description[language()]}
       >
         <div class="sitemap-container">
+          {/* URL Count Banner */}
+          <div class="sitemap-count-banner">
+            {pageContent.urlCount[language()](totalUrlCount())}
+          </div>
+
           <For each={sections}>
             {(section) => (
               <section class="sitemap-section">
@@ -174,35 +222,39 @@ const Sitemap: Component = () => {
                   <For each={section.items}>
                     {(item) => (
                       <li class="sitemap-item">
-                        <Show
-                          when={!item.isExternal}
-                          fallback={
+                        <span class="sitemap-item-name">
+                          {item.name[language()]}
+                        </span>
+                        <div class="sitemap-urls">
+                          <div class="sitemap-url-row">
                             <a
-                              href={item.url}
+                              href={item.enUrl}
+                              class="sitemap-url-link"
                               target="_blank"
                               rel="noopener noreferrer"
-                              class="sitemap-link sitemap-link-external"
                             >
-                              <span class="sitemap-link-name">
-                                {item.name[language()]}
-                              </span>
-                              <span class="sitemap-link-external-icon">↗</span>
+                              {item.enUrl}
                             </a>
-                          }
-                        >
-                          <Link href={getPath(item.url)} class="sitemap-link">
-                            <span class="sitemap-link-name">
-                              {item.name[language()]}
+                            <span class="sitemap-url-arrow">→</span>
+                            <span class="sitemap-lang-badge sitemap-lang-en">
+                              en
                             </span>
-                          </Link>
-                        </Show>
-                        <p class="sitemap-item-desc">
-                          {item.description[language()]}
-                        </p>
-                        <span class="sitemap-item-url">
-                          {BRAND.siteUrl}
-                          {item.url}
-                        </span>
+                          </div>
+                          <div class="sitemap-url-row">
+                            <a
+                              href={item.koUrl}
+                              class="sitemap-url-link"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {item.koUrl}
+                            </a>
+                            <span class="sitemap-url-arrow">→</span>
+                            <span class="sitemap-lang-badge sitemap-lang-ko">
+                              ko
+                            </span>
+                          </div>
+                        </div>
                       </li>
                     )}
                   </For>
