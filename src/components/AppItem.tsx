@@ -21,7 +21,8 @@ const AppItem: Component<AppItemProps> = (props) => {
   const desc = () => props.app.desc[props.language];
 
   const localizedUrl = createMemo(() => toLocalizedPath(props.app.url));
-  const handleClick = createMemo(() => createClickHandler(localizedUrl()));
+  // Direct function - no need for createMemo as createClickHandler returns a new function
+  const handleClick = () => createClickHandler(localizedUrl());
 
   return (
     <Link

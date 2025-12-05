@@ -22,8 +22,25 @@ export const Footer: Component = () => {
   const linkClass =
     'text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]';
 
+  // Organization schema for SEO
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: BRAND.name,
+    url: BRAND.siteUrl,
+    logo: `${BRAND.siteUrl}/icons/icon-512.png`,
+    description: BRAND.description.en,
+    ...(BRAND.githubUrl && { sameAs: [BRAND.githubUrl] }),
+  };
+
   return (
     <footer class="footer">
+      {/* Organization Schema */}
+      <script
+        type="application/ld+json"
+        innerHTML={JSON.stringify(organizationSchema)}
+      />
+
       {/* Share Button - lazy loaded (always shares homepage) */}
       <div class="flex justify-center mb-6">
         <Suspense fallback={null}>

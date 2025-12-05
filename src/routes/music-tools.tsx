@@ -1,9 +1,5 @@
-import { createMemo, type Component } from 'solid-js';
-import { Title, Meta } from '@solidjs/meta';
-import { useLanguage } from '../i18n';
-import { useSEO, useApps } from '../hooks';
-import { AppList } from '../components/AppList';
-import { Breadcrumb } from '../components/Breadcrumb';
+import type { Component } from 'solid-js';
+import { CategoryPage } from '../components/CategoryPage';
 import { MUSIC_APP_PATHS } from '../constants/apps';
 
 const categorySEO = {
@@ -22,65 +18,25 @@ const categorySEO = {
   },
 };
 
-const breadcrumbItems = [
-  { label: { ko: '홈', en: 'Home' }, href: '/' },
-  { label: { ko: '음악 도구', en: 'Music Tools' }, href: '/music-tools' },
-];
+const subtitle = {
+  ko: '음악가와 작곡가를 위한 도구',
+  en: 'Tools for musicians and composers',
+};
 
 /**
  * Music Tools Category Page
  */
-const MusicTools: Component = () => {
-  const { language } = useLanguage();
-
-  useSEO({
-    description: categorySEO[language()].description,
-    keywords: categorySEO[language()].keywords,
-    canonicalPath: '/music-tools',
-  });
-
-  const { apps, isLoading } = useApps();
-
-  const musicApps = createMemo(() =>
-    apps.filter((app) =>
-      MUSIC_APP_PATHS.includes(app.url as (typeof MUSIC_APP_PATHS)[number])
-    )
-  );
-
-  const appListAriaLabel = () =>
-    language() === 'ko' ? '음악 도구' : 'Music Tools';
-
-  return (
-    <>
-      <Title>
-        {categorySEO[language()].title} - Tools
-      </Title>
-      <Meta name="description" content={categorySEO[language()].description} />
-      <Meta name="keywords" content={categorySEO[language()].keywords} />
-
-      <div class="w-full p-6 md:p-8 lg:p-10">
-        <Breadcrumb items={breadcrumbItems} />
-
-        <div class="mb-6 md:mb-8 lg:mb-10">
-          <h1 class="text-2xl font-semibold text-[var(--color-text-primary)] m-0 mb-2 max-[480px]:text-xl">
-            {categorySEO[language()].title}
-          </h1>
-          <p class="text-[var(--color-text-secondary)] m-0">
-            {language() === 'ko'
-              ? '음악가와 작곡가를 위한 도구'
-              : 'Tools for musicians and composers'}
-          </p>
-        </div>
-
-        <AppList
-          apps={musicApps()}
-          isPending={isLoading}
-          language={language()}
-          ariaLabel={appListAriaLabel()}
-        />
-      </div>
-    </>
-  );
-};
+const MusicTools: Component = () => (
+  <CategoryPage
+    seo={categorySEO}
+    canonicalPath="/music-tools"
+    subtitle={subtitle}
+    filterApps={(apps) =>
+      apps.filter((app) =>
+        MUSIC_APP_PATHS.includes(app.url as (typeof MUSIC_APP_PATHS)[number])
+      )
+    }
+  />
+);
 
 export default MusicTools;

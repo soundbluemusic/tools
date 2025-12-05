@@ -7,7 +7,7 @@ export { useViewTransition } from './useViewTransition';
 export { useSEO } from './useSEO';
 export { useTheme, ThemeProvider } from './useTheme';
 export type { Theme } from './useTheme';
-export { useApps, AppsProvider } from './useApps';
+export { useApps } from './useApps';
 export { useDropdown, useDropdownToggle } from './useDropdown';
 export { useIsActive } from './useIsActive';
 export {

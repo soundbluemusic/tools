@@ -1,12 +1,21 @@
-import { createMemo, type Component } from 'solid-js';
+import { createMemo, lazy, Suspense, type Component } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
-import { DrumTool } from '../apps/drum-tool/components/DrumTool';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
 import { FullscreenButton } from '../components/FullscreenButton';
 import { useLanguage } from '../i18n/context';
 import { useSEO } from '../hooks';
+import { Loader } from '../components/ui';
+// Route-level CSS for code splitting
+import '../styles/tool-page.css';
+
+// Lazy load the drum tool component
+const DrumTool = lazy(() =>
+  import('../apps/drum-tool/components/DrumTool').then((m) => ({
+    default: m.DrumTool,
+  }))
+);
 
 /**
  * Drum Tool Page - Combined Drum Machine + Synth
@@ -34,6 +43,11 @@ const DrumToolPage: Component = () => {
     keywords:
       'drum tool, drum machine, drum synth, 808, beat maker, 드럼 툴, 드럼 머신',
     canonicalPath: '/drum-tool',
+    softwareApp: {
+      name: seoTitle(),
+      description: seoDescription(),
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [
@@ -66,7 +80,9 @@ const DrumToolPage: Component = () => {
           </>
         }
       >
-        <DrumTool />
+        <Suspense fallback={<Loader />}>
+          <DrumTool />
+        </Suspense>
       </PageLayout>
     </>
   );

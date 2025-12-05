@@ -90,25 +90,42 @@ export function useHighContrast(): Accessor<boolean> {
   return useMediaQuery('(prefers-contrast: more)');
 }
 
+export type Breakpoint = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+
+/**
+ * Get breakpoint from window width
+ */
+function getBreakpointFromWidth(width: number): Breakpoint {
+  if (width < 480) return 'xs';
+  if (width < 768) return 'sm';
+  if (width < 1024) return 'md';
+  if (width < 1280) return 'lg';
+  if (width < 1536) return 'xl';
+  return '2xl';
+}
+
 /**
  * Hook to get current breakpoint
- * @returns Current breakpoint name (memoized)
+ * Optimized: Uses single resize listener instead of multiple mediaQuery listeners
+ * @returns Current breakpoint name
  */
-export function useBreakpoint(): Accessor<
-  'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
-> {
-  const isXs = useMediaQuery('(max-width: 479px)');
-  const isSm = useMediaQuery('(min-width: 480px) and (max-width: 767px)');
-  const isMd = useMediaQuery('(min-width: 768px) and (max-width: 1023px)');
-  const isLg = useMediaQuery('(min-width: 1024px) and (max-width: 1279px)');
-  const isXl = useMediaQuery('(min-width: 1280px) and (max-width: 1535px)');
+export function useBreakpoint(): Accessor<Breakpoint> {
+  const [breakpoint, setBreakpoint] = createSignal<Breakpoint>('2xl');
 
-  return createMemo(() => {
-    if (isXs()) return 'xs';
-    if (isSm()) return 'sm';
-    if (isMd()) return 'md';
-    if (isLg()) return 'lg';
-    if (isXl()) return 'xl';
-    return '2xl';
+  onMount(() => {
+    if (isServer) return;
+
+    const updateBreakpoint = () => {
+      setBreakpoint(getBreakpointFromWidth(window.innerWidth));
+    };
+
+    // Initial value
+    updateBreakpoint();
+
+    // Single resize listener with passive option for performance
+    window.addEventListener('resize', updateBreakpoint, { passive: true });
+    onCleanup(() => window.removeEventListener('resize', updateBreakpoint));
   });
+
+  return breakpoint;
 }

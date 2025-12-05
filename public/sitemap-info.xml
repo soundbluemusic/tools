@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Sitemap Page -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/sitemap</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/sitemap"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/sitemap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/sitemap"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/sitemap</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/sitemap"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/sitemap"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/sitemap"/>
+  </url>
+
+  <!-- About / Opensource -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/about</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/about"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/about"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/about</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/about"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/about"/>
+  </url>
+
+  <!-- Tools Used -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/tools-used</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/tools-used"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/tools-used"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/tools-used"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/tools-used</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/tools-used"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/tools-used"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/tools-used"/>
+  </url>
+
+  <!-- Privacy -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/privacy</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/privacy"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/privacy</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/privacy"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/privacy"/>
+  </url>
+
+  <!-- Terms -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/terms</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/terms"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/terms"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/terms"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/terms</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/terms"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/terms"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/terms"/>
+  </url>
+
+</urlset>

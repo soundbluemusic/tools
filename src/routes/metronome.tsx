@@ -1,12 +1,21 @@
-import { createMemo, type Component } from 'solid-js';
+import { createMemo, lazy, Suspense, type Component } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
-import { MetronomePlayer } from '../apps/metronome/components/MetronomePlayer';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
 import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
+import { Loader } from '../components/ui';
+// Route-level CSS for code splitting
+import '../styles/tool-page.css';
+
+// Lazy load the metronome component
+const MetronomePlayer = lazy(() =>
+  import('../apps/metronome/components/MetronomePlayer').then((m) => ({
+    default: m.MetronomePlayer,
+  }))
+);
 
 /**
  * Metronome Tool Page
@@ -20,6 +29,11 @@ const Metronome: Component = () => {
     description: metronome().seo.description,
     keywords: metronome().seo.keywords,
     canonicalPath: '/metronome',
+    softwareApp: {
+      name: metronome().seo.title,
+      description: metronome().seo.description,
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [
@@ -39,13 +53,22 @@ const Metronome: Component = () => {
         breadcrumb={breadcrumb()}
         actions={
           <>
-            <EmbedButton title={metronome().title} defaultWidth={400} defaultHeight={500} />
+            <EmbedButton
+              title={metronome().title}
+              defaultWidth={400}
+              defaultHeight={500}
+            />
             <FullscreenButton />
-            <ShareButton title={metronome().title} description={metronome().description} />
+            <ShareButton
+              title={metronome().title}
+              description={metronome().description}
+            />
           </>
         }
       >
-        <MetronomePlayer />
+        <Suspense fallback={<Loader />}>
+          <MetronomePlayer />
+        </Suspense>
       </PageLayout>
     </>
   );

@@ -1,12 +1,21 @@
-import { createMemo, type Component } from 'solid-js';
+import { createMemo, lazy, Suspense, type Component } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
 import { PageLayout } from '../components/layout';
-import { DrumSynth } from '../apps/drum-synth/components/DrumSynth';
 import { ShareButton } from '../components/ShareButton';
 import { EmbedButton } from '../components/EmbedButton';
 import { FullscreenButton } from '../components/FullscreenButton';
 import { useTranslations } from '../i18n/context';
 import { useSEO } from '../hooks';
+import { Loader } from '../components/ui';
+// Route-level CSS for code splitting
+import '../styles/tool-page.css';
+
+// Lazy load the drum synth component
+const DrumSynth = lazy(() =>
+  import('../apps/drum-synth/components/DrumSynth').then((m) => ({
+    default: m.DrumSynth,
+  }))
+);
 
 /**
  * Drum Sound Synthesizer Tool Page
@@ -20,6 +29,11 @@ const DrumSynthPage: Component = () => {
     description: drumSynth().seo.description,
     keywords: drumSynth().seo.keywords,
     canonicalPath: '/drum-synth',
+    softwareApp: {
+      name: drumSynth().seo.title,
+      description: drumSynth().seo.description,
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [
@@ -52,7 +66,9 @@ const DrumSynthPage: Component = () => {
           </>
         }
       >
-        <DrumSynth />
+        <Suspense fallback={<Loader />}>
+          <DrumSynth />
+        </Suspense>
       </PageLayout>
     </>
   );

@@ -26,26 +26,20 @@ export const Sidebar: Component<SidebarProps> = (props) => {
   const isOpen = () => props.isOpen ?? true;
   const getPath = (path: string) => toLocalizedPath(path);
 
-  // Memoize filtered apps
-  const musicApps = createMemo(() =>
-    props.apps.filter((app) =>
-      (MUSIC_APP_PATHS as readonly string[]).includes(app.url)
-    )
-  );
-
-  const combinedApps = createMemo(() =>
-    props.apps.filter((app) =>
-      (COMBINED_APP_PATHS as readonly string[]).includes(app.url)
-    )
-  );
-
-  const otherApps = createMemo(() =>
-    props.apps.filter(
-      (app) =>
-        !(MUSIC_APP_PATHS as readonly string[]).includes(app.url) &&
-        !(COMBINED_APP_PATHS as readonly string[]).includes(app.url)
-    )
-  );
+  // Single-pass categorization for better performance
+  const categorizedApps = createMemo(() => {
+    const result = { music: [] as App[], combined: [] as App[], other: [] as App[] };
+    for (const app of props.apps) {
+      if ((MUSIC_APP_PATHS as readonly string[]).includes(app.url)) {
+        result.music.push(app);
+      } else if ((COMBINED_APP_PATHS as readonly string[]).includes(app.url)) {
+        result.combined.push(app);
+      } else {
+        result.other.push(app);
+      }
+    }
+    return result;
+  });
 
   return (
     <aside class={`sidebar ${isOpen() ? 'sidebar--open' : 'sidebar--closed'}`}>
@@ -74,7 +68,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           {language() === 'ko' ? '음악 도구' : 'Music Tools'}
         </div>
 
-        <For each={musicApps()}>
+        <For each={categorizedApps().music}>
           {(app) => (
             <Link
               href={getPath(app.url)}
@@ -95,7 +89,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           {language() === 'ko' ? '결합 도구' : 'Combined Tools'}
         </div>
 
-        <For each={combinedApps()}>
+        <For each={categorizedApps().combined}>
           {(app) => (
             <Link
               href={getPath(app.url)}
@@ -116,7 +110,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           {language() === 'ko' ? '기타 도구' : 'Other Tools'}
         </div>
 
-        <For each={otherApps()}>
+        <For each={categorizedApps().other}>
           {(app) => (
             <Link
               href={getPath(app.url)}

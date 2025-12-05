@@ -2,15 +2,22 @@ import {
   createSignal,
   createEffect,
   onCleanup,
+  lazy,
+  Show,
+  Suspense,
   type ParentComponent,
 } from 'solid-js';
 import { isServer } from 'solid-js/web';
 import { Header } from '../Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
-import { CommandPalette } from './CommandPalette';
 import type { App } from '../../types';
 import './NavigationLayout.css';
+
+// Lazy load CommandPalette - only loads when user opens it (Cmd+K)
+const CommandPalette = lazy(() =>
+  import('./CommandPalette').then((m) => ({ default: m.CommandPalette }))
+);
 
 interface NavigationLayoutProps {
   apps: App[];
@@ -104,12 +111,16 @@ export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
       {/* Mobile Bottom Navigation - CSS controls visibility */}
       <BottomNav onToggle={toggleBottomNav} isOpen={isBottomNavOpen()} />
 
-      {/* Command Palette (Universal) */}
-      <CommandPalette
-        isOpen={isCommandPaletteOpen()}
-        onClose={closeCommandPalette}
-        apps={props.apps}
-      />
+      {/* Command Palette - Lazy loaded, only mounts when opened */}
+      <Show when={isCommandPaletteOpen()}>
+        <Suspense>
+          <CommandPalette
+            isOpen={true}
+            onClose={closeCommandPalette}
+            apps={props.apps}
+          />
+        </Suspense>
+      </Show>
     </div>
   );
 };

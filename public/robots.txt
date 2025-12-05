@@ -5,8 +5,8 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://tools.soundbluemusic.com/sitemap.xml
+# Sitemap location (sitemap index with multiple sub-sitemaps)
+Sitemap: https://tools.soundbluemusic.com/sitemap_index.xml
 
 # Allow specific bots
 User-agent: Googlebot

@@ -12,3 +12,9 @@ export {
 } from './storage';
 export { getSizeClass, SIZE_CLASSES, type Size } from './sizeClass';
 export { copyToClipboard } from './clipboard';
+export {
+  preloadComponent,
+  preloadAllTools,
+  isPreloaded,
+  getLoader,
+} from './preload';
