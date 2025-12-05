@@ -122,30 +122,34 @@
 
           <div class="section-title">Pages</div>
 
-          <xsl:for-each select="sitemap:urlset/sitemap:url[not(contains(sitemap:loc, '/ko/'))]">
+          <!-- Only process English URLs (not containing /ko) -->
+          <xsl:for-each select="sitemap:urlset/sitemap:url[not(contains(sitemap:loc, '/ko'))]">
             <xsl:sort select="sitemap:priority" order="descending"/>
-            <xsl:variable name="base-url" select="sitemap:loc"/>
-            <xsl:variable name="path" select="substring-after($base-url, '.com')"/>
+            <xsl:variable name="en-url" select="sitemap:loc"/>
+            <xsl:variable name="path" select="substring-after($en-url, '.com')"/>
+
+            <!-- Calculate Korean URL -->
+            <xsl:variable name="ko-url">
+              <xsl:choose>
+                <xsl:when test="$path = '' or $path = '/'">
+                  <xsl:value-of select="concat($en-url, '/ko')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="concat(substring-before($en-url, $path), '/ko', $path)"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
 
             <div class="url-group">
+              <!-- English URL -->
               <div class="url-row">
-                <a class="url-link" href="{sitemap:loc}">
-                  <xsl:value-of select="sitemap:loc"/>
+                <a class="url-link" href="{$en-url}">
+                  <xsl:value-of select="$en-url"/>
                 </a>
                 <span class="lang-badge">EN</span>
               </div>
 
-              <xsl:variable name="ko-url">
-                <xsl:choose>
-                  <xsl:when test="$path = '' or $path = '/'">
-                    <xsl:value-of select="concat(substring-before($base-url, '.com'), '.com/ko/')"/>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:value-of select="concat(substring-before($base-url, $path), '/ko', $path)"/>
-                  </xsl:otherwise>
-                </xsl:choose>
-              </xsl:variable>
-
+              <!-- Korean URL (if exists in sitemap) -->
               <xsl:if test="//sitemap:url[sitemap:loc = $ko-url]">
                 <div class="url-row">
                   <a class="url-link" href="{$ko-url}">
