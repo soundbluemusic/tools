@@ -12,12 +12,12 @@ interface AppListProps {
 
 /**
  * AppList Component - Responsive Grid Layout
- * CSS Grid로 반응형 카드 그리드 구현
+ * Tailwind Grid로 반응형 카드 그리드 구현
  */
 const AppList: Component<AppListProps> = (props) => {
   return (
     <nav
-      class={`app-grid${props.isPending ? ' app-grid--pending' : ''}`}
+      class={`grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4 2xl:grid-cols-5${props.isPending ? ' opacity-60 pointer-events-none' : ''}`}
       role="list"
       aria-label={props.ariaLabel}
       aria-busy={props.isPending}

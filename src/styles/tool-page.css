@@ -1,11 +1,8 @@
 /* ==========================================================================
-   Tool Page Styles - Lazy loaded for tool pages only
+   Tool Page Animation - Minimal CSS for page enter animation
    ========================================================================== */
 
-.tool-page {
-  padding: 24px 32px;
-  /* GPU layer for page transitions */
-  transform: translateZ(0);
+.tool-page-enter {
   animation: tool-page-enter 0.15s ease-out;
 }
 
@@ -20,96 +17,9 @@
   }
 }
 
-.tool-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  contain: layout style;
-}
-
-.tool-header-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.tool-title {
-  font-size: clamp(1.25rem, 5vw, 1.75rem);
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--text-color);
-}
-
-.tool-desc {
-  color: var(--color-text-secondary, #666);
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-}
-
-.tool-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.tool-content {
-  background: var(--color-bg-secondary, var(--bg-color));
-  border-radius: 12px;
-  border: 1px solid var(--color-border-secondary, transparent);
-  padding: 2rem;
-  contain: layout style;
-  transform: translateZ(0);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .tool-page {
-    padding: 20px 24px;
-  }
-
-  .tool-header {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .tool-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .tool-content {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .tool-page {
-    padding: 16px;
-  }
-
-  .tool-header {
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .tool-content {
-    padding: 1.25rem;
-    border-radius: 8px;
-  }
-}
-
-@media (max-width: 360px) {
-  .tool-content {
-    padding: 1rem;
-  }
-}
-
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-  .tool-page {
+  .tool-page-enter {
     animation: none;
   }
 }

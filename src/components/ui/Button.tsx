@@ -1,13 +1,22 @@
 import { type JSX, type ParentComponent, Show, splitProps } from 'solid-js';
 import { cn } from '../../utils';
-import { SIZE_CLASSES } from '../../utils/sizeClass';
 
-// Move class mappings to module level to avoid recreation on every render
+// Variant styles using Tailwind
 const VARIANT_CLASSES = {
-  primary: 'btn--primary',
-  secondary: 'btn--secondary',
-  ghost: 'btn--ghost',
-  outline: 'btn--outline',
+  primary:
+    'bg-[var(--color-accent-primary)] text-white hover:bg-[var(--color-accent-primary-hover)] active:bg-[var(--color-accent-primary-active)]',
+  secondary:
+    'bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] active:bg-[var(--color-interactive-active)]',
+  ghost:
+    'bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] active:bg-[var(--color-interactive-active)]',
+  outline:
+    'bg-transparent border-2 border-[var(--color-border-primary)] text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] active:bg-[var(--color-interactive-active)]',
+} as const;
+
+const SIZE_CLASSES = {
+  sm: 'h-8 px-3 text-sm',
+  md: 'h-10 px-4 text-base',
+  lg: 'h-12 px-6 text-lg',
 } as const;
 
 export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -50,17 +59,23 @@ export const Button: ParentComponent<ButtonProps> = (props) => {
   const loading = () => local.loading ?? false;
 
   const variantClass = () => VARIANT_CLASSES[variant()];
-  const sizeClass = () => SIZE_CLASSES.btn[size()];
+  const sizeClass = () => SIZE_CLASSES[size()];
 
   return (
     <button
       ref={local.ref}
       class={cn(
-        'btn',
+        // Base styles
+        'inline-flex items-center justify-center gap-2 font-medium rounded-lg border-0 cursor-pointer transition-[background-color,box-shadow] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] outline-none select-none whitespace-nowrap',
+        // Focus styles
+        'focus-visible:shadow-[0_0_0_3px_rgba(59,130,246,0.3)]',
+        // Disabled styles
+        'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
+        // Variant and size
         variantClass(),
         sizeClass(),
-        fullWidth() && 'btn--full-width',
-        loading() && 'btn--loading',
+        fullWidth() && 'w-full',
+        loading() && 'opacity-70 cursor-wait',
         local.class
       )}
       disabled={local.disabled || loading()}
@@ -69,14 +84,23 @@ export const Button: ParentComponent<ButtonProps> = (props) => {
       {...others}
     >
       <Show when={loading()}>
-        <span class="btn-spinner" aria-hidden="true" />
+        <span
+          class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"
+          aria-hidden="true"
+        />
       </Show>
       <Show when={!loading() && local.startIcon}>
-        <span class="btn-icon btn-icon--start">{local.startIcon}</span>
+        <span class="inline-flex items-center justify-center flex-shrink-0">
+          {local.startIcon}
+        </span>
       </Show>
-      <span class="btn-content">{local.children}</span>
+      <span class="inline-flex items-center justify-center">
+        {local.children}
+      </span>
       <Show when={!loading() && local.endIcon}>
-        <span class="btn-icon btn-icon--end">{local.endIcon}</span>
+        <span class="inline-flex items-center justify-center flex-shrink-0">
+          {local.endIcon}
+        </span>
       </Show>
     </button>
   );

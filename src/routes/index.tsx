@@ -103,14 +103,14 @@ const Home: Component = () => {
       <Meta name="description" content={homeSEO[language()].description} />
       <Meta name="keywords" content={homeSEO[language()].keywords} />
 
-      <div class="home-page">
-        <div class="home-header">
-          <h1 class="home-title">
+      <div class="w-full p-4 md:p-6 lg:p-8">
+        <div class="flex items-center justify-between gap-4 mb-4 md:mb-6 lg:mb-8 flex-wrap max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-3">
+          <h1 class="text-2xl font-semibold text-[var(--color-text-primary)] m-0 max-[480px]:text-xl">
             {language() === 'ko' ? '모든 도구' : 'All Tools'}
           </h1>
-          <div class="home-controls">
+          <div class="flex items-center gap-3">
             <select
-              class="sort-dropdown"
+              class="px-4 py-3 text-sm font-inherit border border-[var(--color-border-secondary)] rounded-lg bg-[var(--color-bg-tertiary)] text-[var(--color-text-primary)] cursor-pointer outline-none transition-[border-color,box-shadow] duration-150 ease-[var(--ease-default)] min-w-[150px] hover:border-[var(--color-border-primary)] focus:border-[var(--color-border-focus)] focus:shadow-[var(--shadow-focus)]"
               value={sortBy()}
               onChange={handleSortChange}
               aria-label={homeT().sortAriaLabel}
@@ -132,7 +132,7 @@ const Home: Component = () => {
         />
 
         <Show when={sortedApps().length === 0 && !isLoading}>
-          <p class="no-results">
+          <p class="text-center text-[var(--color-text-secondary)] py-8 text-sm">
             {language() === 'ko' ? '도구가 없습니다.' : 'No tools found.'}
           </p>
         </Show>
