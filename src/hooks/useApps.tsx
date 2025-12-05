@@ -1,6 +1,5 @@
 import { APPS } from '../constants/apps';
 import type { App } from '../types';
-import type { JSX } from 'solid-js';
 
 interface AppsContextValue {
   apps: readonly App[];
@@ -24,12 +23,4 @@ const STATIC_APPS_VALUE: AppsContextValue = {
  */
 export function useApps(): AppsContextValue {
   return STATIC_APPS_VALUE;
-}
-
-/**
- * @deprecated AppsProvider는 더 이상 필요하지 않음 (정적 데이터)
- * 하위 호환성을 위해 유지하지만, children만 렌더링
- */
-export function AppsProvider(props: { children: JSX.Element }) {
-  return props.children;
 }
