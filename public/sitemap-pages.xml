@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://tools.soundbluemusic.com</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com"/>
+  </url>
+
+  <!-- Music Tools Category -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/music-tools</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/music-tools"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/music-tools"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/music-tools"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/music-tools</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/music-tools"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/music-tools"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/music-tools"/>
+  </url>
+
+  <!-- Other Tools Category -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/other-tools</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/other-tools"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/other-tools"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/other-tools"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/other-tools</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/other-tools"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/other-tools"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/other-tools"/>
+  </url>
+
+  <!-- Combined Tools Category -->
+  <url>
+    <loc>https://tools.soundbluemusic.com/combined-tools</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/combined-tools"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/combined-tools"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/combined-tools"/>
+  </url>
+
+  <url>
+    <loc>https://tools.soundbluemusic.com/ko/combined-tools</loc>
+    <lastmod>2025-12-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/combined-tools"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/combined-tools"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/combined-tools"/>
+  </url>
+
+</urlset>
