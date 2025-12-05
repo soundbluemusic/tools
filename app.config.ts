@@ -254,7 +254,8 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
-      include: ['solid-js', '@solidjs/router'],
+      include: ['solid-js'],
+      exclude: ['@solidjs/router'],
       esbuildOptions: {
         target: 'es2020',
       },
