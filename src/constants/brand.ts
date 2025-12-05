@@ -29,7 +29,7 @@ export const BRAND = {
    * 푸터 저작권 표시에 사용됩니다
    * 예: "© Your Name. MIT License"
    */
-  copyrightHolder: 'SoundBlueMusic',
+  copyrightHolder: 'Tools by SoundBlueMusic',
 
   /**
    * 사이트 URL (Site URL)
