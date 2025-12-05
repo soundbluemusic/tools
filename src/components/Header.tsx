@@ -79,6 +79,15 @@ export const Header: Component<HeaderProps> = (props) => {
                   stroke-width="2"
                 />
                 <path stroke-width="2" d="M9 3v18" />
+                {/* Chevron indicator: right arrow when closed, left arrow when open */}
+                <Show when={!props.isSidebarOpen}>
+                  <path
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13 9l3 3-3 3"
+                  />
+                </Show>
               </svg>
             </button>
           </Show>
