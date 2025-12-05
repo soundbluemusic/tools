@@ -1,9 +1,11 @@
 import {
   type Component,
   createEffect,
+  createMemo,
   onMount,
   onCleanup,
   For,
+  Show,
 } from 'solid-js';
 import { useTranslations } from '../../../i18n';
 import type { MetronomeTranslation } from '../../../i18n/types';
@@ -165,32 +167,14 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
   let nextNoteTime = 0;
   let schedulerBeat = 0;
   let schedulerInterval: ReturnType<typeof setInterval> | null = null;
-  let bpmValue: number = DEFAULTS.BPM;
-  let volumeValue: number = DEFAULTS.VOLUME;
-  let beatsPerMeasureValue: number = DEFAULTS.BEATS_PER_MEASURE;
   let animationId: number | null = null;
   let startAudioTime = 0;
-  let elapsedTimeValue = 0;
 
   // Get accent pattern - only first beat of each measure is accented
   const isAccentBeat = (beatIndex: number) => beatIndex === 0;
 
-  // Update refs when state changes
-  createEffect(() => {
-    bpmValue = store.bpm;
-  });
-
-  createEffect(() => {
-    volumeValue = store.volume;
-  });
-
-  createEffect(() => {
-    beatsPerMeasureValue = store.beatsPerMeasure;
-  });
-
-  createEffect(() => {
-    elapsedTimeValue = store.elapsedTime;
-  });
+  // Memoized beat indices for efficient For loop rendering
+  const beatIndices = createMemo(() => [...Array(store.beatsPerMeasure).keys()]);
 
   // Animation loop for visual updates - synced with audio scheduler
   createEffect(() => {
@@ -208,14 +192,14 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
         }
 
         const currentTime = audioContext.currentTime;
-        const secondsPerBeat = 60 / bpmValue;
+        const secondsPerBeat = 60 / store.bpm;
         const elapsed = currentTime - startAudioTime;
         const totalBeats = elapsed / secondsPerBeat;
-        const currentBeatIndex = Math.floor(totalBeats) % beatsPerMeasureValue;
+        const currentBeatIndex = Math.floor(totalBeats) % store.beatsPerMeasure;
 
         // Calculate measure count from elapsed time (synced with beat visualization)
         const currentMeasure =
-          Math.floor(totalBeats / beatsPerMeasureValue) + 1;
+          Math.floor(totalBeats / store.beatsPerMeasure) + 1;
 
         // Pendulum swing (one cycle per 2 beats)
         const swingCycle = totalBeats % 2;
@@ -277,7 +261,7 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
     osc.connect(gain);
     gain.connect(ctx.destination);
 
-    const volumeMultiplier = volumeValue / 100;
+    const volumeMultiplier = store.volume / 100;
 
     if (isFirst) {
       osc.frequency.value = FREQUENCIES.ACCENT;
@@ -302,7 +286,7 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
       const scheduleNotes = () => {
         if (!audioContext) return;
 
-        const secondsPerBeat = 60.0 / bpmValue;
+        const secondsPerBeat = 60.0 / store.bpm;
         const now = audioContext.currentTime;
 
         while (nextNoteTime < now + TIMING.LOOK_AHEAD_SECONDS) {
@@ -310,7 +294,7 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
           playClick(nextNoteTime, schedulerBeat);
 
           nextNoteTime += secondsPerBeat;
-          schedulerBeat = (schedulerBeat + 1) % beatsPerMeasureValue;
+          schedulerBeat = (schedulerBeat + 1) % store.beatsPerMeasure;
         }
       };
 
@@ -390,15 +374,15 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
           nextNoteTime = currentTime;
         } else {
           // Resume from pause - adjust start time to maintain elapsed time
-          const elapsedSeconds = elapsedTimeValue / 1000;
+          const elapsedSeconds = store.elapsedTime / 1000;
           startAudioTime = currentTime - elapsedSeconds;
 
           // Calculate which beat we're on and when the next beat should occur
-          const secondsPerBeat = 60 / bpmValue;
+          const secondsPerBeat = 60 / store.bpm;
           const totalBeats = elapsedSeconds / secondsPerBeat;
           const currentBeatNumber = Math.floor(totalBeats);
 
-          schedulerBeat = (currentBeatNumber + 1) % beatsPerMeasureValue;
+          schedulerBeat = (currentBeatNumber + 1) % store.beatsPerMeasure;
 
           // Next beat should occur at the next whole beat number
           const nextBeatTime =
@@ -625,7 +609,7 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
 
       {/* Beat visualization */}
       <div class="metronome-beats">
-        <For each={[...Array(store.beatsPerMeasure).keys()]}>
+        <For each={beatIndices()}>
           {(i) => (
             <div class="metronome-beat">
               <NoteIcon
@@ -659,32 +643,33 @@ const MetronomePlayer: Component<MetronomePlayerProps> = (props) => {
           onClick={handleStart}
           class="metronome-btn metronome-btn--primary"
         >
-          {store.isPlaying ? (
-            <>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <rect x="6" y="4" width="4" height="16" />
-                <rect x="14" y="4" width="4" height="16" />
-              </svg>
-              <span>{t().stop}</span>
-            </>
-          ) : (
-            <>
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              <span>{t().start}</span>
-            </>
-          )}
+          <Show
+            when={store.isPlaying}
+            fallback={
+              <>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+                <span>{t().start}</span>
+              </>
+            }
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+            <span>{t().stop}</span>
+          </Show>
         </button>
         <button onClick={reset} class="metronome-btn metronome-btn--secondary">
           <svg

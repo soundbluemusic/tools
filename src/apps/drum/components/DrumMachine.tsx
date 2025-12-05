@@ -1,6 +1,5 @@
 import {
   type Component,
-  createEffect,
   onMount,
   onCleanup,
   For,
@@ -308,10 +307,7 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
   let schedulerAnimationId: number | null = null;
   let nextStepTime = 0;
   let currentStepValue = 0;
-  let loopsValue: MultiLoopPattern = store.loops;
   let currentPlayingLoop = 0;
-  let tempoValue: number = store.tempo;
-  let volumesValue: InstrumentVolumes = store.volumes;
   let isPlayingValue = false;
   let isDragging = false;
   let paintMode: boolean | null = null; // true = paint on, false = paint off
@@ -328,25 +324,6 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
   } | null = null;
   // Ref to store the mousemove handler for dynamic add/remove during velocity drag
   let mouseMoveHandler: ((e: MouseEvent) => void) | null = null;
-  // Synth params ref
-  let synthParamsValue: AllDrumParams | undefined = props.synthParams;
-
-  // Keep refs in sync with store state
-  createEffect(() => {
-    loopsValue = store.loops;
-  });
-
-  createEffect(() => {
-    tempoValue = store.tempo;
-  });
-
-  createEffect(() => {
-    volumesValue = store.volumes;
-  });
-
-  createEffect(() => {
-    synthParamsValue = props.synthParams;
-  });
 
   /**
    * Get or create audio context
@@ -401,17 +378,17 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
     const startTime = time ?? ctx.currentTime;
 
     // Use synth parameters when available (integrated mode with DrumSynth)
-    if (synthParamsValue) {
+    if (props.synthParams) {
       // Calculate delay for scheduled sounds
       const delay = Math.max(0, (startTime - ctx.currentTime) * 1000);
-      const adjustedVelocity = (volumesValue[inst] / 100) * velocity;
+      const adjustedVelocity = (store.volumes[inst] / 100) * velocity;
 
       setTimeout(() => {
-        if (ctx && synthParamsValue) {
+        if (ctx && props.synthParams) {
           playSynthSound(
             ctx,
             inst as DrumMachineInstrument,
-            synthParamsValue,
+            props.synthParams,
             adjustedVelocity
           );
         }
@@ -421,7 +398,7 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
 
     // Basic synthesis (standalone mode)
     // Combine instrument volume and note velocity
-    const volumeMultiplier = (volumesValue[inst] / 100) * (velocity / 100);
+    const volumeMultiplier = (store.volumes[inst] / 100) * (velocity / 100);
 
     switch (inst) {
       case 'kick': {
@@ -510,7 +487,7 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
    * Schedule sounds for upcoming steps using Web Audio timing
    */
   const scheduleStep = (stepIndex: number, loopIndex: number, time: number) => {
-    const currentPattern = loopsValue[loopIndex];
+    const currentPattern = store.loops[loopIndex];
     if (!currentPattern) return;
     INSTRUMENTS.forEach((inst) => {
       const velocity = currentPattern[inst][stepIndex];
@@ -529,7 +506,7 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
     if (!ctx || !isPlayingValue) return;
 
     const scheduleAheadTime = 0.1; // Schedule 100ms ahead
-    const stepDuration = 60 / tempoValue / 4; // Duration of one 16th note in seconds
+    const stepDuration = 60 / store.tempo / 4; // Duration of one 16th note in seconds
 
     // Schedule all notes that fall within the look-ahead window
     while (nextStepTime < ctx.currentTime + scheduleAheadTime) {
@@ -553,7 +530,7 @@ export const DrumMachine: Component<DrumMachineProps> = (props) => {
       // Check if we need to advance to next loop
       if (currentStepValue >= STEPS) {
         currentStepValue = 0;
-        currentPlayingLoop = (currentPlayingLoop + 1) % loopsValue.length;
+        currentPlayingLoop = (currentPlayingLoop + 1) % store.loops.length;
       }
 
       nextStepTime += stepDuration;

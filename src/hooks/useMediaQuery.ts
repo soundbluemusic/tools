@@ -1,6 +1,6 @@
 import {
   createSignal,
-  createEffect,
+  createMemo,
   onCleanup,
   onMount,
   type Accessor,
@@ -92,7 +92,7 @@ export function useHighContrast(): Accessor<boolean> {
 
 /**
  * Hook to get current breakpoint
- * @returns Current breakpoint name
+ * @returns Current breakpoint name (memoized)
  */
 export function useBreakpoint(): Accessor<
   'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
@@ -103,12 +103,12 @@ export function useBreakpoint(): Accessor<
   const isLg = useMediaQuery('(min-width: 1024px) and (max-width: 1279px)');
   const isXl = useMediaQuery('(min-width: 1280px) and (max-width: 1535px)');
 
-  return () => {
+  return createMemo(() => {
     if (isXs()) return 'xs';
     if (isSm()) return 'sm';
     if (isMd()) return 'md';
     if (isLg()) return 'lg';
     if (isXl()) return 'xl';
     return '2xl';
-  };
+  });
 }
