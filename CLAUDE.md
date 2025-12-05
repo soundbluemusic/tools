@@ -55,6 +55,10 @@ src/
 │       ├── components/      # App-specific components
 │       └── utils/           # App-specific utilities
 │
+├── audio/                   # Web Audio utilities
+│   ├── worklet.ts           # Audio Worklet processor
+│   └── index.ts             # Barrel export
+│
 ├── components/              # Shared SolidJS components
 │   ├── layout/              # Layout components (Container, Layout, PageLayout)
 │   ├── navigation/          # Navigation system
@@ -66,8 +70,10 @@ src/
 │   │   ├── Button.tsx       # Button with variants
 │   │   ├── Input.tsx        # Input field
 │   │   ├── Select.tsx       # Select dropdown
+│   │   ├── Link.tsx         # Navigation link component
 │   │   ├── Loader.tsx       # Loading spinner
-│   │   └── Skeleton.tsx     # Skeleton loading states
+│   │   ├── Skeleton.tsx     # Skeleton loading states
+│   │   └── ThemeIcon.tsx    # Theme toggle icons
 │   ├── AppCard.tsx          # App card with hover prefetch
 │   ├── AppGrid.tsx          # Memoized grid container
 │   ├── AppList.tsx          # List view for apps
@@ -80,7 +86,8 @@ src/
 │   ├── ThemeToggle.tsx      # Dark/Light mode toggle
 │   ├── SkipLink.tsx         # Accessibility skip navigation
 │   ├── ShareButton.tsx      # Social sharing button
-│   └── EmbedButton.tsx      # Embed code generator
+│   ├── EmbedButton.tsx      # Embed code generator
+│   └── FullscreenButton.tsx # Fullscreen toggle button
 │
 ├── routes/                  # File-based routing (SolidStart)
 │   ├── index.tsx            # Home page with search/sort
@@ -95,16 +102,20 @@ src/
 │   └── ko/                   # Korean locale routes
 │
 ├── hooks/                   # Custom SolidJS hooks
-│   ├── useSearch.ts         # Searchable lists with deferred value
-│   ├── useSort.ts           # Sorting logic
-│   ├── useDebounce.ts       # Debounce utility
-│   ├── useLocalStorage.ts   # localStorage persistence + cross-tab sync
-│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useIsMobile, useReducedMotion)
-│   ├── useTheme.tsx         # Theme context (ThemeProvider)
+│   ├── useA11y.ts           # Accessibility hooks (useFocusTrap, useArrowNavigation, useAnnounce)
 │   ├── useApps.tsx          # Apps context (AppsProvider) for lazy-loaded apps
+│   ├── useDebounce.ts       # Debounce utility
+│   ├── useDropdown.ts       # Dropdown menu logic
+│   ├── useIsActive.ts       # Route active state detection
+│   ├── useLocalStorage.ts   # localStorage persistence + cross-tab sync
+│   ├── useLocalizedPath.ts  # Localized URL path utilities
+│   ├── useMediaQuery.ts     # Responsive breakpoints (useDarkMode, useIsMobile, useReducedMotion)
+│   ├── useSearch.ts         # Searchable lists with deferred value
 │   ├── useSEO.ts            # SEO meta tags management
+│   ├── useSort.ts           # Sorting logic
+│   ├── useTheme.tsx         # Theme context (ThemeProvider)
 │   ├── useViewTransition.ts # View Transitions API support
-│   └── useA11y.ts           # Accessibility hooks (useFocusTrap, useArrowNavigation, useAnnounce)
+│   └── index.ts             # Barrel export
 │
 ├── i18n/                    # Internationalization
 │   ├── context.tsx          # Language context provider
@@ -119,8 +130,29 @@ src/
 │
 ├── constants/               # App metadata and constants
 │   ├── apps.ts              # Auto-loaded app list (uses import.meta.glob)
+│   ├── brand.ts             # Brand configuration
 │   ├── sortOptions.ts       # Sort options for app list
 │   └── index.ts             # Barrel export
+│
+├── stores/                  # Solid.js stores for state management
+│   ├── audioStore.ts        # Shared audio context and state
+│   ├── drumStore.ts         # Drum machine state
+│   ├── metronomeStore.ts    # Metronome state
+│   └── index.ts             # Barrel export
+│
+├── storage/                 # Data persistence utilities
+│   ├── db.ts                # IndexedDB wrapper
+│   ├── opfs.ts              # Origin Private File System
+│   └── index.ts             # Barrel export
+│
+├── standalone/              # Embeddable standalone apps
+│   ├── common/              # Shared standalone utilities
+│   │   ├── base.css         # Base styles for standalone
+│   │   └── useStandaloneSettings.ts
+│   ├── metronome/           # Standalone metronome
+│   ├── drum/                # Standalone drum machine
+│   ├── drum-synth/          # Standalone drum synth
+│   └── qr/                  # Standalone QR generator
 │
 ├── utils/                   # Utility functions
 │   ├── cn.ts                # ClassNames utility
@@ -130,6 +162,10 @@ src/
 │
 ├── wasm/                    # WebAssembly modules
 │   ├── wasmProcessor.ts     # WASM loader & TypeScript wrapper
+│   ├── imageProcessor.ts    # Image processing utilities
+│   ├── ffmpeg.ts            # FFmpeg WASM integration
+│   ├── useFFmpeg.ts         # FFmpeg hook
+│   ├── useImageProcessor.ts # Image processor hook
 │   ├── processing.wasm      # Compiled WASM binary
 │   └── index.ts             # Barrel export
 │
@@ -142,7 +178,11 @@ src/
 │   ├── index.css            # Main entry (imports others)
 │   ├── variables.css        # CSS custom properties (design tokens)
 │   ├── base.css             # Base/reset styles
-│   └── components.css       # Component styles
+│   ├── components.css       # Component styles
+│   ├── tool-page.css        # Tool page specific styles
+│   ├── qr-page.css          # QR page specific styles
+│   ├── not-found.css        # 404 page styles
+│   └── pages/               # Page-specific styles
 │
 ├── test/                    # Testing utilities
 │   ├── setup.ts             # Vitest setup (mocks browser APIs)
@@ -150,13 +190,16 @@ src/
 │
 ├── app.tsx                  # Root component with routing
 ├── app.css                  # App-level styles
+├── App.css                  # Additional app styles
 ├── entry-client.tsx         # SolidStart client entry
 └── entry-server.tsx         # SolidStart server entry
 
 scripts/                     # Build utilities
-├── generate-icons.mjs       # Generate PWA icons
-├── generate-og-image.mjs    # Generate OpenGraph images
-└── convert-to-webp.mjs      # Convert images to WebP format
+├── generate-icons.ts        # Generate PWA icons
+├── generate-og-image.ts     # Generate OpenGraph images
+├── generate-sitemap.ts      # Generate XML sitemap
+├── convert-to-webp.ts       # Convert images to WebP format
+└── sync-docs.ts             # Documentation sync utility
 ```
 
 ## Key Architecture Patterns
@@ -244,18 +287,24 @@ function MyComponent() {
 
 ### 4. Theme System
 
-- Three theme modes: `system`, `light`, `dark`
+- Two theme modes: `light`, `dark`
 - Uses `data-theme` attribute on `<html>` element
-- System preference detection with manual override
-- Persisted in localStorage
+- System preference detection on first visit
+- Persisted in localStorage (`theme-preference`)
 
 ```tsx
 import { useTheme } from '../hooks';
 
 function ThemeExample() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
-  // theme: 'system' | 'light' | 'dark'
-  // resolvedTheme: 'light' | 'dark' (actual applied theme)
+  const { theme, setTheme, toggleTheme } = useTheme();
+  // theme: 'light' | 'dark'
+}
+
+// Or use the ThemeToggle component
+import { ThemeToggle } from '../components';
+
+function MyComponent() {
+  return <ThemeToggle size="md" />;
 }
 ```
 
@@ -294,10 +343,11 @@ npm run wasm:build    # Compile AssemblyScript → WASM
 
 ### 6. Component Patterns
 
-- **Memoization**: Use `memo()`, `useMemo()`, `useCallback()` for performance
+- **Fine-grained Reactivity**: SolidJS tracks dependencies automatically, use `createMemo` for derived values
 - **Error Boundaries**: Wrap feature components with `withErrorBoundary` HOC
 - **UI Components**: Use primitives from `src/components/ui/`
-- **Lazy Loading**: Tool pages are lazy-loaded for code splitting
+- **Lazy Loading**: Tool pages are lazy-loaded for code splitting with `lazy()`
+- **Stores**: Use `createStore` from `solid-js/store` for complex state (see `src/stores/`)
 
 ### 7. Styling
 
@@ -340,6 +390,76 @@ npm run wasm:build    # Compile AssemblyScript → WASM
 --breakpoint-md: 768px
 --breakpoint-lg: 1024px
 --breakpoint-xl: 1280px
+```
+
+### 8. State Management (Stores)
+
+For complex state that needs to be shared across components, use Solid stores:
+
+```typescript
+// src/stores/myStore.ts
+import { createStore } from 'solid-js/store';
+
+interface MyState {
+  count: number;
+  items: string[];
+}
+
+const [state, setState] = createStore<MyState>({
+  count: 0,
+  items: [],
+});
+
+export const useMyStore = () => ({
+  state,
+  increment: () => setState('count', (c) => c + 1),
+  addItem: (item: string) => setState('items', (items) => [...items, item]),
+});
+```
+
+**Existing stores:**
+- `audioStore.ts` - Shared AudioContext and audio state
+- `drumStore.ts` - Drum machine patterns and settings
+- `metronomeStore.ts` - Metronome tempo and beat state
+
+### 9. Standalone Apps
+
+Embeddable versions of tools for iframe integration:
+
+```
+src/standalone/
+├── common/              # Shared utilities
+│   ├── base.css         # Minimal base styles
+│   └── useStandaloneSettings.ts
+├── metronome/
+│   ├── main.tsx         # Entry point
+│   ├── App.tsx          # Standalone app component
+│   ├── styles.css       # Scoped styles
+│   └── i18n.ts          # Standalone translations
+└── ...
+```
+
+**Usage:**
+```html
+<iframe src="https://tools.soundbluemusic.com/standalone/metronome" />
+```
+
+### 10. Data Persistence
+
+**IndexedDB (via `src/storage/db.ts`):**
+```typescript
+import { db } from '../storage';
+
+await db.patterns.add({ name: 'My Pattern', data: [...] });
+const patterns = await db.patterns.toArray();
+```
+
+**Origin Private File System (via `src/storage/opfs.ts`):**
+```typescript
+import { saveToOPFS, loadFromOPFS } from '../storage';
+
+await saveToOPFS('recording.wav', audioBlob);
+const blob = await loadFromOPFS('recording.wav');
 ```
 
 ## Development Commands
