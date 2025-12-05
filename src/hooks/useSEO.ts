@@ -81,14 +81,16 @@ export function useSEO(config: SEOConfig): void {
       isHomePage = false,
     } = config;
 
-    const fullTitle = isHomePage ? SITE_NAME : `${title} | ${SITE_NAME}`;
+    // For homepage, let the <Title> component handle the title (supports i18n)
+    // For other pages, construct title with site name suffix
+    const fullTitle = isHomePage ? null : `${title} | ${SITE_NAME}`;
     const canonicalUrl = `${BASE_URL}${canonicalPath}`;
 
-    // Update document title
-    document.title = fullTitle;
-
-    // Primary meta tags
-    updateMetaTag('name', 'title', fullTitle);
+    // Update document title (skip for homepage - handled by <Title> component)
+    if (fullTitle) {
+      document.title = fullTitle;
+      updateMetaTag('name', 'title', fullTitle);
+    }
     updateMetaTag('name', 'description', description);
     if (keywords) {
       updateMetaTag('name', 'keywords', keywords);
@@ -106,16 +108,20 @@ export function useSEO(config: SEOConfig): void {
     // Canonical URL
     updateCanonicalLink(canonicalUrl);
 
-    // Open Graph tags
-    updateMetaTag('property', 'og:title', fullTitle);
+    // Open Graph tags (skip title for homepage - handled by <Title> component)
+    if (fullTitle) {
+      updateMetaTag('property', 'og:title', fullTitle);
+    }
     updateMetaTag('property', 'og:description', description);
     updateMetaTag('property', 'og:url', canonicalUrl);
     updateMetaTag('property', 'og:type', ogType);
     updateMetaTag('property', 'og:image', ogImage);
     updateMetaTag('property', 'og:site_name', SITE_NAME);
 
-    // Twitter Card tags
-    updateMetaTag('name', 'twitter:title', fullTitle);
+    // Twitter Card tags (skip title for homepage - handled by <Title> component)
+    if (fullTitle) {
+      updateMetaTag('name', 'twitter:title', fullTitle);
+    }
     updateMetaTag('name', 'twitter:description', description);
     updateMetaTag('name', 'twitter:url', canonicalUrl);
     updateMetaTag('name', 'twitter:image', ogImage);
