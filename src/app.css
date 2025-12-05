@@ -10,16 +10,14 @@
  * ============================================ */
 @import './styles/variables.css';
 @import './styles/base.css';
-@import './components/navigation/NavigationLayout.css';
 @import './styles/components.css';
 @import './styles/not-found.css';
 /* Note: tool-page.css and qr-page.css are loaded at route level for better code splitting */
+/* Note: NavigationLayout and Sidebar use Tailwind classes directly (no CSS file) */
 
 /* ============================================
  * Layout Components
- * NOTE: Main layout classes (.navigation-layout, .navigation-content,
- * .content-wrapper) are defined in NavigationLayout.css
- * Do NOT redefine them here to avoid CSS cascade conflicts
+ * NOTE: NavigationLayout and Sidebar now use Tailwind inline classes
  * ============================================ */
 
 .main-content {
