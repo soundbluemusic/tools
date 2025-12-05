@@ -113,7 +113,7 @@ Free online tools for musicians, writers, designers, filmmakers — every creato
 >
 > ## Trademark Guidelines
 >
-> "SoundBlueMusic" name and logo are trademarks of SoundBlueMusic. When forking this project, please modify `src/constants/brand.ts` to replace with your own branding.
+> "SoundBlueMusic" and logos are trademarks of SoundBlueMusic. MIT license covers the code, not the trademarks. See [TRADEMARKS.md](./TRADEMARKS.md) for details.
 >
 > ## Inspiration
 >

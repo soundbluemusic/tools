@@ -113,7 +113,7 @@
 >
 > ## 상표 가이드라인
 >
-> "SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다. 이 프로젝트를 포크하여 사용할 경우, `src/constants/brand.ts`를 수정하여 본인의 브랜드로 교체해 주세요.
+> "SoundBlueMusic" 이름과 로고는 SoundBlueMusic의 상표입니다. MIT 라이선스는 코드에만 적용되며, 상표에는 적용되지 않습니다. 자세한 내용은 [TRADEMARKS.md](./TRADEMARKS.md)를 참조하세요.
 >
 > ## Inspiration
 >
