@@ -48,7 +48,7 @@ export const Sidebar: Component<SidebarProps> = (props) => {
   );
 
   return (
-    <aside class={`sidebar${isOpen() ? '' : ' collapsed'}`}>
+    <aside class={`sidebar ${isOpen() ? 'sidebar--open' : 'sidebar--closed'}`}>
       <nav class="sidebar-nav">
         {/* Home */}
         <Link
