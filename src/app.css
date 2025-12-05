@@ -137,3 +137,134 @@
   justify-content: center;
   min-height: 50vh;
 }
+
+/* ============================================
+ * Page Transition Loader - Skeleton during route changes
+ * ============================================ */
+.page-transition-loader {
+  width: 100%;
+  min-height: calc(100vh - 120px);
+  min-height: calc(100dvh - 120px);
+  padding: var(--spacing-6);
+  animation: page-transition-fade-in 0.2s ease-out;
+}
+
+@media (min-width: 768px) {
+  .page-transition-loader {
+    padding: var(--spacing-8);
+  }
+}
+
+.page-transition-skeleton {
+  max-width: 100%;
+}
+
+.page-transition-skeleton .skeleton-header {
+  margin-bottom: var(--spacing-6);
+}
+
+.page-transition-skeleton .skeleton-content {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-8);
+  border: 1px solid var(--color-border-secondary);
+}
+
+@keyframes page-transition-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+ * Page Content - Smooth entry animation
+ * ============================================ */
+.page-content {
+  animation: page-content-enter 0.25s ease-out;
+  will-change: opacity, transform;
+}
+
+@keyframes page-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .page-transition-loader,
+  .page-content {
+    animation: none;
+  }
+}
+
+/* ============================================
+ * View Transitions API - Cross-fade between pages
+ * Modern browsers with View Transitions support
+ * ============================================ */
+@supports (view-transition-name: none) {
+  /* Main content gets a view transition name */
+  .main-content {
+    view-transition-name: main-content;
+  }
+
+  /* Page content transition */
+  .page-content {
+    view-transition-name: page-content;
+  }
+
+  /* Disable page-content animation when view transition is active */
+  ::view-transition-old(page-content),
+  ::view-transition-new(page-content) {
+    animation-duration: 0.25s;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Old page fades out and slightly scales down */
+  ::view-transition-old(page-content) {
+    animation-name: view-transition-fade-out;
+  }
+
+  /* New page fades in and slightly scales up */
+  ::view-transition-new(page-content) {
+    animation-name: view-transition-fade-in;
+  }
+}
+
+@keyframes view-transition-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes view-transition-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion for View Transitions */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(page-content),
+  ::view-transition-new(page-content) {
+    animation: none;
+  }
+}

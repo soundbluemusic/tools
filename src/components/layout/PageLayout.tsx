@@ -28,12 +28,7 @@ interface PageLayoutProps {
  */
 export const PageLayout: ParentComponent<PageLayoutProps> = (props) => {
   return (
-    <div
-      class={cn(
-        'p-6 md:p-8 max-[480px]:p-4 translate-z-0 tool-page-enter motion-reduce:animate-none',
-        props.class
-      )}
-    >
+    <div class={cn('p-6 md:p-8 max-[480px]:p-4 translate-z-0', props.class)}>
       {/* Breadcrumb Navigation */}
       <Show when={props.breadcrumb && props.breadcrumb.length > 0}>
         <Breadcrumb items={props.breadcrumb!} />
