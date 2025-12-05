@@ -1,47 +1,74 @@
 /**
- * Sidebar - Desktop Only
- * Fixed to left edge, below header
- * Clean visual separation with border
- * Uses CSS variables for automatic theme support
+ * Sidebar - Desktop Navigation
+ * GPU-accelerated slide animation using transform
+ * Visible only on desktop (≥768px)
  */
 
+/* Base Sidebar - Hidden by default (mobile) */
 .sidebar {
   display: none;
 }
 
-/* Desktop: Show sidebar */
-@media (min-width: 1024px) {
+/* ============================================
+ * Desktop: Show Sidebar (≥768px)
+ * Fixed position with transform-based animation
+ * ============================================ */
+@media (min-width: 768px) {
   .sidebar {
     position: fixed;
-    top: 56px; /* Below header */
+    top: var(--header-height, 56px);
     left: 0;
     bottom: 0;
     display: flex;
     flex-direction: column;
-    width: 240px;
-    background: var(--color-bg-primary);
+    width: var(--sidebar-width, 240px);
+    background: var(--color-bg-secondary);
     border-right: 1px solid var(--color-border-primary);
     overflow-y: auto;
     overflow-x: hidden;
-    z-index: 50;
+    z-index: var(--z-sidebar, 200);
+    /* Core animation: transform-based slide (GPU accelerated, no reflow) */
+    transition: transform var(--transition-normal, 250ms)
+      var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1));
+    /* Start open */
+    transform: translateX(0);
   }
 
-  /* Collapsed state */
+  /* Collapsed state - Slide out to left */
   .sidebar.collapsed {
-    width: 0;
-    border-right: none;
-    overflow: hidden;
+    transform: translateX(-100%);
   }
 }
 
-/* Navigation */
+/* ============================================
+ * Navigation Structure
+ * ============================================ */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
   padding: 12px 8px;
 }
 
-/* Navigation Item - Consistent style for all items including Home */
+/* Section Title */
+.sidebar-section-title {
+  padding: 16px 12px 8px;
+  color: var(--color-text-tertiary);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Divider */
+.sidebar-divider {
+  height: 1px;
+  margin: 8px 12px;
+  background: var(--color-border-primary);
+}
+
+/* ============================================
+ * Navigation Items
+ * ============================================ */
 .sidebar-item {
   display: flex;
   align-items: center;
@@ -63,14 +90,16 @@
   color: var(--color-text-primary);
 }
 
-/* Active state - Only highlight when on that page */
+/* Active state */
 .sidebar-item.active {
   background: var(--color-interactive-active);
   color: var(--color-text-primary);
   font-weight: 500;
 }
 
-/* Icon */
+/* ============================================
+ * Icon Styles
+ * ============================================ */
 .sidebar-icon {
   width: 24px;
   height: 24px;
@@ -85,31 +114,18 @@
   font-size: 18px;
 }
 
-/* Label */
+/* ============================================
+ * Label
+ * ============================================ */
 .sidebar-label {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Divider */
-.sidebar-divider {
-  height: 1px;
-  margin: 8px 12px;
-  background: var(--color-border-primary);
-}
-
-/* Section Title */
-.sidebar-section-title {
-  padding: 16px 12px 8px;
-  color: var(--color-text-tertiary);
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Scrollbar - Subtle design */
+/* ============================================
+ * Custom Scrollbar
+ * ============================================ */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
@@ -127,11 +143,13 @@
   background: var(--color-border-secondary);
 }
 
-/* Safe area support */
+/* ============================================
+ * Safe Area Support
+ * ============================================ */
 @supports (top: env(safe-area-inset-top)) {
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     .sidebar {
-      top: calc(56px + env(safe-area-inset-top));
+      top: calc(var(--header-height, 56px) + env(safe-area-inset-top));
     }
   }
 }

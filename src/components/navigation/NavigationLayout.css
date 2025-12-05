@@ -1,70 +1,104 @@
 /**
- * Navigation Layout - True Full Width
- * No constraints, edge-to-edge layout
+ * Navigation Layout - Responsive Sidebar System
+ * Desktop (≥768px): Sidebar with animated content offset
+ * Mobile (<768px): Bottom navigation bar
  */
 
+/* Main Layout Container */
 .navigation-layout {
   position: relative;
-  width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Main Content Area - Full width */
+/* Main Content Area */
 .navigation-content {
+  flex: 1;
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  padding-top: 56px; /* Header height */
+  margin-top: var(--header-height, 56px);
+  /* Core animation: margin-left transition for smooth content shift */
+  transition: margin-left var(--transition-normal, 250ms)
+    var(--ease-default, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
-/* Content Wrapper - Full width, no constraints */
+/* Content Wrapper */
 .content-wrapper {
   width: 100%;
-  min-height: calc(100vh - 56px);
-  min-height: calc(100dvh - 56px);
+  min-height: calc(100vh - var(--header-height, 56px));
+  min-height: calc(100dvh - var(--header-height, 56px));
 }
 
-/* Mobile: Space for bottom nav */
-@media (max-width: 1023px) {
+/* ============================================
+ * Desktop Layout (≥768px)
+ * Sidebar visible, content shifts when open
+ * ============================================ */
+@media (min-width: 768px) {
+  /* Content shifts right when sidebar is open */
   .navigation-content {
-    padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    margin-left: var(--sidebar-width, 240px);
+  }
+
+  /* Sidebar collapsed - content returns to left edge */
+  .navigation-layout.sidebar-collapsed .navigation-content {
+    margin-left: 0;
   }
 }
 
-/* Desktop: Offset for sidebar */
-@media (min-width: 1024px) {
+/* ============================================
+ * Mobile Layout (<768px)
+ * Bottom nav visible, no sidebar offset
+ * ============================================ */
+@media (max-width: 767px) {
   .navigation-content {
-    padding-left: 256px; /* Sidebar width + extra gap */
-  }
-
-  /* Sidebar collapsed - no offset */
-  .sidebar-collapsed .navigation-content {
-    padding-left: 0;
-  }
-}
-
-/* Small mobile header */
-@media (max-width: 480px) {
-  .navigation-content {
-    padding-top: 52px;
+    margin-left: 0;
+    /* Space for bottom navigation + safe area */
+    padding-bottom: calc(
+      var(--bottom-nav-height, 56px) + env(safe-area-inset-bottom, 0px)
+    );
   }
 
   .content-wrapper {
-    min-height: calc(100vh - 52px);
-    min-height: calc(100dvh - 52px);
+    min-height: calc(
+      100vh - var(--header-height, 56px) - var(--bottom-nav-height, 56px)
+    );
+    min-height: calc(
+      100dvh - var(--header-height, 56px) - var(--bottom-nav-height, 56px)
+    );
   }
 }
 
-/* Safe area */
+/* ============================================
+ * Small Mobile (≤480px)
+ * Compact header height
+ * ============================================ */
+@media (max-width: 480px) {
+  .navigation-content {
+    margin-top: var(--header-height-mobile, 52px);
+  }
+
+  .content-wrapper {
+    min-height: calc(100vh - var(--header-height-mobile, 52px));
+    min-height: calc(100dvh - var(--header-height-mobile, 52px));
+  }
+}
+
+/* ============================================
+ * Safe Area Support (iOS notch/home indicator)
+ * ============================================ */
 @supports (padding-top: env(safe-area-inset-top)) {
   .navigation-content {
-    padding-top: calc(56px + env(safe-area-inset-top));
+    margin-top: calc(var(--header-height, 56px) + env(safe-area-inset-top));
   }
 
   @media (max-width: 480px) {
     .navigation-content {
-      padding-top: calc(52px + env(safe-area-inset-top));
+      margin-top: calc(
+        var(--header-height-mobile, 52px) + env(safe-area-inset-top)
+      );
     }
   }
 }
