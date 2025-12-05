@@ -1,8 +1,17 @@
-import { createSignal, createMemo, For, Show, type Component } from 'solid-js';
+import {
+  createSignal,
+  createMemo,
+  For,
+  Show,
+  onMount,
+  type Component,
+} from 'solid-js';
+import { isServer } from 'solid-js/web';
 import { Title, Meta } from '@solidjs/meta';
 import { useLanguage } from '../i18n';
 import { useSEO, useApps } from '../hooks';
 import { AppList } from '../components/AppList';
+import { preloadAllTools } from '../utils/preload';
 import type { App, SortOption } from '../types';
 import type { Language } from '../i18n/types';
 
@@ -69,6 +78,13 @@ const Home: Component = () => {
     keywords: homeSEO[language()].keywords,
     canonicalPath: '/',
     isHomePage: true,
+  });
+
+  // Preload all tool components in background when home page loads
+  onMount(() => {
+    if (!isServer) {
+      preloadAllTools();
+    }
   });
 
   const { apps, isLoading } = useApps();
