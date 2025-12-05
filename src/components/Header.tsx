@@ -51,9 +51,9 @@ export const Header: Component<HeaderProps> = (props) => {
 
   return (
     <header class="fixed top-0 left-0 right-0 z-[100] h-14 max-[480px]:h-[52px] bg-[var(--color-bg-primary)] border-b border-[var(--color-border-primary)] supports-[top:env(safe-area-inset-top)]:pt-[env(safe-area-inset-top)] supports-[top:env(safe-area-inset-top)]:h-[calc(56px+env(safe-area-inset-top))] supports-[top:env(safe-area-inset-top)]:max-[480px]:h-[calc(52px+env(safe-area-inset-top))]">
-      <div class="flex items-center justify-between w-full h-full px-4 max-[480px]:px-3">
-        {/* Left: Sidebar Toggle */}
-        <div class="flex items-center w-20">
+      <div class="flex items-center w-full h-full px-4 max-[480px]:px-3 gap-4">
+        {/* Left: Sidebar Toggle + Logo */}
+        <div class="flex items-center gap-3 flex-shrink-0">
           <Show when={props.onSidebarToggle}>
             <button
               onClick={props.onSidebarToggle}
@@ -82,28 +82,27 @@ export const Header: Component<HeaderProps> = (props) => {
               </svg>
             </button>
           </Show>
+
+          {/* Logo - Left aligned */}
+          <Link
+            href={toLocalizedPath('/')}
+            class="flex items-center no-underline"
+          >
+            <span class="text-xl max-[480px]:text-lg font-semibold text-[var(--color-text-primary)] tracking-tight">
+              {BRAND.name}
+            </span>
+          </Link>
         </div>
 
-        {/* Center: Logo */}
-        <Link
-          href={toLocalizedPath('/')}
-          class="flex items-center no-underline absolute left-1/2 -translate-x-1/2"
-        >
-          <span class="text-xl max-[480px]:text-lg font-semibold text-[var(--color-text-primary)] tracking-tight">
-            {BRAND.name}
-          </span>
-        </Link>
-
-        {/* Right: Controls */}
-        <div class="flex items-center gap-1">
-          {/* Search Button */}
+        {/* Center: Search Button */}
+        <div class="flex-1 flex justify-center max-[480px]:hidden">
           <button
             onClick={() => props.onSearchClick?.()}
-            class="inline-flex items-center gap-2 h-9 px-3 bg-[var(--color-bg-tertiary)] border border-[var(--color-border-secondary)] rounded-lg cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-primary)] transition-colors duration-150 max-[480px]:hidden"
+            class="inline-flex items-center gap-3 w-full max-w-md h-10 px-4 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-full cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-hover)] hover:shadow-sm transition-all duration-150"
             aria-label={language() === 'ko' ? '검색' : 'Search'}
           >
             <svg
-              class="w-4 h-4"
+              class="w-4 h-4 flex-shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -115,7 +114,36 @@ export const Header: Component<HeaderProps> = (props) => {
                 d="M21 21l-4.35-4.35"
               />
             </svg>
-            <span class="text-sm">{shortcutKey()}</span>
+            <span class="flex-1 text-left text-sm">
+              {language() === 'ko' ? '검색...' : 'Search...'}
+            </span>
+            <span class="text-xs text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] px-2 py-0.5 rounded border border-[var(--color-border-secondary)]">
+              {shortcutKey()}
+            </span>
+          </button>
+        </div>
+
+        {/* Right: Controls */}
+        <div class="flex items-center gap-1 flex-shrink-0">
+          {/* Mobile Search Button */}
+          <button
+            onClick={() => props.onSearchClick?.()}
+            class="hidden max-[480px]:inline-flex items-center justify-center w-9 h-9 p-0 bg-transparent border-0 rounded-lg cursor-pointer text-[var(--color-text-secondary)] hover:bg-[var(--color-interactive-hover)] hover:text-[var(--color-text-primary)]"
+            aria-label={language() === 'ko' ? '검색' : 'Search'}
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="7" stroke-width="2" />
+              <path
+                stroke-width="2"
+                stroke-linecap="round"
+                d="M21 21l-4.35-4.35"
+              />
+            </svg>
           </button>
           {/* Theme Toggle */}
           <button
