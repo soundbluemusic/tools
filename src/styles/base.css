@@ -3,6 +3,15 @@
  * Wrapped in @layer base so Tailwind utilities can override
  */
 
+/* ============================================
+ * App Container - Reveal after CSS loads
+ * Works with critical CSS in entry-server.tsx
+ * MUST be outside @layer to override critical CSS
+ * ============================================ */
+#app {
+  opacity: 1;
+}
+
 @layer base {
   /* Note: box-sizing and margin/padding reset handled by Tailwind preflight */
 

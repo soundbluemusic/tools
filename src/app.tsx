@@ -9,7 +9,6 @@ import { useApps } from './hooks/useApps';
 import { NavigationLayout } from './components/navigation';
 import { Footer } from './components/Footer';
 import { SkipLink } from './components/SkipLink';
-import { Loader } from './components/ui';
 import './app.css';
 
 /**
@@ -146,15 +145,7 @@ export default function App() {
                 <NavigationLayout apps={apps}>
                   <SkipLink />
                   <main id="main-content" class="main-content" role="main">
-                    <Suspense
-                      fallback={
-                        <div class="page-loader">
-                          <Loader />
-                        </div>
-                      }
-                    >
-                      {props.children}
-                    </Suspense>
+                    <Suspense>{props.children}</Suspense>
                   </main>
                   <Footer />
                 </NavigationLayout>
