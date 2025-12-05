@@ -22,7 +22,6 @@
 .nav-layout {
   position: relative;
   width: 100%;
-  max-width: 100vw;
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
@@ -31,14 +30,16 @@
 /* ============================================
  * Main Content Area
  * Uses margin-left for sidebar push animation
+ * width: auto ensures content doesn't overflow when margin is applied
  * ============================================ */
 .nav-layout-content {
-  flex: 1;
   position: relative;
-  width: 100%;
+  width: auto;
   min-height: 100vh;
   min-height: 100dvh;
   margin-top: var(--header-height, 56px);
+  margin-left: 0;
+  margin-right: 0;
   box-sizing: border-box;
   /* Smooth transition for sidebar toggle - margin-left animation */
   transition: margin-left var(--transition-normal, 250ms)
