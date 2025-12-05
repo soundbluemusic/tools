@@ -99,12 +99,17 @@ const Home: Component = () => {
 
   return (
     <>
-      <Title>Tools - {language() === 'ko' ? '모든 창작자를 위한 무료 도구' : 'Free Tools for Every Creator'}</Title>
+      <Title>
+        Tools -{' '}
+        {language() === 'ko'
+          ? '모든 창작자를 위한 무료 도구'
+          : 'Free Tools for Every Creator'}
+      </Title>
       <Meta name="description" content={homeSEO[language()].description} />
       <Meta name="keywords" content={homeSEO[language()].keywords} />
 
-      <div class="w-full p-4 md:p-6 lg:p-8">
-        <div class="flex items-center justify-between gap-4 mb-4 md:mb-6 lg:mb-8 flex-wrap max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-3">
+      <div class="w-full p-6 md:p-8 lg:p-10">
+        <div class="flex items-center justify-between gap-4 mb-6 md:mb-8 lg:mb-10 flex-wrap max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-4">
           <h1 class="text-2xl font-semibold text-[var(--color-text-primary)] m-0 max-[480px]:text-xl">
             {language() === 'ko' ? '창작을 시작하세요' : 'Start Creating'}
           </h1>

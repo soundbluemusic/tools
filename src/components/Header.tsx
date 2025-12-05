@@ -98,11 +98,11 @@ export const Header: Component<HeaderProps> = (props) => {
         <div class="flex-1 flex justify-center max-[480px]:hidden">
           <button
             onClick={() => props.onSearchClick?.()}
-            class="inline-flex items-center gap-3 w-full max-w-md h-10 px-4 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-full cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-hover)] hover:shadow-sm transition-all duration-150"
+            class="inline-flex items-center gap-4 w-full max-w-md h-11 px-5 bg-[var(--color-bg-secondary)] border border-[var(--color-border-primary)] rounded-full cursor-pointer text-[var(--color-text-tertiary)] hover:border-[var(--color-border-hover)] hover:shadow-sm transition-all duration-150"
             aria-label={language() === 'ko' ? '검색' : 'Search'}
           >
             <svg
-              class="w-4 h-4 flex-shrink-0"
+              class="w-5 h-5 flex-shrink-0"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -117,7 +117,7 @@ export const Header: Component<HeaderProps> = (props) => {
             <span class="flex-1 text-left text-sm">
               {language() === 'ko' ? '검색...' : 'Search...'}
             </span>
-            <span class="text-xs text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] px-2 py-0.5 rounded border border-[var(--color-border-secondary)]">
+            <span class="text-xs text-[var(--color-text-tertiary)] bg-[var(--color-bg-tertiary)] px-2.5 py-1 rounded border border-[var(--color-border-secondary)]">
               {shortcutKey()}
             </span>
           </button>

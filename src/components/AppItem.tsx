@@ -26,17 +26,17 @@ const AppItem: Component<AppItemProps> = (props) => {
   return (
     <Link
       href={localizedUrl()}
-      class="flex flex-col h-full p-5 lg:p-6 bg-[var(--color-bg-secondary)] border border-[var(--color-border-secondary)] rounded-lg no-underline text-inherit transition-[transform,box-shadow,border-color] duration-[250ms] ease-[var(--ease-out)] hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)] hover:border-[var(--color-border-primary)] active:scale-[0.99] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] [@media(hover:none)]:hover:scale-100 [@media(hover:none)]:hover:shadow-none motion-reduce:transition-none motion-reduce:hover:scale-100"
+      class="flex flex-col h-full p-6 lg:p-8 bg-[var(--color-bg-secondary)] border border-[var(--color-border-secondary)] rounded-xl no-underline text-inherit transition-[transform,box-shadow,border-color] duration-[250ms] ease-[var(--ease-out)] hover:scale-[1.02] hover:shadow-[var(--shadow-card-hover)] hover:border-[var(--color-border-primary)] active:scale-[0.99] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)] [@media(hover:none)]:hover:scale-100 [@media(hover:none)]:hover:shadow-none motion-reduce:transition-none motion-reduce:hover:scale-100"
       aria-label={`${name()} - ${desc()}`}
       role="listitem"
       onClick={handleClick()}
     >
-      <div class="flex items-center justify-center w-14 h-14 lg:w-16 lg:h-16 mb-4 bg-[var(--color-bg-tertiary)] rounded-lg lg:rounded-xl transition-transform duration-[250ms] ease-[var(--ease-out)] [a:hover>&]:scale-105 [@media(hover:none)]:scale-100 motion-reduce:scale-100">
-        <span class="text-[1.75rem] lg:text-[2rem] leading-none">
+      <div class="flex items-center justify-center w-16 h-16 lg:w-20 lg:h-20 mb-5 bg-[var(--color-bg-tertiary)] rounded-xl lg:rounded-2xl transition-transform duration-[250ms] ease-[var(--ease-out)] [a:hover>&]:scale-105 [@media(hover:none)]:scale-100 motion-reduce:scale-100">
+        <span class="text-[2rem] lg:text-[2.5rem] leading-none">
           {props.app.icon}
         </span>
       </div>
-      <div class="flex-1 flex flex-col gap-2">
+      <div class="flex-1 flex flex-col gap-3">
         <h3 class="m-0 text-lg font-semibold text-[var(--color-text-primary)] leading-snug tracking-tight line-clamp-2">
           {name()}
         </h3>
