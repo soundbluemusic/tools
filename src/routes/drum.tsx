@@ -27,6 +27,11 @@ const Drum: Component = () => {
     description: drum().seo.description,
     keywords: drum().seo.keywords,
     canonicalPath: '/drum',
+    softwareApp: {
+      name: drum().seo.title,
+      description: drum().seo.description,
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [

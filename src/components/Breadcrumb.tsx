@@ -1,7 +1,8 @@
-import { type Component, For, Show } from 'solid-js';
+import { type Component, For, Show, createMemo } from 'solid-js';
 import { Link } from './ui';
 import { useLanguage } from '../i18n';
 import { useLocalizedPath } from '../hooks';
+import { BRAND } from '../constants';
 import './Breadcrumb.css';
 
 interface BreadcrumbItem {
@@ -16,6 +17,7 @@ interface BreadcrumbProps {
 /**
  * Breadcrumb Navigation Component
  * Shows hierarchical navigation path (e.g., Home > Music Tools > Metronome)
+ * Includes JSON-LD structured data for SEO
  */
 export const Breadcrumb: Component<BreadcrumbProps> = (props) => {
   const { language } = useLanguage();
@@ -23,8 +25,30 @@ export const Breadcrumb: Component<BreadcrumbProps> = (props) => {
 
   const getPath = (path: string) => toLocalizedPath(path);
 
+  // Generate JSON-LD BreadcrumbList schema
+  const breadcrumbSchema = createMemo(() => {
+    const itemListElement = props.items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.label[language()],
+      ...(item.href && { item: `${BRAND.siteUrl}${getPath(item.href)}` }),
+    }));
+
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement,
+    };
+  });
+
   return (
-    <nav class="breadcrumb" aria-label="Breadcrumb">
+    <>
+      {/* JSON-LD Breadcrumb Schema */}
+      <script
+        type="application/ld+json"
+        innerHTML={JSON.stringify(breadcrumbSchema())}
+      />
+      <nav class="breadcrumb" aria-label="Breadcrumb">
       <ol class="breadcrumb-list">
         <For each={props.items}>
           {(item, index) => {
@@ -75,6 +99,7 @@ export const Breadcrumb: Component<BreadcrumbProps> = (props) => {
           }}
         </For>
       </ol>
-    </nav>
+      </nav>
+    </>
   );
 };

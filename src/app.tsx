@@ -103,6 +103,8 @@ export default function App() {
             content="https://tools.soundbluemusic.com/og-image.png"
           />
           <Meta name="twitter:card" content="summary_large_image" />
+          <Meta name="twitter:site" content="@soundbluemusic" />
+          <Meta name="twitter:creator" content="@soundbluemusic" />
           <Meta
             name="twitter:title"
             content="Tools - 모든 창작자를 위한 무료 도구"
@@ -111,7 +113,12 @@ export default function App() {
             name="twitter:description"
             content="음악가, 작가, 디자이너, 영상 제작자 — 모든 창작자를 위한 무료 도구. 회원가입 없이 바로 사용하세요."
           />
+          <Meta
+            name="twitter:image"
+            content="https://tools.soundbluemusic.com/og-image.png"
+          />
           <Link rel="preconnect" href="https://fonts.googleapis.com" />
+          <Link rel="dns-prefetch" href="https://github.com" />
           <Link
             rel="preconnect"
             href="https://fonts.gstatic.com"

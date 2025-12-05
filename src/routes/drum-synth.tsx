@@ -27,6 +27,11 @@ const DrumSynthPage: Component = () => {
     description: drumSynth().seo.description,
     keywords: drumSynth().seo.keywords,
     canonicalPath: '/drum-synth',
+    softwareApp: {
+      name: drumSynth().seo.title,
+      description: drumSynth().seo.description,
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [

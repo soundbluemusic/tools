@@ -41,6 +41,11 @@ const DrumToolPage: Component = () => {
     keywords:
       'drum tool, drum machine, drum synth, 808, beat maker, 드럼 툴, 드럼 머신',
     canonicalPath: '/drum-tool',
+    softwareApp: {
+      name: seoTitle(),
+      description: seoDescription(),
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [

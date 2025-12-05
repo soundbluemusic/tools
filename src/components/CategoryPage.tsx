@@ -1,10 +1,32 @@
-import { createMemo, type Component } from 'solid-js';
+import { createMemo, For, Show, type Component } from 'solid-js';
 import { Title, Meta } from '@solidjs/meta';
 import { useLanguage } from '../i18n';
-import { useSEO, useApps } from '../hooks';
+import { useSEO, useApps, useLocalizedPath } from '../hooks';
 import { AppList } from './AppList';
 import { Breadcrumb } from './Breadcrumb';
+import { Link } from './ui';
 import type { App } from '../types';
+
+/**
+ * Related category links for internal SEO
+ */
+const categoryLinks = [
+  {
+    path: '/music-tools',
+    label: { ko: '음악 도구', en: 'Music Tools' },
+    icon: '🎵',
+  },
+  {
+    path: '/other-tools',
+    label: { ko: '기타 도구', en: 'Other Tools' },
+    icon: '🔧',
+  },
+  {
+    path: '/combined-tools',
+    label: { ko: '결합 도구', en: 'Combined Tools' },
+    icon: '⚡',
+  },
+];
 
 interface CategorySEO {
   ko: {
@@ -37,6 +59,12 @@ interface CategoryPageProps {
 export const CategoryPage: Component<CategoryPageProps> = (props) => {
   const { language } = useLanguage();
   const { apps, isLoading } = useApps();
+  const { toLocalizedPath } = useLocalizedPath();
+
+  // Get other categories for internal linking (exclude current)
+  const relatedCategories = createMemo(() =>
+    categoryLinks.filter((cat) => cat.path !== props.canonicalPath)
+  );
 
   useSEO({
     description: props.seo[language()].description,
@@ -80,6 +108,28 @@ export const CategoryPage: Component<CategoryPageProps> = (props) => {
           language={language()}
           ariaLabel={appListAriaLabel()}
         />
+
+        {/* Related Categories - Internal Linking for SEO */}
+        <Show when={relatedCategories().length > 0}>
+          <section class="mt-12 pt-8 border-t border-[var(--color-border-secondary)]">
+            <h2 class="text-lg font-semibold text-[var(--color-text-primary)] mb-4">
+              {language() === 'ko' ? '다른 카테고리 둘러보기' : 'Explore Other Categories'}
+            </h2>
+            <div class="flex flex-wrap gap-3">
+              <For each={relatedCategories()}>
+                {(category) => (
+                  <Link
+                    href={toLocalizedPath(category.path)}
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-[var(--color-bg-secondary)] border border-[var(--color-border-secondary)] rounded-lg text-[var(--color-text-secondary)] no-underline text-sm font-medium transition-all duration-150 hover:bg-[var(--color-interactive-hover)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-primary)]"
+                  >
+                    <span>{category.icon}</span>
+                    <span>{category.label[language()]}</span>
+                  </Link>
+                )}
+              </For>
+            </div>
+          </section>
+        </Show>
       </div>
     </>
   );

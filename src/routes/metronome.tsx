@@ -27,6 +27,11 @@ const Metronome: Component = () => {
     description: metronome().seo.description,
     keywords: metronome().seo.keywords,
     canonicalPath: '/metronome',
+    softwareApp: {
+      name: metronome().seo.title,
+      description: metronome().seo.description,
+      applicationCategory: 'MusicApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [

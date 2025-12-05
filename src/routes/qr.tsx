@@ -27,6 +27,11 @@ const QR: Component = () => {
     description: qr().seo.description,
     keywords: qr().seo.keywords,
     canonicalPath: '/qr',
+    softwareApp: {
+      name: qr().seo.title,
+      description: qr().seo.description,
+      applicationCategory: 'UtilitiesApplication',
+    },
   });
 
   const breadcrumb = createMemo(() => [

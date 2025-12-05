@@ -25,10 +25,22 @@ const themeScript = `(function(){
  */
 const criticalCss = `#app{opacity:0;transition:opacity .15s ease-in}`;
 
-export default createHandler(() => (
-  <StartServer
-    document={({ assets, children, scripts }) => (
-      <html lang="ko">
+/**
+ * Detect language from URL pathname for SSR
+ */
+const getLanguageFromPath = (pathname: string): string => {
+  return pathname.startsWith('/ko') ? 'ko' : 'en';
+};
+
+export default createHandler(({ request }) => {
+  // Extract pathname from request URL for language detection
+  const url = new URL(request.url);
+  const language = getLanguageFromPath(url.pathname);
+
+  return (
+    <StartServer
+      document={({ assets, children, scripts }) => (
+        <html lang={language}>
         <head>
           <meta charset="utf-8" />
           <meta
@@ -46,6 +58,7 @@ export default createHandler(() => (
           {scripts}
         </body>
       </html>
-    )}
-  />
-));
+      )}
+    />
+  );
+});
