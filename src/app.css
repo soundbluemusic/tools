@@ -1,5 +1,12 @@
 /* ============================================
- * CSS Imports (MUST be at the top)
+ * Tailwind CSS v4 - MUST be imported FIRST
+ * This allows our custom CSS to override Tailwind's preflight
+ * ============================================ */
+@import 'tailwindcss';
+
+/* ============================================
+ * Custom CSS Imports (AFTER Tailwind)
+ * These override Tailwind's preflight/base styles
  * ============================================ */
 @import './styles/variables.css';
 @import './styles/base.css';
@@ -8,17 +15,6 @@
 @import './styles/tool-page.css';
 @import './styles/qr-page.css';
 @import './styles/not-found.css';
-
-/* ============================================
- * Tailwind CSS v4 - Full Stack
- *
- * 정적 스타일: Tailwind CSS 유틸리티 클래스 (기본)
- * 동적 스타일: style 속성 (좌표/크기/애니메이션)
- * 커스텀 CSS: 복잡한 애니메이션, 특수 레이아웃만
- *
- * Tailwind CSS를 기반으로 하고 필요한 경우에만 커스텀 CSS 사용
- * ============================================ */
-@import 'tailwindcss';
 
 /* ============================================
  * Layout Components
