@@ -12,7 +12,6 @@ import { Header } from '../Header';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
 import type { App } from '../../types';
-import './NavigationLayout.css';
 
 // Lazy load CommandPalette - only loads when user opens it (Cmd+K)
 const CommandPalette = lazy(() =>
@@ -34,6 +33,8 @@ interface NavigationLayoutProps {
  * Note: Both sidebar and bottom nav are always rendered,
  * CSS handles visibility based on viewport size.
  * This prevents hydration mismatches and flickering.
+ *
+ * Tailwind CSS with GPU-accelerated animations
  */
 export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
   props
@@ -90,7 +91,7 @@ export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
   });
 
   return (
-    <div class="nav-layout">
+    <div class="relative w-full min-h-screen min-h-dvh overflow-x-hidden">
       {/* Fixed Header */}
       <Header
         onSearchClick={openCommandPalette}
@@ -103,9 +104,28 @@ export const NavigationLayout: ParentComponent<NavigationLayoutProps> = (
 
       {/* Main Content Wrapper - margin-left animation based on sidebar state */}
       <div
-        class={`nav-layout-content${isSidebarOpen() ? ' nav-layout-content--sidebar-open' : ''}`}
+        class={`
+          relative w-auto min-h-screen min-h-dvh box-border
+          mt-14 ml-0 mr-0
+          will-change-[margin-left]
+          transition-[margin-left] duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]
+          max-[767px]:ml-0 max-[767px]:pb-[calc(56px+env(safe-area-inset-bottom,0px))]
+          max-[480px]:mt-[52px]
+          supports-[padding-top:env(safe-area-inset-top)]:mt-[calc(56px+env(safe-area-inset-top))]
+          supports-[padding-top:env(safe-area-inset-top)]:max-[480px]:mt-[calc(52px+env(safe-area-inset-top))]
+          ${isSidebarOpen() ? 'md:ml-60' : ''}
+        `}
       >
-        <div class="content-wrapper">{props.children}</div>
+        <div
+          class="
+            w-full max-w-full box-border
+            min-h-[calc(100vh-56px)] min-h-[calc(100dvh-56px)]
+            max-[767px]:min-h-[calc(100vh-56px-56px)] max-[767px]:min-h-[calc(100dvh-56px-56px)]
+            max-[480px]:min-h-[calc(100vh-52px)] max-[480px]:min-h-[calc(100dvh-52px)]
+          "
+        >
+          {props.children}
+        </div>
       </div>
 
       {/* Mobile Bottom Navigation - CSS controls visibility */}
