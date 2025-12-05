@@ -79,15 +79,22 @@ function createAudioStore(): AudioStore {
     },
   };
 
-  // Return merged state and actions
-  return new Proxy({} as AudioStore, {
-    get(_, prop: string) {
-      if (prop in actions) {
-        return actions[prop as keyof AudioActions];
-      }
-      return state[prop as keyof AudioState];
+  // Return merged state (via getters for reactivity) and actions
+  return {
+    get masterVolume() {
+      return state.masterVolume;
     },
-  });
+    get isMuted() {
+      return state.isMuted;
+    },
+    get isAudioContextReady() {
+      return state.isAudioContextReady;
+    },
+    get sampleRate() {
+      return state.sampleRate;
+    },
+    ...actions,
+  };
 }
 
 // ============================================

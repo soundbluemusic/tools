@@ -2,7 +2,8 @@
 /**
  * Sitemap Generation Script
  *
- * Generates sitemap.xml from app configs and routes.
+ * Generates sitemap.xml with multilingual support (EN/KO).
+ * Includes XSL stylesheet for browser display.
  * Usage: npx tsx scripts/generate-sitemap.ts
  */
 
@@ -23,6 +24,7 @@ interface SitemapUrl {
     | 'yearly'
     | 'never';
   priority: number;
+  alternates?: { lang: string; href: string }[];
 }
 
 interface RouteConfig {
@@ -38,9 +40,12 @@ const appsDir = join(rootDir, 'src/apps');
 const brandFile = join(rootDir, 'src/constants/brand.ts');
 const outputFile = join(rootDir, 'public/sitemap.xml');
 
-// Static routes
+// Static routes (pages that exist for both languages)
 const STATIC_ROUTES: RouteConfig[] = [
   { path: '/', changefreq: 'weekly', priority: 1.0 },
+  { path: '/music-tools', changefreq: 'weekly', priority: 0.9 },
+  { path: '/other-tools', changefreq: 'weekly', priority: 0.9 },
+  { path: '/combined-tools', changefreq: 'weekly', priority: 0.9 },
   { path: '/sitemap', changefreq: 'monthly', priority: 0.5 },
   { path: '/opensource', changefreq: 'monthly', priority: 0.5 },
   { path: '/tools-used', changefreq: 'monthly', priority: 0.5 },
@@ -87,21 +92,33 @@ async function getAppRoutes(): Promise<string[]> {
   }
 }
 
-// Generate XML for a single URL
+// Generate XML for a single URL with hreflang alternates
 function generateUrlEntry(url: SitemapUrl): string {
-  return `  <url>
+  let entry = `  <url>
     <loc>${url.loc}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
-    <priority>${url.priority.toFixed(1)}</priority>
+    <priority>${url.priority.toFixed(1)}</priority>`;
+
+  if (url.alternates && url.alternates.length > 0) {
+    for (const alt of url.alternates) {
+      entry += `
+    <xhtml:link rel="alternate" hreflang="${alt.lang}" href="${alt.href}"/>`;
+    }
+  }
+
+  entry += `
   </url>`;
+  return entry;
 }
 
-// Generate complete sitemap XML
+// Generate complete sitemap XML with XSL stylesheet
 function generateSitemapXml(urls: SitemapUrl[]): string {
   const urlEntries = urls.map(generateUrlEntry).join('\n\n');
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
 ${urlEntries}
 
@@ -109,9 +126,47 @@ ${urlEntries}
 `;
 }
 
+// Create URL entry with alternates
+function createUrlWithAlternates(
+  siteUrl: string,
+  path: string,
+  today: string,
+  changefreq: SitemapUrl['changefreq'],
+  priority: number
+): SitemapUrl[] {
+  const enPath = path === '/' ? '' : path;
+  const koPath = path === '/' ? '/ko' : `/ko${path}`;
+
+  const enUrl = siteUrl + enPath;
+  const koUrl = siteUrl + koPath;
+
+  const alternates = [
+    { lang: 'en', href: enUrl },
+    { lang: 'ko', href: koUrl },
+    { lang: 'x-default', href: enUrl },
+  ];
+
+  return [
+    {
+      loc: enUrl,
+      lastmod: today,
+      changefreq,
+      priority,
+      alternates,
+    },
+    {
+      loc: koUrl,
+      lastmod: today,
+      changefreq,
+      priority: priority * 0.9, // Slightly lower priority for alternate language
+      alternates,
+    },
+  ];
+}
+
 // Main
 async function main() {
-  console.log('Generating sitemap.xml...');
+  console.log('Generating sitemap.xml with multilingual support...');
 
   const siteUrl = await getSiteUrl();
   console.log('Site URL:', siteUrl);
@@ -122,27 +177,33 @@ async function main() {
   const today = getToday();
   const urls: SitemapUrl[] = [];
 
-  // Add static routes
+  // Add static routes (both EN and KO versions)
   for (const route of STATIC_ROUTES) {
-    urls.push({
-      loc: siteUrl + (route.path === '/' ? '' : route.path),
-      lastmod: today,
-      changefreq: route.changefreq,
-      priority: route.priority,
-    });
+    urls.push(
+      ...createUrlWithAlternates(
+        siteUrl,
+        route.path,
+        today,
+        route.changefreq,
+        route.priority
+      )
+    );
   }
 
-  // Add app routes
+  // Add app routes (both EN and KO versions)
   for (const appPath of appRoutes) {
-    urls.push({
-      loc: siteUrl + appPath,
-      lastmod: today,
-      changefreq: APP_ROUTE_CONFIG.changefreq,
-      priority: APP_ROUTE_CONFIG.priority,
-    });
+    urls.push(
+      ...createUrlWithAlternates(
+        siteUrl,
+        appPath,
+        today,
+        APP_ROUTE_CONFIG.changefreq,
+        APP_ROUTE_CONFIG.priority
+      )
+    );
   }
 
-  // Sort by priority then path
+  // Sort by priority (descending) then by path
   urls.sort((a, b) => {
     if (b.priority !== a.priority) return b.priority - a.priority;
     return a.loc.localeCompare(b.loc);
@@ -152,6 +213,14 @@ async function main() {
   await writeFile(outputFile, xml, 'utf-8');
 
   console.log('Generated sitemap.xml with', urls.length, 'URLs');
+  console.log(
+    '  - English URLs:',
+    urls.filter((u) => !u.loc.includes('/ko')).length
+  );
+  console.log(
+    '  - Korean URLs:',
+    urls.filter((u) => u.loc.includes('/ko')).length
+  );
 }
 
 main().catch((error) => {

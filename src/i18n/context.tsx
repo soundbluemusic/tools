@@ -103,9 +103,9 @@ const getBasePath = (pathname: string): string => {
  * Hydration-safe: Uses same render path for SSR and client
  */
 export const LanguageProvider: ParentComponent = (props) => {
-  // Always use 'ko' as initial value for consistent hydration
+  // Always use 'en' as initial value for consistent hydration
   // Client will update after mount based on URL
-  const [language, setLanguageState] = createSignal<Language>('ko');
+  const [language, setLanguageState] = createSignal<Language>('en');
 
   // Get navigate function at component level (not inside callbacks)
   let navigate: ReturnType<typeof useNavigate> | null = null;
@@ -179,13 +179,13 @@ export const LanguageProvider: ParentComponent = (props) => {
 /**
  * Default translations for SSR/prerender fallback
  */
-const defaultTranslations = allTranslations.ko;
+const defaultTranslations = allTranslations.en;
 
 /**
  * Default language context value for SSR/prerender fallback
  */
 const defaultLanguageContext: LanguageContextValue = {
-  language: () => 'ko' as Language,
+  language: () => 'en' as Language,
   setLanguage: () => {},
   toggleLanguage: () => {},
   t: () => defaultTranslations,
