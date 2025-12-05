@@ -28,9 +28,6 @@ dist-ssr
 build/
 tests/
 
-# React Router generated files
-.react-router/
-
 # SolidStart / Vinxi build output
 .output/
 .vinxi/

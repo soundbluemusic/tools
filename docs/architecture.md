@@ -17,13 +17,13 @@ src/
 │       ├── components/      # 앱별 컴포넌트
 │       └── utils/           # 앱별 유틸리티
 │
-├── components/              # 공유 React 컴포넌트
+├── components/              # 공유 SolidJS 컴포넌트
 │   ├── layout/              # 레이아웃 컴포넌트
 │   ├── navigation/          # 네비게이션 시스템
 │   └── ui/                  # 기본 UI 컴포넌트
 │
 ├── pages/                   # 라우트 페이지 컴포넌트
-├── hooks/                   # 커스텀 React 훅
+├── hooks/                   # 커스텀 SolidJS 훅
 ├── i18n/                    # 국제화 (한국어/영어)
 ├── constants/               # 앱 메타데이터 및 상수
 ├── utils/                   # 유틸리티 함수
@@ -193,8 +193,8 @@ const MyTool = lazy(() => import('./pages/MyTool'));
 
 ## 성능 최적화
 
-1. **코드 스플리팅**: `React.lazy()`로 페이지 지연 로딩
-2. **벤더 청크**: React, Router 등 별도 청크
+1. **코드 스플리팅**: SolidStart 파일 기반 라우팅으로 페이지 지연 로딩
+2. **벤더 청크**: SolidJS, Router 등 별도 청크
 3. **프리페칭**: 앱 카드 호버 시 프리페치
 4. **CSS Containment**: `contain: layout style`
 5. **PWA 캐싱**: Service Worker 에셋 캐싱

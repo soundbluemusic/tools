@@ -44,12 +44,13 @@ Free online tools for musicians, writers, designers, filmmakers — every creato
 >
 > | Category | Technology |
 > | -------- | ---------- |
-> | Framework | React 19 |
-> | Routing | React Router 7 |
+> | Framework | SolidJS 1.9 |
+> | Meta-Framework | SolidStart 1.1 |
+> | Routing | @solidjs/router |
 > | Language | TypeScript 5 |
-> | Build | Vite 7 |
+> | Build | Vinxi + Vite |
 > | WASM | AssemblyScript |
-> | Testing | Vitest + React Testing Library |
+> | Testing | Vitest + Solid Testing Library |
 > | Deployment | Cloudflare Pages |
 >
 > ## Why Free?

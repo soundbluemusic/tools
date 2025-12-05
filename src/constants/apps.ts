@@ -25,7 +25,7 @@ export const COMBINED_APP_PATHS = ['/drum-tool'] as const;
  * - url: Generated from folder name (e.g., /contract, /qr)
  *
  * NOTE: Using { eager: true } for synchronous loading
- * This is required for React Router Framework Mode pre-rendering
+ * This is required for SolidStart pre-rendering
  */
 const appModules = import.meta.glob<{ default: AppConfig }>(
   '../apps/*/config.ts',

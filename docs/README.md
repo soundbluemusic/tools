@@ -1,6 +1,6 @@
 # Tools 문서
 
-React + TypeScript + Vite 기반의 유틸리티 앱 대시보드 공식 문서입니다.
+SolidJS + TypeScript + Vite 기반의 유틸리티 앱 대시보드 공식 문서입니다.
 
 ## 목차
 
@@ -39,15 +39,16 @@ npm run dev
 
 ## 기술 스택
 
-| 분류       | 기술                | 버전 |
-| :--------- | :------------------ | :--- |
-| 프레임워크 | React               | 19   |
-| 라우팅     | React Router        | 7    |
-| 언어       | TypeScript          | 5    |
-| 빌드       | Vite                | 7    |
-| WASM       | AssemblyScript      | -    |
-| 테스트     | Vitest + Playwright | -    |
-| 배포       | Cloudflare Pages    | -    |
+| 분류           | 기술                | 버전  |
+| :------------- | :------------------ | :---- |
+| 프레임워크     | SolidJS             | 1.9   |
+| 메타 프레임워크 | SolidStart          | 1.1   |
+| 라우팅         | @solidjs/router     | -     |
+| 언어           | TypeScript          | 5     |
+| 빌드           | Vinxi + Vite        | -     |
+| WASM           | AssemblyScript      | -     |
+| 테스트         | Vitest + Playwright | -     |
+| 배포           | Cloudflare Pages    | -     |
 
 ## 주요 기능
 

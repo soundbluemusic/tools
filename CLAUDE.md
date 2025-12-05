@@ -66,7 +66,6 @@ src/
 │       └── utils/           # App-specific utilities
 │
 ├── assets/                  # Static assets (images, SVGs)
-│   └── react.svg            # React logo (legacy)
 │
 ├── audio/                   # Web Audio utilities
 │   ├── worklet.ts           # Audio Worklet processor

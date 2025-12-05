@@ -29,7 +29,7 @@
 
 - **오디오**: Web Audio API 기반 정밀 타이밍
 - **스케줄링**: 오디오 컨텍스트의 `currentTime` 활용으로 정확한 비트 재생
-- **상태 관리**: React 상태 + localStorage 영속화
+- **상태 관리**: SolidJS 상태 + localStorage 영속화
 
 ## 키보드 단축키
 

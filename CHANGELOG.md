@@ -119,7 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### 🛠️ 기술 스택
 
-- React 19 + TypeScript 기반
+- SolidJS + TypeScript 기반
 - Vite 6 빌드 도구
 - PWA 지원
 - Cloudflare Pages 배포
