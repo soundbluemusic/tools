@@ -67,11 +67,8 @@ button {
   font-family: inherit;
   font-size: inherit;
   cursor: pointer;
-  border: none;
-  background: none;
-  /* Touch-friendly minimum size */
-  min-height: var(--touch-target-min, 44px);
   touch-action: manipulation;
+  /* Note: border, background, min-height handled by Tailwind or component styles */
 }
 
 button:disabled {
@@ -90,16 +87,7 @@ select {
   touch-action: manipulation;
 }
 
-/* Touch-friendly input/select sizing */
-input[type='text'],
-input[type='search'],
-input[type='email'],
-input[type='url'],
-input[type='number'],
-input[type='tel'],
-select {
-  min-height: var(--touch-target-min, 44px);
-}
+/* Note: Touch-friendly sizing handled by component styles with Tailwind */
 
 /* Lists */
 ul,

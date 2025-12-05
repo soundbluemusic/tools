@@ -2,6 +2,7 @@
  * Sidebar - Desktop Only
  * Fixed to left edge, below header
  * Clean visual separation with border
+ * Uses CSS variables for automatic theme support
  */
 
 .sidebar {
@@ -18,8 +19,8 @@
     display: flex;
     flex-direction: column;
     width: 240px;
-    background: var(--color-bg-primary, #ffffff);
-    border-right: 1px solid var(--color-border-primary, #e5e5e5);
+    background: var(--color-bg-primary);
+    border-right: 1px solid var(--color-border-primary);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 50;
@@ -48,21 +49,24 @@
   height: 40px;
   padding: 0 12px;
   border-radius: 8px;
-  color: var(--color-text-secondary, #606060);
+  color: var(--color-text-secondary);
   text-decoration: none;
   font-size: 14px;
   font-weight: 400;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
 }
 
 .sidebar-item:hover {
-  background: var(--color-interactive-hover, rgba(0, 0, 0, 0.05));
-  color: var(--color-text-primary, #0f0f0f);
+  background: var(--color-interactive-hover);
+  color: var(--color-text-primary);
 }
 
 /* Active state - Only highlight when on that page */
 .sidebar-item.active {
-  background: var(--color-interactive-active, rgba(0, 0, 0, 0.08));
-  color: var(--color-text-primary, #0f0f0f);
+  background: var(--color-interactive-active);
+  color: var(--color-text-primary);
   font-weight: 500;
 }
 
@@ -92,13 +96,13 @@
 .sidebar-divider {
   height: 1px;
   margin: 8px 12px;
-  background: var(--color-border-primary, #e5e5e5);
+  background: var(--color-border-primary);
 }
 
 /* Section Title */
 .sidebar-section-title {
   padding: 16px 12px 8px;
-  color: var(--color-text-tertiary, #909090);
+  color: var(--color-text-tertiary);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
@@ -120,7 +124,7 @@
 }
 
 .sidebar:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
+  background: var(--color-border-secondary);
 }
 
 /* Safe area support */
@@ -130,65 +134,4 @@
       top: calc(56px + env(safe-area-inset-top));
     }
   }
-}
-
-/* Dark Mode */
-@media (prefers-color-scheme: dark) {
-  .sidebar {
-    background: var(--color-bg-primary, #0f0f0f);
-    border-right-color: var(--color-border-primary, #272727);
-  }
-
-  .sidebar-item {
-    color: var(--color-text-secondary, #aaa);
-  }
-
-  .sidebar-item:hover {
-    background: var(--color-interactive-hover, rgba(255, 255, 255, 0.08));
-    color: var(--color-text-primary, #f1f1f1);
-  }
-
-  .sidebar-item.active {
-    background: var(--color-interactive-active, rgba(255, 255, 255, 0.12));
-    color: var(--color-text-primary, #f1f1f1);
-  }
-
-  .sidebar-divider {
-    background: var(--color-border-primary, #272727);
-  }
-
-  .sidebar-section-title {
-    color: var(--color-text-tertiary, #717171);
-  }
-
-  .sidebar:hover::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.12);
-  }
-}
-
-[data-theme='dark'] .sidebar {
-  background: var(--color-bg-primary, #0f0f0f);
-  border-right-color: var(--color-border-primary, #272727);
-}
-
-[data-theme='dark'] .sidebar-item {
-  color: var(--color-text-secondary, #aaa);
-}
-
-[data-theme='dark'] .sidebar-item:hover {
-  background: var(--color-interactive-hover, rgba(255, 255, 255, 0.08));
-  color: var(--color-text-primary, #f1f1f1);
-}
-
-[data-theme='dark'] .sidebar-item.active {
-  background: var(--color-interactive-active, rgba(255, 255, 255, 0.12));
-  color: var(--color-text-primary, #f1f1f1);
-}
-
-[data-theme='dark'] .sidebar-divider {
-  background: var(--color-border-primary, #272727);
-}
-
-[data-theme='dark'] .sidebar-section-title {
-  color: var(--color-text-tertiary, #717171);
 }
