@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 /**
- * Desktop Sidebar Navigation (YouTube Style)
+ * Desktop Sidebar Navigation
  * - Fixed on left
  * - Icon + label for each item
  * - Active state highlight
@@ -145,16 +145,16 @@ export const Sidebar: Component<SidebarProps> = (props) => {
           </span>
         </Link>
 
-        {/* Menu / Settings */}
+        {/* Sitemap */}
         <Link
           href={getPath('/sitemap')}
           class={`sidebar-item ${isActive('/sitemap') ? 'active' : ''}`}
         >
           <svg class="sidebar-icon" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+            <path d="M3 3v8h8V3H3zm6 6H5V5h4v4zm-6 4v8h8v-8H3zm6 6H5v-4h4v4zm4-16v8h8V3h-8zm6 6h-4V5h4v4zm-6 4v8h8v-8h-8zm6 6h-4v-4h4v4z" />
           </svg>
           <span class="sidebar-label">
-            {language() === 'ko' ? '메뉴' : 'Menu'}
+            {language() === 'ko' ? '사이트맵' : 'Sitemap'}
           </span>
         </Link>
       </nav>

@@ -57,10 +57,10 @@ export default defineConfig({
         registerType: 'autoUpdate',
         includeAssets: ['icons/*.png', 'og-image.png', 'robots.txt'],
         manifest: {
-          name: 'Tools - Open Source Productivity Tools',
+          name: 'Tools',
           short_name: 'Tools',
           description:
-            '무료 온라인 도구 모음. QR 코드 생성기, 메트로놈, 드럼 머신 등 유용한 도구를 무료로 사용하세요.',
+            '모든 창작자를 위한 무료 도구. QR 코드 생성기, 메트로놈, 드럼 머신 등.',
           theme_color: '#242424',
           background_color: '#1a1a1a',
           display: 'standalone',

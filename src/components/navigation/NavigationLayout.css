@@ -35,7 +35,7 @@
 /* Desktop: Offset for sidebar */
 @media (min-width: 1024px) {
   .navigation-content {
-    padding-left: 240px; /* Sidebar width */
+    padding-left: 256px; /* Sidebar width + extra gap */
   }
 
   /* Sidebar collapsed - no offset */

@@ -19,6 +19,9 @@ export const Footer: Component = () => {
 
   const getPath = (path: string) => toLocalizedPath(path);
 
+  const linkClass =
+    'text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]';
+
   return (
     <footer class="footer">
       {/* Share Button - lazy loaded (always shares homepage) */}
@@ -38,44 +41,29 @@ export const Footer: Component = () => {
         class="flex flex-wrap justify-center gap-y-2 gap-x-6 mb-6"
         aria-label="Footer navigation"
       >
-        <Link
-          href={getPath('/privacy')}
-          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
-        >
+        <Link href={getPath('/privacy')} class={linkClass}>
           {t().common.footer.privacy}
         </Link>
-        <Link
-          href={getPath('/terms')}
-          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
-        >
+        <Link href={getPath('/terms')} class={linkClass}>
           {t().common.footer.terms}
         </Link>
         <Show when={BRAND.githubUrl}>
           <a
             href={BRAND.githubUrl}
-            class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
+            class={linkClass}
             target="_blank"
             rel="noopener noreferrer"
           >
             {t().common.footer.github}
           </a>
         </Show>
-        <Link
-          href={getPath('/sitemap')}
-          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
-        >
+        <Link href={getPath('/sitemap')} class={linkClass}>
           {t().common.footer.sitemap}
         </Link>
-        <Link
-          href={getPath('/about')}
-          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
-        >
+        <Link href={getPath('/about')} class={linkClass}>
           {t().common.footer.about}
         </Link>
-        <Link
-          href={getPath('/tools-used')}
-          class="text-[var(--color-text-secondary)] no-underline text-sm font-medium px-2 py-1 rounded transition-[color,background-color] duration-150 ease-[var(--ease-default)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-interactive-hover)] focus-visible:outline-none focus-visible:shadow-[var(--shadow-focus)]"
-        >
+        <Link href={getPath('/tools-used')} class={linkClass}>
           {t().common.footer.toolsUsed}
         </Link>
       </nav>

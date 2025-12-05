@@ -17,7 +17,7 @@ interface AppListProps {
 const AppList: Component<AppListProps> = (props) => {
   return (
     <nav
-      class={`grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4 2xl:grid-cols-5${props.isPending ? ' opacity-60 pointer-events-none' : ''}`}
+      class={`grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-7 xl:grid-cols-4 xl:gap-8 2xl:grid-cols-5${props.isPending ? ' opacity-60 pointer-events-none' : ''}`}
       role="list"
       aria-label={props.ariaLabel}
       aria-busy={props.isPending}

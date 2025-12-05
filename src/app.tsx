@@ -1,5 +1,5 @@
 // @refresh reload
-import { MetaProvider, Title, Meta, Link } from '@solidjs/meta';
+import { MetaProvider, Meta, Link } from '@solidjs/meta';
 import { Router } from '@solidjs/router';
 import { FileRoutes } from '@solidjs/start/router';
 import { Suspense, ErrorBoundary } from 'solid-js';
@@ -64,7 +64,6 @@ export default function App() {
     <Router
       root={(props) => (
         <MetaProvider>
-          <Title>Tools - 모든 창작자를 위한 무료 도구</Title>
           <Meta charset="utf-8" />
           <Meta
             name="viewport"
@@ -136,7 +135,7 @@ export default function App() {
             sizes="180x180"
             href="/icons/apple-touch-icon.png"
           />
-          <Link rel="manifest" href="/manifest.webmanifest" />
+          <Link rel="manifest" href="/_build/manifest.webmanifest" />
           <script
             type="application/ld+json"
             innerHTML={JSON.stringify(structuredData)}
