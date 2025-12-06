@@ -1,8 +1,19 @@
+'use client';
+
 import Link from 'next/link';
 import { Github } from 'lucide-react';
+import { useLanguage } from '@/i18n';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t, language } = useLanguage();
+
+  const toolLinks = [
+    { href: '/tools/metronome', label: t.tools.metronome },
+    { href: '/tools/tuner', label: t.tools.tuner },
+    { href: '/daw', label: t.tools.daw },
+    { href: '/tools/qr-generator', label: t.tools.qrGenerator },
+  ];
 
   return (
     <footer className="border-t bg-card/50">
@@ -12,7 +23,7 @@ export function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <h3 className="mb-2 text-lg font-bold">
-              Tools{' '}
+              {t.brand}{' '}
               <span className="text-sm font-normal text-muted-foreground">
                 by SoundBlueMusic
               </span>
@@ -24,57 +35,38 @@ export function Footer() {
               className="inline-flex items-center gap-2 rounded-md bg-secondary px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary/80"
             >
               <Github className="h-4 w-4" />
-              GitHub
+              {t.footer.github}
             </a>
           </div>
 
           {/* Links */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold">도구</h4>
+            <h4 className="mb-3 text-sm font-semibold">{t.nav.tools}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>
-                <Link href="/tools/metronome" className="hover:text-foreground">
-                  메트로놈
-                </Link>
-              </li>
-              <li>
-                <Link href="/tools/tuner" className="hover:text-foreground">
-                  튜너
-                </Link>
-              </li>
-              <li>
-                <Link href="/daw" className="hover:text-foreground">
-                  DAW (드럼머신/신스)
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/tools/qr-generator"
-                  className="hover:text-foreground"
-                >
-                  QR 생성기
-                </Link>
-              </li>
+              {toolLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className="hover:text-foreground">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Legal */}
           <div>
-            <h4 className="mb-3 text-sm font-semibold">정보</h4>
+            <h4 className="mb-3 text-sm font-semibold">
+              {language === 'ko' ? '정보' : 'Info'}
+            </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link href="/about" className="hover:text-foreground">
-                  소개
-                </Link>
-              </li>
-              <li>
                 <Link href="/terms" className="hover:text-foreground">
-                  이용약관
+                  {t.footer.terms}
                 </Link>
               </li>
               <li>
                 <Link href="/privacy" className="hover:text-foreground">
-                  개인정보처리방침
+                  {t.footer.privacy}
                 </Link>
               </li>
               <li>
@@ -84,7 +76,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-foreground"
                 >
-                  MIT License
+                  {t.footer.license}
                 </a>
               </li>
             </ul>
@@ -104,7 +96,7 @@ export function Footer() {
               SoundBlueMusic
             </a>
           </p>
-          <span>MIT License</span>
+          <span>{t.footer.license}</span>
         </div>
       </div>
     </footer>

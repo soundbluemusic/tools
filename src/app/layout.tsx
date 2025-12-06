@@ -1,24 +1,28 @@
 import type { Metadata, Viewport } from 'next';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { LanguageProvider } from '@/i18n';
+import { NavigationLayout } from '@/components/navigation';
 import './globals.css';
 
 export const metadata: Metadata = {
   title: {
-    default: 'Tools - Pro-grade Web DAW & Creative Tools',
+    default: 'Tools - Free Creative Tools',
     template: '%s | Tools',
   },
   description:
-    'Professional web-based DAW, rhythm game, and creative tools. Free for everyone.',
+    'Free web-based tools for everyone. Metronome, tuner, drum machine, QR generator, and more.',
   keywords: [
-    'DAW',
-    'Digital Audio Workstation',
+    'Tools',
+    'Metronome',
+    'Tuner',
+    'Drum Machine',
+    'QR Generator',
     'Web Audio',
-    'Music Production',
-    'Rhythm Game',
+    'Music Tools',
     'Creative Tools',
   ],
-  authors: [{ name: 'Sound Blue Music' }],
-  creator: 'Sound Blue Music',
+  authors: [{ name: 'SoundBlueMusic' }],
+  creator: 'SoundBlueMusic',
   metadataBase: new URL('https://tools.soundbluemusic.com'),
   manifest: '/manifest.json',
   appleWebApp: {
@@ -66,7 +70,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <LanguageProvider>
+            <NavigationLayout>{children}</NavigationLayout>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

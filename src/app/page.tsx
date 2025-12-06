@@ -1,72 +1,84 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Footer } from '@/components/footer';
+import { useLanguage } from '@/i18n';
 
-// Tool categories
-const musicTools = [
-  {
-    id: 'metronome',
+// Tool data
+const musicToolIds = [
+  'metronome',
+  'tuner',
+  'daw',
+  'pianoRoll',
+  'sheetEditor',
+  'rhythm',
+] as const;
+const utilityToolIds = ['qrGenerator', 'worldClock'] as const;
+
+const toolData: Record<
+  string,
+  { href: string; icon: string; descKo: string; descEn: string }
+> = {
+  metronome: {
     href: '/tools/metronome',
-    titleKo: '메트로놈',
-    descriptionKo: '정확한 템포 연습',
     icon: '⏱️',
+    descKo: '정확한 템포 연습',
+    descEn: 'Practice with precision',
   },
-  {
-    id: 'tuner',
+  tuner: {
     href: '/tools/tuner',
-    titleKo: '튜너',
-    descriptionKo: '악기 튜닝',
     icon: '🎸',
+    descKo: '악기 튜닝',
+    descEn: 'Tune your instrument',
   },
-  {
-    id: 'daw',
+  daw: {
     href: '/daw',
-    titleKo: '드럼머신 & 신스',
-    descriptionKo: '비트 메이킹',
     icon: '🥁',
+    descKo: '비트 메이킹',
+    descEn: 'Make beats',
   },
-  {
-    id: 'piano-roll',
+  pianoRoll: {
     href: '/tools/piano-roll',
-    titleKo: '피아노 롤',
-    descriptionKo: 'MIDI 노트 편집',
     icon: '🎹',
+    descKo: 'MIDI 노트 편집',
+    descEn: 'Edit MIDI notes',
   },
-  {
-    id: 'sheet-editor',
+  sheetEditor: {
     href: '/tools/sheet-editor',
-    titleKo: '악보 편집기',
-    descriptionKo: '악보 작성',
     icon: '🎼',
+    descKo: '악보 작성',
+    descEn: 'Write sheet music',
   },
-];
-
-const utilityTools = [
-  {
-    id: 'qr-generator',
+  rhythm: {
+    href: '/rhythm',
+    icon: '🎮',
+    descKo: '리듬 게임',
+    descEn: 'Rhythm game',
+  },
+  qrGenerator: {
     href: '/tools/qr-generator',
-    titleKo: 'QR 생성기',
-    descriptionKo: 'QR 코드 생성',
     icon: '📱',
+    descKo: 'QR 코드 생성',
+    descEn: 'Generate QR codes',
   },
-  {
-    id: 'world-clock',
+  worldClock: {
     href: '/tools/world-clock',
-    titleKo: '세계 시계',
-    descriptionKo: '시간대 비교',
     icon: '🌍',
+    descKo: '시간대 비교',
+    descEn: 'Compare timezones',
   },
-];
+};
 
 function ToolCard({
   href,
-  titleKo,
-  descriptionKo,
+  title,
+  description,
   icon,
 }: {
   href: string;
-  titleKo: string;
-  descriptionKo: string;
+  title: string;
+  description: string;
   icon: string;
 }) {
   return (
@@ -75,53 +87,71 @@ function ToolCard({
       className="group flex flex-col items-center rounded-xl border bg-card p-5 text-center transition-all hover:border-primary/50 hover:shadow-lg"
     >
       <div className="mb-2 text-3xl">{icon}</div>
-      <h3 className="mb-1 font-semibold">{titleKo}</h3>
-      <p className="text-xs text-muted-foreground">{descriptionKo}</p>
+      <h3 className="mb-1 font-semibold">{title}</h3>
+      <p className="text-xs text-muted-foreground">{description}</p>
     </Link>
   );
 }
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-background to-muted/20">
-      {/* Hero */}
-      <header className="container mx-auto px-4 py-12 text-center md:py-16">
-        <h1 className="mb-2 text-4xl font-bold tracking-tight md:text-5xl">
-          Tools
-        </h1>
-        <p className="text-sm text-muted-foreground">by SoundBlueMusic</p>
-      </header>
+  const { t, language } = useLanguage();
 
+  return (
+    <div className="flex min-h-screen flex-col">
       {/* Main Content */}
-      <main className="container mx-auto flex-1 px-4 pb-12">
+      <main className="container mx-auto flex-1 px-4 py-8">
         {/* Music Tools */}
         <section className="mb-10">
-          <h2 className="mb-4 text-lg font-semibold">🎵 음악 도구</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-            {musicTools.map((tool) => (
-              <ToolCard key={tool.id} {...tool} />
-            ))}
+          <h2 className="mb-4 text-lg font-semibold">🎵 {t.nav.musicTools}</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+            {musicToolIds.map((id) => {
+              const data = toolData[id];
+              return (
+                <ToolCard
+                  key={id}
+                  href={data.href}
+                  title={t.tools[id]}
+                  description={language === 'ko' ? data.descKo : data.descEn}
+                  icon={data.icon}
+                />
+              );
+            })}
           </div>
         </section>
 
         {/* Utility Tools */}
         <section className="mb-10">
-          <h2 className="mb-4 text-lg font-semibold">🛠️ 유틸리티</h2>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-            {utilityTools.map((tool) => (
-              <ToolCard key={tool.id} {...tool} />
-            ))}
+          <h2 className="mb-4 text-lg font-semibold">
+            🛠️ {t.nav.utilityTools}
+          </h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-6">
+            {utilityToolIds.map((id) => {
+              const data = toolData[id];
+              return (
+                <ToolCard
+                  key={id}
+                  href={data.href}
+                  title={t.tools[id]}
+                  description={language === 'ko' ? data.descKo : data.descEn}
+                  icon={data.icon}
+                />
+              );
+            })}
           </div>
         </section>
 
         {/* Workspace Link */}
         <section className="rounded-xl border bg-card p-6 text-center">
-          <h2 className="mb-2 text-lg font-semibold">🧰 작업 공간</h2>
+          <h2 className="mb-2 text-lg font-semibold">🧰 {t.nav.workspace}</h2>
           <p className="mb-4 text-sm text-muted-foreground">
-            여러 도구를 한 화면에서 사용하세요
+            {language === 'ko'
+              ? '여러 도구를 한 화면에서 사용하세요'
+              : 'Use multiple tools in one workspace'}
           </p>
           <Link href="/tools">
-            <Button>작업 공간 열기</Button>
+            <Button>
+              {language === 'ko' ? '작업 공간 열기' : 'Open Workspace'}
+            </Button>
           </Link>
         </section>
       </main>
