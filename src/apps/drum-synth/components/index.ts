@@ -1,1 +1,0 @@
-export { DrumSynth } from './DrumSynth';

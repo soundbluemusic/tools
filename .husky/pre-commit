@@ -1,8 +1,2 @@
-# Sync documentation (only if package.json or src/apps changed)
-if git diff --cached --name-only | grep -qE '^(package\.json|src/apps/)'; then
-  npm run sync-docs
-  git add README.md docs/README.md
-fi
-
 # Run lint-staged on staged files
 npx lint-staged

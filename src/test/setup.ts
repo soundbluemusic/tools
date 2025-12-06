@@ -1,11 +1,6 @@
-/**
- * Test Setup File
- * Runs before all tests
- */
-import { beforeAll, afterAll } from 'vitest';
 import '@testing-library/jest-dom';
 
-// Mock window.matchMedia
+// Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({
@@ -16,51 +11,92 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: () => {},
     addEventListener: () => {},
     removeEventListener: () => {},
-    dispatchEvent: () => false,
+    dispatchEvent: () => true,
   }),
 });
 
 // Mock ResizeObserver
-class ResizeObserverMock {
+global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
-}
-
-window.ResizeObserver = ResizeObserverMock;
+};
 
 // Mock IntersectionObserver
-class IntersectionObserverMock {
-  readonly root: Element | null = null;
-  readonly rootMargin: string = '';
-  readonly thresholds: ReadonlyArray<number> = [];
-
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
   observe() {}
   unobserve() {}
   disconnect() {}
-  takeRecords(): IntersectionObserverEntry[] {
+  root = null;
+  rootMargin = '';
+  thresholds = [];
+  takeRecords() {
     return [];
+  }
+};
+
+// Mock AudioContext
+class MockAudioContext {
+  sampleRate = 48000;
+  baseLatency = 0.01;
+  outputLatency = 0.02;
+  state = 'running';
+  destination = {};
+
+  createGain() {
+    return {
+      gain: { value: 1, setValueAtTime: () => {} },
+      connect: () => {},
+      disconnect: () => {},
+    };
+  }
+
+  createAnalyser() {
+    return {
+      fftSize: 2048,
+      frequencyBinCount: 1024,
+      getByteFrequencyData: () => {},
+      getByteTimeDomainData: () => {},
+      connect: () => {},
+      disconnect: () => {},
+    };
+  }
+
+  createOscillator() {
+    return {
+      type: 'sine',
+      frequency: { value: 440 },
+      connect: () => {},
+      disconnect: () => {},
+      start: () => {},
+      stop: () => {},
+    };
+  }
+
+  resume() {
+    return Promise.resolve();
+  }
+
+  close() {
+    return Promise.resolve();
+  }
+
+  get audioWorklet() {
+    return {
+      addModule: () => Promise.resolve(),
+    };
   }
 }
 
-window.IntersectionObserver = IntersectionObserverMock;
+(global as unknown as { AudioContext: typeof MockAudioContext }).AudioContext =
+  MockAudioContext;
 
-// Suppress console errors during tests
-const originalError = console.error;
-beforeAll(() => {
-  console.error = (...args: unknown[]) => {
-    // Filter out known SolidJS warnings in tests
-    if (
-      typeof args[0] === 'string' &&
-      (args[0].includes('Warning: An update to') ||
-        args[0].includes('act(...)'))
-    ) {
-      return;
-    }
-    originalError(...args);
-  };
-});
+// Mock requestAnimationFrame
+global.requestAnimationFrame = (callback: FrameRequestCallback) => {
+  return setTimeout(() => callback(Date.now()), 16) as unknown as number;
+};
 
-afterAll(() => {
-  console.error = originalError;
-});
+global.cancelAnimationFrame = (id: number) => {
+  clearTimeout(id);
+};

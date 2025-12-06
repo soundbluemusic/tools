@@ -1,8 +1,0 @@
-/**
- * Standalone Drum Machine Styles
- * Base styles and CSS variables for standalone app
- * Component styles come from DrumMachine.css via component import
- */
-
-@import '../common/base.css';
-@import '../../apps/drum/components/DrumMachine.css';
