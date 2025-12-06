@@ -1,4 +1,42 @@
 import type { NextConfig } from 'next';
+import withPWAInit from '@ducanh2912/next-pwa';
+
+const withPWA = withPWAInit({
+  dest: 'public',
+  register: true,
+  disable: process.env.NODE_ENV === 'development',
+  cacheOnFrontEndNav: true,
+  reloadOnOnline: true,
+  workboxOptions: {
+    skipWaiting: true,
+    clientsClaim: true,
+    // Audio/WASM 파일 캐싱
+    runtimeCaching: [
+      {
+        urlPattern: /\.(?:wasm|wav|mp3|ogg)$/,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'audio-wasm-cache',
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: /\.(?:woff2?|ttf|otf|eot)$/,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'font-cache',
+          expiration: {
+            maxEntries: 10,
+            maxAgeSeconds: 60 * 24 * 60 * 60, // 60 days
+          },
+        },
+      },
+    ],
+  },
+});
 
 const nextConfig: NextConfig = {
   // Cloudflare Pages 정적 배포
@@ -47,4 +85,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

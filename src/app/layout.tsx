@@ -20,6 +20,12 @@ export const metadata: Metadata = {
   authors: [{ name: 'Sound Blue Music' }],
   creator: 'Sound Blue Music',
   metadataBase: new URL('https://tools.soundbluemusic.com'),
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Tools',
+  },
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
