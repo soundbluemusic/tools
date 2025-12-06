@@ -1,104 +1,76 @@
 {
   "name": "tools",
   "private": true,
-  "version": "0.2.0-베타",
+  "version": "1.0.0",
   "type": "module",
-  "description": "A collection of utility tools built with SolidStart",
-  "author": "Tools Team",
+  "description": "Pro-grade Web DAW, Rhythm Game & Creative Tools",
+  "author": "Sound Blue Music",
   "license": "MIT",
   "homepage": "https://tools.soundbluemusic.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/soundbluemusic/tools.git"
   },
-  "bugs": {
-    "url": "https://github.com/soundbluemusic/tools/issues"
-  },
-  "keywords": [
-    "solidjs",
-    "solidstart",
-    "typescript",
-    "vite",
-    "metronome",
-    "drum-machine",
-    "qr-code",
-    "web-audio",
-    "pwa",
-    "music-tools"
-  ],
   "scripts": {
-    "dev": "vinxi dev",
-    "prebuild": "npm run generate-sitemap",
-    "wasm:build": "npm run asbuild:release && cp build/release.wasm src/wasm/processing.wasm",
-    "build": "vinxi build",
-    "preview": "vinxi start",
-    "lint": "eslint . --ext .ts,.tsx",
-    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,css,json}\"",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:ui": "vitest --ui",
-    "typecheck": "tsc --noEmit",
-    "validate": "npm run typecheck && npm run lint && npm run test:run",
-    "generate-icons": "tsx scripts/generate-icons.ts",
-    "generate-og-image": "tsx scripts/generate-og-image.ts",
-    "generate-sitemap": "tsx scripts/generate-sitemap.ts",
-    "convert-webp": "tsx scripts/convert-to-webp.ts",
-    "sync-docs": "tsx scripts/sync-docs.ts",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed",
-    "prepare": "husky",
-    "asbuild:debug": "asc assembly/index.ts --target debug",
-    "asbuild:release": "asc assembly/index.ts --target release",
-    "asbuild": "npm run asbuild:debug && npm run asbuild:release",
-    "start": "vinxi start"
+    "wasm:build": "cd rust && wasm-pack build --target web --out-dir ../src/engine/wasm/pkg",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.15",
-    "@ffmpeg/util": "^0.12.2",
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "^1.1.0",
-    "@tailwindcss/vite": "^4.1.17",
-    "dexie": "^4.2.1",
-    "qrious": "^4.0.2",
-    "solid-js": "^1.9.5",
-    "tailwindcss": "^4.1.17",
-    "vinxi": "^0.5.3",
-    "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0"
+    "@ducanh2912/next-pwa": "^10.2.9",
+    "@pixi/react": "^8.0.0-beta.8",
+    "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-dropdown-menu": "^2.1.4",
+    "@radix-ui/react-select": "^2.1.4",
+    "@radix-ui/react-slider": "^1.2.2",
+    "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-switch": "^1.1.2",
+    "@radix-ui/react-tabs": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dexie": "^4.0.10",
+    "lucide-react": "^0.468.0",
+    "next": "^15.1.0",
+    "next-themes": "^0.4.4",
+    "pixi.js": "^8.6.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^2.6.0",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@playwright/test": "^1.48.0",
-    "@solidjs/testing-library": "^0.8.10",
+    "@eslint/eslintrc": "^3.2.0",
+    "@tailwindcss/postcss": "^4.0.0",
     "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/user-event": "^14.5.2",
-    "@types/node": "^24.10.1",
-    "@vitest/coverage-v8": "^4.0.14",
-    "@vitest/ui": "^4.0.14",
-    "assemblyscript": "^0.28.9",
-    "eslint": "^9.9.0",
-    "globals": "^16.5.0",
+    "@testing-library/react": "^16.1.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.2",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.16.0",
+    "eslint-config-next": "^15.1.0",
     "husky": "^9.1.7",
-    "jiti": "^2.6.1",
-    "jsdom": "^27.2.0",
-    "lint-staged": "^16.2.7",
+    "jsdom": "^25.0.1",
+    "lint-staged": "^16.0.0",
+    "postcss": "^8.4.49",
     "prettier": "^3.4.2",
-    "sharp": "^0.34.5",
-    "tsx": "^4.21.0",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.0.1",
-    "vite": "^7.2.6",
-    "vite-plugin-pwa": "^1.2.0",
-    "vite-plugin-solid": "^2.11.6",
-    "vitest": "^4.0.14"
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -108,23 +80,5 @@
     "*.{css,json,md}": [
       "prettier --write"
     ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "exports": {
-    ".": {
-      "import": "./build/release.js",
-      "types": "./build/release.d.ts"
-    }
   }
 }

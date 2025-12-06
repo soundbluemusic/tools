@@ -1,111 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Metronome -->
   <url>
-    <loc>https://tools.soundbluemusic.com/metronome</loc>
-    <lastmod>2025-12-05</lastmod>
+    <loc>https://tools.soundbluemusic.com/tools/metronome</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/metronome"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/metronome"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/metronome"/>
   </url>
 
+  <!-- Tuner -->
   <url>
-    <loc>https://tools.soundbluemusic.com/ko/metronome</loc>
-    <lastmod>2025-12-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/metronome"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/metronome"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/metronome"/>
-  </url>
-
-  <!-- Drum Machine -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/drum</loc>
-    <lastmod>2025-12-05</lastmod>
+    <loc>https://tools.soundbluemusic.com/tools/tuner</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/drum"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/drum"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/drum"/>
   </url>
 
+  <!-- Piano Roll -->
   <url>
-    <loc>https://tools.soundbluemusic.com/ko/drum</loc>
-    <lastmod>2025-12-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/drum"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/drum"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/drum"/>
-  </url>
-
-  <!-- Drum Synth -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/drum-synth</loc>
-    <lastmod>2025-12-05</lastmod>
+    <loc>https://tools.soundbluemusic.com/tools/piano-roll</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/drum-synth"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/drum-synth"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/drum-synth"/>
   </url>
 
+  <!-- Sheet Editor -->
   <url>
-    <loc>https://tools.soundbluemusic.com/ko/drum-synth</loc>
-    <lastmod>2025-12-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/drum-synth"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/drum-synth"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/drum-synth"/>
-  </url>
-
-  <!-- Drum Tool -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/drum-tool</loc>
-    <lastmod>2025-12-05</lastmod>
+    <loc>https://tools.soundbluemusic.com/tools/sheet-editor</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/drum-tool"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/drum-tool"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/drum-tool"/>
   </url>
 
+  <!-- QR Generator -->
   <url>
-    <loc>https://tools.soundbluemusic.com/ko/drum-tool</loc>
-    <lastmod>2025-12-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/drum-tool"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/drum-tool"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/drum-tool"/>
-  </url>
-
-  <!-- QR Code Generator -->
-  <url>
-    <loc>https://tools.soundbluemusic.com/qr</loc>
-    <lastmod>2025-12-05</lastmod>
+    <loc>https://tools.soundbluemusic.com/tools/qr-generator</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/qr"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/qr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/qr"/>
   </url>
 
+  <!-- World Clock -->
   <url>
-    <loc>https://tools.soundbluemusic.com/ko/qr</loc>
-    <lastmod>2025-12-05</lastmod>
+    <loc>https://tools.soundbluemusic.com/tools/world-clock</loc>
+    <lastmod>2025-12-06</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://tools.soundbluemusic.com/qr"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://tools.soundbluemusic.com/ko/qr"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://tools.soundbluemusic.com/qr"/>
+    <priority>0.8</priority>
   </url>
 
 </urlset>

@@ -1,125 +1,130 @@
-<img src="public/icons/icon-72.png" alt="Tools" width="32" height="32" align="left" style="margin-right: 8px;">
-
 # Tools
 
-**Free Tools for Every Creator**
+Tools by SoundBlueMusic
 
-[![CI](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml/badge.svg)](https://github.com/soundbluemusic/tools/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
-[![SolidJS](https://img.shields.io/badge/SolidJS-1.9-2c4f7c.svg)](https://www.solidjs.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org/)
 
-Free online tools for musicians, writers, designers, filmmakers — every creator. No signup, no ads, completely free.
+## Tech Stack
 
-🌐 **[한국어 README](./README.ko.md)**
+| Group              | #   | Technology        | Role              |
+| ------------------ | --- | ----------------- | ----------------- |
+| **Environment**    | 1   | pnpm              | Package Manager   |
+|                    | 2   | TypeScript        | Type Safety       |
+|                    | 3   | wasm-pack         | Rust → WASM Build |
+| **Frontend**       | 4   | Next.js 15        | Framework         |
+|                    | 5   | Tailwind CSS      | Styling           |
+|                    | 6   | Shadcn UI         | UI Components     |
+|                    | 7   | Zustand           | State Management  |
+|                    | 8   | Pixi.js           | GPU Rendering     |
+| **Audio Core**     | 9   | Rust              | DSP Engine        |
+|                    | 10  | AudioWorklet      | Audio Thread      |
+|                    | 11  | SharedArrayBuffer | Zero-copy IPC     |
+| **I/O & Data**     | 12  | WebMIDI API       | MIDI Input        |
+|                    | 13  | FileSystem API    | Local Storage     |
+| **Production**     | 14  | Next.js Metadata  | SEO               |
+|                    | 15  | next-pwa          | PWA               |
+| **Infrastructure** | 16  | Cloudflare Pages  | Deployment        |
 
-## For Every Creator
+## Routes
 
-| Tool | Who It's For | Path |
-| --- | ----------- | ---- |
-| 🎵 Metronome | Musicians, dancers, anyone who needs precise tempo | `/metronome` |
-| 🥁 Drum Machine | Composers, producers experimenting with patterns | `/drum` |
-| 🎛️ Drum Synth | Sound designers crafting unique drum sounds | `/drum-synth` |
-| 📱 QR Generator | Designers, marketers who need quick QR codes | `/qr` |
+```
+/                     → Tool Grid (Main)
+├── /tools/metronome
+├── /tools/tuner
+├── /tools/piano-roll
+├── /tools/sheet-editor
+├── /tools/qr-generator
+├── /tools/world-clock
+└── /daw              → DAW (Metronome + Drum Machine + Drum Synth)
+```
 
-> 📖 For detailed documentation, see [/docs](./docs/README.md).
->
-> ## Getting Started
->
-> ```bash
-> # Install dependencies
-> npm install
->
-> # Start development server
-> npm run dev
->
-> # Production build
-> npm run build
->
-> # Full validation (typecheck + lint + test)
-> npm run validate
-> ```
->
-> ## Tech Stack
->
-> | Category | Technology |
-> | -------- | ---------- |
-> | Framework | SolidJS 1.9 |
-> | Meta-Framework | SolidStart 1.1 |
-> | Routing | @solidjs/router |
-> | Language | TypeScript 5 |
-> | Build | Vinxi + Vite |
-> | WASM | AssemblyScript |
-> | Testing | Vitest + Solid Testing Library |
-> | Deployment | Cloudflare Pages |
->
-> ## Why Free?
->
-> Good tools shouldn't be expensive or complicated. They should be available instantly, to anyone, when needed.
->
-> - 💸 **Completely Free** - No hidden costs, no premium tiers
-> - 🚫 **No Signup** - Use immediately without creating an account
-> - 📵 **No Ads** - Clean interface, no distractions
-> - 🌐 **Works Offline** - PWA support for use anywhere
-> - 🌙 **Dark Mode** - Easy on the eyes
-> - ♿ **Accessible** - Built with accessibility in mind
->        
->         - ## Fork & Deploy Guide
->        
->         - This project is designed to be **fork-friendly**.
->        
->         - ### Step 1: Change Branding
->
-> Just modify one file: `src/constants/brand.ts`
->
-> ```typescript
-> export const BRAND = {
->   name: 'Your App Name',
->   copyrightHolder: 'Your Name',
->   siteUrl: 'https://your-domain.com',
->   githubUrl: 'https://github.com/you/repo',
->   // ...
-> };
-> ```
->
-> ### Step 2: Static Files (Optional)
->
-> | File | What to Change |
-> | ---- | -------------- |
-> | `index.html` | Meta tags, JSON-LD structured data |
-> | `public/sitemap.xml` | Sitemap URLs |
-> | `public/robots.txt` | Sitemap URL |
-> | `public/icons/` | Favicon and PWA icons |
-> | `public/og-image.png` | Social media share image |
->
-> ## Contributing
->
-> We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
->
-> Before submitting a PR, please run:
->
-> ```bash
-> npm run validate
-> ```
->
-> ## License
->
-> This project is licensed under the [MIT License](./LICENSE).
->
-> Free to use, modify, and distribute. Commercial use is also permitted.
->
-> ## Icon Color
->
-> #9370DB
->
-> ## Trademark Guidelines
->
-> "SoundBlueMusic" and logos are trademarks of SoundBlueMusic. MIT license covers the code, not the trademarks. See [TRADEMARKS.md](./TRADEMARKS.md) for details.
->
-> ## Inspiration
->
-> Looking for ideas? Visit the [Claude Artifacts Gallery](https://claude.ai/artifacts) and check out the **Inspiration** tab to discover creative artifacts built by others with Claude.
->
-> ---
->
-> Built with [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+## Directory Structure
+
+```
+tools/
+├── rust-audio-engine/
+│   ├── src/lib.rs
+│   └── Cargo.toml
+├── public/
+│   ├── audio-worklet/
+│   ├── manifest.json
+│   └── sw.js
+├── src/
+│   ├── app/
+│   │   ├── page.tsx
+│   │   ├── daw/page.tsx
+│   │   └── tools/
+│   │       ├── metronome/page.tsx
+│   │       ├── tuner/page.tsx
+│   │       ├── piano-roll/page.tsx
+│   │       ├── sheet-editor/page.tsx
+│   │       ├── qr-generator/page.tsx
+│   │       └── world-clock/page.tsx
+│   ├── tools/
+│   │   ├── metronome/
+│   │   ├── tuner/
+│   │   ├── drum-machine/
+│   │   ├── drum-synth/
+│   │   ├── piano-roll/
+│   │   ├── sheet-editor/
+│   │   ├── qr-generator/
+│   │   └── world-clock/
+│   ├── components/
+│   │   ├── ui/
+│   │   └── footer.tsx
+│   ├── lib/
+│   │   ├── audio-context.ts
+│   │   ├── event-bus.ts
+│   │   ├── storage.ts
+│   │   └── midi.ts
+│   └── stores/
+├── next.config.ts
+└── package.json
+```
+
+## Core Modules
+
+### audio-context.ts
+
+Singleton AudioContext - shared across all tools, prevents conflicts in DAW integration
+
+### event-bus.ts
+
+Inter-tool communication (e.g., Metronome ↔ Piano Roll BPM sync)
+
+### Tool stores
+
+Each tool has its own Zustand store - independent but composable in DAW
+
+## Architecture
+
+```
+Individual Tools     Compose      Integrated DAW
+────────────────     ───────>     ──────────────
+Metronome                         ┌────────────┐
+Tuner                             │    DAW     │
+Piano Roll           ───────>     │ All Tools  │
+Sheet Editor                      │  Combined  │
+QR Generator                      └────────────┘
+World Clock
+```
+
+Each tool is an independent component → can be deployed individually + integrated into DAW
+
+## Getting Started
+
+```bash
+pnpm install    # Install dependencies
+pnpm dev        # Dev server (Turbopack)
+pnpm build      # Production build
+```
+
+## License
+
+[MIT License](./LICENSE)
+
+---
+
+Tools by [SoundBlueMusic](https://soundbluemusic.com)

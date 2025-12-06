@@ -1,9 +1,5 @@
-/**
- * Navigation Components
- * Responsive navigation system with desktop sidebar, mobile bottom nav, and command palette
- */
-
-export { BottomNav } from './BottomNav';
+export { Header } from './Header';
 export { Sidebar } from './Sidebar';
+export { BottomNav } from './BottomNav';
 export { CommandPalette } from './CommandPalette';
 export { NavigationLayout } from './NavigationLayout';

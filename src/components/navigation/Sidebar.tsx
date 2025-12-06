@@ -1,165 +1,189 @@
-import { createMemo, For, type Component } from 'solid-js';
-import { Link } from '../../components/ui';
-import { useLanguage } from '../../i18n';
-import { useIsActive, useLocalizedPath } from '../../hooks';
-import { MUSIC_APP_PATHS, COMBINED_APP_PATHS } from '../../constants/apps';
-import type { App } from '../../types';
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  Timer,
+  Guitar,
+  Drum,
+  Piano,
+  Music,
+  QrCode,
+  Clock,
+  Gamepad2,
+  LayoutGrid,
+  Home,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useLanguage } from '@/i18n';
 
 interface SidebarProps {
-  apps: App[];
-  isOpen?: boolean;
+  isOpen: boolean;
 }
 
-/**
- * Desktop Sidebar Navigation
- * - Fixed on left
- * - Icon + label for each item
- * - Active state highlight
- * - Collapsible via toggle button
- * - Tailwind CSS with GPU-accelerated animation
- */
-export const Sidebar: Component<SidebarProps> = (props) => {
-  const { language } = useLanguage();
-  const { isActive } = useIsActive();
-  const { toLocalizedPath } = useLocalizedPath();
+interface NavItem {
+  href: string;
+  labelKey:
+    | keyof typeof import('@/i18n/translations').translations.ko.tools
+    | 'home'
+    | 'workspace';
+  icon: React.ReactNode;
+  category?: 'main' | 'music' | 'utility';
+}
 
-  const isOpen = () => props.isOpen ?? true;
-  const getPath = (path: string) => toLocalizedPath(path);
+const navItems: NavItem[] = [
+  {
+    href: '/',
+    labelKey: 'home',
+    icon: <Home className="h-4 w-4" />,
+    category: 'main',
+  },
+  {
+    href: '/tools',
+    labelKey: 'workspace',
+    icon: <LayoutGrid className="h-4 w-4" />,
+    category: 'main',
+  },
+  {
+    href: '/tools/metronome',
+    labelKey: 'metronome',
+    icon: <Timer className="h-4 w-4" />,
+    category: 'music',
+  },
+  {
+    href: '/tools/tuner',
+    labelKey: 'tuner',
+    icon: <Guitar className="h-4 w-4" />,
+    category: 'music',
+  },
+  {
+    href: '/daw',
+    labelKey: 'daw',
+    icon: <Drum className="h-4 w-4" />,
+    category: 'music',
+  },
+  {
+    href: '/tools/piano-roll',
+    labelKey: 'pianoRoll',
+    icon: <Piano className="h-4 w-4" />,
+    category: 'music',
+  },
+  {
+    href: '/tools/sheet-editor',
+    labelKey: 'sheetEditor',
+    icon: <Music className="h-4 w-4" />,
+    category: 'music',
+  },
+  {
+    href: '/rhythm',
+    labelKey: 'rhythm',
+    icon: <Gamepad2 className="h-4 w-4" />,
+    category: 'music',
+  },
+  {
+    href: '/tools/qr-generator',
+    labelKey: 'qrGenerator',
+    icon: <QrCode className="h-4 w-4" />,
+    category: 'utility',
+  },
+  {
+    href: '/tools/world-clock',
+    labelKey: 'worldClock',
+    icon: <Clock className="h-4 w-4" />,
+    category: 'utility',
+  },
+];
 
-  // Single-pass categorization for better performance
-  const categorizedApps = createMemo(() => {
-    const result = { music: [] as App[], combined: [] as App[], other: [] as App[] };
-    for (const app of props.apps) {
-      if ((MUSIC_APP_PATHS as readonly string[]).includes(app.url)) {
-        result.music.push(app);
-      } else if ((COMBINED_APP_PATHS as readonly string[]).includes(app.url)) {
-        result.combined.push(app);
-      } else {
-        result.other.push(app);
-      }
-    }
-    return result;
-  });
+export function Sidebar({ isOpen }: SidebarProps) {
+  const pathname = usePathname();
+  const { t } = useLanguage();
 
-  // Sidebar item classes
-  const itemClass = (active: boolean) =>
-    `flex items-center gap-3 h-10 px-3 rounded-lg no-underline text-sm font-normal
-     transition-colors duration-150 ease-out
-     ${active
-       ? 'bg-[var(--color-interactive-active)] text-[var(--color-text-primary)] font-medium'
-       : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-interactive-hover)] hover:text-[var(--color-text-primary)]'
-     }`;
+  const getLabel = (labelKey: NavItem['labelKey']) => {
+    if (labelKey === 'home') return t.nav.home;
+    if (labelKey === 'workspace') return t.nav.workspace;
+    return t.tools[labelKey as keyof typeof t.tools];
+  };
+
+  const mainItems = navItems.filter((item) => item.category === 'main');
+  const musicItems = navItems.filter((item) => item.category === 'music');
+  const utilityItems = navItems.filter((item) => item.category === 'utility');
 
   return (
     <aside
-      class={`
-        fixed top-14 left-0 bottom-0 w-60
-        bg-[var(--color-bg-secondary)] border-r border-[var(--color-border-primary)]
-        overflow-y-auto overflow-x-hidden z-[200]
-        will-change-transform
-        transition-transform duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]
-        hidden md:flex md:flex-col
-        supports-[top:env(safe-area-inset-top)]:top-[calc(56px+env(safe-area-inset-top))]
-        ${isOpen() ? 'translate-x-0' : '-translate-x-full'}
-      `}
+      className={cn(
+        'fixed left-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-60 border-r bg-background transition-transform duration-200 ease-in-out',
+        'hidden md:block',
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      )}
     >
-      <nav class="flex flex-col py-3 px-2">
-        {/* Home */}
-        <Link href={getPath('/')} class={itemClass(isActive('/'))}>
-          <svg class="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            {isActive('/') ? (
-              <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4z" />
-            ) : (
-              <path d="M4 21V10.08l8-6.96 8 6.96V21h-6v-6h-4v6H4zm2-2h2v-6h8v6h2V11l-6-5.25L6 11v8z" />
-            )}
-          </svg>
-          <span class="whitespace-nowrap overflow-hidden text-ellipsis">
-            {language() === 'ko' ? '홈' : 'Home'}
-          </span>
-        </Link>
-
-        <div class="h-px my-2 mx-3 bg-[var(--color-border-primary)]" />
-
-        {/* Music Section */}
-        <div class="pt-4 pb-2 px-3 text-[var(--color-text-tertiary)] text-[11px] font-semibold uppercase tracking-wide">
-          {language() === 'ko' ? '음악 도구' : 'Music Tools'}
+      <nav className="flex h-full flex-col gap-2 overflow-y-auto p-4">
+        {/* Main */}
+        <div className="space-y-1">
+          {mainItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                pathname === item.href
+                  ? 'bg-accent text-accent-foreground'
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+              )}
+            >
+              {item.icon}
+              <span>{getLabel(item.labelKey)}</span>
+            </Link>
+          ))}
         </div>
 
-        <For each={categorizedApps().music}>
-          {(app) => (
-            <Link href={getPath(app.url)} class={itemClass(isActive(app.url))}>
-              <span class="w-6 h-6 shrink-0 flex items-center justify-center text-lg">
-                {app.icon}
-              </span>
-              <span class="whitespace-nowrap overflow-hidden text-ellipsis">
-                {language() === 'ko' ? app.name.ko : app.name.en}
-              </span>
-            </Link>
-          )}
-        </For>
-
-        <div class="h-px my-2 mx-3 bg-[var(--color-border-primary)]" />
-
-        {/* Combined Tools */}
-        <div class="pt-4 pb-2 px-3 text-[var(--color-text-tertiary)] text-[11px] font-semibold uppercase tracking-wide">
-          {language() === 'ko' ? '결합 도구' : 'Combined Tools'}
+        {/* Music Tools */}
+        <div className="mt-4">
+          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {t.nav.musicTools}
+          </h3>
+          <div className="space-y-1">
+            {musicItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                  pathname === item.href
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                )}
+              >
+                {item.icon}
+                <span>{getLabel(item.labelKey)}</span>
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <For each={categorizedApps().combined}>
-          {(app) => (
-            <Link href={getPath(app.url)} class={itemClass(isActive(app.url))}>
-              <span class="w-6 h-6 shrink-0 flex items-center justify-center text-lg">
-                {app.icon}
-              </span>
-              <span class="whitespace-nowrap overflow-hidden text-ellipsis">
-                {language() === 'ko' ? app.name.ko : app.name.en}
-              </span>
-            </Link>
-          )}
-        </For>
-
-        <div class="h-px my-2 mx-3 bg-[var(--color-border-primary)]" />
-
-        {/* Other Tools */}
-        <div class="pt-4 pb-2 px-3 text-[var(--color-text-tertiary)] text-[11px] font-semibold uppercase tracking-wide">
-          {language() === 'ko' ? '기타 도구' : 'Other Tools'}
+        {/* Utility Tools */}
+        <div className="mt-4">
+          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            {t.nav.utilityTools}
+          </h3>
+          <div className="space-y-1">
+            {utilityItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors',
+                  pathname === item.href
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                )}
+              >
+                {item.icon}
+                <span>{getLabel(item.labelKey)}</span>
+              </Link>
+            ))}
+          </div>
         </div>
-
-        <For each={categorizedApps().other}>
-          {(app) => (
-            <Link href={getPath(app.url)} class={itemClass(isActive(app.url))}>
-              <span class="w-6 h-6 shrink-0 flex items-center justify-center text-lg">
-                {app.icon}
-              </span>
-              <span class="whitespace-nowrap overflow-hidden text-ellipsis">
-                {language() === 'ko' ? app.name.ko : app.name.en}
-              </span>
-            </Link>
-          )}
-        </For>
-
-        <div class="h-px my-2 mx-3 bg-[var(--color-border-primary)]" />
-
-        {/* Downloads */}
-        <Link href={getPath('/downloads')} class={itemClass(isActive('/downloads'))}>
-          <svg class="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M5 20h14v-2H5v2zm7-18v12.17l3.59-3.58L17 12l-5 5-5-5 1.41-1.41L12 14.17V2z" />
-          </svg>
-          <span class="whitespace-nowrap overflow-hidden text-ellipsis">
-            {language() === 'ko' ? '다운로드' : 'Downloads'}
-          </span>
-        </Link>
-
-        {/* Sitemap */}
-        <Link href={getPath('/sitemap')} class={itemClass(isActive('/sitemap'))}>
-          <svg class="w-6 h-6 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M3 3v8h8V3H3zm6 6H5V5h4v4zm-6 4v8h8v-8H3zm6 6H5v-4h4v4zm4-16v8h8V3h-8zm6 6h-4V5h4v4zm-6 4v8h8v-8h-8zm6 6h-4v-4h4v4z" />
-          </svg>
-          <span class="whitespace-nowrap overflow-hidden text-ellipsis">
-            {language() === 'ko' ? '사이트맵' : 'Sitemap'}
-          </span>
-        </Link>
       </nav>
     </aside>
   );
-};
+}

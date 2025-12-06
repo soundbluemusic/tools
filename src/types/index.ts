@@ -1,182 +1,96 @@
-/**
- * Core Application Type Definitions
- * Using readonly for immutability optimization
- */
+// ========================================
+// Type Definitions
+// ========================================
 
-import type { Component, JSX } from 'solid-js';
-
-// ============================================
-// App Types
-// ============================================
-
-/** Configuration for a single app/tool (bilingual) */
+// App configuration
 export interface AppConfig {
-  readonly name: {
-    readonly ko: string;
-    readonly en: string;
+  name: {
+    ko: string;
+    en: string;
   };
-  readonly desc: {
-    readonly ko: string;
-    readonly en: string;
+  description: {
+    ko: string;
+    en: string;
   };
-  readonly icon: string;
-  readonly size: number; // Size in bytes
-  readonly order?: number; // Display order (lower = first)
+  icon: string;
+  href: string;
+  status: 'ready' | 'beta' | 'coming-soon';
 }
 
-/** Full app object with computed properties */
-export interface App extends AppConfig {
-  readonly id: number;
-  readonly url: string;
+// Audio types
+export interface AudioBuffer {
+  sampleRate: number;
+  length: number;
+  duration: number;
+  numberOfChannels: number;
+  getChannelData(channel: number): Float32Array;
 }
 
-/** Immutable list of apps */
-export type AppList = readonly App[];
-
-// ============================================
-// Sort Types
-// ============================================
-
-/** Available sort options for apps */
-export type SortOption =
-  | 'name-asc'
-  | 'name-desc'
-  | 'name-long'
-  | 'name-short'
-  | 'size-large'
-  | 'size-small';
-
-/** Sort option with label for UI */
-export interface SortOptionItem {
-  readonly value: SortOption;
-  readonly label: string;
+// MIDI types
+export interface MIDINoteEvent {
+  note: number;
+  velocity: number;
+  channel: number;
+  timestamp: number;
 }
 
-// ============================================
-// Common Types
-// ============================================
-
-/** Generic callback function type */
-export type Callback<T = void> = () => T;
-
-/** Generic async callback function type */
-export type AsyncCallback<T = void> = () => Promise<T>;
-
-/** Makes specified keys required */
-export type RequireKeys<T, K extends keyof T> = T & Required<Pick<T, K>>;
-
-/** Makes specified keys optional */
-export type OptionalKeys<T, K extends keyof T> = Omit<T, K> &
-  Partial<Pick<T, K>>;
-
-/** Deep partial type */
-export type DeepPartial<T> = T extends object
-  ? { [P in keyof T]?: DeepPartial<T[P]> }
-  : T;
-
-/** Deep readonly type */
-export type DeepReadonly<T> = T extends object
-  ? { readonly [P in keyof T]: DeepReadonly<T[P]> }
-  : T;
-
-/** Extract props type from a component */
-export type PropsOf<C> = C extends Component<infer P> ? P : never;
-
-/** Make all properties nullable */
-export type Nullable<T> = { [P in keyof T]: T[P] | null };
-
-// ============================================
-// Component Props Types
-// ============================================
-
-/** Base props for all components */
-export interface BaseComponentProps {
-  /** Additional class names */
-  className?: string;
-  /** Test ID for testing */
-  'data-testid'?: string;
+// Project types
+export interface ProjectMetadata {
+  id: string;
+  name: string;
+  bpm: number;
+  timeSignature: [number, number];
+  sampleRate: number;
+  createdAt: number;
+  updatedAt: number;
 }
 
-/** Props with children */
-export interface WithChildren {
-  children: JSX.Element;
+// Track types
+export type TrackType = 'audio' | 'midi' | 'instrument';
+
+export interface TrackData {
+  id: string;
+  name: string;
+  type: TrackType;
+  color: string;
+  volume: number;
+  pan: number;
+  mute: boolean;
+  solo: boolean;
 }
 
-/** Props with optional children */
-export interface WithOptionalChildren {
-  children?: JSX.Element;
+// Clip types
+export interface ClipData {
+  id: string;
+  trackId: string;
+  name: string;
+  startTime: number;
+  duration: number;
+  color: string;
 }
 
-// ============================================
-// API / Data Types
-// ============================================
+// Effect types
+export type EffectType =
+  | 'eq'
+  | 'compressor'
+  | 'reverb'
+  | 'delay'
+  | 'chorus'
+  | 'distortion';
 
-/** Generic API response wrapper */
-export interface ApiResponse<T> {
-  readonly data: T;
-  readonly success: boolean;
-  readonly message?: string;
-  readonly timestamp: number;
+export interface EffectData {
+  id: string;
+  type: EffectType;
+  enabled: boolean;
+  params: Record<string, number>;
 }
 
-/** Error response type */
-export interface ApiError {
-  readonly code: string;
-  readonly message: string;
-  readonly details?: Record<string, unknown>;
+// Instrument types
+export type InstrumentType = 'synth' | 'sampler' | 'drum-machine';
+
+export interface InstrumentData {
+  id: string;
+  type: InstrumentType;
+  name: string;
+  params: Record<string, number>;
 }
-
-/** Pagination params */
-export interface PaginationParams {
-  readonly page: number;
-  readonly limit: number;
-  readonly total?: number;
-}
-
-/** Paginated response */
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
-  readonly pagination: Required<PaginationParams>;
-  readonly hasMore: boolean;
-}
-
-// ============================================
-// State Types
-// ============================================
-
-/** Loading states */
-export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
-
-/** Generic async state */
-export interface AsyncState<T, E = Error> {
-  readonly data: T | null;
-  readonly status: LoadingState;
-  readonly error: E | null;
-}
-
-/** Create initial async state */
-export function createAsyncState<T>(): AsyncState<T> {
-  return {
-    data: null,
-    status: 'idle',
-    error: null,
-  };
-}
-
-// ============================================
-// Event Types
-// ============================================
-
-/** Mouse event handler */
-export type MouseEventHandler<T = HTMLElement> = JSX.EventHandler<T, MouseEvent>;
-
-/** Keyboard event handler */
-export type KeyboardEventHandler<T = HTMLElement> = JSX.EventHandler<T, KeyboardEvent>;
-
-/** Change event handler */
-export type ChangeEventHandler<T = HTMLInputElement> = JSX.ChangeEventHandler<T, Event>;
-
-/** Focus event handler */
-export type FocusEventHandler<T = HTMLElement> = JSX.EventHandler<T, FocusEvent>;
-
-/** Form event handler */
-export type FormEventHandler<T = HTMLFormElement> = JSX.EventHandler<T, Event>;
