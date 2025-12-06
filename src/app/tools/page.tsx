@@ -3,13 +3,8 @@
 import { WorkspaceContainer } from '@/components/workspace';
 import { ToolPickerButton } from '@/components/workspace/tool-picker';
 import { Button } from '@/components/ui/button';
-import { Save, FolderOpen, RotateCcw, Home } from 'lucide-react';
-import Link from 'next/link';
+import { Save, FolderOpen, RotateCcw } from 'lucide-react';
 import { useWorkspaceStore } from '@/stores/workspace-store';
-
-// ========================================
-// Tools Workspace Page - 도구 작업 공간 페이지
-// ========================================
 
 export default function ToolsWorkspacePage() {
   const { currentLayout, resetLayout } = useWorkspaceStore();
@@ -17,15 +12,10 @@ export default function ToolsWorkspacePage() {
   const toolCount = currentLayout?.tools.length ?? 0;
 
   return (
-    <div className="flex h-screen flex-col">
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col md:h-[calc(100vh-3.5rem)]">
       {/* Header */}
       <header className="flex h-12 items-center justify-between border-b bg-background px-4">
         <div className="flex items-center gap-4">
-          <Link href="/">
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Home className="h-4 w-4" />
-            </Button>
-          </Link>
           <h1 className="text-lg font-semibold">도구 작업 공간</h1>
           {toolCount > 0 && (
             <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">

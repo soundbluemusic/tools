@@ -1,9 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowLeft, Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { tunerTool } from '@/tools/tuner';
 import type { TunerSettings } from '@/tools/tuner';
 
@@ -19,27 +16,18 @@ export default function TunerPage() {
   const ToolComponent = tunerTool.component;
 
   return (
-    <div className="flex h-screen flex-col bg-background">
-      {/* Header */}
-      <header className="flex h-14 items-center justify-between border-b px-4">
-        <div className="flex items-center gap-3">
-          <Link href="/">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">{tunerTool.meta.icon}</span>
-            <h1 className="text-xl font-semibold">{tunerTool.meta.name.ko}</h1>
-          </div>
-        </div>
-        <Button variant="ghost" size="icon">
-          <Settings className="h-5 w-5" />
-        </Button>
-      </header>
+    <div className="container mx-auto max-w-2xl p-4">
+      <div className="mb-4">
+        <h1 className="flex items-center gap-2 text-2xl font-semibold">
+          <span>{tunerTool.meta.icon}</span>
+          {tunerTool.meta.name.ko}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {tunerTool.meta.description.ko}
+        </p>
+      </div>
 
-      {/* Tool Content */}
-      <main className="flex-1 overflow-hidden">
+      <div className="rounded-xl border bg-card">
         <ToolComponent
           instanceId="main"
           settings={settings}
@@ -47,7 +35,7 @@ export default function TunerPage() {
           size={{ width: 400, height: 500 }}
           isActive={true}
         />
-      </main>
+      </div>
     </div>
   );
 }

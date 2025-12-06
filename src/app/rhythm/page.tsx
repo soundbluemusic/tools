@@ -19,9 +19,8 @@ const DEMO_CHART: Chart = {
 function generateDemoNotes(): Note[] {
   const notes: Note[] = [];
   const bpm = 120;
-  const beatDuration = 60000 / bpm; // ms per beat
+  const beatDuration = 60000 / bpm;
 
-  // Generate notes for 32 beats
   for (let beat = 4; beat < 36; beat++) {
     const lane = beat % 4;
     notes.push({
@@ -30,7 +29,6 @@ function generateDemoNotes(): Note[] {
       time: beat * beatDuration,
     });
 
-    // Add some double notes
     if (beat % 8 === 0 && beat > 4) {
       notes.push({
         id: `note-${beat}-double`,
@@ -43,7 +41,6 @@ function generateDemoNotes(): Note[] {
   return notes;
 }
 
-// Key bindings: D, F, J, K for 4 lanes
 const KEY_TO_LANE: Record<string, number> = {
   KeyD: 0,
   KeyF: 1,
@@ -66,12 +63,10 @@ export default function RhythmPage() {
   const gameLoopRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
 
-  // Load demo chart on mount
   useEffect(() => {
     loadChart(DEMO_CHART);
   }, [loadChart]);
 
-  // Game loop
   useEffect(() => {
     if (gameState !== 'playing') {
       if (gameLoopRef.current) {
@@ -87,7 +82,6 @@ export default function RhythmPage() {
       const elapsed = performance.now() - startTimeRef.current;
       setCurrentTime(elapsed);
 
-      // Check for end of song
       if (chart && elapsed > chart.notes[chart.notes.length - 1]?.time + 2000) {
         useRhythmStore.getState().endGame();
         return;
@@ -105,7 +99,6 @@ export default function RhythmPage() {
     };
   }, [gameState, setCurrentTime, chart]);
 
-  // Check if key press hits a note
   const checkNoteHit = useCallback(
     (lane: number) => {
       const state = useRhythmStore.getState();
@@ -113,8 +106,7 @@ export default function RhythmPage() {
 
       if (!chart) return;
 
-      // Find unhit notes in this lane within timing window
-      const PERFECT_WINDOW = 50; // ms
+      const PERFECT_WINDOW = 50;
       const GREAT_WINDOW = 100;
       const GOOD_WINDOW = 150;
 
@@ -147,13 +139,11 @@ export default function RhythmPage() {
     (e: KeyboardEvent) => {
       if (e.repeat) return;
 
-      // Start game on any key press when ready
       if (gameState === 'ready' && e.code in KEY_TO_LANE) {
         startGame();
         return;
       }
 
-      // Space to pause/resume
       if (e.code === 'Space') {
         e.preventDefault();
         if (gameState === 'playing') {
@@ -164,13 +154,11 @@ export default function RhythmPage() {
         return;
       }
 
-      // Escape to reset
       if (e.code === 'Escape') {
         resetGame();
         return;
       }
 
-      // Lane keys
       const lane = KEY_TO_LANE[e.code];
       if (lane !== undefined && gameState === 'playing') {
         setLanePressed(lane, true);
@@ -208,7 +196,7 @@ export default function RhythmPage() {
   }, [handleKeyDown, handleKeyUp]);
 
   return (
-    <div className="flex h-screen flex-col bg-black text-white">
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col bg-black text-white md:h-[calc(100vh-3.5rem)]">
       {/* Header */}
       <header className="flex h-12 items-center justify-between border-b border-white/10 bg-black/50 px-4">
         <div className="flex items-center gap-4">
@@ -223,11 +211,8 @@ export default function RhythmPage() {
       {/* Game Area */}
       <main className="relative flex-1 overflow-hidden">
         <GameCanvas />
-
-        {/* Score Overlay */}
         <ScoreDisplay />
 
-        {/* State Overlays */}
         {gameState === 'ready' && (
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80">
             <h2 className="mb-2 text-3xl font-bold">{chart?.title}</h2>
