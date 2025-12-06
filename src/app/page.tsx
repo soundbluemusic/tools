@@ -3,6 +3,16 @@ import { Button } from '@/components/ui/button';
 
 const tools = [
   {
+    id: 'tools',
+    name: 'Tools Workspace',
+    nameKo: '도구 작업 공간',
+    description: 'Customizable workspace with modular tools',
+    descriptionKo: '모듈식 도구를 조합하는 커스텀 작업 공간',
+    href: '/tools',
+    icon: '🧰',
+    status: 'new' as const,
+  },
+  {
     id: 'daw',
     name: 'Web DAW',
     nameKo: '웹 DAW',
@@ -85,6 +95,11 @@ export default function HomePage() {
               {tool.status === 'beta' && (
                 <span className="absolute right-2 top-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
                   Beta
+                </span>
+              )}
+              {tool.status === 'new' && (
+                <span className="absolute right-2 top-2 rounded-full bg-green-500/10 px-2 py-0.5 text-xs text-green-600 dark:text-green-400">
+                  New
                 </span>
               )}
               <div className="mb-4 text-4xl">{tool.icon}</div>
