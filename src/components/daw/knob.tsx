@@ -13,11 +13,12 @@ interface KnobProps {
   min?: number;
   max?: number;
   step?: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | number;
   label?: string;
   showValue?: boolean;
   valueFormatter?: (value: number) => string;
   disabled?: boolean;
+  bipolar?: boolean; // Center at 0 for pan controls
   className?: string;
 }
 
@@ -38,6 +39,7 @@ export function Knob({
   showValue = true,
   valueFormatter,
   disabled = false,
+  bipolar = false,
   className,
 }: KnobProps) {
   const knobRef = React.useRef<HTMLDivElement>(null);
@@ -45,7 +47,12 @@ export function Knob({
   const startY = React.useRef(0);
   const startValue = React.useRef(0);
 
-  const { diameter, strokeWidth } = SIZES[size];
+  // Handle numeric or string size
+  const sizeConfig =
+    typeof size === 'number'
+      ? { diameter: size, strokeWidth: Math.max(2, size / 12) }
+      : SIZES[size];
+  const { diameter, strokeWidth } = sizeConfig;
   const radius = (diameter - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
@@ -55,8 +62,14 @@ export function Knob({
   // Calculate rotation (270 degree range, from -135 to 135)
   const rotation = -135 + normalizedValue * 270;
 
-  // Arc for value indicator
-  const arcLength = normalizedValue * 0.75 * circumference;
+  // Arc for value indicator (bipolar mode draws from center)
+  const arcLength = bipolar
+    ? Math.abs(normalizedValue - 0.5) * 0.75 * circumference
+    : normalizedValue * 0.75 * circumference;
+  const arcOffset =
+    bipolar && normalizedValue < 0.5
+      ? circumference * 0.375 + (0.5 - normalizedValue) * 0.75 * circumference
+      : circumference * 0.375;
 
   const handlePointerDown = (e: React.PointerEvent) => {
     if (disabled) return;
@@ -177,7 +190,12 @@ export function Knob({
             strokeWidth={strokeWidth}
             className="text-primary"
             strokeDasharray={`${arcLength} ${circumference}`}
-            strokeDashoffset={circumference * 0.375}
+            strokeDashoffset={
+              bipolar && normalizedValue >= 0.5
+                ? circumference * 0.375 -
+                  (normalizedValue - 0.5) * 0.75 * circumference
+                : arcOffset
+            }
             strokeLinecap="round"
             style={{
               transition: isDragging.current ? 'none' : 'stroke-dasharray 0.1s',

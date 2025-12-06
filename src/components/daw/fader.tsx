@@ -15,6 +15,7 @@ interface FaderProps {
   step?: number;
   orientation?: 'vertical' | 'horizontal';
   size?: 'sm' | 'md' | 'lg';
+  height?: number; // Override length for custom sizing
   label?: string;
   showValue?: boolean;
   showScale?: boolean;
@@ -40,6 +41,7 @@ export function Fader({
   step = 0.01,
   orientation = 'vertical',
   size = 'md',
+  height,
   label,
   showValue = true,
   showScale = false,
@@ -50,7 +52,8 @@ export function Fader({
   const trackRef = React.useRef<HTMLDivElement>(null);
   const isDragging = React.useRef(false);
 
-  const { length, thickness } = SIZES[size];
+  const { length: defaultLength, thickness } = SIZES[size];
+  const length = height ?? defaultLength;
   const isVertical = orientation === 'vertical';
 
   // Convert value to position (0-1)
