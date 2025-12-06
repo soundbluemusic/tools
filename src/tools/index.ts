@@ -15,6 +15,8 @@ import './qr-generator';
 import './world-clock';
 import './piano-roll';
 import './sheet-editor';
+import './drum-machine';
+import './drum-synth';
 
 // Re-export tool definitions for direct access
 export { metronomeTool } from './metronome';
@@ -23,3 +25,5 @@ export { qrGeneratorTool } from './qr-generator';
 export { worldClockTool } from './world-clock';
 export { pianoRollTool } from './piano-roll';
 export { sheetEditorTool } from './sheet-editor';
+export { drumMachineTool } from './drum-machine';
+export { drumSynthTool } from './drum-synth';

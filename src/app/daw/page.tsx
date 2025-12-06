@@ -1,108 +1,107 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
-import { Transport } from '@/components/daw/transport';
-import { TrackList } from '@/components/daw/track-list';
-import { Timeline } from '@/components/daw/timeline';
-import { Mixer } from '@/components/daw/mixer';
-import { Toolbar } from '@/components/daw/toolbar';
-import { useAudioStore } from '@/stores/audio-store';
-import { useProjectStore } from '@/stores/project-store';
+import { useState } from 'react';
+import Link from 'next/link';
+import { ArrowLeft, Timer, Disc3, SlidersHorizontal } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { metronomeTool } from '@/tools/metronome';
+import { drumMachineTool } from '@/tools/drum-machine';
+import { drumSynthTool } from '@/tools/drum-synth';
+import type { MetronomeSettings } from '@/tools/metronome';
+import type { DrumMachineSettings } from '@/tools/drum-machine';
+import type { DrumSynthSettings } from '@/tools/drum-synth';
 
 export default function DAWPage() {
-  const initialize = useAudioStore((s) => s.initialize);
-  const play = useAudioStore((s) => s.play);
-  const pause = useAudioStore((s) => s.pause);
-  const stop = useAudioStore((s) => s.stop);
-  const isPlaying = useAudioStore((s) => s.transport.isPlaying);
-  const tracks = useProjectStore((s) => s.tracks);
-  const clips = useProjectStore((s) => s.clips);
-
-  // Initialize audio engine on mount
-  useEffect(() => {
-    initialize();
-  }, [initialize]);
-
-  // Keyboard shortcuts
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      // Prevent shortcuts when typing in inputs
-      if (
-        e.target instanceof HTMLInputElement ||
-        e.target instanceof HTMLTextAreaElement
-      ) {
-        return;
-      }
-
-      switch (e.code) {
-        case 'Space':
-          e.preventDefault();
-          if (isPlaying) {
-            pause();
-          } else {
-            play();
-          }
-          break;
-        case 'Enter':
-          e.preventDefault();
-          stop();
-          break;
-        case 'Home':
-          e.preventDefault();
-          stop();
-          break;
-      }
-    },
-    [isPlaying, play, pause, stop]
+  const [metronomeSettings, setMetronomeSettings] = useState<MetronomeSettings>(
+    metronomeTool.defaultSettings
+  );
+  const [drumMachineSettings, setDrumMachineSettings] =
+    useState<DrumMachineSettings>(drumMachineTool.defaultSettings);
+  const [drumSynthSettings, setDrumSynthSettings] = useState<DrumSynthSettings>(
+    drumSynthTool.defaultSettings
   );
 
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  const MetronomeComponent = metronomeTool.component;
+  const DrumMachineComponent = drumMachineTool.component;
+  const DrumSynthComponent = drumSynthTool.component;
+
+  const defaultSize = { width: 800, height: 600 };
 
   return (
-    <div className="flex h-screen flex-col bg-background text-foreground">
-      {/* Top Bar */}
-      <header className="flex h-12 items-center justify-between border-b bg-card px-4">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-bold">🎹 Web DAW</h1>
+    <div className="flex h-screen flex-col bg-background">
+      {/* Header */}
+      <header className="flex h-14 items-center justify-between border-b bg-card px-4">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+          <h1 className="text-lg font-bold">🎵 DAW</h1>
           <span className="rounded bg-primary/10 px-2 py-0.5 text-xs text-primary">
-            Beta
+            메트로놈 + 드럼머신 + 드럼신스
           </span>
         </div>
-        <Toolbar />
       </header>
 
-      {/* Transport */}
-      <div className="border-b bg-card/50 px-4 py-2">
-        <Transport />
-      </div>
-
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Track List (Left Panel) */}
-        <aside className="w-64 flex-shrink-0 border-r bg-card/50">
-          <TrackList />
-        </aside>
+      <div className="flex-1 overflow-hidden p-4">
+        <Tabs defaultValue="drum-machine" className="flex h-full flex-col">
+          <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsTrigger value="metronome" className="gap-2">
+              <Timer className="h-4 w-4" />
+              메트로놈
+            </TabsTrigger>
+            <TabsTrigger value="drum-machine" className="gap-2">
+              <Disc3 className="h-4 w-4" />
+              드럼머신
+            </TabsTrigger>
+            <TabsTrigger value="drum-synth" className="gap-2">
+              <SlidersHorizontal className="h-4 w-4" />
+              드럼신스
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Timeline (Center) */}
-        <main className="flex-1 overflow-hidden">
-          <Timeline tracks={tracks} clips={clips} />
-        </main>
+          <div className="mt-4 flex-1 overflow-hidden rounded-lg border bg-card">
+            <TabsContent value="metronome" className="m-0 h-full">
+              <MetronomeComponent
+                instanceId="daw-metronome"
+                settings={metronomeSettings}
+                onSettingsChange={(updates) =>
+                  setMetronomeSettings((prev) => ({ ...prev, ...updates }))
+                }
+                size={defaultSize}
+                isActive={true}
+              />
+            </TabsContent>
 
-        {/* Mixer (Right Panel) */}
-        <aside className="w-72 flex-shrink-0 border-l bg-card/50">
-          <Mixer />
-        </aside>
+            <TabsContent value="drum-machine" className="m-0 h-full">
+              <DrumMachineComponent
+                instanceId="daw-drum-machine"
+                settings={drumMachineSettings}
+                onSettingsChange={(updates) =>
+                  setDrumMachineSettings((prev) => ({ ...prev, ...updates }))
+                }
+                size={defaultSize}
+                isActive={true}
+              />
+            </TabsContent>
+
+            <TabsContent value="drum-synth" className="m-0 h-full">
+              <DrumSynthComponent
+                instanceId="daw-drum-synth"
+                settings={drumSynthSettings}
+                onSettingsChange={(updates) =>
+                  setDrumSynthSettings((prev) => ({ ...prev, ...updates }))
+                }
+                size={defaultSize}
+                isActive={true}
+              />
+            </TabsContent>
+          </div>
+        </Tabs>
       </div>
-
-      {/* Status Bar */}
-      <footer className="flex h-6 items-center justify-between border-t bg-card px-4 text-xs text-muted-foreground">
-        <span>Tracks: {tracks.length}</span>
-        <span>Clips: {clips.length}</span>
-        <span>48kHz / 128 samples</span>
-      </footer>
     </div>
   );
 }
