@@ -1,70 +1,379 @@
 @import 'tailwindcss';
 
 /* ========================================
-   Design Tokens (CSS Custom Properties)
+   Design Tokens - Warm Minimal Palette
+   Inspired by Claude.ai & OpenAI
    ======================================== */
 
 :root {
-  /* Colors - Light Mode */
-  --background: 0 0% 100%;
-  --foreground: 0 0% 3.9%;
+  /* ===== Colors - Light Mode ===== */
+  --color-bg-primary: #faf9f7; /* 메인 배경 (따뜻한 오프화이트) */
+  --color-bg-secondary: #ffffff; /* 카드/컨테이너 배경 */
+  --color-bg-tertiary: #f5f4f1; /* 3차 배경 */
+
+  --color-text-primary: #1c1917; /* 주요 텍스트 (따뜻한 검정) */
+  --color-text-secondary: #57534e; /* 보조 텍스트 */
+  --color-text-tertiary: #a8a29e; /* 3차 텍스트 (비활성) */
+
+  --color-border-primary: #e7e5e4; /* 기본 테두리 */
+  --color-border-hover: #d6d3d1; /* 호버 테두리 */
+  --color-interactive-hover: rgba(28, 25, 23, 0.04); /* 호버 상태 */
+  --color-interactive-focus: rgba(28, 25, 23, 0.12); /* 포커스 상태 */
+
+  /* Accent Colors */
+  --color-accent-primary: #1c1917;
+  --color-accent-secondary: #57534e;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+
+  /* Skeleton Loading */
+  --color-skeleton: #e7e5e4;
+  --color-skeleton-highlight: #f5f4f1;
+
+  /* Legacy Shadcn compatibility */
+  --background: 40 20% 98%;
+  --foreground: 24 10% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 0 0% 3.9%;
+  --card-foreground: 24 10% 10%;
   --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 3.9%;
-  --primary: 0 0% 9%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 0 0% 96.1%;
-  --secondary-foreground: 0 0% 9%;
-  --muted: 0 0% 96.1%;
-  --muted-foreground: 0 0% 45.1%;
-  --accent: 0 0% 96.1%;
-  --accent-foreground: 0 0% 9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --input: 0 0% 89.8%;
-  --ring: 0 0% 3.9%;
+  --popover-foreground: 24 10% 10%;
+  --primary: 24 10% 10%;
+  --primary-foreground: 40 20% 98%;
+  --secondary: 30 10% 96%;
+  --secondary-foreground: 24 10% 10%;
+  --muted: 30 10% 96%;
+  --muted-foreground: 24 6% 45%;
+  --accent: 30 10% 96%;
+  --accent-foreground: 24 10% 10%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 24 6% 90%;
+  --input: 24 6% 90%;
+  --ring: 24 10% 10%;
   --radius: 0.5rem;
 
   /* DAW Colors */
-  --daw-track-bg: 0 0% 95%;
-  --daw-track-border: 0 0% 85%;
+  --daw-track-bg: 30 10% 95%;
+  --daw-track-border: 24 6% 85%;
   --daw-playhead: 200 100% 50%;
   --daw-waveform: 200 80% 45%;
-  --daw-grid: 0 0% 90%;
+  --daw-grid: 24 6% 90%;
   --daw-meter-green: 120 60% 50%;
   --daw-meter-yellow: 45 100% 50%;
   --daw-meter-red: 0 80% 50%;
+
+  /* ===== Typography ===== */
+  --font-family-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* ===== Spacing ===== */
+  --spacing-0: 0;
+  --spacing-1: 0.25rem; /* 4px */
+  --spacing-2: 0.5rem; /* 8px */
+  --spacing-3: 0.75rem; /* 12px */
+  --spacing-4: 1rem; /* 16px */
+  --spacing-5: 1.25rem; /* 20px */
+  --spacing-6: 1.5rem; /* 24px */
+  --spacing-8: 2rem; /* 32px */
+  --spacing-10: 2.5rem; /* 40px */
+  --spacing-12: 3rem; /* 48px */
+  --spacing-16: 4rem; /* 64px */
+
+  /* ===== Shadows (Subtle & Warm) ===== */
+  --shadow-xs: 0 1px 2px rgba(28, 25, 23, 0.03);
+  --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
+  --shadow-md:
+    0 2px 4px rgba(28, 25, 23, 0.04), 0 1px 2px rgba(28, 25, 23, 0.02);
+  --shadow-lg: 0 4px 12px rgba(28, 25, 23, 0.06);
+  --shadow-xl: 0 8px 24px rgba(28, 25, 23, 0.08);
+  --shadow-2xl: 0 12px 48px rgba(28, 25, 23, 0.12);
+  --shadow-focus: 0 0 0 2px var(--color-interactive-focus);
+
+  /* ===== Border Radius ===== */
+  --radius-none: 0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+
+  /* ===== Transitions ===== */
+  --transition-fast: 150ms; /* 빠른 상호작용 (버튼 호버) */
+  --transition-normal: 250ms; /* 일반 전환 */
+  --transition-slow: 350ms; /* 느린 전환 */
+
+  /* Easing Functions */
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1); /* Material Design 스타일 */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ===== Layout ===== */
+  --header-height: 56px;
+  --header-height-mobile: 52px;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 64px;
+  --bottom-nav-height: 56px;
+  --touch-target-min: 44px; /* WCAG 2.5.5 접근성 */
+  --touch-target-comfortable: 48px;
+
+  /* ===== Breakpoints (for reference) ===== */
+  --breakpoint-xs: 320px; /* 작은 모바일 */
+  --breakpoint-sm: 480px; /* 모바일 */
+  --breakpoint-md: 768px; /* 태블릿 */
+  --breakpoint-lg: 1024px; /* 데스크톱 */
+  --breakpoint-xl: 1280px; /* 대형 화면 */
+  --breakpoint-2xl: 1536px; /* 초대형 화면 */
+
+  /* ===== Z-Index Scale ===== */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
 }
 
-.dark {
-  --background: 0 0% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 0 0% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 0 0% 14.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 14.9%;
-  --muted-foreground: 0 0% 63.9%;
-  --accent: 0 0% 14.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
-  --input: 0 0% 14.9%;
-  --ring: 0 0% 83.1%;
+/* ===== Dark Mode ===== */
+.dark,
+[data-theme='dark'] {
+  --color-bg-primary: #1a1918; /* 따뜻한 다크 배경 */
+  --color-bg-secondary: #212120;
+  --color-bg-tertiary: #292827;
+
+  --color-text-primary: #ececec;
+  --color-text-secondary: #a8a29e;
+  --color-text-tertiary: #78716c;
+
+  --color-border-primary: #3d3b39;
+  --color-border-hover: #4d4a47;
+  --color-interactive-hover: rgba(236, 236, 236, 0.06);
+  --color-interactive-focus: rgba(236, 236, 236, 0.12);
+
+  /* Accent Colors - Dark */
+  --color-accent-primary: #ececec;
+  --color-accent-secondary: #a8a29e;
+
+  /* Skeleton Loading - Dark */
+  --color-skeleton: #3d3b39;
+  --color-skeleton-highlight: #4d4a47;
+
+  /* Legacy Shadcn compatibility - Dark */
+  --background: 20 4% 10%;
+  --foreground: 0 0% 93%;
+  --card: 20 4% 13%;
+  --card-foreground: 0 0% 93%;
+  --popover: 20 4% 13%;
+  --popover-foreground: 0 0% 93%;
+  --primary: 0 0% 93%;
+  --primary-foreground: 20 4% 10%;
+  --secondary: 20 3% 16%;
+  --secondary-foreground: 0 0% 93%;
+  --muted: 20 3% 16%;
+  --muted-foreground: 24 6% 64%;
+  --accent: 20 3% 16%;
+  --accent-foreground: 0 0% 93%;
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 0 0% 93%;
+  --border: 20 3% 24%;
+  --input: 20 3% 24%;
+  --ring: 0 0% 83%;
 
   /* DAW Colors - Dark */
-  --daw-track-bg: 0 0% 8%;
-  --daw-track-border: 0 0% 20%;
+  --daw-track-bg: 20 4% 8%;
+  --daw-track-border: 20 3% 20%;
   --daw-playhead: 200 100% 60%;
   --daw-waveform: 200 80% 55%;
-  --daw-grid: 0 0% 15%;
+  --daw-grid: 20 3% 15%;
+
+  /* Shadows - Dark (slightly more visible) */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.25);
+  --shadow-2xl: 0 12px 48px rgba(0, 0, 0, 0.3);
+}
+
+/* System preference auto-detect */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-bg-primary: #1a1918;
+    --color-bg-secondary: #212120;
+    --color-bg-tertiary: #292827;
+    --color-text-primary: #ececec;
+    --color-text-secondary: #a8a29e;
+    --color-text-tertiary: #78716c;
+    --color-border-primary: #3d3b39;
+    --color-border-hover: #4d4a47;
+    --color-interactive-hover: rgba(236, 236, 236, 0.06);
+    --color-interactive-focus: rgba(236, 236, 236, 0.12);
+    --color-accent-primary: #ececec;
+    --color-accent-secondary: #a8a29e;
+    --color-skeleton: #3d3b39;
+    --color-skeleton-highlight: #4d4a47;
+
+    --background: 20 4% 10%;
+    --foreground: 0 0% 93%;
+    --card: 20 4% 13%;
+    --card-foreground: 0 0% 93%;
+    --popover: 20 4% 13%;
+    --popover-foreground: 0 0% 93%;
+    --primary: 0 0% 93%;
+    --primary-foreground: 20 4% 10%;
+    --secondary: 20 3% 16%;
+    --secondary-foreground: 0 0% 93%;
+    --muted: 20 3% 16%;
+    --muted-foreground: 24 6% 64%;
+    --accent: 20 3% 16%;
+    --accent-foreground: 0 0% 93%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 0 0% 93%;
+    --border: 20 3% 24%;
+    --input: 20 3% 24%;
+    --ring: 0 0% 83%;
+
+    --daw-track-bg: 20 4% 8%;
+    --daw-track-border: 20 3% 20%;
+    --daw-playhead: 200 100% 60%;
+    --daw-waveform: 200 80% 55%;
+    --daw-grid: 20 3% 15%;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 8px 24px rgba(0, 0, 0, 0.25);
+    --shadow-2xl: 0 12px 48px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* ========================================
+   Tailwind v4 Theme Extension
+   ======================================== */
+
+@theme {
+  /* Custom animations */
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-pulse-slow: pulse 3s ease-in-out infinite;
+  --animate-fade-in: fadeIn 0.2s ease-out;
+  --animate-slide-up: slideUp 0.2s ease-out;
+  --animate-slide-down: slideDown 0.2s ease-out;
+  --animate-skeleton: skeleton-loading 1.5s ease-in-out infinite;
+  --animate-skeleton-pulse: skeleton-pulse 1.5s ease-in-out infinite;
+  --animate-dropdown-in: shareDropdownIn 0.2s ease-out;
+  --animate-slide-up-mobile: shareDropdownSlideUp 0.3s ease-out;
+}
+
+/* ========================================
+   Keyframe Animations
+   ======================================== */
+
+/* Fade In */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide Up */
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Slide Down */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Skeleton Loading */
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Skeleton Pulse */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Dropdown In (Desktop) */
+@keyframes shareDropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Slide Up Mobile (Bottom Sheet) */
+@keyframes shareDropdownSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ========================================
@@ -72,16 +381,31 @@
    ======================================== */
 
 * {
-  border-color: hsl(var(--border));
+  border-color: var(--color-border-primary);
+}
+
+html {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
   font-feature-settings:
     'rlig' 1,
     'calt' 1;
+  transition:
+    background-color var(--transition-normal) var(--ease-default),
+    color var(--transition-normal) var(--ease-default);
 }
+
+/* ========================================
+   Utility Classes
+   ======================================== */
 
 /* Disable text selection on interactive elements */
 .no-select {
@@ -95,9 +419,151 @@ body {
   will-change: transform;
 }
 
-/* DAW specific styles */
+/* Tool page fade-in animation */
+.tool-page {
+  animation: fadeIn 0.2s var(--ease-out);
+}
+
+/* ========================================
+   Skeleton Loading Styles
+   ======================================== */
+
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-tertiary) 25%,
+    var(--color-bg-secondary) 50%,
+    var(--color-bg-tertiary) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+.skeleton--pulse {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* ========================================
+   Loader Spinner
+   ======================================== */
+
+.loader-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-skeleton);
+  border-top-color: var(--color-text-primary);
+  border-radius: var(--radius-full);
+  animation: spin 0.8s linear infinite;
+}
+
+.loader-spinner--sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+}
+
+.loader-spinner--lg {
+  width: 48px;
+  height: 48px;
+  border-width: 4px;
+}
+
+/* ========================================
+   Interactive Patterns
+   ======================================== */
+
+/* Base button transition */
+.btn {
+  transition: background-color var(--transition-fast) var(--ease-default);
+}
+
+/* Share button hover effect */
+.share-button {
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    border-color var(--transition-fast) var(--ease-default),
+    box-shadow var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default);
+}
+
+.share-button:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.share-button:active {
+  transform: translateY(0);
+}
+
+/* Social link hover */
+.social-link {
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    color var(--transition-fast) var(--ease-default),
+    transform var(--transition-fast) var(--ease-default);
+}
+
+.social-link:hover {
+  background-color: var(--color-interactive-hover);
+  transform: translateY(-1px);
+}
+
+/* Platform-specific brand colors */
+.social-youtube:hover {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+
+.social-twitter:hover {
+  background-color: #1da1f2;
+  color: #ffffff;
+}
+
+.social-instagram:hover {
+  background-color: #e4405f;
+  color: #ffffff;
+}
+
+.social-github:hover {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.social-discord:hover {
+  background-color: #5865f2;
+  color: #ffffff;
+}
+
+/* Card hover */
+.app-item {
+  transition:
+    background-color var(--transition-fast) var(--ease-default),
+    border-color var(--transition-fast) var(--ease-default);
+}
+
+.app-item:hover {
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border-primary);
+}
+
+/* Sidebar transition */
+.sidebar {
+  transition:
+    transform var(--transition-normal) var(--ease-default),
+    width var(--transition-normal) var(--ease-default);
+}
+
+/* ========================================
+   DAW Specific Styles
+   ======================================== */
+
 .daw-container {
-  @apply h-screen w-screen overflow-hidden bg-[hsl(var(--background))];
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--color-bg-primary);
 }
 
 /* Audio meter gradient */
@@ -111,26 +577,65 @@ body {
   );
 }
 
-/* Scrollbar styling */
+/* ========================================
+   Scrollbar Styling
+   ======================================== */
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: var(--color-bg-tertiary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 4px;
+  background: var(--color-text-tertiary);
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: var(--color-text-secondary);
 }
 
-/* Reduced motion */
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-text-tertiary) var(--color-bg-tertiary);
+}
+
+/* ========================================
+   Focus Styles (Accessibility)
+   ======================================== */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+}
+
+/* Remove default focus for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ========================================
+   Touch Target Optimization
+   ======================================== */
+
+@media (hover: none) and (pointer: coarse) {
+  button:not(.inline-btn),
+  a:not(.inline-link),
+  [role='button'] {
+    min-height: var(--touch-target-comfortable);
+    min-width: var(--touch-target-min);
+  }
+}
+
+/* ========================================
+   Reduced Motion (Accessibility)
+   ======================================== */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -139,4 +644,93 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ========================================
+   Responsive Navigation
+   ======================================== */
+
+/* Desktop: Sidebar visible */
+@media (min-width: 1024px) {
+  .nav-sidebar {
+    display: block;
+  }
+  .nav-bottom {
+    display: none;
+  }
+}
+
+/* Mobile: Bottom navigation visible */
+@media (max-width: 767px) {
+  .nav-sidebar {
+    display: none;
+  }
+  .nav-bottom {
+    display: block;
+  }
+}
+
+/* Tablet: Both options available */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .nav-sidebar {
+    display: none;
+  }
+  .nav-bottom {
+    display: block;
+  }
+}
+
+/* ========================================
+   Dropdown Animations
+   ======================================== */
+
+/* Desktop dropdown */
+.dropdown-content {
+  animation: shareDropdownIn 0.2s var(--ease-out);
+}
+
+/* Mobile bottom sheet */
+@media (max-width: 767px) {
+  .dropdown-content--mobile {
+    animation: shareDropdownSlideUp 0.3s var(--ease-out);
+  }
+}
+
+/* ========================================
+   Legacy Compatibility
+   ======================================== */
+
+/* Ensure HSL-based Shadcn components work */
+.bg-background {
+  background: hsl(var(--background));
+}
+.text-foreground {
+  color: hsl(var(--foreground));
+}
+.bg-card {
+  background: hsl(var(--card));
+}
+.text-card-foreground {
+  color: hsl(var(--card-foreground));
+}
+.bg-primary {
+  background: hsl(var(--primary));
+}
+.text-primary-foreground {
+  color: hsl(var(--primary-foreground));
+}
+.bg-secondary {
+  background: hsl(var(--secondary));
+}
+.text-secondary-foreground {
+  color: hsl(var(--secondary-foreground));
+}
+.bg-muted {
+  background: hsl(var(--muted));
+}
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+.border-border {
+  border-color: hsl(var(--border));
 }
