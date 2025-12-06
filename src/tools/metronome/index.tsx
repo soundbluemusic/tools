@@ -40,6 +40,17 @@ const defaultSettings: MetronomeSettings = {
   timerSeconds: '',
 };
 
+// Colors matching original design
+const COLORS = {
+  ACCENT: '#dc2626', // First beat - red
+  ACTIVE: 'hsl(var(--foreground))', // Active beat - foreground
+  INACTIVE: '#a8a29e', // Inactive beat - stone-400
+  PENDULUM_BASE: 'hsl(var(--border))',
+  PENDULUM_BG: 'hsl(var(--muted))',
+  PENDULUM_ARM: 'hsl(var(--foreground))',
+  PENDULUM_PIVOT: 'hsl(var(--muted-foreground))',
+};
+
 // Note Icon Component
 function NoteIcon({
   unit,
@@ -53,9 +64,9 @@ function NoteIcon({
   const size = isActive ? (isFirst ? 28 : 24) : 16;
   const color = isActive
     ? isFirst
-      ? 'rgb(239, 68, 68)'
-      : 'currentColor'
-    : 'rgb(156, 163, 175)';
+      ? COLORS.ACCENT
+      : COLORS.ACTIVE
+    : COLORS.INACTIVE;
 
   if (unit === 2) {
     return (
@@ -65,7 +76,7 @@ function NoteIcon({
           cy="24"
           rx="7"
           ry="5"
-          fill="transparent"
+          fill={COLORS.PENDULUM_BG}
           stroke={color}
           strokeWidth="2"
         />
@@ -385,48 +396,44 @@ function MetronomeComponent({
         {/* Pendulum */}
         <div className="h-32 w-24">
           <svg viewBox="0 0 100 120" className="h-full w-full">
+            {/* Base */}
             <rect
               x="15"
               y="112"
               width="70"
               height="4"
               rx="2"
-              fill="currentColor"
-              opacity="0.2"
+              fill={COLORS.PENDULUM_BASE}
             />
+            {/* Metronome body */}
             <path
               d="M 50 22 L 22 112 L 78 112 Z"
-              fill="currentColor"
-              fillOpacity="0.1"
-              stroke="currentColor"
+              fill={COLORS.PENDULUM_BG}
+              stroke={COLORS.PENDULUM_BASE}
               strokeWidth="1.5"
-              strokeOpacity="0.3"
             />
+            {/* Swinging arm */}
             <g
               style={{
                 transformOrigin: '50px 108px',
                 transform: `rotate(${pendulumAngle}deg)`,
-                transition: 'transform 0.05s linear',
               }}
+              className="transition-transform duration-50"
             >
               <line
                 x1="50"
                 y1="28"
                 x2="50"
                 y2="108"
-                stroke="currentColor"
+                stroke={COLORS.PENDULUM_ARM}
                 strokeWidth="1.5"
                 strokeLinecap="round"
               />
-              <circle cx="50" cy="55" r="4" fill="currentColor" />
+              {/* Weight */}
+              <circle cx="50" cy="55" r="4" fill={COLORS.PENDULUM_ARM} />
             </g>
-            <circle
-              cx="50"
-              cy="108"
-              r="2.5"
-              fill="currentColor"
-              opacity="0.5"
-            />
+            {/* Pivot point */}
+            <circle cx="50" cy="108" r="2.5" fill={COLORS.PENDULUM_PIVOT} />
           </svg>
         </div>
 
