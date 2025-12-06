@@ -10,7 +10,7 @@ const tools = [
     descriptionKo: '프로페셔널 디지털 오디오 워크스테이션',
     href: '/daw',
     icon: '🎹',
-    status: 'coming-soon' as const,
+    status: 'beta' as const,
   },
   {
     id: 'rhythm',
@@ -20,7 +20,7 @@ const tools = [
     descriptionKo: '프로급 리듬 게임 엔진',
     href: '/rhythm',
     icon: '🎮',
-    status: 'coming-soon' as const,
+    status: 'beta' as const,
   },
   {
     id: 'metronome',
@@ -42,7 +42,7 @@ const tools = [
     icon: '🥁',
     status: 'ready' as const,
   },
-];
+] as const;
 
 export default function HomePage() {
   return (
@@ -82,9 +82,9 @@ export default function HomePage() {
               href={tool.href}
               className="group relative overflow-hidden rounded-xl border bg-card p-6 transition-all hover:border-primary/50 hover:shadow-lg"
             >
-              {tool.status === 'coming-soon' && (
+              {tool.status === 'beta' && (
                 <span className="absolute right-2 top-2 rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
-                  Coming Soon
+                  Beta
                 </span>
               )}
               <div className="mb-4 text-4xl">{tool.icon}</div>
