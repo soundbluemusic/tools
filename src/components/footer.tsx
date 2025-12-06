@@ -17,11 +17,6 @@ export function Footer() {
                 by SoundBlueMusic
               </span>
             </h3>
-            <p className="mb-4 text-sm text-muted-foreground">
-              모든 창작자를 위한 무료 오픈소스 도구
-              <br />
-              Free open-source tools for every creator
-            </p>
             <a
               href="https://github.com/soundbluemusic/tools"
               target="_blank"
@@ -29,7 +24,7 @@ export function Footer() {
               className="inline-flex items-center gap-2 rounded-md bg-secondary px-3 py-2 text-sm font-medium transition-colors hover:bg-secondary/80"
             >
               <Github className="h-4 w-4" />
-              GitHub에서 보기
+              GitHub
             </a>
           </div>
 
@@ -108,15 +103,8 @@ export function Footer() {
             >
               SoundBlueMusic
             </a>
-            . All rights reserved.
           </p>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <span className="inline-block h-2 w-2 rounded-full bg-green-500" />
-              Open Source
-            </span>
-            <span>MIT License</span>
-          </div>
+          <span>MIT License</span>
         </div>
       </div>
     </footer>

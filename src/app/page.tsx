@@ -86,16 +86,10 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-background to-muted/20">
       {/* Hero */}
       <header className="container mx-auto px-4 py-12 text-center md:py-16">
-        <div className="mb-2 text-sm font-medium text-primary">
-          Open Source · Free · No Ads
-        </div>
-        <h1 className="mb-3 text-4xl font-bold tracking-tight md:text-5xl">
+        <h1 className="mb-2 text-4xl font-bold tracking-tight md:text-5xl">
           Tools
         </h1>
         <p className="text-sm text-muted-foreground">by SoundBlueMusic</p>
-        <p className="mx-auto mt-4 max-w-md text-muted-foreground">
-          모든 창작자를 위한 무료 오픈소스 도구
-        </p>
       </header>
 
       {/* Main Content */}
